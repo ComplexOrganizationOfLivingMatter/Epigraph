@@ -14,9 +14,8 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>Epigraph</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-
-	<name>plugins/epigraph.jar</name>
+	<version>0.1.0</version>
+	<name>plugins/Epigraph.jar</name>
 	<description></description>
 
 	<developers>
@@ -35,10 +34,17 @@
 	</developers>
 
 	<properties>
-		<main-class>epigraph</main-class>
+		<main-class>Epigraph</main-class>
 	</properties>
 
 	<dependencies>
+		<!-- ImgLib2 dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+		</dependency>
+		
+		<!-- ImageJ dependencies -->
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
