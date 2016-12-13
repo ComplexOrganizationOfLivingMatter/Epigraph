@@ -4,24 +4,18 @@ package main.java.Epigraph;
  * @author Pablo Vicente-Munuera
  *
  */
-import ij.*;
-import ij.process.*;
-import ij.gui.*;
-import java.awt.*;
+import ij.IJ;
 import ij.ImageJ;
-import javax.swing.SwingUtilities;
-import ij.plugin.*;
-import ij.plugin.frame.*;
-
-
+import ij.ImagePlus;
 import ij.WindowManager;
+import ij.plugin.PlugIn;
 
 
 
 public class Epigraph implements PlugIn {
 	
 	/** image to be used in the training */
-	private ImagePlus trainingImage = null;
+	private ImagePlus raw_img = null;
 	
 //	private class CustomWindow extends StackWindow
 //	{
@@ -37,11 +31,6 @@ public class Epigraph implements PlugIn {
 
 		// start ImageJ
 		new ImageJ();
-		
-		System.out.println("hola");
-		
-//		ImagePlus image = IJ.openImage("http://imagej.net/images/clown.jpg");
-//		image.show();
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");
@@ -60,23 +49,22 @@ public class Epigraph implements PlugIn {
 	{
 
 		// instantiate segmentation backend
-		Epigraph epigraph = new Epigraph();
 		
 //
 		//get current image
 		if (null == WindowManager.getCurrentImage())
 		{
-			trainingImage = IJ.openImage();
-			if (null == trainingImage) return; // user canceled open dialog
+			raw_img = IJ.openImage();
+			if (null == raw_img) return; // user canceled open dialog
 		}
 		else
 		{
-			trainingImage = WindowManager.getCurrentImage().duplicate();
-			trainingImage.setSlice( 
+			raw_img = WindowManager.getCurrentImage().duplicate();
+			raw_img.setSlice( 
 					WindowManager.getCurrentImage().getSlice() );
 		}
 		
-		
+		GraphletImage graphletImage = new GraphletImage(raw_img);
 		
 		
 		
