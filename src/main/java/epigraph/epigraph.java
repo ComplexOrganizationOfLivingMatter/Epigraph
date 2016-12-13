@@ -1,3 +1,4 @@
+package main.java.Epigraph;
 
 /**
  * @author Pablo Vicente-Munuera
@@ -7,44 +8,97 @@ import ij.*;
 import ij.process.*;
 import ij.gui.*;
 import java.awt.*;
+import ij.ImageJ;
+import javax.swing.SwingUtilities;
 import ij.plugin.*;
 import ij.plugin.frame.*;
 
-public class epigraph implements PlugIn {
 
-	public void run(String arg) {
-		ImagePlus imp = IJ.getImage();
-		IJ.run(imp, "Invert", "");
-		IJ.wait(1000);
-		IJ.run(imp, "Invert", "");
-	}
+import ij.WindowManager;
+
+
+
+public class Epigraph implements PlugIn {
 	
-	/**
-	 * Main method for debugging.
-	 *
-	 * For debugging, it is convenient to have a method that starts ImageJ, loads an
-	 * image and calls the plugin, e.g. after setting breakpoints.
-	 *
-	 * @param args unused
-	 */
+	/** image to be used in the training */
+	private ImagePlus trainingImage = null;
+	
+//	private class CustomWindow extends StackWindow
+//	{
+//		
+//	}
+	
 	public static void main(String[] args) {
-		// set the plugins.dir property to make the plugin appear in the Plugins
-		// menu
-		Class<?> clazz = epigraph.class;
+		// set the plugins.dir property to make the plugin appear in the Plugins menu
+		Class<?> clazz = Epigraph.class;
 		String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
-		String pluginsDir = url.substring("file:".length(),
-				url.length() - clazz.getName().length() - ".class".length());
+		String pluginsDir = url.substring("file:".length(), url.length() - clazz.getName().length() - ".class".length() - "classes".length());
 		System.setProperty("plugins.dir", pluginsDir);
 
 		// start ImageJ
 		new ImageJ();
-
-		// open the Clown sample
-		ImagePlus image = IJ.openImage("http://imagej.net/images/clown.jpg");
-		image.show();
+		
+		System.out.println("hola");
+		
+//		ImagePlus image = IJ.openImage("http://imagej.net/images/clown.jpg");
+//		image.show();
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");
 	}
+
+	public Epigraph() 
+	{
+	}
+	
+	
+	
+	/**
+	 * Plugin run method
+	 */
+	public void run(String arg)
+	{
+
+		// instantiate segmentation backend
+		Epigraph epigraph = new Epigraph();
+		
+//
+		//get current image
+		if (null == WindowManager.getCurrentImage())
+		{
+			trainingImage = IJ.openImage();
+			if (null == trainingImage) return; // user canceled open dialog
+		}
+		else
+		{
+			trainingImage = WindowManager.getCurrentImage().duplicate();
+			trainingImage.setSlice( 
+					WindowManager.getCurrentImage().getSlice() );
+		}
+		
+		
+		
+		
+		
+//		wekaSegmentation.setTrainingImage(trainingImage);
+		
+//		// The display image is a copy of the training image (single image or stack)
+//		displayImage = trainingImage.duplicate();
+//		displayImage.setSlice( trainingImage.getSlice() );
+//		displayImage.setTitle( Weka_Segmentation.PLUGIN_NAME + " " + Weka_Segmentation.PLUGIN_VERSION );
+
+//		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.FREELINE);
+//
+//		//Build GUI
+//		SwingUtilities.invokeLater(
+//				new Runnable() {
+//					public void run() {
+////						win = new CustomWindow(displayImage);
+////						win.pack();
+//					}
+//				});
+	}
+	
+	
 
 }

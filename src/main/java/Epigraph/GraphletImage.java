@@ -3,13 +3,17 @@
  */
 package main.java.Epigraph;
 
+import java.util.ArrayList;
+
+import ij.ImagePlus;
+
 /**
  * @author Equipo
  *
  */
 public class GraphletImage {
-	img;
-	l_img;
-	EpiCell cells;
+	ImagePlus img;
+	ImagePlus l_img;
+	ArrayList<EpiCell> cells;
 	
 }
