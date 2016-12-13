@@ -6,13 +6,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>net.imagej</groupId>
-		<artifactId>pom-imagej</artifactId>
-		<version>7.0.0</version>
+		<groupId>sc.fiji</groupId>
+		<artifactId>pom-fiji</artifactId>
+		<version>26.1.1</version>
 		<relativePath />
 	</parent>
 
-	<groupId>sc.fiji</groupId>
 	<artifactId>Epigraph</artifactId>
 	<version>0.1.0</version>
 	<name>plugins/Epigraph.jar</name>
@@ -49,6 +48,11 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>fiji-lib</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -65,5 +69,13 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<!-- NB: for project parent -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
 
 </project>
