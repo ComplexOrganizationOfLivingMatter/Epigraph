@@ -19,6 +19,16 @@ public class EpiCell {
 
 	private ArrayList<Integer> graphlets;
 	
+	public EpiCell() {
+		super();
+		this.id = -1;
+		this.neighbours = null;
+		this.valid_cell = false;
+		this.valid_cell_4 = false;
+		this.valid_cell_5 = false;
+		this.graphlets = null;
+	}
+	
 	/**
 	 * @param id
 	 * @param neighbours
@@ -34,6 +44,7 @@ public class EpiCell {
 		this.valid_cell = valid_cell;
 		this.valid_cell_4 = valid_cell_4;
 		this.valid_cell_5 = valid_cell_5;
+		this.graphlets = null;
 	}
 
 	/**
