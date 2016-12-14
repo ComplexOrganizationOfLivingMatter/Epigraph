@@ -51,6 +51,8 @@ public class GraphletImage {
 			img.getChannelProcessor().invert();
 			img.show();
 		}
+		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
+		this.raw_img = new ImagePlus("", imp);
 		
 		//Add a frame
 		for (int i = 0; i < img.getWidth(); i++){
@@ -63,42 +65,29 @@ public class GraphletImage {
 			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
 		}
 		img.show();
-		this.raw_img = img;
 		
 		MaximumFinder mxf = new MaximumFinder();
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
 		img.show();
-		this.l_img = img;
+		this.l_img = new ImagePlus("", img.getChannelProcessor());
 		
 		pixels = img.getChannelProcessor().getIntArray();
-		ArrayList<Integer> numCells = new ArrayList<Integer>();
 		
-		int indexEpiCell;
+		int indexEpiCell = 0;
 		EpiCell epicell = null;
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++){
 				if (pixels[i][j] != 0){
-					indexEpiCell = numCells.indexOf(pixels[i][j]);
-					if (indexEpiCell != -1){
-						epicell = cells.get(indexEpiCell);
-					}else{
-						numCells.add(pixels[i][j]);
-						epicell = new EpiCell(pixels[i][j]);
-						cells.add(epicell);
-					}
-					
+					epicell = new EpiCell(indexEpiCell);
+					cells.add(epicell);
 					epicell.addPixel(i, j);
-					if (i == 0 || j == 0 || j == (img.getHeight() - 1) || i == (img.getWidth() - 1)){
-						epicell.setValid_cell(false);
-					} else {
-						epicell.setValid_cell(true);
-					}
+					indexEpiCell++;
 				}
 			}
 		}
 		
-		
+		this.raw_img.show();
 		img.show();
 	}
 }
