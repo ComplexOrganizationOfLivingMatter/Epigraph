@@ -4,6 +4,7 @@
 package main.java.Epigraph;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ij.ImagePlus;
 
@@ -25,6 +26,7 @@ public class GraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		EDM edm = new EDM();
+		cells = new ArrayList<EpiCell>();
 		
 		if (!img.getChannelProcessor().isBinary()){
 			System.out.println("No binary image, improving...");
@@ -56,12 +58,21 @@ public class GraphletImage {
 		this.l_img = img;
 		
 		pixels = img.getChannelProcessor().getIntArray();
+		ArrayList<Integer> numCells = new ArrayList<Integer>();
 		
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++){
-				System.out.println(pixels[i][j]);
+				indexEpiCell = numCells.indexOf(pixels[i][j]);
+				if (numCells.contains(pixels[i][j])){
+					
+					numCells.get(pixels[i][j]);
+				}else{
+					numCells.add(pixels[i][j]);
+				}
 			}
 		}
+		
+		
 		img.show();
 	}
 }

@@ -3,7 +3,10 @@
  */
 package main.java.Epigraph;
 
+import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
+
 
 /**
  * @author Equipo
@@ -18,6 +21,9 @@ public class EpiCell {
 	private boolean valid_cell_5;
 
 	private ArrayList<Integer> graphlets;
+	private int[] pixelsY;
+	private int[] pixelsX;
+	
 	
 	public EpiCell() {
 		super();
@@ -27,6 +33,23 @@ public class EpiCell {
 		this.valid_cell_4 = false;
 		this.valid_cell_5 = false;
 		this.graphlets = null;
+		int[] pixelsY = null;
+		int[] pixelsX = null;
+	}
+	
+	/**
+	 * @param id
+	 */
+	public EpiCell(int id) {
+		super();
+		this.id = id;
+		this.neighbours = null;
+		this.valid_cell = false;
+		this.valid_cell_4 = false;
+		this.valid_cell_5 = false;
+		this.graphlets = null;
+		int[] pixelsY = null;
+		int[] pixelsX = null;
 	}
 	
 	/**
@@ -45,6 +68,8 @@ public class EpiCell {
 		this.valid_cell_4 = valid_cell_4;
 		this.valid_cell_5 = valid_cell_5;
 		this.graphlets = null;
+		int[] pixelsY = null;
+		int[] pixelsX = null;
 	}
 
 	/**
@@ -129,5 +154,66 @@ public class EpiCell {
 	 */
 	public void setGraphlets(ArrayList<Integer> graphlets) {
 		this.graphlets = graphlets;
+	}
+
+	/**
+	 * @return the pixels
+	 */
+	public int[][] getPixels() {
+		int[][] pixels = new int[pixelsX.length][2];
+		for (int i = 0; i < pixels.length; i++){
+			pixels[i][0] = pixelsX[i];
+			pixels[i][1] = pixelsY[i];
+		}
+		return pixels;
+	}
+	
+	/**
+	 * @return the pixels
+	 */
+	public int[] getCentroid() {
+		int[] centroid = new int[2];
+		centroid[0] = (int) IntStream.of(pixelsX).average().getAsDouble();
+		centroid[1] = (int) IntStream.of(pixelsY).average().getAsDouble();
+		return centroid;
+	}
+
+	/**
+	 * @param pixels the pixels to set
+	 */
+	public void setPixels(int[][] pixels) {
+		for (int i = 0; i < pixels.length; i++){
+			this.pixelsX[i] = pixels[i][0];
+			this.pixelsY[i] = pixels[i][1];
+		}
+	}
+	
+	/**
+	 * @param pixels the pixels to set
+	 */
+	public void addPixel(int[] newPixel) {
+		int[] newPixelsX;
+		int[] newPixelsY;
+		
+		if (this.pixelsX == null){
+			newPixelsX = new int[1];
+			newPixelsY = new int[1];
+		} else {
+			newPixelsX = new int[this.pixelsX.length+1];
+			newPixelsY = new int[this.pixelsY.length+1];
+		}
+		
+		
+		//Copying the old array into the new one
+		for (int i = 0; i < this.pixelsX.length; i++){
+			newPixelsX[i] = this.pixelsX[i];
+			newPixelsY[i] = this.pixelsY[i];
+		}
+		//Adding the new ones
+		newPixelsX[this.pixelsX.length] = newPixel[0];
+		newPixelsY[this.pixelsY.length] = newPixel[1];
+		
+		this.pixelsX = newPixelsX;
+		this.pixelsY = newPixelsY;
 	}
 }
