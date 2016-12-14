@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 
 /**
- * @author Equipo
+ * @author Pablo Vicente-Munuera
  *
  */
 public class EpiCell {
@@ -191,27 +191,28 @@ public class EpiCell {
 	/**
 	 * @param pixels the pixels to set
 	 */
-	public void addPixel(int[] newPixel) {
+	public void addPixel(int newPixelX, int newPixelY) {
 		int[] newPixelsX;
 		int[] newPixelsY;
 		
 		if (this.pixelsX == null){
 			newPixelsX = new int[1];
 			newPixelsY = new int[1];
+			newPixelsX[0] = newPixelX;
+			newPixelsY[0] = newPixelY;
 		} else {
 			newPixelsX = new int[this.pixelsX.length+1];
 			newPixelsY = new int[this.pixelsY.length+1];
+			//Copying the old array into the new one
+			for (int i = 0; i < this.pixelsX.length; i++){
+				newPixelsX[i] = this.pixelsX[i];
+				newPixelsY[i] = this.pixelsY[i];
+			}
+
+			//Adding the new ones
+			newPixelsX[this.pixelsX.length] = newPixelX;
+			newPixelsY[this.pixelsY.length] = newPixelY;
 		}
-		
-		
-		//Copying the old array into the new one
-		for (int i = 0; i < this.pixelsX.length; i++){
-			newPixelsX[i] = this.pixelsX[i];
-			newPixelsY[i] = this.pixelsY[i];
-		}
-		//Adding the new ones
-		newPixelsX[this.pixelsX.length] = newPixel[0];
-		newPixelsY[this.pixelsY.length] = newPixel[1];
 		
 		this.pixelsX = newPixelsX;
 		this.pixelsY = newPixelsY;
