@@ -20,12 +20,14 @@ public class GraphletImage {
 	ArrayList<EpiCell> cells;
 	
 	/**
-	 * @param img
+	 * @param img image
 	 */
 	public GraphletImage(ImagePlus img) {
 		super();
 		this.raw_img = img;
 		EDM edm = new EDM();
+		//label image
+		img.show();
 		edm.toWatershed(img.getChannelProcessor());
 	}
 }

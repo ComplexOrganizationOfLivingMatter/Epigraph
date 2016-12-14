@@ -30,11 +30,11 @@ public class EpiCell {
 	}
 	
 	/**
-	 * @param id
-	 * @param neighbours
-	 * @param valid_cell
-	 * @param valid_cell_4
-	 * @param valid_cell_5
+	 * @param id identifier
+	 * @param neighbours neighbors of the cells
+	 * @param valid_cell valid cells to compute
+	 * @param valid_cell_4 valid cells in a 4-length path
+	 * @param valid_cell_5 valid cells in a 5-length path
 	 */
 	public EpiCell(int id, ArrayList<EpiCell> neighbours, boolean valid_cell, boolean valid_cell_4,
 			boolean valid_cell_5) {

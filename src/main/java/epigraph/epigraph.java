@@ -1,9 +1,9 @@
+/**
+ * Epigraph
+ */
 package main.java.Epigraph;
 
-/**
- * @author Pablo Vicente-Munuera
- *
- */
+
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -11,7 +11,10 @@ import ij.WindowManager;
 import ij.plugin.PlugIn;
 
 
-
+/**
+ * @author Pablo Vicente-Munuera
+ *
+ */
 public class Epigraph implements PlugIn {
 	
 	/** image to be used in the training */
@@ -34,10 +37,6 @@ public class Epigraph implements PlugIn {
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");
-	}
-
-	public Epigraph() 
-	{
 	}
 	
 	
