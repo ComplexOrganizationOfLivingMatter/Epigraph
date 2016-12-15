@@ -13,7 +13,6 @@ import java.util.stream.IntStream;
  *
  */
 public class EpiCell {
-	//Starts with 1. 0 would be the edges or background
 	private int id;
 	
 	private ArrayList<EpiCell> neighbours;
@@ -24,6 +23,8 @@ public class EpiCell {
 	private ArrayList<Integer> graphlets;
 	private int[] pixelsY;
 	private int[] pixelsX;
+	private int[] perimeterPixelsX;
+	private int[] perimeterPixelsY;
 	
 	
 	public EpiCell() {
@@ -158,6 +159,34 @@ public class EpiCell {
 	}
 
 	/**
+	 * @return the perimeterPixelsX
+	 */
+	public int[] getPerimeterPixelsX() {
+		return perimeterPixelsX;
+	}
+	
+	/**
+	 * @param perimeterPixelsX the perimeterPixelsX to set
+	 */
+	public void setPerimeterPixelsX(int[] perimeterPixelsX) {
+		this.perimeterPixelsX = perimeterPixelsX;
+	}
+
+	/**
+	 * @return the perimeterPixelsY
+	 */
+	public int[] getPerimeterPixelsY() {
+		return perimeterPixelsY;
+	}
+
+	/**
+	 * @param perimeterPixelsY the perimeterPixelsY to set
+	 */
+	public void setPerimeterPixelsY(int[] perimeterPixelsY) {
+		this.perimeterPixelsY = perimeterPixelsY;
+	}
+
+	/**
 	 * @return the pixels
 	 */
 	public int[][] getPixels() {
@@ -217,5 +246,35 @@ public class EpiCell {
 		
 		this.pixelsX = newPixelsX;
 		this.pixelsY = newPixelsY;
+	}
+	
+	/**
+	 * @param pixels the pixels to set
+	 */
+	public void addPixelToPerimeter(int newPixelX, int newPixelY) {
+		int[] newPixelsX;
+		int[] newPixelsY;
+		
+		if (this.perimeterPixelsX == null){
+			newPixelsX = new int[1];
+			newPixelsY = new int[1];
+			newPixelsX[0] = newPixelX;
+			newPixelsY[0] = newPixelY;
+		} else {
+			newPixelsX = new int[this.perimeterPixelsX.length+1];
+			newPixelsY = new int[this.perimeterPixelsY.length+1];
+			//Copying the old array into the new one
+			for (int i = 0; i < this.perimeterPixelsX.length; i++){
+				newPixelsX[i] = this.perimeterPixelsX[i];
+				newPixelsY[i] = this.perimeterPixelsY[i];
+			}
+
+			//Adding the new ones
+			newPixelsX[this.perimeterPixelsX.length] = newPixelX;
+			newPixelsY[this.perimeterPixelsY.length] = newPixelY;
+		}
+		
+		this.perimeterPixelsX = newPixelsX;
+		this.perimeterPixelsY = newPixelsY;
 	}
 }

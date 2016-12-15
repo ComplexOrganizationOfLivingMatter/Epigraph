@@ -76,7 +76,7 @@ public class GraphletImage {
 		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
 		pixels = img.getChannelProcessor().getIntArray();
 		
-		int indexEpiCell = 1;
+		int indexEpiCell = 0;
 		EpiCell epicell = null;
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++){
@@ -89,14 +89,15 @@ public class GraphletImage {
 				}
 			}
 		}
+		
 		this.l_img.show();
 		//this.raw_img.show();
 		//img.show();
 	}
 	
-	private void labelPropagation(int x, int y, int label){
-		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0 && this.l_img.getChannelProcessor().getPixel(x, y) != label){
-			this.l_img.getChannelProcessor().set(x, y, label);
+	private boolean labelPropagation(int x, int y, int label){
+		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0 && this.l_img.getChannelProcessor().getPixel(x, y) != label + 1){
+			this.l_img.getChannelProcessor().set(x, y, label + 1);
 			this.cells.get(label).addPixel(x, y);
 			if (x > 0)
 				labelPropagation(x - 1, y, label);
@@ -106,7 +107,17 @@ public class GraphletImage {
 				labelPropagation(x, y - 1, label);
 			if (y < this.raw_img.getHeight())
 				labelPropagation(x, y + 1, label);
+			boolean isPerimeter1 = labelPropagation(x - 1, y, label);
+			boolean isPerimeter2 = labelPropagation(x + 1, y, label);
+			boolean isPerimeter3 = labelPropagation(x, y - 1, label);
+			boolean isPerimeter4 = labelPropagation(x, y + 1, label);
+			//If some pixel is 
+			if (isPerimeter1 || isPerimeter2 || isPerimeter3 || isPerimeter4)
+				this.cells.get(label).addPixelToPerimeter(x,y);
+			
+		}else if (this.raw_img.getChannelProcessor().getPixel(x, y) == 0){
+			return true;
 		}
-		
+		return false;
 	}
 }
