@@ -12,6 +12,7 @@ import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
 
 
 /**
