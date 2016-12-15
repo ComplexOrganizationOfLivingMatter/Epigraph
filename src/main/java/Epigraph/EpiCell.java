@@ -1,7 +1,7 @@
 /**
  * 
  */
-package main.java.Epigraph;
+package Epigraph;
 
 import java.math.MathContext;
 import java.util.ArrayList;

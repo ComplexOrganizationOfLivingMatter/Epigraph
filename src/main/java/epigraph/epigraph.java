@@ -1,7 +1,7 @@
 /**
  * Epigraph
  */
-package main.java.Epigraph;
+package Epigraph;
 
 
 import ij.IJ;
