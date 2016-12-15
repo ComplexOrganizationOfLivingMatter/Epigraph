@@ -99,14 +99,8 @@ public class GraphletImage {
 		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0 && this.l_img.getChannelProcessor().getPixel(x, y) != label + 1){
 			this.l_img.getChannelProcessor().set(x, y, label + 1);
 			this.cells.get(label).addPixel(x, y);
-			if (x > 0)
-				labelPropagation(x - 1, y, label);
-			if (x < this.raw_img.getWidth())
-				labelPropagation(x + 1, y, label);
-			if (y > 0)
-				labelPropagation(x, y - 1, label);
-			if (y < this.raw_img.getHeight())
-				labelPropagation(x, y + 1, label);
+			//System.out.println("l" + label + ", XY:" + x + " "+ y);
+			
 			boolean isPerimeter1 = labelPropagation(x - 1, y, label);
 			boolean isPerimeter2 = labelPropagation(x + 1, y, label);
 			boolean isPerimeter3 = labelPropagation(x, y - 1, label);
