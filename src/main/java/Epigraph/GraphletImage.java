@@ -13,6 +13,8 @@ import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
+import util.FindConnectedRegions;
 
 
 /**
@@ -30,7 +32,7 @@ public class GraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		EDM edm = new EDM();
-		cells = new ArrayList<EpiCell>();
+		this.cells = new ArrayList<EpiCell>();
 		
 		if (!img.getChannelProcessor().isBinary()){
 			System.out.println("No binary image, improving...");
@@ -71,24 +73,40 @@ public class GraphletImage {
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
 		img.show();
-		this.l_img = new ImagePlus("", img.getChannelProcessor());
-		
+		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
 		pixels = img.getChannelProcessor().getIntArray();
 		
-		int indexEpiCell = 0;
+		int indexEpiCell = 1;
 		EpiCell epicell = null;
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++){
 				if (pixels[i][j] != 0){
 					epicell = new EpiCell(indexEpiCell);
-					cells.add(epicell);
+					this.cells.add(epicell);
+					labelPropagation(i, j, indexEpiCell);
 					epicell.addPixel(i, j);
 					indexEpiCell++;
 				}
 			}
 		}
+		this.l_img.show();
+		//this.raw_img.show();
+		//img.show();
+	}
+	
+	private void labelPropagation(int x, int y, int label){
+		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0 && this.l_img.getChannelProcessor().getPixel(x, y) != label){
+			this.l_img.getChannelProcessor().set(x, y, label);
+			this.cells.get(label).addPixel(x, y);
+			if (x > 0)
+				labelPropagation(x - 1, y, label);
+			if (x < this.raw_img.getWidth())
+				labelPropagation(x + 1, y, label);
+			if (y > 0)
+				labelPropagation(x, y - 1, label);
+			if (y < this.raw_img.getHeight())
+				labelPropagation(x, y + 1, label);
+		}
 		
-		this.raw_img.show();
-		img.show();
 	}
 }

@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
  *
  */
 public class EpiCell {
+	//Starts with 1. 0 would be the edges or background
 	private int id;
 	
 	private ArrayList<EpiCell> neighbours;
