@@ -16,7 +16,7 @@ import ij.process.ImageProcessor;
 
 
 /**
- * @author Equipo
+ * @author Pablo Vicente-Munuera
  *
  */
 public class GraphletImage {
