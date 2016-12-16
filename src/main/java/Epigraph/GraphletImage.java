@@ -37,7 +37,7 @@ public class GraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		//TODO: hardcoded variables, when interfaces come, they should be removed
-		int radiusOfShape = 4;
+		int radiusOfShape = 3;
 		int selectedShape = CIRCLE_SHAPE;
 		
 		EDM edm = new EDM();
