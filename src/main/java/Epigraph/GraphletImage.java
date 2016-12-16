@@ -37,7 +37,7 @@ public class GraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		//TODO: hardcoded variables, when interfaces come, they should be removed
-		int radiusOfShape = 3;
+		int radiusOfShape = 4;
 		int selectedShape = CIRCLE_SHAPE;
 		
 		EDM edm = new EDM();
@@ -103,13 +103,14 @@ public class GraphletImage {
 		
 		int percentageOfHexagons = 0;
 		int numValid_Cells = 0;
-		for (indexEpiCell = 0; indexEpiCell++ < this.cells.size(); indexEpiCell++){
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 			if (this.cells.get(indexEpiCell).isValid_cell()){
-				if (this.cells.get(indexEpiCell).getNeighbours().size() == 6)
+				if (this.cells.get(indexEpiCell).getNeighbours().size() == 6){
 					percentageOfHexagons++;
+				}
 				numValid_Cells++;
-			}	
+			}
 		}
 		
 		System.out.println(percentageOfHexagons/numValid_Cells);
@@ -137,7 +138,7 @@ public class GraphletImage {
 			return true;
 		}
 		//no valid cell
-		if (x == 0 || y == 0 || x == this.raw_img.getWidth() || y == this.l_img.getHeight())
+		if (x == 0 || y == 0 || y == this.l_img.getWidth() - 1 || x == this.l_img.getHeight() - 1)
 			this.cells.get(label).setValid_cell(false);
 		return false;
 	}
