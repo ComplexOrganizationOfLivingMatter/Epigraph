@@ -5,6 +5,7 @@ package Epigraph;
 
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.stream.IntStream;
 
 
@@ -15,7 +16,7 @@ import java.util.stream.IntStream;
 public class EpiCell {
 	private int id;
 	
-	private ArrayList<EpiCell> neighbours;
+	private HashSet<Integer> neighbours;
 	private boolean valid_cell;
 	private boolean valid_cell_4;
 	private boolean valid_cell_5;
@@ -31,7 +32,7 @@ public class EpiCell {
 		super();
 		this.id = -1;
 		this.neighbours = null;
-		this.valid_cell = false;
+		this.valid_cell = true;
 		this.valid_cell_4 = false;
 		this.valid_cell_5 = false;
 		this.graphlets = null;
@@ -46,7 +47,7 @@ public class EpiCell {
 		super();
 		this.id = id;
 		this.neighbours = null;
-		this.valid_cell = false;
+		this.valid_cell = true;
 		this.valid_cell_4 = false;
 		this.valid_cell_5 = false;
 		this.graphlets = null;
@@ -61,7 +62,7 @@ public class EpiCell {
 	 * @param valid_cell_4 valid cells in a 4-length path
 	 * @param valid_cell_5 valid cells in a 5-length path
 	 */
-	public EpiCell(int id, ArrayList<EpiCell> neighbours, boolean valid_cell, boolean valid_cell_4,
+	public EpiCell(int id, HashSet<Integer> neighbours, boolean valid_cell, boolean valid_cell_4,
 			boolean valid_cell_5) {
 		super();
 		this.id = id;
@@ -91,14 +92,14 @@ public class EpiCell {
 	/**
 	 * @return the neighbours
 	 */
-	public ArrayList<EpiCell> getNeighbours() {
+	public HashSet<Integer> getNeighbours() {
 		return neighbours;
 	}
 
 	/**
-	 * @param neighbours the neighbours to set
+	 * @param neighbours2 the neighbours to set
 	 */
-	public void setNeighbours(ArrayList<EpiCell> neighbours) {
+	public void setNeighbours(HashSet<Integer> neighbours) {
 		this.neighbours = neighbours;
 	}
 
@@ -252,6 +253,7 @@ public class EpiCell {
 	 * @param pixels the pixels to set
 	 */
 	public void addPixelToPerimeter(int newPixelX, int newPixelY) {
+		//TODO: We should do a unique to remove duplicates
 		int[] newPixelsX;
 		int[] newPixelsY;
 		
