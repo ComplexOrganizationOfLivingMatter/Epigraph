@@ -5,6 +5,7 @@ package Epigraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import ij.ImagePlus;
@@ -27,6 +28,7 @@ public class GraphletImage {
 	ImagePlus raw_img;
 	ImagePlus l_img;
 	ArrayList<EpiCell> cells;
+	int[][] adjacencyMatrix;
 	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
@@ -39,6 +41,7 @@ public class GraphletImage {
 		//TODO: hardcoded variables, when interfaces come, they should be removed
 		int radiusOfShape = 3;
 		int selectedShape = CIRCLE_SHAPE;
+		
 		
 		EDM edm = new EDM();
 		this.cells = new ArrayList<EpiCell>();
@@ -98,25 +101,27 @@ public class GraphletImage {
 				}
 			}
 		}
+		//Create adjacency matrix from the found cells
+		adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
 		
 		this.l_img.show();
 		
-		int percentageOfHexagons = 0;
-		int numValid_Cells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-			if (this.cells.get(indexEpiCell).isValid_cell()){
-				if (this.cells.get(indexEpiCell).getNeighbours().size() == 6){
-					percentageOfHexagons++;
-				}
-				numValid_Cells++;
+		
+		int numValidCells = 0;
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
+			if (allValidCellsWithinAGivenLength(indexEpiCell, 4)){
+				this.cells.get(indexEpiCell).setValid_cell_4(true);
+				
+				numValidCells++;
+			}else{
+				this.cells.get(indexEpiCell).setValid_cell_4(false);
 			}
+			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
 		
-		System.out.println(percentageOfHexagons/numValid_Cells);
-		//this.raw_img.show();
-		//img.show();
-		
+		System.out.println(numValidCells);
 		
 	}
 	
@@ -171,12 +176,33 @@ public class GraphletImage {
 		for (int x = 0; x < this.l_img.getWidth(); x++){
 			for (int y = 0; y < this.l_img.getHeight(); y++){
 				if (imgProc.get(x, y) == 255){
-					if (this.l_img.getChannelProcessor().get(x, y) != 0 && this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1)
-						neighbours.add(this.l_img.getChannelProcessor().get(x, y));
+					if (this.l_img.getChannelProcessor().get(x, y) != 0 && this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1){
+						neighbours.add(this.l_img.getChannelProcessor().get(x, y) - 1);
+						this.adjacencyMatrix[idEpiCell][this.l_img.getChannelProcessor().get(x, y) - 1] = 1;
+					}
+						
 				}
 			}
 		}
 		//System.out.println(neighbours);
 		cell.setNeighbours(neighbours);
+	}
+	
+	private boolean allValidCellsWithinAGivenLength(int indexEpiCell, int length){
+		if (this.cells.get(indexEpiCell).isValid_cell()){
+			if (length > 1){
+				HashSet<Integer> neighbours = this.cells.get(indexEpiCell).getNeighbours();
+				Iterator<Integer> itNeigh = neighbours.iterator();
+				int neighbourActual = -1;
+				while (itNeigh.hasNext()){
+					neighbourActual = itNeigh.next();
+					if (allValidCellsWithinAGivenLength(neighbourActual, length - 1) == false)
+						return false;
+				}
+			}
+			return true;
+		}
+		
+		return false;
 	}
 }
