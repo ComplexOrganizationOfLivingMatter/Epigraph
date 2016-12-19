@@ -135,7 +135,7 @@ public class GraphletImage {
 			boolean isPerimeter2 = labelPropagation(x + 1, y, label);
 			boolean isPerimeter3 = labelPropagation(x, y - 1, label);
 			boolean isPerimeter4 = labelPropagation(x, y + 1, label);
-			//If some pixel is 
+			//If some pixel is at the perimeter
 			if (isPerimeter1 || isPerimeter2 || isPerimeter3 || isPerimeter4)
 				this.cells.get(label).addPixelToPerimeter(x,y);
 			//if it's in the border, then it is a no valid cell

@@ -63,7 +63,9 @@ public class Epigraph implements PlugIn {
 					WindowManager.getCurrentImage().getSlice() );
 		}
 		
-		GraphletImage graphletImage = new GraphletImage(raw_img);
+		ScatterDemo sc = new ScatterDemo();
+		
+		//GraphletImage graphletImage = new GraphletImage(raw_img);
 		
 		
 		
