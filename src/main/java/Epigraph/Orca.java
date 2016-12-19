@@ -23,14 +23,15 @@ public class Orca {
 	private int[][] adj;
 	private int[] deg;
 	private ArrayList<ValuePair<Integer, Integer>> edges; // list of edges
-	private int[][] inc;
+	private ValuePair<Integer, Integer>[][] inc;
 
 	public Orca(int[][] adjacencyMatrix) {
 		super();
 		this.adjacencyMatrix = adjacencyMatrix;
 		this.orbit = new int[adjacencyMatrix.length][73];
 		this.deg = new int[adjacencyMatrix.length];
-		int d_max = 0;
+		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
+		this.inc = new ValuePair[adjacencyMatrix.length][adjacencyMatrix.length];
 
 		int numEdge = 0;
 		int[] d = new int[adjacencyMatrix.length];
@@ -40,16 +41,17 @@ public class Orca {
 					deg[i]++;
 					deg[j]++;
 					this.edges.add(new ValuePair<Integer, Integer>(i, j));
-					adj[i][d[j]] = j;
+					adj[i][d[i]] = j;
+					inc[i][d[i]] = new ValuePair<Integer, Integer>(j, numEdge);
 					adj[j][d[j]] = i;
-					inc[i][d[i]] = new ValuePair(j, numEdge);
-					inc[j][d[j]] = new ValuePair(j, numEdge);
+					inc[j][d[j]] = new ValuePair<Integer, Integer>(i, numEdge);
 					d[i]++;
 					d[j]++;
 					numEdge++;
 				}
 			}
 		}
+		System.out.println(numEdge);
 	}
 
 	public Orca() {
@@ -63,10 +65,6 @@ public class Orca {
 		int[] tri = new int[edges.size()];
 		frac_prev = -1;
 		for (int i = 0; i < edges.size(); i++) {
-			frac = 100 * i / edges.size(); // 100LL
-			if (frac != frac_prev)
-				frac_prev = frac;
-
 			int x = edges.get(i).getA();
 			int y = edges.get(i).getB();
 
