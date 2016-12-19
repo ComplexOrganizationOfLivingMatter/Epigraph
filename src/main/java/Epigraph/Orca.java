@@ -38,6 +38,8 @@ public class Orca {
 		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
 		this.inc = new ValuePair[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 		this.adj = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
+		this.common2 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length]; 
+		this.common3 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 
 		int numEdge = 0;
 		int[] d = new int[this.adjacencyMatrix[0].length];
@@ -62,7 +64,9 @@ public class Orca {
 		 * for (int i=0;i<this.adjacencyMatrix[0].length;i++) {
 		 * sort(adj[i],adj[i]+deg[i]); sort(inc[i],inc[i]+deg[i]); }
 		 */
-		System.out.println(numEdge);
+		this.computingCommonNodes();
+		this.countingFullGraphlets();
+		this.buildingEquationSystems();
 	}
 
 	public Orca() {
