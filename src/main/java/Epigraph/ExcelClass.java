@@ -2,10 +2,11 @@ package Epigraph;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -29,19 +30,13 @@ public class ExcelClass {
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
 	}
-
-	/**
-	 * @param filename
-	 */
-	public ExcelClass(String filename) {
-		super();
-		this.filename = filename;
-	}
+	
+	
+	
 
 	public ExcelClass(String filename, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b) {
 		super();
-		this.filename = filename;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
 		this.hexagonsPercentage = hexagonsPercentage;
@@ -50,7 +45,6 @@ public class ExcelClass {
 		B = b;
 	}
 
-	private String filename;
 	private ArrayList<Float> gddh;
 	private ArrayList<Float> gddrv;
 	private ArrayList<Float> hexagonsPercentage;
@@ -58,14 +52,7 @@ public class ExcelClass {
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
 
-	public String getFilename() {
-		return filename;
-	}
-
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
+	
 	public ArrayList<Float> getGddh() {
 		return gddh;
 	}
@@ -114,8 +101,13 @@ public class ExcelClass {
 		B = b;
 	}
 
+	
+	
+	
+	/*IMPORT DATA FROM EXCEL*/
+	
 	public void importData(FileInputStream filename) {
-
+		
 		try {
 			POIFSFileSystem fs = new POIFSFileSystem(filename);
 			HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -140,10 +132,11 @@ public class ExcelClass {
 				}
 			}
 
-			for (int r = 0; r < rows; r++) {
+			//Start in second row because first row is only for names of heads
+			for (int r = 1; r < rows; r++) {
 				row = sheet.getRow(r);
 				if (row != null) {
-					for (int c = 0; c < cols; c++) {
+					for (int c = 0; c <= cols; c++) {
 						cell = row.getCell(c);
 						if (cell != null) {
 							// Your code here
@@ -170,9 +163,29 @@ public class ExcelClass {
 								break;
 
 							}
+							
+							
+							
 
 						}
+					
+						//If colors aren't define, default will be 0,0,0 (black) 
+						if (cols <= 3 && c == cols){
+							
+							this.R.add((float) 0);
+							this.R.add((float) 0);
+							this.R.add((float) 0);
+
+						}
+						
 					}
+					
+					
+					
+					
+					
+					
+					
 				}
 			}
 		} catch (Exception ioe) {
@@ -180,5 +193,77 @@ public class ExcelClass {
 		}
 
 	}
+	
+	
+	
+	/*EXPORT DATA TO EXCEL*/
+	
+	
+	public void exportData(String fname){
+		
+		
+		//Blank workbook
+	    HSSFWorkbook workbook = new HSSFWorkbook();
+
+	    
+	    //Create a blank sheet
+	    HSSFSheet sheet = workbook.createSheet("Graphlets_distance");
+
+	    //This data needs to be written (Object[])
+	    Map<String, Object[]> data = new TreeMap<String, Object[]>();
+	    data.put("1", new Object[]{"GDDH", "GDDRV", "Hexagons percentage","R","G","B"});
+	    
+	    for (int i = 0; i < gddh.size(); i++) {
+			
+	    	Integer j = i+2;
+	    	
+	    	data.put(j.toString(), new Object[]{gddh.get(i).toString(),gddrv.get(i).toString(),hexagonsPercentage.get(i).toString(),R.get(i).toString(),G.get(i).toString(),B.get(i).toString()});
+	    	
+		}
+	    
+
+	    //Iterate over data and write to sheet
+	    Set<String> keyset = data.keySet();
+
+	    int rownum = 0;
+	    for (String key : keyset) 
+	    {
+	        //create a row of excelsheet
+	        Row row = sheet.createRow(rownum++);
+
+	        //get object array of prerticuler key
+	        Object[] objArr = data.get(key);
+
+	        int cellnum = 0;
+
+	        for (Object obj : objArr) 
+	        {
+	            Cell cell = row.createCell(cellnum++);
+	            
+	            if (obj instanceof Integer) 
+	            {
+	                cell.setCellValue((Integer) obj);
+	            }
+	            else if (obj instanceof String) 
+	            {
+	                cell.setCellValue((String) obj);
+	            }
+	            
+	        }
+	    }
+	    try 
+	    {
+	        //Write the workbook in file system
+	        FileOutputStream out = new FileOutputStream(new File(fname));
+	        workbook.write(out);
+	        out.close();
+	    } 
+	    catch (Exception e)
+	    {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
 
 }

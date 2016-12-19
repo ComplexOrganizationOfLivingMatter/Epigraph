@@ -68,7 +68,7 @@ public class Epigraph implements PlugIn {
 					WindowManager.getCurrentImage().getSlice() );
 		}
 		
-		final String path = "D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions.xls";
+		final String path = "D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls";
 		//System.out.println(gddh)
 		ExcelClass ec=new ExcelClass();
 		try {
@@ -78,10 +78,13 @@ public class Epigraph implements PlugIn {
 			e.printStackTrace();
 		}
 		
-		for (int i = 0; i < ec.getB().size(); i++) {
-			System.out.println(ec.getB().get(i));
-		}
 		
+		
+		for (int i = 0; i < ec.getB().size(); i++) {
+			System.out.println(ec.getGddh().get(i));
+		}
+
+		ec.exportData("D:/Pedro/Graphlet/pruebas exportar u3d/Export_test.xls");
 		
 		//GraphletImage graphletImage = new GraphletImage(raw_img);
 		
