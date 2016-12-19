@@ -30,6 +30,21 @@
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
+		
+		<developer>
+			<id>pgomez</id>
+			<name>Pedro Javier Gomez Galvez</name>
+			<email>pgomez-ibis@us.es</email>
+			<url>http://lmescudero.blogspot.com.es/</url>
+			<organization>University of Seville - IBiS</organization>
+			<organizationUrl>http://www.us.es</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		
+		
 	</developers>
 
 	<properties>
@@ -95,6 +110,12 @@
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.3.1</version>
 		</dependency> -->
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.8</version>
+		</dependency>
 		
 	</dependencies>
 

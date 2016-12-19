@@ -15,6 +15,9 @@ public class ScatterDemo extends AbstractAnalysis{
 	public static void main(String[] args) throws Exception {
 		AnalysisLauncher.open(new ScatterDemo());
 	}
+	
+	
+	/*load X Y Z coordenates*/
 		
 	@Override
     public void init(){
@@ -27,6 +30,8 @@ public class ScatterDemo extends AbstractAnalysis{
         Coord3d[] points = new Coord3d[size];
         Color[]   colors = new Color[size];
         
+        /*create an color array*/
+        
         Random r = new Random();
         r.setSeed(0);
         
@@ -38,6 +43,7 @@ public class ScatterDemo extends AbstractAnalysis{
             a = 0.25f;
             colors[i] = new Color(x, y, z, a);
         }
+        
         
         Scatter scatter = new Scatter(points, colors);
         chart = AWTChartComponentFactory.chart(Quality.Advanced, "newt");
