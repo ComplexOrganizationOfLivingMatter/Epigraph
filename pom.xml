@@ -100,6 +100,12 @@
 			<groupId>mpicbg</groupId>
 			<artifactId>mpicbg</artifactId>
 		</dependency>
+		<!-- Visualization -->
+		<dependency> 
+		    <groupId>org.jzy3d</groupId>
+		    <artifactId>jzy3d-api</artifactId>
+		    <version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		
 <!-- 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
@@ -151,6 +157,16 @@
 		<repository>
 			<id>imagej.public</id>
 			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>jzy3d-snapshots</id>
+			<name>Jzy3d Snapshots</name>
+			<url>http://maven.jzy3d.org/snapshots </url>
+		</repository>
+		<repository>
+			<id>jzy3d-releases</id>
+			<name>Jzy3d Snapshots</name>
+			<url>http://maven.jzy3d.org/releases </url>
 		</repository>
 	</repositories>
 	
