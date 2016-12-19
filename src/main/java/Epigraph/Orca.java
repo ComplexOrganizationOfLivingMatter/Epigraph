@@ -32,6 +32,7 @@ public class Orca {
 		this.deg = new int[adjacencyMatrix.length];
 		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
 		this.inc = new ValuePair[adjacencyMatrix.length][adjacencyMatrix.length];
+		this.adj = new int[adjacencyMatrix.length][adjacencyMatrix.length];
 
 		int numEdge = 0;
 		int[] d = new int[adjacencyMatrix.length];
