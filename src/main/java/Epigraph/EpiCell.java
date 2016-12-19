@@ -21,7 +21,7 @@ public class EpiCell {
 	private boolean valid_cell_4;
 	private boolean valid_cell_5;
 
-	private ArrayList<Integer> graphlets;
+	private int[] graphlets;
 	private int[] pixelsY;
 	private int[] pixelsX;
 	private int[] perimeterPixelsX;
@@ -148,15 +148,15 @@ public class EpiCell {
 	/**
 	 * @return the graphlets
 	 */
-	public ArrayList<Integer> getGraphlets() {
+	public int[] getGraphlets() {
 		return graphlets;
 	}
 
 	/**
-	 * @param graphlets the graphlets to set
+	 * @param graphlets2 the graphlets to set
 	 */
-	public void setGraphlets(ArrayList<Integer> graphlets) {
-		this.graphlets = graphlets;
+	public void setGraphlets(int[] graphlets2) {
+		this.graphlets = graphlets2;
 	}
 
 	/**
@@ -207,16 +207,6 @@ public class EpiCell {
 		centroid[0] = (int) IntStream.of(pixelsX).average().getAsDouble();
 		centroid[1] = (int) IntStream.of(pixelsY).average().getAsDouble();
 		return centroid;
-	}
-
-	/**
-	 * @param pixels the pixels to set
-	 */
-	public void setPixels(int[][] pixels) {
-		for (int i = 0; i < pixels.length; i++){
-			this.pixelsX[i] = pixels[i][0];
-			this.pixelsY[i] = pixels[i][1];
-		}
 	}
 	
 	/**

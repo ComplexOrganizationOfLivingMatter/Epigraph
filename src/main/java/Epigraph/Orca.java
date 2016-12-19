@@ -38,7 +38,7 @@ public class Orca {
 		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
 		this.inc = new ValuePair[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 		this.adj = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
-		this.common2 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length]; 
+		this.common2 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 		this.common3 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 
 		int numEdge = 0;
