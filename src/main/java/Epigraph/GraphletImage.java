@@ -268,14 +268,23 @@ public class GraphletImage {
 	 * Function to compute the graphlet counts from ndump2 files
 	 * @return
 	 */
-	private int[] getGraphletFrequence(){
+	private float[] getGraphletFrequence(){
 		int[] orbits = {2, 3, 5, 7, 8, 9, 12, 14, 17, 18, 23, 25, 27, 33, 34, 35, 39, 44, 45, 50, 52, 55, 56, 61, 62, 65, 69, 70, 72};
 		int[] weights = {1, 3, 2, 1, 4, 1, 2, 4, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 5};
 		
-		int[] graphletCounts = new int[orbits.length]; 
+		float[] graphletCounts = new float[orbits.length];
+		int[][] graphletsImage = this.orcaProgram.getOrbit();
 		
+		int orbit;
 		for (int i = 0; i < orbits.length; i++){
-			
+			orbit = orbits[i];
+			int sumCount = 0;
+			for (int j = 0; j < this.cells.size(); j++){
+				sumCount += graphletsImage[j][orbit];
+			}
+			graphletCounts[i] = (float) sumCount / (float) weights[i];
 		}
+		
+		return graphletCounts;
 	}
 }
