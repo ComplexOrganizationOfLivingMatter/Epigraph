@@ -71,27 +71,6 @@ public class Orca {
 				//System.out.println(adj[i].toString());
 				Arrays.sort(adj[i], 0 , deg[i]);
 				//System.out.println(adj[i].toString());
-//				minValueA = Integer.MAX_VALUE;
-//				minValueB = Integer.MAX_VALUE;
-//				ArrayList<ValuePair<Integer, Integer>> incAux = new ArrayList<ValuePair<Integer, Integer>>(inc.get(i));
-//				inc.get(i).clear();
-//				sizeIncindecenMatrix = incAux.size();
-//				for (int numEdges = 0; numEdges < sizeIncindecenMatrix; numEdges++) {
-//					for (int incidenceIndex = 0; incidenceIndex < incAux.size(); incidenceIndex++) {
-//						if (incAux.get(incidenceIndex).getA() < minValueA) {
-//							minValueA = incAux.get(incidenceIndex).getA();
-//							minValueB = incAux.get(incidenceIndex).getB();
-//							minIndex = incidenceIndex;
-//						} else if (incAux.get(incidenceIndex).getA() == minValueA
-//								&& incAux.get(incidenceIndex).getB() < minValueB) {
-//							minValueA = incAux.get(incidenceIndex).getA();
-//							minValueB = incAux.get(incidenceIndex).getB();
-//							minIndex = incidenceIndex;
-//						}
-//					}
-//					inc.get(i).add(new ValuePair<Integer, Integer>(minValueA, minValueB));
-//					incAux.remove(minIndex);
-//				}
 			}
 		}
 
@@ -164,20 +143,20 @@ public class Orca {
 	}
 
 	public void countingFullGraphlets() {
-		C5 = new int[this.adjacencyMatrix[0].length];
+		this.C5 = new int[this.adjacencyMatrix[0].length];
 		int[] neigh = new int[this.adjacencyMatrix[0].length];
 		int[] neigh2 = new int[this.adjacencyMatrix[0].length];
 		int nn;
 		int nn2;
 
 		for (int x = 0; x < this.adjacencyMatrix[0].length; x++) {
-			for (int nx = 0; nx < deg[x]; nx++) {
-				int y = adj[x][nx];
+			for (int nx = 0; nx < this.deg[x]; nx++) {
+				int y = this.adj[x][nx];
 				if (y >= x)
 					break;
 				nn = 0;
-				for (int ny = 0; ny < deg[y]; ny++) {
-					int z = adj[y][ny];
+				for (int ny = 0; ny < this.deg[y]; ny++) {
+					int z = this.adj[y][ny];
 					if (z >= y)
 						break;
 					if (isAdjacent(x, z) == 1) {
@@ -198,11 +177,11 @@ public class Orca {
 						for (int j2 = i2 + 1; j2 < nn2; j2++) {
 							int zzz = neigh2[j2];
 							if (isAdjacent(zz, zzz) == 1) {
-								C5[x]++;
-								C5[y]++;
-								C5[z]++;
-								C5[zz]++;
-								C5[zzz]++;
+								this.C5[x]++;
+								this.C5[y]++;
+								this.C5[z]++;
+								this.C5[zz]++;
+								this.C5[zzz]++;
 							}
 						}
 					}
@@ -502,7 +481,7 @@ public class Orca {
 			}
 
 			// solve equations
-			orbit[x][72] = C5[x];
+			orbit[x][72] = this.C5[x];
 			orbit[x][71] = (f_71 - 12 * orbit[x][72]) / 2;
 			orbit[x][70] = (f_70 - 4 * orbit[x][72]);
 			orbit[x][69] = (f_69 - 2 * orbit[x][71]) / 4;
