@@ -68,17 +68,10 @@ public class Epigraph implements PlugIn {
 					WindowManager.getCurrentImage().getSlice() );
 		}
 		
-		final String path = "D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls";
 		//System.out.println(gddh)
 		ExcelClass ec=new ExcelClass();
-		try {
-			ec.importData(new FileInputStream(path));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
+				
 		
 		for (int i = 0; i < ec.getB().size(); i++) {
 			System.out.println(ec.getGddh().get(i));

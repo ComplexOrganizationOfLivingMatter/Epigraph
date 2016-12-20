@@ -2,13 +2,22 @@ package Epigraph;
 
 import java.util.Random;
 
+
 import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.analysis.AnalysisLauncher;
+import org.jzy3d.chart.ChartLauncher;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
+import org.jzy3d.colors.ColorMapper;
+import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.plot3d.primitives.Scatter;
+import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
+import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
+import org.jzy3d.plot3d.primitives.axes.layout.renderers.IntegerTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import org.jzy3d.plot3d.rendering.legends.AWTLegend;
+
 
 
 public class ScatterDemo extends AbstractAnalysis{
@@ -18,35 +27,54 @@ public class ScatterDemo extends AbstractAnalysis{
 	
 	
 	/*load X Y Z coordenates*/
-		
+	
 	@Override
     public void init(){
-        int size = 500000;
-        float x;
-        float y;
-        float z;
-        float a;
+		
+		ExcelClass ec = new ExcelClass();
+		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
+		
+		
+        int size_array = ec.getGddh().size();
         
-        Coord3d[] points = new Coord3d[size];
-        Color[]   colors = new Color[size];
+               
+        Coord3d[] points = new Coord3d[size_array];
+        Color[]   colors = new Color[size_array];
         
         /*create an color array*/
         
         Random r = new Random();
         r.setSeed(0);
         
-        for(int i=0; i<size; i++){
-            x = r.nextFloat() - 0.5f;
-            y = r.nextFloat() - 0.5f;
-            z = r.nextFloat() - 0.5f;
-            points[i] = new Coord3d(x, y, z);
-            a = 0.25f;
-            colors[i] = new Color(x, y, z, a);
+        for(int i=0; i<size_array; i++){
+            
+            points[i] = new Coord3d(ec.getHexagonsPercentage().get(i), ec.getGddh().get(i), ec.getGddrv().get(i));
+            colors[i] = new Color(ec.getR().get(i), ec.getG().get(i), ec.getB().get(i));
         }
         
         
-        Scatter scatter = new Scatter(points, colors);
-        chart = AWTChartComponentFactory.chart(Quality.Advanced, "newt");
+        Scatter scatter = new Scatter(points, colors, 6f);
+        
+      
+        chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
+        
+                       
         chart.getScene().add(scatter);
+        
+        
+              
+        
+        IAxeLayout l = chart.getAxeLayout();
+        
+        //Labelling axes
+        l.setXAxeLabel("Hexagons percentage");
+        l.setYAxeLabel("GDDH");
+        l.setZAxeLabel("GDDRV");
+                
+        //Presition displaying axes
+        l.setXTickRenderer(new FixedDecimalTickRenderer(2));
+        l.setYTickRenderer(new FixedDecimalTickRenderer(2));
+        l.setZTickRenderer(new FixedDecimalTickRenderer(2));
+
     }
 }

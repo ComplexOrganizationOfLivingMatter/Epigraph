@@ -106,10 +106,11 @@ public class ExcelClass {
 	
 	/*IMPORT DATA FROM EXCEL*/
 	
-	public void importData(FileInputStream filename) {
+	public void importData(String filename) {
 		
 		try {
-			POIFSFileSystem fs = new POIFSFileSystem(filename);
+			FileInputStream path = new FileInputStream(filename); 
+			POIFSFileSystem fs = new POIFSFileSystem(path);
 			HSSFWorkbook wb = new HSSFWorkbook(fs);
 			HSSFSheet sheet = wb.getSheetAt(0);
 			HSSFRow row;
@@ -173,8 +174,8 @@ public class ExcelClass {
 						if (cols <= 3 && c == cols){
 							
 							this.R.add((float) 0);
-							this.R.add((float) 0);
-							this.R.add((float) 0);
+							this.G.add((float) 0);
+							this.B.add((float) 0);
 
 						}
 						
