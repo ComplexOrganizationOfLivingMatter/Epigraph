@@ -114,9 +114,18 @@ public class GraphletImage {
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 		
 		int[][] graphlets = this.orcaProgram.getOrbit();
+		int percentageOfHexagons = 0, percentageOfHexagonsOriginal = 0;
 		for (int i = 0; i < graphlets.length; i++){
 			this.cells.get(i).setGraphlets(graphlets[i]);
+			if (graphlets[i][0] == 6){
+				percentageOfHexagons++;
+			}
+			if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()){
+				percentageOfHexagonsOriginal++;
+			}
 		}
+		System.out.println(percentageOfHexagons);
+		System.out.println(percentageOfHexagonsOriginal);
 		this.orcaProgram = null;
 		
 		int numValidCells = 0;
@@ -189,8 +198,10 @@ public class GraphletImage {
 					if (this.l_img.getChannelProcessor().get(x, y) != 0 && this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1){
 						labelNeigh = this.l_img.getChannelProcessor().get(x, y) - 1;
 						neighbours.add(labelNeigh);
-						if (this.cells.get(idEpiCell).isValid_cell() ||  this.cells.get(labelNeigh).isValid_cell()) //Only valid cells' relationships
+						if (this.cells.get(idEpiCell).isValid_cell() ||  this.cells.get(labelNeigh).isValid_cell()){ //Only valid cells' relationships
 							this.adjacencyMatrix[idEpiCell][labelNeigh] = 1;
+							this.adjacencyMatrix[labelNeigh][idEpiCell] = 1;
+						}
 					}
 						
 				}
