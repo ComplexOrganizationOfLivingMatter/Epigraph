@@ -44,18 +44,20 @@ public class Orca {
 
 		int numEdge = 0;
 		int[] d = new int[this.adjacencyMatrix[0].length];
+		
+		for (int i = 0; i < this.adjacencyMatrix[0].length; i++)
+			inc.add(new ArrayList<ValuePair<Integer, Integer>>());
+		
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
-			if (i == 0)
-				inc.add(new ArrayList<ValuePair<Integer, Integer>>());
 			for (int j = i + 1; j < this.adjacencyMatrix[0].length; j++) {
 				if (this.adjacencyMatrix[i][j] != 0) {
 					deg[i]++;
 					deg[j]++;
 					this.edges.add(new ValuePair<Integer, Integer>(i, j));
 					adj[i][d[i]] = j;
-					inc.get(i).add(new ValuePair<Integer, Integer>(j, numEdge));
 					adj[j][d[j]] = i;
-					inc.get(j).add(new ValuePair<Integer, Integer>(i, numEdge));
+					inc.get(i).add(d[i], new ValuePair<Integer, Integer>(j, numEdge));
+					inc.get(j).add(d[j], new ValuePair<Integer, Integer>(i, numEdge));
 					d[i]++;
 					d[j]++;
 					numEdge++;
@@ -63,30 +65,32 @@ public class Orca {
 			}
 		}
 
-		ArrayList<ArrayList<ValuePair<Integer, Integer>>> incAux = new ArrayList<ArrayList<ValuePair<Integer, Integer>>>(
-				inc);
-		int minValueA, minValueB, minIndex = 0;
+		int minValueA, minValueB, sizeIncindecenMatrix, minIndex = 0;
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
 			if (adj[i][0] != 0) {
-				Arrays.sort(adj[i]);
+				//System.out.println(adj[i].toString());
+				Arrays.sort(adj[i], 0 , deg[i]);
+				//System.out.println(adj[i].toString());
 				minValueA = Integer.MAX_VALUE;
 				minValueB = Integer.MAX_VALUE;
+				ArrayList<ValuePair<Integer, Integer>> incAux = new ArrayList<ValuePair<Integer, Integer>>(inc.get(i));
 				inc.get(i).clear();
-				for (int incidenceIndex = 0; incidenceIndex < inc.get(i).size(); incidenceIndex++) {
-					for (int numEdges = 0; numEdges < inc.get(i).size(); numEdges++) {
-						if (incAux.get(i).get(incidenceIndex).getA() < minValueA) {
-							minValueA = incAux.get(i).get(incidenceIndex).getA();
-							minValueB = incAux.get(i).get(incidenceIndex).getB();
+				sizeIncindecenMatrix = incAux.size();
+				for (int numEdges = 0; numEdges < sizeIncindecenMatrix; numEdges++) {
+					for (int incidenceIndex = 0; incidenceIndex < incAux.size(); incidenceIndex++) {
+						if (incAux.get(incidenceIndex).getA() < minValueA) {
+							minValueA = incAux.get(incidenceIndex).getA();
+							minValueB = incAux.get(incidenceIndex).getB();
 							minIndex = incidenceIndex;
-						} else if (incAux.get(i).get(incidenceIndex).getA() == minValueA
-								&& incAux.get(i).get(incidenceIndex).getB() < minValueB) {
-							minValueA = incAux.get(i).get(incidenceIndex).getA();
-							minValueB = incAux.get(i).get(incidenceIndex).getB();
+						} else if (incAux.get(incidenceIndex).getA() == minValueA
+								&& incAux.get(incidenceIndex).getB() < minValueB) {
+							minValueA = incAux.get(incidenceIndex).getA();
+							minValueB = incAux.get(incidenceIndex).getB();
 							minIndex = incidenceIndex;
 						}
 					}
 					inc.get(i).add(new ValuePair<Integer, Integer>(minValueA, minValueB));
-					incAux.get(i).remove(minIndex);
+					incAux.remove(minIndex);
 				}
 			}
 		}
@@ -331,8 +335,9 @@ public class Orca {
 					for (int na = 0; na < deg[a]; na++) {
 						int c = Math.min(inc.get(a).get(na).getA(), inc.get(a).get(na).getB()),
 								ac = Math.max(inc.get(a).get(na).getA(), inc.get(a).get(na).getB());
-						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0)
+						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0){
 							continue;
+						}
 						orbit[x][12]++;
 						f_65 += (tri[ac] > 1) ? common3[a][b][c] : 0;
 						f_63 += common_x[c] - 2;
@@ -353,8 +358,9 @@ public class Orca {
 					for (int na = 0; na < deg[a]; na++) {
 						int c = Math.min(inc.get(a).get(na).getA(), inc.get(a).get(na).getB()),
 								ac = Math.max(inc.get(a).get(na).getA(), inc.get(a).get(na).getB());
-						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0)
+						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0){
 							continue;
+						}
 						orbit[x][8]++;
 						f_62 += (tri[ac] > 0) ? common3[a][b][c] : 0;
 						f_53 += tri[xa] + tri[xb];
