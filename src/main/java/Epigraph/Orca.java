@@ -122,12 +122,18 @@ public class Orca {
 				for (int n2 = n1 + 1; n2 < deg[x]; n2++) {
 					int b = adj[x][n2];
 					common2[a][b]++;
+					common2[b][a]++;
 					for (int n3 = n2 + 1; n3 < deg[x]; n3++) {
 						int c = adj[x][n3];
 						int st = isAdjacent(a, b) + isAdjacent(a, c) + isAdjacent(b, c);
 						if (st < 2)
 							continue;
 						common3[a][b][c]++;
+						common3[c][b][a]++;
+						common3[a][c][b]++;
+						common3[b][c][a]++;
+						common3[b][a][c]++;
+						common3[c][a][b]++;
 					}
 				}
 			}
