@@ -211,6 +211,12 @@ public class GraphletImage {
 		cell.setNeighbours(neighbours);
 	}
 	
+	/**
+	 * 
+	 * @param indexEpiCell
+	 * @param length
+	 * @return
+	 */
 	private boolean allValidCellsWithinAGivenLength(int indexEpiCell, int length){
 		if (this.cells.get(indexEpiCell).isValid_cell()){
 			if (length > 1){
@@ -227,5 +233,49 @@ public class GraphletImage {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public float distanceGDDH(){
+		int[] hexagonReference = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		
+		
+		
+		float[][] graphletsImageNormalize = new float[this.cells.size()][this.cells.get(0).getGraphlets().length];
+		float totalAreaT = (float) 0.0;
+		for (int j = 0; j < this.cells.size(); j++){
+			int[] graphlets = this.cells.get(j).getGraphlets();
+			for (int i = 0; i < this.cells.get(0).getGraphlets().length; i++){
+				graphletsImageNormalize[j][i] = (float) graphlets[i] / (float) this.cells.size();
+				totalAreaT += graphletsImageNormalize[j][i];
+			}
+		}
+		
+		for (int j = 0; j < this.cells.size(); j++){
+			for (int i = 0; i < this.cells.get(0).getGraphlets().length; i++){
+				graphletsImageNormalize[j][i] = graphletsImageNormalize[j][i] / totalAreaT;
+			}
+		}
+		
+		
+		
+	}
+	
+	/**
+	 * Function to compute the graphlet counts from ndump2 files
+	 * @return
+	 */
+	private int[] getGraphletFrequence(){
+		int[] orbits = {2, 3, 5, 7, 8, 9, 12, 14, 17, 18, 23, 25, 27, 33, 34, 35, 39, 44, 45, 50, 52, 55, 56, 61, 62, 65, 69, 70, 72};
+		int[] weights = {1, 3, 2, 1, 4, 1, 2, 4, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 5};
+		
+		int[] graphletCounts = new int[orbits.length]; 
+		
+		for (int i = 0; i < orbits.length; i++){
+			
+		}
 	}
 }
