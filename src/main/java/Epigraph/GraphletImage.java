@@ -240,11 +240,12 @@ public class GraphletImage {
 	 * @return
 	 */
 	public float distanceGDDH(){
-		int[] hexagonReference = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		int[][] hexagonReference = {{6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 		
+		float[] graphletFreqRef = getGraphletFrequence(hexagonReference);
+		float[] graphletFreqImage = getGraphletFrequence(this.orcaProgram.getOrbit());
 		
-		
-		float[][] graphletsImageNormalize = new float[this.cells.size()][this.cells.get(0).getGraphlets().length];
+		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
 		float totalAreaT = (float) 0.0;
 		for (int j = 0; j < this.cells.size(); j++){
 			int[] graphlets = this.cells.get(j).getGraphlets();
@@ -268,12 +269,11 @@ public class GraphletImage {
 	 * Function to compute the graphlet counts from ndump2 files
 	 * @return
 	 */
-	private float[] getGraphletFrequence(){
+	private float[] getGraphletFrequence(int[][] graphletsImage){
 		int[] orbits = {2, 3, 5, 7, 8, 9, 12, 14, 17, 18, 23, 25, 27, 33, 34, 35, 39, 44, 45, 50, 52, 55, 56, 61, 62, 65, 69, 70, 72};
 		int[] weights = {1, 3, 2, 1, 4, 1, 2, 4, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 5};
 		
 		float[] graphletCounts = new float[orbits.length];
-		int[][] graphletsImage = this.orcaProgram.getOrbit();
 		
 		int orbit;
 		for (int i = 0; i < orbits.length; i++){
