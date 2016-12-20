@@ -71,27 +71,27 @@ public class Orca {
 				//System.out.println(adj[i].toString());
 				Arrays.sort(adj[i], 0 , deg[i]);
 				//System.out.println(adj[i].toString());
-				minValueA = Integer.MAX_VALUE;
-				minValueB = Integer.MAX_VALUE;
-				ArrayList<ValuePair<Integer, Integer>> incAux = new ArrayList<ValuePair<Integer, Integer>>(inc.get(i));
-				inc.get(i).clear();
-				sizeIncindecenMatrix = incAux.size();
-				for (int numEdges = 0; numEdges < sizeIncindecenMatrix; numEdges++) {
-					for (int incidenceIndex = 0; incidenceIndex < incAux.size(); incidenceIndex++) {
-						if (incAux.get(incidenceIndex).getA() < minValueA) {
-							minValueA = incAux.get(incidenceIndex).getA();
-							minValueB = incAux.get(incidenceIndex).getB();
-							minIndex = incidenceIndex;
-						} else if (incAux.get(incidenceIndex).getA() == minValueA
-								&& incAux.get(incidenceIndex).getB() < minValueB) {
-							minValueA = incAux.get(incidenceIndex).getA();
-							minValueB = incAux.get(incidenceIndex).getB();
-							minIndex = incidenceIndex;
-						}
-					}
-					inc.get(i).add(new ValuePair<Integer, Integer>(minValueA, minValueB));
-					incAux.remove(minIndex);
-				}
+//				minValueA = Integer.MAX_VALUE;
+//				minValueB = Integer.MAX_VALUE;
+//				ArrayList<ValuePair<Integer, Integer>> incAux = new ArrayList<ValuePair<Integer, Integer>>(inc.get(i));
+//				inc.get(i).clear();
+//				sizeIncindecenMatrix = incAux.size();
+//				for (int numEdges = 0; numEdges < sizeIncindecenMatrix; numEdges++) {
+//					for (int incidenceIndex = 0; incidenceIndex < incAux.size(); incidenceIndex++) {
+//						if (incAux.get(incidenceIndex).getA() < minValueA) {
+//							minValueA = incAux.get(incidenceIndex).getA();
+//							minValueB = incAux.get(incidenceIndex).getB();
+//							minIndex = incidenceIndex;
+//						} else if (incAux.get(incidenceIndex).getA() == minValueA
+//								&& incAux.get(incidenceIndex).getB() < minValueB) {
+//							minValueA = incAux.get(incidenceIndex).getA();
+//							minValueB = incAux.get(incidenceIndex).getB();
+//							minIndex = incidenceIndex;
+//						}
+//					}
+//					inc.get(i).add(new ValuePair<Integer, Integer>(minValueA, minValueB));
+//					incAux.remove(minIndex);
+//				}
 			}
 		}
 
