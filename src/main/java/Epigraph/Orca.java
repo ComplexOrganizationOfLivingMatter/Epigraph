@@ -69,7 +69,7 @@ public class Orca {
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
 			if (adj[i][0] != 0) {
 				//System.out.println(adj[i].toString());
-				Arrays.sort(adj[i], 0 , deg[i]);
+				//Arrays.sort(adj[i], 0 , deg[i]);
 				//System.out.println(adj[i].toString());
 			}
 		}
