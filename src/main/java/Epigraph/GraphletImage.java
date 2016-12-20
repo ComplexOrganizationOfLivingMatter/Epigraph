@@ -29,6 +29,7 @@ public class GraphletImage {
 	ImagePlus l_img;
 	ArrayList<EpiCell> cells;
 	int[][] adjacencyMatrix;
+	Orca orcaProgram;
 	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
@@ -102,18 +103,26 @@ public class GraphletImage {
 			}
 		}
 		//Create adjacency matrix from the found cells
-		adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
+		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
+		
 		
 		this.l_img.show();
 		
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		
+		this.orcaProgram = new Orca(this.adjacencyMatrix);
+		
+		int[][] graphlets = this.orcaProgram.getOrbit();
+		for (int i = 0; i < graphlets.length; i++){
+			this.cells.get(i).setGraphlets(graphlets[i]);
+		}
+		this.orcaProgram = null;
+		
 		int numValidCells = 0;
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
 			if (allValidCellsWithinAGivenLength(indexEpiCell, 4)){
 				this.cells.get(indexEpiCell).setValid_cell_4(true);
-				
 				numValidCells++;
 			}else{
 				this.cells.get(indexEpiCell).setValid_cell_4(false);
@@ -173,12 +182,15 @@ public class GraphletImage {
 		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPerimeterPixelsX(), cell.getPerimeterPixelsY());
 		
 		HashSet<Integer> neighbours = new HashSet<Integer>();
+		int labelNeigh;
 		for (int x = 0; x < this.l_img.getWidth(); x++){
 			for (int y = 0; y < this.l_img.getHeight(); y++){
 				if (imgProc.get(x, y) == 255){
 					if (this.l_img.getChannelProcessor().get(x, y) != 0 && this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1){
-						neighbours.add(this.l_img.getChannelProcessor().get(x, y) - 1);
-						this.adjacencyMatrix[idEpiCell][this.l_img.getChannelProcessor().get(x, y) - 1] = 1;
+						labelNeigh = this.l_img.getChannelProcessor().get(x, y) - 1;
+						neighbours.add(labelNeigh);
+						if (this.cells.get(idEpiCell).isValid_cell() ||  this.cells.get(labelNeigh).isValid_cell()) //Only valid cells' relationships
+							this.adjacencyMatrix[idEpiCell][labelNeigh] = 1;
 					}
 						
 				}
