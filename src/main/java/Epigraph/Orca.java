@@ -4,6 +4,7 @@
 package Epigraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import net.imglib2.util.ValuePair;
 
@@ -24,7 +25,7 @@ public class Orca {
 	private int[][] adj;
 	private int[] deg;
 	private ArrayList<ValuePair<Integer, Integer>> edges; // list of edges
-	private ValuePair<Integer, Integer>[][] inc;
+	private ArrayList<ArrayList<ValuePair<Integer, Integer>>> inc;
 	private int[][] common2;
 	private int[][][] common3;
 	private int[] tri;
@@ -36,7 +37,7 @@ public class Orca {
 		this.orbit = new int[this.adjacencyMatrix[0].length][73];
 		this.deg = new int[this.adjacencyMatrix[0].length];
 		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
-		this.inc = new ValuePair[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
+		this.inc = new ArrayList<ArrayList<ValuePair<Integer, Integer>>>();
 		this.adj = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 		this.common2 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
 		this.common3 = new int[this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length][this.adjacencyMatrix[0].length];
@@ -44,15 +45,17 @@ public class Orca {
 		int numEdge = 0;
 		int[] d = new int[this.adjacencyMatrix[0].length];
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
+			if (i == 0)
+				inc.add(new ArrayList<ValuePair<Integer, Integer>>());
 			for (int j = i + 1; j < this.adjacencyMatrix[0].length; j++) {
 				if (this.adjacencyMatrix[i][j] != 0) {
 					deg[i]++;
 					deg[j]++;
 					this.edges.add(new ValuePair<Integer, Integer>(i, j));
 					adj[i][d[i]] = j;
-					inc[i][d[i]] = new ValuePair<Integer, Integer>(j, numEdge);
+					inc.get(i).add(new ValuePair<Integer, Integer>(j, numEdge));
 					adj[j][d[j]] = i;
-					inc[j][d[j]] = new ValuePair<Integer, Integer>(i, numEdge);
+					inc.get(j).add(new ValuePair<Integer, Integer>(i, numEdge));
 					d[i]++;
 					d[j]++;
 					numEdge++;
@@ -60,10 +63,34 @@ public class Orca {
 			}
 		}
 
-		/*
-		 * for (int i=0;i<this.adjacencyMatrix[0].length;i++) {
-		 * sort(adj[i],adj[i]+deg[i]); sort(inc[i],inc[i]+deg[i]); }
-		 */
+		ArrayList<ArrayList<ValuePair<Integer, Integer>>> incAux = new ArrayList<ArrayList<ValuePair<Integer, Integer>>>(
+				inc);
+		int minValueA, minValueB, minIndex = 0;
+		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
+			if (adj[i][0] != 0) {
+				Arrays.sort(adj[i]);
+				minValueA = Integer.MAX_VALUE;
+				minValueB = Integer.MAX_VALUE;
+				inc.get(i).clear();
+				for (int incidenceIndex = 0; incidenceIndex < inc.get(i).size(); incidenceIndex++) {
+					for (int numEdges = 0; numEdges < inc.get(i).size(); numEdges++) {
+						if (incAux.get(i).get(incidenceIndex).getA() < minValueA) {
+							minValueA = incAux.get(i).get(incidenceIndex).getA();
+							minValueB = incAux.get(i).get(incidenceIndex).getB();
+							minIndex = incidenceIndex;
+						} else if (incAux.get(i).get(incidenceIndex).getA() == minValueA
+								&& incAux.get(i).get(incidenceIndex).getB() < minValueB) {
+							minValueA = incAux.get(i).get(incidenceIndex).getA();
+							minValueB = incAux.get(i).get(incidenceIndex).getB();
+							minIndex = incidenceIndex;
+						}
+					}
+					inc.get(i).add(new ValuePair<Integer, Integer>(minValueA, minValueB));
+					incAux.get(i).remove(minIndex);
+				}
+			}
+		}
+
 		this.computingCommonNodes();
 		this.countingFullGraphlets();
 		this.buildingEquationSystems();
@@ -224,8 +251,8 @@ public class Orca {
 			int f_23 = 0, f_21 = 0; // 7
 
 			for (int nx1 = 0; nx1 < deg[x]; nx1++) {
-				int a = Math.min(inc[x][nx1].getA(), inc[x][nx1].getB()),
-						xa = Math.max(inc[x][nx1].getA(), inc[x][nx1].getB());
+				int a = Math.min(inc.get(x).get(nx1).getA(), inc.get(x).get(nx1).getB()),
+						xa = Math.max(inc.get(x).get(nx1).getA(), inc.get(x).get(nx1).getB());
 
 				for (int i = 0; i < nca; i++)
 					common_a[common_a_list[i]] = 0;
@@ -237,25 +264,29 @@ public class Orca {
 						if (c == a || isAdjacent(a, c) == 1)
 							continue;
 						if (common_a[c] == 0)
-							common_a_list[nca++] = c;
+							common_a_list[nca++] = c; // is the same in c++?
 						common_a[c]++;
 					}
 				}
 
 				// x = orbit-14 (tetrahedron)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB()),
-							xb = Math.max(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB()),
+							xb = Math.max(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
+
 					if (isAdjacent(a, b) == 0)
 						continue;
+
 					for (int nx3 = nx2 + 1; nx3 < deg[x]; nx3++) {
-						int c = Math.min(inc[x][nx3].getA(), inc[x][nx3].getB()),
-								xc = Math.max(inc[x][nx3].getA(), inc[x][nx3].getB());
+						int c = Math.min(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB()),
+								xc = Math.max(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB());
 						if (isAdjacent(a, c) == 0 || isAdjacent(b, c) == 0)
 							continue;
 						orbit[x][14]++;
 						f_70 += this.common3[a][b][c] - 1;
-						f_71 += (tri[xa] > 2 && tri[xb] > 2) ? (common3[x][a][b]) - 1 : 0;
+						f_71 += (tri[xa] > 2 && tri[xb] > 2) ? (common3[x][a][b]) - 1 : 0; // common3
+																							// -
+																							// 1?
 						f_71 += (tri[xa] > 2 && tri[xc] > 2) ? (common3[x][a][c]) - 1 : 0;
 						f_71 += (tri[xb] > 2 && tri[xc] > 2) ? (common3[x][b][c]) - 1 : 0;
 						f_67 += tri[xa] - 2 + tri[xb] - 2 + tri[xc] - 2;
@@ -269,13 +300,13 @@ public class Orca {
 
 				// x = orbit-13 (diamond)
 				for (int nx2 = 0; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB()),
-							xb = Math.max(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB()),
+							xb = Math.max(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nx3 = nx2 + 1; nx3 < deg[x]; nx3++) {
-						int c = Math.min(inc[x][nx3].getA(), inc[x][nx3].getB()),
-								xc = Math.max(inc[x][nx3].getA(), inc[x][nx3].getB());
+						int c = Math.min(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB()),
+								xc = Math.max(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB());
 						if (isAdjacent(a, c) == 0 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][13]++;
@@ -294,12 +325,12 @@ public class Orca {
 
 				// x = orbit-12 (diamond)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int na = 0; na < deg[a]; na++) {
-						int c = Math.min(inc[a][na].getA(), inc[a][na].getB()),
-								ac = Math.max(inc[a][na].getA(), inc[a][na].getB());
+						int c = Math.min(inc.get(a).get(na).getA(), inc.get(a).get(na).getB()),
+								ac = Math.max(inc.get(a).get(na).getA(), inc.get(a).get(na).getB());
 						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0)
 							continue;
 						orbit[x][12]++;
@@ -315,13 +346,13 @@ public class Orca {
 
 				// x = orbit-8 (cycle)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB()),
-							xb = Math.max(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB()),
+							xb = Math.max(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 1)
 						continue;
 					for (int na = 0; na < deg[a]; na++) {
-						int c = Math.min(inc[a][na].getA(), inc[a][na].getB()),
-								ac = Math.max(inc[a][na].getA(), inc[a][na].getB());
+						int c = Math.min(inc.get(a).get(na).getA(), inc.get(a).get(na).getB()),
+								ac = Math.max(inc.get(a).get(na).getA(), inc.get(a).get(na).getB());
 						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0)
 							continue;
 						orbit[x][8]++;
@@ -338,12 +369,12 @@ public class Orca {
 
 				// x = orbit-11 (paw)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nx3 = 0; nx3 < deg[x]; nx3++) {
-						int c = Math.min(inc[x][nx3].getA(), inc[x][nx3].getB()),
-								xc = Math.max(inc[x][nx3].getA(), inc[x][nx3].getB());
+						int c = Math.min(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB()),
+								xc = Math.max(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB());
 						if (c == a || c == b || isAdjacent(a, c) == 1 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][11]++;
@@ -356,12 +387,12 @@ public class Orca {
 
 				// x = orbit-10 (paw)
 				for (int nx2 = 0; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nb = 0; nb < deg[b]; nb++) {
-						int c = Math.min(inc[b][nb].getA(), inc[b][nb].getB()),
-								bc = Math.max(inc[b][nb].getA(), inc[b][nb].getB());
+						int c = Math.min(inc.get(b).get(nb).getA(), inc.get(b).get(nb).getB()),
+								bc = Math.max(inc.get(b).get(nb).getA(), inc.get(b).get(nb).getB());
 						if (c == x || c == a || isAdjacent(a, c) == 1 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][10]++;
@@ -375,13 +406,13 @@ public class Orca {
 
 				// x = orbit-9 (paw)
 				for (int na1 = 0; na1 < deg[a]; na1++) {
-					int b = Math.min(inc[a][na1].getA(), inc[a][na1].getB()),
-							ab = Math.max(inc[a][na1].getA(), inc[a][na1].getB());
+					int b = Math.min(inc.get(a).get(na1).getA(), inc.get(a).get(na1).getB()),
+							ab = Math.max(inc.get(a).get(na1).getA(), inc.get(a).get(na1).getB());
 					if (b == x || isAdjacent(x, b) == 1)
 						continue;
 					for (int na2 = na1 + 1; na2 < deg[a]; na2++) {
-						int c = Math.min(inc[a][na2].getA(), inc[a][na2].getB()),
-								ac = Math.max(inc[a][na2].getA(), inc[a][na2].getB());
+						int c = Math.min(inc.get(a).get(na2).getA(), inc.get(a).get(na2).getB()),
+								ac = Math.max(inc.get(a).get(na2).getA(), inc.get(a).get(na2).getB());
 						if (c == x || isAdjacent(b, c) == 0 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][9]++;
@@ -396,12 +427,12 @@ public class Orca {
 
 				// x = orbit-4 (path)
 				for (int na = 0; na < deg[a]; na++) {
-					int b = Math.min(inc[a][na].getA(), inc[a][na].getB());
+					int b = Math.min(inc.get(a).get(na).getA(), inc.get(a).get(na).getB());
 					if (b == x || isAdjacent(x, b) == 1)
 						continue;
 					for (int nb = 0; nb < deg[b]; nb++) {
-						int c = Math.min(inc[b][nb].getA(), inc[b][nb].getB()),
-								bc = Math.max(inc[b][nb].getA(), inc[b][nb].getB());
+						int c = Math.min(inc.get(b).get(nb).getA(), inc.get(b).get(nb).getB()),
+								bc = Math.max(inc.get(b).get(nb).getA(), inc.get(b).get(nb).getB());
 						if (c == a || isAdjacent(a, c) == 1 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][4]++;
@@ -416,11 +447,11 @@ public class Orca {
 
 				// x = orbit-5 (path)
 				for (int nx2 = 0; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (b == a || isAdjacent(a, b) == 1)
 						continue;
 					for (int nb = 0; nb < deg[b]; nb++) {
-						int c = Math.min(inc[b][nb].getA(), inc[b][nb].getB());
+						int c = Math.min(inc.get(b).get(nb).getA(), inc.get(b).get(nb).getB());
 						if (c == x || isAdjacent(a, c) == 1 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][5]++;
@@ -430,11 +461,11 @@ public class Orca {
 
 				// x = orbit-6 (claw)
 				for (int na1 = 0; na1 < deg[a]; na1++) {
-					int b = Math.min(inc[a][na1].getA(), inc[a][na1].getB());
+					int b = Math.min(inc.get(a).get(na1).getA(), inc.get(a).get(na1).getB());
 					if (b == x || isAdjacent(x, b) == 1)
 						continue;
 					for (int na2 = na1 + 1; na2 < deg[a]; na2++) {
-						int c = Math.min(inc[a][na2].getA(), inc[a][na2].getB());
+						int c = Math.min(inc.get(a).get(na2).getA(), inc.get(a).get(na2).getB());
 						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][6]++;
@@ -446,11 +477,11 @@ public class Orca {
 
 				// x = orbit-7 (claw)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = Math.min(inc[x][nx2].getA(), inc[x][nx2].getB());
+					int b = Math.min(inc.get(x).get(nx2).getA(), inc.get(x).get(nx2).getB());
 					if (isAdjacent(a, b) == 1)
 						continue;
 					for (int nx3 = nx2 + 1; nx3 < deg[x]; nx3++) {
-						int c = Math.min(inc[x][nx3].getA(), inc[x][nx3].getB());
+						int c = Math.min(inc.get(x).get(nx3).getA(), inc.get(x).get(nx3).getB());
 						if (isAdjacent(a, c) == 1 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][7]++;
