@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ij.ImagePlus;
 
@@ -246,19 +247,26 @@ public class GraphletImage {
 	public float distanceGDDH(){
 		int[][] hexagonReference = {{6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 		
-		float[] graphletFreqRef = getGraphletFrequence(hexagonReference);
-		float[] graphletFreqImage = getGraphletFrequence(this.orcaProgram.getOrbit());
+		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(hexagonReference);
+		ArrayList<HashMap<Integer, Float>> graphletFreqImage = scaleGraphletDists(this.orcaProgram.getOrbit());
 		
 		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
 		
-		for 
-		float sumDistances = (float) 0.0;
+		for (int i = 0; i < TOTALGRAPHLETS; i++){
+			HashMap<Integer, Float> values1 = graphletFreqRef.get(i);
+			HashMap<Integer, Float> values2 = graphletFreqImage.get(i);
+			
+			//Compute the distance among the orbits
+			float sumDistances = (float) 0.0;
+			Set<Integer> allDegrees = values1.keySet();
+			allDegrees.addAll(values2.keySet());
+			
+			for (Integer degree : allDegrees){
+				
+			}
+		}
 		
-		
-		
-		
-		
-		
+		return orbitDist;
 	}
 	
 	/**
@@ -284,8 +292,13 @@ public class GraphletImage {
 		return graphletCounts;
 	}
 	
-	private int[] scaleGraphletDists(int[][] signatures){
-		int[] distributions = new int[TOTALGRAPHLETS];
+	/**
+	 * 
+	 * @param signatures
+	 * @return
+	 */
+	private ArrayList<HashMap<Integer,Float>> scaleGraphletDists(int[][] signatures){
+		ArrayList<HashMap<Integer, Float>> distributions = new ArrayList<HashMap<Integer, Float>>();
 		
 		HashMap<Integer, Float> graphletsValues;
 		Float actualValue;
@@ -300,26 +313,24 @@ public class GraphletImage {
 			}
 			graphletsValues.remove(0);
 			
+			//Scale the distribution values for GDD agreement
 			float total = 0;
 			float valueGraph;
 			for (int key : graphletsValues.keySet()) {
 				valueGraph = graphletsValues.get(key);
 				graphletsValues.replace(key, valueGraph/key);
+				total += valueGraph/key;
 			}
+			
+			//Normalize the distributions
+			for (int key : graphletsValues.keySet()) {
+				valueGraph = graphletsValues.get(key);
+				graphletsValues.replace(key, valueGraph/total);
+			}
+			
+			distributions.add(graphletsValues);
 		}
-				
-				//Scale the distribution values for GDD agreement
-				float total = 0
-				for val in values:
-					values[val] = float(values[val]) / val
-					total += values[val]
-			
-				# Normalize the distributions
-				for val in values:
-					values[val] /= total
-					
-				distributions.append(values)
-			
-			return distributions
+		
+		return distributions;
 	}
 }
