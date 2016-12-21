@@ -4,6 +4,7 @@
 package Epigraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,6 +49,7 @@ public class GraphletImage {
 		//TODO: hardcoded variables, when interfaces come, they should be removed
 		int radiusOfShape = 3;
 		int selectedShape = CIRCLE_SHAPE;
+		int modeNumGraphlets = 0;
 		
 		
 		EDM edm = new EDM();
@@ -154,12 +156,30 @@ public class GraphletImage {
 		int[] basicGraphlets = {16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
 		int[] basicParcialGraphlets = {8, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
 		
+		int[] graphletsWeDontWant;
+		switch (modeNumGraphlets) {
+		case 0:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		case 1:
+			graphletsWeDontWant = totalParcialGraphlets;
+			break;
+
+		default:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		}
+		
+		Arrays.sort(graphletsWeDontWant);
+		
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for ( EpiCell cell : this.cells) {
 			if (cell.isValid_cell_5()){
-				actualGraphlets = cell.getGraphletsInteger(totalGraphlets);
-				System.out.println(actualGraphlets);
+				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+				for (int i = 0; i < actualGraphlets.length; i++)
+					System.out.print(actualGraphlets[i] + " ");
+				System.out.println();
 				graphletsFinal.add(actualGraphlets);
 			}
 		}
