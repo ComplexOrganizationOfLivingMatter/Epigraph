@@ -151,6 +151,24 @@ public class EpiCell {
 	public int[] getGraphlets() {
 		return graphlets;
 	}
+	
+	/**
+	 * @return the graphlets
+	 */
+	public Integer[] getGraphletsInteger(int[] graphletsWeDontWant) {
+		Integer[] graph = new Integer[graphlets.length];
+		int graphletIndex = 0;
+		for (int i = 0; i < graphlets.length; i++){
+			if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]) {
+				graph[i] = new Integer(graphlets[i]);
+			}else{
+				graph[i] = new Integer(0);
+				graphletIndex++;
+			}
+				
+		}
+		return graph;
+	}
 
 	/**
 	 * @param graphlets2 the graphlets to set
