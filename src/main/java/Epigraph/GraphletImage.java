@@ -262,13 +262,33 @@ public class GraphletImage {
 			allDegrees.addAll(values2.keySet());
 			
 			for (Integer degree : allDegrees){
+				Float score1 = values1.getOrDefault(degree, (float) 0);
+				Float score2 = values2.getOrDefault(degree, (float) 0);
 				
+				sumDistances += Math.pow((score1 - score2), 2);
 			}
+			orbitDist[i] = (float) ((1/Math.sqrt(2)) * Math.sqrt(sumDistances));
 		}
 		
-		return orbitDist;
+		float gdda_distance = mean(orbitDist);
+		//gddg_distance
+		
+		return gdda_distance;
 	}
 	
+	/**
+	 * 
+	 * @param m
+	 * @return
+	 */
+	private float mean(float[] m) {
+		float sum = 0;
+		for (int i = 0; i < m.length; i++) {
+			sum += m[i];
+		}
+		return sum / m.length;
+	}
+
 	/**
 	 * Function to compute the graphlet counts from ndump2 files
 	 * @return
