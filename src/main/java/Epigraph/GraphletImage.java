@@ -24,6 +24,7 @@ import util.FindConnectedRegions;
 
 
 /**
+ * 
  * @author Pablo Vicente-Munuera
  *
  */
@@ -148,6 +149,13 @@ public class GraphletImage {
 		
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param label
+	 * @return
+	 */
 	private boolean labelPropagation(int x, int y, int label){
 		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0 && this.l_img.getChannelProcessor().getPixel(x, y) != label + 1){
 			this.l_img.getChannelProcessor().set(x, y, label + 1);
@@ -171,6 +179,14 @@ public class GraphletImage {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param shape
+	 * @param dimensionOfShape
+	 * @param perimeterPixelX
+	 * @param perimeterPixelY
+	 * @return
+	 */
 	private ImageProcessor generateMask(int shape, int dimensionOfShape, int[] perimeterPixelX, int[] perimeterPixelY){
 		//Create the perimeter of the cell
 		ImageProcessor img = new ByteProcessor(this.raw_img.getWidth(), this.raw_img.getHeight());
@@ -191,6 +207,12 @@ public class GraphletImage {
 		return img;
 	}
 	
+	/**
+	 * 
+	 * @param idEpiCell
+	 * @param shape
+	 * @param dimensionOfShape
+	 */
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape){
 		EpiCell cell = this.cells.get(idEpiCell);
 		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPerimeterPixelsX(), cell.getPerimeterPixelsY());
