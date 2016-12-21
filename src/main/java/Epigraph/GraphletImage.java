@@ -177,9 +177,6 @@ public class GraphletImage {
 		for ( EpiCell cell : this.cells) {
 			if (cell.isValid_cell_5()){
 				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
-				for (int i = 0; i < actualGraphlets.length; i++)
-					System.out.print(actualGraphlets[i] + " ");
-				System.out.println();
 				graphletsFinal.add(actualGraphlets);
 			}
 		}
