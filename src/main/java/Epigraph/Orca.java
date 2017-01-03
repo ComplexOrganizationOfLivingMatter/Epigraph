@@ -65,14 +65,7 @@ public class Orca {
 			}
 		}
 
-		int minValueA, minValueB, sizeIncindecenMatrix, minIndex = 0;
-		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
-			if (adj[i][0] != 0) {
-				//System.out.println(adj[i].toString());
-				//Arrays.sort(adj[i], 0 , deg[i]);
-				//System.out.println(adj[i].toString());
-			}
-		}
+		//There were a sorting on previous code (Tomaz Hocevar's code). However, seems to be not necessary.
 
 		this.computingCommonNodes();
 		this.countingFullGraphlets();
@@ -142,7 +135,7 @@ public class Orca {
 		return this.adjacencyMatrix[a][b];
 	}
 
-	public void countingFullGraphlets() {
+	private void countingFullGraphlets() {
 		this.C5 = new int[this.adjacencyMatrix[0].length];
 		int[] neigh = new int[this.adjacencyMatrix[0].length];
 		int[] neigh2 = new int[this.adjacencyMatrix[0].length];
@@ -190,7 +183,7 @@ public class Orca {
 		}
 	}
 
-	public void buildingEquationSystems() {
+	private void buildingEquationSystems() {
 		int[] common_x = new int[this.adjacencyMatrix[0].length];
 		int[] common_x_list = new int[this.adjacencyMatrix[0].length];
 		int[] common_a = new int[this.adjacencyMatrix[0].length];
@@ -568,35 +561,4 @@ public class Orca {
 					- 2 * orbit[x][35] - 2 * orbit[x][34] - 2 * orbit[x][27]);
 		}
 	}
-
-	/*
-	 * private class Triplet { int a, b, c; int value;
-	 * 
-	 * Triplet(int a0, int b0, int c0) { a = a0; b = b0; c = c0; int aux = -1;
-	 * if (a > b) { a = b0; b = a0; } if (b > c) { aux = c; c = b; b = aux; } if
-	 * (a > b) { aux = b; b = a; a = aux; } }
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
-	 * public boolean equals(Triplet trip) { return this.a == trip.a && this.b
-	 * == trip.b && this.c == trip.c; }
-	 * 
-	 * public boolean compare(Triplet trip){ if (this.a == trip.a) { if (this.b
-	 * == trip.b) return this.c < trip.c; else return this.b < trip.b; } else
-	 * return this.a < trip.a; }
-	 * 
-	 *//**
-		 * @param value
-		 *            the value to set
-		 */
-	/*
-	 * public void setValue(int value) { this.value = value; }
-	 * 
-	 *//**
-		* 
-		*//*
-		 * public void increaseValue() { this.value++; } };
-		 */
 }
