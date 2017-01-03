@@ -40,6 +40,9 @@ public class GraphletImage {
 	public static int SQUARE_SHAPE = 1;
 	
 	public static int TOTALGRAPHLETS = 73;
+
+	//Hexagonal reference
+	public static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	
 	/**
 	 * @param img image
@@ -304,7 +307,7 @@ public class GraphletImage {
 	 */
 	public float calculateGDDH(ArrayList<Integer[]> graphletsFinal){
 		ArrayList<Integer[]> hexagonReference = new ArrayList<Integer[]>();
-		Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		
 		
 		hexagonReference.add(hexagonRefInt);
 		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(hexagonReference);
