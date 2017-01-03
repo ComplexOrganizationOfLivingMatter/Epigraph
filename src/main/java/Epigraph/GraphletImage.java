@@ -148,16 +148,9 @@ public class GraphletImage {
 		
 		int numValidCells = 0;
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
-			if (allValidCellsWithinAGivenLength(indexEpiCell, 4)){
-				this.cells.get(indexEpiCell).setValid_cell_4(true);
-				numValidCells++;
-			}else{
-				this.cells.get(indexEpiCell).setValid_cell_4(false);
-			}
+			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
-		
-		System.out.println(numValidCells);
 		
 		
 		int[] graphletsWeDontWant;
@@ -168,6 +161,12 @@ public class GraphletImage {
 		case 1:
 			graphletsWeDontWant = totalParcialGraphlets;
 			break;
+		case 2:
+			graphletsWeDontWant = basicGraphlets;
+			break
+		case 3:
+			graphletsWeDontWant = basicParcialGraphlets;
+			break
 
 		default:
 			graphletsWeDontWant = totalGraphlets;
@@ -306,9 +305,8 @@ public class GraphletImage {
 	 * 
 	 * @return
 	 */
-	public float calculateGDD(ArrayList<Integer[]> graphletsFinal, vectorReferenceInt){
+	public float calculateGDD(ArrayList<Integer[]> graphletsFinal, Integer[] vectorReferenceInt){
 		ArrayList<Integer[]> distanceReference = new ArrayList<Integer[]>();
-		
 		distanceReference.add(vectorReferenceInt);
 		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(distanceReference);
 		ArrayList<HashMap<Integer, Float>> graphletFreqImage = scaleGraphletDists(graphletsFinal);
@@ -334,10 +332,10 @@ public class GraphletImage {
 			orbitDist[i] = (float) ((1/Math.sqrt(2)) * Math.sqrt(sumDistances));
 		}
 		
-		float gdda_distance = mean(orbitDist);
+		float gdd_distance = mean(orbitDist);
 		//gddg_distance
 		
-		return gdda_distance;
+		return gdd_distance;
 	}
 	
 	/**
