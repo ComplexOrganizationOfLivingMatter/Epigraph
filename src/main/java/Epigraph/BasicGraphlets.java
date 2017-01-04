@@ -5,6 +5,7 @@ package Epigraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -25,16 +26,30 @@ public class BasicGraphlets {
 	 * 
 	 */
 	public BasicGraphlets() {
-
+		orbit = null;
+	}
+	/**
+	 * 
+	 */
+	public BasicGraphlets(String fileName) {
+		ArrayList<String> data = readNdump(fileName);
+		orbit = new int[data.size()][73];
+		
+		String row = "";
+		for (int i = 0; i < data.size(); i++){
+			row = 
+			for (int j = 0; j < )
+		}
 	}
 
 	/**
 	 * 
 	 * @param fileName
 	 */
-	private void readNdump(String fileName) {
+	private ArrayList<String> readNdump(String fileName) {
 		// File class needed to turn stringName to actual file
 		File file = new File(fileName);
+		ArrayList<String> wholeFileData = new ArrayList<String>();
 
 		try {
 			// read from filePooped with Scanner class
@@ -42,16 +57,17 @@ public class BasicGraphlets {
 			// hashNext() loops line-by-line
 			while (inputStream.hasNext()) {
 				// read single line, put in string
-				String data = inputStream.next();
-				System.out.println(data + "***");
-
+				wholeFileData.add(inputStream.next());
 			}
 			// after loop, close scanner
 			inputStream.close();
 
+			return wholeFileData;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 
 }
