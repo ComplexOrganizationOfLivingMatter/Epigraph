@@ -42,7 +42,7 @@ public class GraphletImage {
 	public static int TOTALGRAPHLETS = 73;
 
 	//Hexagonal reference
-	public static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	private static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = {8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
@@ -163,10 +163,10 @@ public class GraphletImage {
 			break;
 		case 2:
 			graphletsWeDontWant = basicGraphlets;
-			break
+			break;
 		case 3:
 			graphletsWeDontWant = basicParcialGraphlets;
-			break
+			break;
 
 		default:
 			graphletsWeDontWant = totalGraphlets;
@@ -303,6 +303,8 @@ public class GraphletImage {
 	
 	/**
 	 * 
+	 * @param graphletsFinal
+	 * @param vectorReferenceInt
 	 * @return
 	 */
 	public float calculateGDD(ArrayList<Integer[]> graphletsFinal, Integer[] vectorReferenceInt){
@@ -353,6 +355,7 @@ public class GraphletImage {
 
 	/**
 	 * Function to compute the graphlet counts from ndump2 files
+	 * @param graphletsImage
 	 * @return
 	 */
 	private float[] getGraphletFrequence(int[][] graphletsImage){
