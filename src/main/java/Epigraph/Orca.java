@@ -15,10 +15,11 @@ import net.imglib2.util.ValuePair;
  *         approach to graphlet counting - by Tomaz Hocevar.
  *
  */
-public class Orca {
+public class Orca extends BasicGraphlets{
 
 	private int[][] adjacencyMatrix;
-	private int[][] orbit; // orbit[x][o] - how many times does node x
+	/** inherited from BasicGraphlets **/
+	//private int[][] orbit; // orbit[x][o] - how many times does node x
 
 	// participate in
 	// orbit o
@@ -32,7 +33,6 @@ public class Orca {
 	private int[] C5;
 
 	public Orca(int[][] adjacencyMatrix) {
-		super();
 		this.adjacencyMatrix = adjacencyMatrix;
 		this.orbit = new int[this.adjacencyMatrix[0].length][73];
 		this.deg = new int[this.adjacencyMatrix[0].length];
