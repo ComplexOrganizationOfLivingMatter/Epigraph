@@ -4,7 +4,6 @@
 package Epigraph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import net.imglib2.util.ValuePair;
 

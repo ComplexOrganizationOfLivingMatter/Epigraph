@@ -3,8 +3,6 @@
  */
 package Epigraph;
 
-import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.IntStream;
 
@@ -36,8 +34,8 @@ public class EpiCell {
 		this.valid_cell_4 = false;
 		this.valid_cell_5 = false;
 		this.graphlets = null;
-		int[] pixelsY = null;
-		int[] pixelsX = null;
+		this.pixelsY = null;
+		this.pixelsX = null;
 	}
 	
 	/**
@@ -51,8 +49,8 @@ public class EpiCell {
 		this.valid_cell_4 = false;
 		this.valid_cell_5 = false;
 		this.graphlets = null;
-		int[] pixelsY = null;
-		int[] pixelsX = null;
+		this.pixelsY = null;
+		this.pixelsX = null;
 	}
 	
 	/**
@@ -71,8 +69,8 @@ public class EpiCell {
 		this.valid_cell_4 = valid_cell_4;
 		this.valid_cell_5 = valid_cell_5;
 		this.graphlets = null;
-		int[] pixelsY = null;
-		int[] pixelsX = null;
+		this.pixelsY = null;
+		this.pixelsX = null;
 	}
 
 	/**

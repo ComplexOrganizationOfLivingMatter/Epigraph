@@ -5,7 +5,6 @@ package Epigraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -96,11 +95,11 @@ public class BasicGraphlets {
 		Integer[][] graph = new Integer[orbit.length][MAXORBITS];
 		int graphletIndex = 0;
 		for (int numNode = 0; numNode < orbit.length; numNode++) {
-			for (int i = 0; i < MAXORBITS; i++) {
-				if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]) {
-					graph[numNode][i] = orbit[numNode][i];
+			for (int numOrbit = 0; numOrbit < MAXORBITS; numOrbit++) {
+				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
+					graph[numNode][numOrbit] = orbit[numNode][numOrbit];
 				} else {
-					graph[numNode][i] = 0;
+					graph[numNode][numOrbit] = 0;
 					graphletIndex++;
 				}
 
