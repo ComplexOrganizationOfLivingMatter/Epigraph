@@ -37,7 +37,7 @@ public class Orca extends BasicGraphlets{
 	 */
 	public Orca(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
-		this.orbit = new int[this.adjacencyMatrix[0].length][MAXORBITS];
+		this.orbit = new int[this.adjacencyMatrix[0].length][TOTALGRAPHLETS];
 		this.deg = new int[this.adjacencyMatrix[0].length];
 		this.edges = new ArrayList<ValuePair<Integer, Integer>>();
 		this.inc = new ArrayList<ArrayList<ValuePair<Integer, Integer>>>();

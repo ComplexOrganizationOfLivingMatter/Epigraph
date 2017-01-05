@@ -17,7 +17,7 @@ public class BasicGraphlets {
 	/**
 	 * 
 	 */
-	public static int MAXORBITS = 73;
+	public static int TOTALGRAPHLETS = 73;
 
 	/**
 	 * This will only be seen by this class and the classes whose inherit from
@@ -39,7 +39,7 @@ public class BasicGraphlets {
 	 */
 	public BasicGraphlets(String fileName) {
 		Stack<String> data = readNdump(fileName);
-		orbit = new int[data.size()][MAXORBITS];
+		orbit = new int[data.size()][TOTALGRAPHLETS];
 
 		String row = "";
 		String orbitString = "";
@@ -95,10 +95,10 @@ public class BasicGraphlets {
 	 * @return the graphlets
 	 */
 	public Integer[][] getGraphletsInteger(int[] graphletsWeDontWant) {
-		Integer[][] graph = new Integer[orbit.length][MAXORBITS];
+		Integer[][] graph = new Integer[orbit.length][TOTALGRAPHLETS];
 		int graphletIndex = 0;
 		for (int numNode = 0; numNode < orbit.length; numNode++) {
-			for (int numOrbit = 0; numOrbit < MAXORBITS; numOrbit++) {
+			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
 					graph[numNode][numOrbit] = orbit[numNode][numOrbit];
 				} else {
