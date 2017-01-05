@@ -41,6 +41,7 @@ public class EpiCell {
 
 	/**
 	 * @param id
+	 *            identifier
 	 */
 	public EpiCell(int id) {
 		super();
@@ -164,6 +165,7 @@ public class EpiCell {
 	/**
 	 * 
 	 * @param graphletsWeDontWant
+	 *            the graphlets we dont want, will be zeros
 	 * @return the graphlets
 	 */
 	public Integer[] getGraphletsInteger(int[] graphletsWeDontWant) {

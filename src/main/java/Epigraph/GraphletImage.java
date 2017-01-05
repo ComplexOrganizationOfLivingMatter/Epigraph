@@ -349,9 +349,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 * 
 	 * @param graphletsFinal
 	 *            graphlets of the image
-	 * @param vectorReferenceInt
+	 * @param distanceReference
 	 *            graphlets of the reference image
-	 * @return
+	 * @return the distance calculated between the two params
 	 */
 	public float calculateGDD(ArrayList<Integer[]> graphletsFinal, ArrayList<Integer[]> distanceReference) {
 		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(distanceReference);
