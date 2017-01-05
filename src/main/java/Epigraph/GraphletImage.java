@@ -3,6 +3,7 @@
  */
 package Epigraph;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +36,8 @@ public class GraphletImage {
 	private static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	
 	//Random voronoi references //TODO: Get out from this class the random voronoi references
-	private BasicGraphlets[] randomVoronoiRef;
+	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
+	private BasicGraphlets[] randomVoronoiValidCells_5Ref;
 	
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = {8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
@@ -53,9 +55,16 @@ public class GraphletImage {
 		int selectedShape = CIRCLE_SHAPE;
 		int modeNumGraphlets = 0;
 		
+		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[20];
+		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[20];
 		//TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= 20; i++){
-			randomVoronoiRef[i-1] = new BasicGraphlets(Epigraph.class.getResource("/graphletsReferences/randomVoronoi_" + i + ".ndump2").getFile());
+			System.out.println("graphletsReferences/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			URL fileUrl = Epigraph.class.getResource("graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			randomVoronoiValidCells_4Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
+
+			fileUrl = Epigraph.class.getResource("graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			randomVoronoiValidCells_5Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
 		}
 		//END TODO
 		
