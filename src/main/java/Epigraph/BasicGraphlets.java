@@ -38,57 +38,44 @@ public class BasicGraphlets {
 	 * 
 	 */
 	public BasicGraphlets(String fileName) {
-		Stack<String> data = readNdump(fileName);
-		orbit = new int[data.size()][TOTALGRAPHLETS];
-
-		String row = "";
-		String orbitString = "";
-		int orbitNum = 0;
-		int numRow = 0;
-		while (data.isEmpty()) {
-			row = data.pop();
-			orbitNum = 0;
-			orbitString = "";
-			for (int j = 0; j < row.length(); j++) {
-				if (row.substring(j, j + 1) != " ") {
-					if (orbitString != "") {
-						orbit[numRow][orbitNum] = Integer.parseInt(orbitString);
-						orbitNum++;
-					}
-				} else {
-					orbitString += row.substring(j, j + 1);
-				}
-			}
-			numRow++;
-		}
-	}
-
-	/**
-	 * 
-	 * @param fileName
-	 */
-	private Stack<String> readNdump(String fileName) {
 		// File class needed to turn stringName to actual file
 		File file = new File(fileName);
-		Stack<String> wholeFileData = new Stack<String>();
 
 		try {
+			// count lines
+			Scanner countLines = new Scanner(file);
+
+			int numNodes = 0;
+			while (countLines.hasNextLine()) {
+				countLines.nextLine();
+				numNodes++;
+			}
+			countLines.close();
+
+			orbit = new int[numNodes][TOTALGRAPHLETS];
+
 			// read from filePooped with Scanner class
 			Scanner inputStream = new Scanner(file);
+
+			int row = 0;
+			int col = 0;
 			// hashNext() loops line-by-line
-			while (inputStream.hasNext()) {
+			while (inputStream.hasNextLine()) {
+				col = 0;
 				// read single line, put in string
-				wholeFileData.push(inputStream.next());
+				while (inputStream.hasNext() && col < TOTALGRAPHLETS) {
+					orbit[row][col] = inputStream.nextInt();
+					col++;
+				}
+				inputStream.nextLine();
+				row++;
 			}
 			// after loop, close scanner
 			inputStream.close();
 
-			return wholeFileData;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 	/**
