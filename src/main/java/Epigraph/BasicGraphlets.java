@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Epigraph;
+package epigraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,9 +34,11 @@ public class BasicGraphlets {
 	public BasicGraphlets() {
 		this.orbit = null;
 	}
-	
+
 	/**
 	 * 
+	 * @param orbit
+	 *            the graphlets themselves
 	 */
 	public BasicGraphlets(int[][] orbit) {
 		this.orbit = orbit;
@@ -44,6 +46,8 @@ public class BasicGraphlets {
 
 	/**
 	 * 
+	 * @param fileName
+	 *            where we'll get the graphlets
 	 */
 	public BasicGraphlets(String fileName) {
 		// File class needed to turn stringName to actual file
@@ -87,7 +91,10 @@ public class BasicGraphlets {
 	}
 
 	/**
-	 * @return the graphlets
+	 * 
+	 * @param graphletsWeDontWant
+	 *            the graphlets we don't want will appear as 0s
+	 * @return
 	 */
 	public ArrayList<Integer[]> getGraphletsInteger(int[] graphletsWeDontWant) {
 		ArrayList<Integer[]> graph = new ArrayList<Integer[]>();

@@ -1,13 +1,12 @@
 /**
  * 
  */
-package Epigraph;
+package epigraph;
 
 /**
- * @author Pablo Vicente-Munuera
- * On this class we will represent only the reference images.
- * This means, from this images, we'll only have the distances,
- * just in case the user wants a reference in the graphics.
+ * @author Pablo Vicente-Munuera On this class we will represent only the
+ *         reference images. This means, from this images, we'll only have the
+ *         distances, just in case the user wants a reference in the graphics.
  */
 public class BasicGraphletImage {
 
@@ -15,22 +14,24 @@ public class BasicGraphletImage {
 	 * 
 	 */
 	protected float distanceGDDRV;
-	
+
 	/**
 	 * 
 	 */
 	protected float distanceGDDH;
-	
+
 	/**
 	 * 
 	 */
 	public BasicGraphletImage() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * @param distanceGDDRV
+	 *            distance against random voronoi
 	 * @param distanceGDDH
+	 *            distance against a hexagonal grid
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH) {
 		this.distanceGDDRV = distanceGDDRV;
@@ -45,7 +46,8 @@ public class BasicGraphletImage {
 	}
 
 	/**
-	 * @param distanceGDDRV the distanceGDDRV to set
+	 * @param distanceGDDRV
+	 *            the distanceGDDRV to set
 	 */
 	public void setDistanceGDDRV(float distanceGDDRV) {
 		this.distanceGDDRV = distanceGDDRV;
@@ -59,7 +61,8 @@ public class BasicGraphletImage {
 	}
 
 	/**
-	 * @param distanceGDDH the distanceGDDH to set
+	 * @param distanceGDDH
+	 *            the distanceGDDH to set
 	 */
 	public void setDistanceGDDH(float distanceGDDH) {
 		this.distanceGDDH = distanceGDDH;

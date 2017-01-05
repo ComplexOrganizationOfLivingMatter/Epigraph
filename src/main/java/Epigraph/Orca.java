@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Epigraph;
+package epigraph;
 
 import java.util.ArrayList;
 
@@ -14,11 +14,11 @@ import net.imglib2.util.ValuePair;
  *         approach to graphlet counting - by Tomaz Hocevar.
  *
  */
-public class Orca extends BasicGraphlets{
+public class Orca extends BasicGraphlets {
 
 	private int[][] adjacencyMatrix;
 	/** inherited from BasicGraphlets **/
-	//private int[][] orbit; // orbit[x][o] - how many times does node x
+	// private int[][] orbit; // orbit[x][o] - how many times does node x
 
 	// participate in
 	// orbit o
@@ -47,10 +47,10 @@ public class Orca extends BasicGraphlets{
 
 		int numEdge = 0;
 		int[] d = new int[this.adjacencyMatrix[0].length];
-		
+
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++)
 			inc.add(new ArrayList<ValuePair<Integer, Integer>>());
-		
+
 		for (int i = 0; i < this.adjacencyMatrix[0].length; i++) {
 			for (int j = i + 1; j < this.adjacencyMatrix[0].length; j++) {
 				if (this.adjacencyMatrix[i][j] != 0) {
@@ -68,7 +68,8 @@ public class Orca extends BasicGraphlets{
 			}
 		}
 
-		//There were a sorting on previous code (Tomaz Hocevar's code). However, seems to be not necessary.
+		// There were a sorting on previous code (Tomaz Hocevar's code).
+		// However, seems to be not necessary.
 
 		this.computingCommonNodes();
 		this.countingFullGraphlets();
@@ -248,8 +249,7 @@ public class Orca extends BasicGraphlets{
 			int f_23 = 0, f_21 = 0; // 7
 
 			for (int nx1 = 0; nx1 < deg[x]; nx1++) {
-				int a = inc.get(x).get(nx1).getA(),
-						xa = inc.get(x).get(nx1).getB();
+				int a = inc.get(x).get(nx1).getA(), xa = inc.get(x).get(nx1).getB();
 
 				for (int i = 0; i < nca; i++)
 					common_a[common_a_list[i]] = 0;
@@ -268,15 +268,13 @@ public class Orca extends BasicGraphlets{
 
 				// x = orbit-14 (tetrahedron)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = inc.get(x).get(nx2).getA(),
-							xb = inc.get(x).get(nx2).getB();
+					int b = inc.get(x).get(nx2).getA(), xb = inc.get(x).get(nx2).getB();
 
 					if (isAdjacent(a, b) == 0)
 						continue;
 
 					for (int nx3 = nx2 + 1; nx3 < deg[x]; nx3++) {
-						int c = inc.get(x).get(nx3).getA(),
-								xc = inc.get(x).get(nx3).getB();
+						int c = inc.get(x).get(nx3).getA(), xc = inc.get(x).get(nx3).getB();
 						if (isAdjacent(a, c) == 0 || isAdjacent(b, c) == 0)
 							continue;
 						orbit[x][14]++;
@@ -295,13 +293,11 @@ public class Orca extends BasicGraphlets{
 
 				// x = orbit-13 (diamond)
 				for (int nx2 = 0; nx2 < deg[x]; nx2++) {
-					int b = inc.get(x).get(nx2).getA(),
-							xb = inc.get(x).get(nx2).getB();
+					int b = inc.get(x).get(nx2).getA(), xb = inc.get(x).get(nx2).getB();
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nx3 = nx2 + 1; nx3 < deg[x]; nx3++) {
-						int c = inc.get(x).get(nx3).getA(),
-								xc = inc.get(x).get(nx3).getB();
+						int c = inc.get(x).get(nx3).getA(), xc = inc.get(x).get(nx3).getB();
 						if (isAdjacent(a, c) == 0 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][13]++;
@@ -324,9 +320,8 @@ public class Orca extends BasicGraphlets{
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int na = 0; na < deg[a]; na++) {
-						int c = inc.get(a).get(na).getA(),
-								ac = inc.get(a).get(na).getB();
-						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0){
+						int c = inc.get(a).get(na).getA(), ac = inc.get(a).get(na).getB();
+						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0) {
 							continue;
 						}
 						orbit[x][12]++;
@@ -342,14 +337,12 @@ public class Orca extends BasicGraphlets{
 
 				// x = orbit-8 (cycle)
 				for (int nx2 = nx1 + 1; nx2 < deg[x]; nx2++) {
-					int b = inc.get(x).get(nx2).getA(),
-							xb = inc.get(x).get(nx2).getB();
+					int b = inc.get(x).get(nx2).getA(), xb = inc.get(x).get(nx2).getB();
 					if (isAdjacent(a, b) == 1)
 						continue;
 					for (int na = 0; na < deg[a]; na++) {
-						int c = inc.get(a).get(na).getA(),
-								ac = inc.get(a).get(na).getB();
-						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0){
+						int c = inc.get(a).get(na).getA(), ac = inc.get(a).get(na).getB();
+						if (c == x || isAdjacent(x, c) == 1 || isAdjacent(b, c) == 0) {
 							continue;
 						}
 						orbit[x][8]++;
@@ -370,8 +363,7 @@ public class Orca extends BasicGraphlets{
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nx3 = 0; nx3 < deg[x]; nx3++) {
-						int c = inc.get(x).get(nx3).getA(),
-								xc = inc.get(x).get(nx3).getB();
+						int c = inc.get(x).get(nx3).getA(), xc = inc.get(x).get(nx3).getB();
 						if (c == a || c == b || isAdjacent(a, c) == 1 || isAdjacent(b, c) == 1)
 							continue;
 						orbit[x][11]++;
@@ -388,8 +380,7 @@ public class Orca extends BasicGraphlets{
 					if (isAdjacent(a, b) == 0)
 						continue;
 					for (int nb = 0; nb < deg[b]; nb++) {
-						int c = inc.get(b).get(nb).getA(),
-								bc = inc.get(b).get(nb).getB();
+						int c = inc.get(b).get(nb).getA(), bc = inc.get(b).get(nb).getB();
 						if (c == x || c == a || isAdjacent(a, c) == 1 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][10]++;
@@ -403,13 +394,11 @@ public class Orca extends BasicGraphlets{
 
 				// x = orbit-9 (paw)
 				for (int na1 = 0; na1 < deg[a]; na1++) {
-					int b = inc.get(a).get(na1).getA(),
-							ab = inc.get(a).get(na1).getB();
+					int b = inc.get(a).get(na1).getA(), ab = inc.get(a).get(na1).getB();
 					if (b == x || isAdjacent(x, b) == 1)
 						continue;
 					for (int na2 = na1 + 1; na2 < deg[a]; na2++) {
-						int c = inc.get(a).get(na2).getA(),
-								ac = inc.get(a).get(na2).getB();
+						int c = inc.get(a).get(na2).getA(), ac = inc.get(a).get(na2).getB();
 						if (c == x || isAdjacent(b, c) == 0 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][9]++;
@@ -428,8 +417,7 @@ public class Orca extends BasicGraphlets{
 					if (b == x || isAdjacent(x, b) == 1)
 						continue;
 					for (int nb = 0; nb < deg[b]; nb++) {
-						int c = inc.get(b).get(nb).getA(),
-								bc = inc.get(b).get(nb).getB();
+						int c = inc.get(b).get(nb).getA(), bc = inc.get(b).get(nb).getB();
 						if (c == a || isAdjacent(a, c) == 1 || isAdjacent(x, c) == 1)
 							continue;
 						orbit[x][4]++;

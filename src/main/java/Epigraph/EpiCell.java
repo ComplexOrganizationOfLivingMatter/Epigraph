@@ -1,11 +1,10 @@
 /**
  * 
  */
-package Epigraph;
+package epigraph;
 
 import java.util.HashSet;
 import java.util.stream.IntStream;
-
 
 /**
  * @author Pablo Vicente-Munuera
@@ -13,7 +12,7 @@ import java.util.stream.IntStream;
  */
 public class EpiCell {
 	private int id;
-	
+
 	private HashSet<Integer> neighbours;
 	private boolean valid_cell;
 	private boolean valid_cell_4;
@@ -24,7 +23,7 @@ public class EpiCell {
 	private int[] pixelsX;
 	private int[] perimeterPixelsX;
 	private int[] perimeterPixelsY;
-	
+
 	/**
 	 * 
 	 */
@@ -39,7 +38,7 @@ public class EpiCell {
 		this.pixelsY = null;
 		this.pixelsX = null;
 	}
-	
+
 	/**
 	 * @param id
 	 */
@@ -54,13 +53,18 @@ public class EpiCell {
 		this.pixelsY = null;
 		this.pixelsX = null;
 	}
-	
+
 	/**
-	 * @param id identifier
-	 * @param neighbours neighbors of the cells
-	 * @param valid_cell valid cells to compute
-	 * @param valid_cell_4 valid cells in a 4-length path
-	 * @param valid_cell_5 valid cells in a 5-length path
+	 * @param id
+	 *            identifier
+	 * @param neighbours
+	 *            neighbors of the cells
+	 * @param valid_cell
+	 *            valid cells to compute
+	 * @param valid_cell_4
+	 *            valid cells in a 4-length path
+	 * @param valid_cell_5
+	 *            valid cells in a 5-length path
 	 */
 	public EpiCell(int id, HashSet<Integer> neighbours, boolean valid_cell, boolean valid_cell_4,
 			boolean valid_cell_5) {
@@ -83,7 +87,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -97,7 +102,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param neighbours2 the neighbours to set
+	 * @param neighbours
+	 *            the neighbours to set
 	 */
 	public void setNeighbours(HashSet<Integer> neighbours) {
 		this.neighbours = neighbours;
@@ -111,7 +117,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param valid_cell the valid_cell to set
+	 * @param valid_cell
+	 *            the valid_cell to set
 	 */
 	public void setValid_cell(boolean valid_cell) {
 		this.valid_cell = valid_cell;
@@ -125,7 +132,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param valid_cell_4 the valid_cell_4 to set
+	 * @param valid_cell_4
+	 *            the valid_cell_4 to set
 	 */
 	public void setValid_cell_4(boolean valid_cell_4) {
 		this.valid_cell_4 = valid_cell_4;
@@ -139,7 +147,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param valid_cell_5 the valid_cell_5 to set
+	 * @param valid_cell_5
+	 *            the valid_cell_5 to set
 	 */
 	public void setValid_cell_5(boolean valid_cell_5) {
 		this.valid_cell_5 = valid_cell_5;
@@ -151,27 +160,30 @@ public class EpiCell {
 	public int[] getGraphlets() {
 		return graphlets;
 	}
-	
+
 	/**
+	 * 
+	 * @param graphletsWeDontWant
 	 * @return the graphlets
 	 */
 	public Integer[] getGraphletsInteger(int[] graphletsWeDontWant) {
 		Integer[] graph = new Integer[graphlets.length];
 		int graphletIndex = 0;
-		for (int i = 0; i < graphlets.length; i++){
+		for (int i = 0; i < graphlets.length; i++) {
 			if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]) {
 				graph[i] = graphlets[i];
-			}else{
+			} else {
 				graph[i] = 0;
 				graphletIndex++;
 			}
-				
+
 		}
 		return graph;
 	}
 
 	/**
-	 * @param graphlets2 the graphlets to set
+	 * @param graphlets2
+	 *            the graphlets to set
 	 */
 	public void setGraphlets(int[] graphlets2) {
 		this.graphlets = graphlets2;
@@ -183,9 +195,10 @@ public class EpiCell {
 	public int[] getPerimeterPixelsX() {
 		return perimeterPixelsX;
 	}
-	
+
 	/**
-	 * @param perimeterPixelsX the perimeterPixelsX to set
+	 * @param perimeterPixelsX
+	 *            the perimeterPixelsX to set
 	 */
 	public void setPerimeterPixelsX(int[] perimeterPixelsX) {
 		this.perimeterPixelsX = perimeterPixelsX;
@@ -199,7 +212,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param perimeterPixelsY the perimeterPixelsY to set
+	 * @param perimeterPixelsY
+	 *            the perimeterPixelsY to set
 	 */
 	public void setPerimeterPixelsY(int[] perimeterPixelsY) {
 		this.perimeterPixelsY = perimeterPixelsY;
@@ -210,13 +224,13 @@ public class EpiCell {
 	 */
 	public int[][] getPixels() {
 		int[][] pixels = new int[pixelsX.length][2];
-		for (int i = 0; i < pixels.length; i++){
+		for (int i = 0; i < pixels.length; i++) {
 			pixels[i][0] = pixelsX[i];
 			pixels[i][1] = pixelsY[i];
 		}
 		return pixels;
 	}
-	
+
 	/**
 	 * @return the pixels
 	 */
@@ -226,64 +240,72 @@ public class EpiCell {
 		centroid[1] = (int) IntStream.of(pixelsY).average().getAsDouble();
 		return centroid;
 	}
-	
+
 	/**
-	 * @param pixels the pixels to set
+	 * 
+	 * @param newPixelX
+	 *            pixel to add only coordinate X
+	 * @param newPixelY
+	 *            coordinate Y
 	 */
 	public void addPixel(int newPixelX, int newPixelY) {
 		int[] newPixelsX;
 		int[] newPixelsY;
-		
-		if (this.pixelsX == null){
+
+		if (this.pixelsX == null) {
 			newPixelsX = new int[1];
 			newPixelsY = new int[1];
 			newPixelsX[0] = newPixelX;
 			newPixelsY[0] = newPixelY;
 		} else {
-			newPixelsX = new int[this.pixelsX.length+1];
-			newPixelsY = new int[this.pixelsY.length+1];
-			//Copying the old array into the new one
-			for (int i = 0; i < this.pixelsX.length; i++){
+			newPixelsX = new int[this.pixelsX.length + 1];
+			newPixelsY = new int[this.pixelsY.length + 1];
+			// Copying the old array into the new one
+			for (int i = 0; i < this.pixelsX.length; i++) {
 				newPixelsX[i] = this.pixelsX[i];
 				newPixelsY[i] = this.pixelsY[i];
 			}
 
-			//Adding the new ones
+			// Adding the new ones
 			newPixelsX[this.pixelsX.length] = newPixelX;
 			newPixelsY[this.pixelsY.length] = newPixelY;
 		}
-		
+
 		this.pixelsX = newPixelsX;
 		this.pixelsY = newPixelsY;
 	}
-	
+
 	/**
-	 * @param pixels the pixels to set
+	 * 
+	 * @param newPixelX
+	 *            coordinate X of perimeter
+	 * @param newPixelY
+	 *            coordinate Y of perimeter
 	 */
 	public void addPixelToPerimeter(int newPixelX, int newPixelY) {
-		//TODO: We should do a unique to remove duplicates
+		// TODO: We should do a unique to remove duplicates
 		int[] newPixelsX;
 		int[] newPixelsY;
-		
-		if (this.perimeterPixelsX == null){
+
+		if (this.perimeterPixelsX == null) {
 			newPixelsX = new int[1];
 			newPixelsY = new int[1];
 			newPixelsX[0] = newPixelX;
 			newPixelsY[0] = newPixelY;
 		} else {
-			newPixelsX = new int[this.perimeterPixelsX.length+1];
-			newPixelsY = new int[this.perimeterPixelsY.length+1];
-			//Copying the old array into the new one
-			for (int i = 0; i < this.perimeterPixelsX.length; i++){
+			newPixelsX = new int[this.perimeterPixelsX.length + 1];
+			newPixelsY = new int[this.perimeterPixelsY.length + 1];
+			// Copying the old array into the new one
+			for (int i = 0; i < this.perimeterPixelsX.length; i++) {
 				newPixelsX[i] = this.perimeterPixelsX[i];
 				newPixelsY[i] = this.perimeterPixelsY[i];
 			}
 
-			//Adding the new ones
+			// Adding the new ones
 			newPixelsX[this.perimeterPixelsX.length] = newPixelX;
 			newPixelsY[this.perimeterPixelsY.length] = newPixelY;
 		}
-		
+
 		this.perimeterPixelsX = newPixelsX;
 		this.perimeterPixelsY = newPixelsY;
 	}
