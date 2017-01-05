@@ -8,20 +8,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import ij.ImagePlus;
-
-import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
-import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
-import util.FindConnectedRegions;
 
 
 /**
@@ -38,11 +30,12 @@ public class GraphletImage {
 	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
-	
-	public static int TOTALGRAPHLETS = 73;
 
 	//Hexagonal reference
 	private static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	
+	//Random voronoi references //TODO: Get out from this class the random voronoi references
+	private BasicGraphlets[] randomVoronoiRef;
 	
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = {8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
@@ -60,7 +53,12 @@ public class GraphletImage {
 		int selectedShape = CIRCLE_SHAPE;
 		int modeNumGraphlets = 0;
 		
-		EDM edm = new EDM();
+		//TODO: Get out from this class the random voronoi references
+		for (int i = 1; i <= 20; i++){
+			randomVoronoiRef[i-1] = new BasicGraphlets(Epigraph.class.getResource("/graphletsReferences/randomVoronoi_" + i + ".ndump2").getFile());
+		}
+		//END TODO
+		
 		this.cells = new ArrayList<EpiCell>();
 		
 		if (!img.getChannelProcessor().isBinary()){
@@ -145,7 +143,7 @@ public class GraphletImage {
 		System.out.println(percentageOfHexagonsOriginal);
 		this.orcaProgram = null;
 		
-		int numValidCells = 0;
+		//int numValidCells = 0;
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
@@ -183,8 +181,8 @@ public class GraphletImage {
 			}
 		}
 		
-		float distanceGDDH = calculateGDDH(graphletsFinal);
-		System.out.println(distanceGDDH);
+		//float distanceGDDH = calculateGDDH(graphletsFinal);
+		//System.out.println(distanceGDDH);
 	}
 	
 	/**
@@ -314,7 +312,7 @@ public class GraphletImage {
 		
 		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
 		
-		for (int i = 0; i < TOTALGRAPHLETS; i++){
+		for (int i = 0; i < BasicGraphlets.TOTALGRAPHLETS; i++){
 			HashMap<Integer, Float> values1 = graphletFreqRef.get(i);
 			HashMap<Integer, Float> values2 = graphletFreqImage.get(i);
 			
@@ -386,7 +384,7 @@ public class GraphletImage {
 		
 		HashMap<Integer, Float> graphletsValues;
 		Float actualValue;
-		for (int numGraphlet = 0; numGraphlet < TOTALGRAPHLETS; numGraphlet++){
+		for (int numGraphlet = 0; numGraphlet < BasicGraphlets.TOTALGRAPHLETS; numGraphlet++){
 			graphletsValues = new HashMap<Integer, Float>();
 			
 			for (int numNode = 0; numNode < signatures.size(); numNode++){
