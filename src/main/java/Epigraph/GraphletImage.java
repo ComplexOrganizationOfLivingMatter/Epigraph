@@ -22,7 +22,7 @@ import ij.process.ImageProcessor;
  * @author Pablo Vicente-Munuera
  *
  */
-public class GraphletImage {
+public class GraphletImage extends BasicGraphletImage{
 	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
@@ -48,8 +48,6 @@ public class GraphletImage {
 	private ArrayList<EpiCell> cells;
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
-	private float distanceGDDRV;
-	private float distanceGDDH;
 	
 	/**
 	 * @param img image
@@ -215,34 +213,6 @@ public class GraphletImage {
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
 		System.out.println(this.distanceGDDRV);
-	}
-	
-	/**
-	 * @return the distanceGDDRV
-	 */
-	public float getDistanceGDDRV() {
-		return distanceGDDRV;
-	}
-
-	/**
-	 * @param distanceGDDRV the distanceGDDRV to set
-	 */
-	public void setDistanceGDDRV(float distanceGDDRV) {
-		this.distanceGDDRV = distanceGDDRV;
-	}
-
-	/**
-	 * @return the distanceGDDH
-	 */
-	public float getDistanceGDDH() {
-		return distanceGDDH;
-	}
-
-	/**
-	 * @param distanceGDDH the distanceGDDH to set
-	 */
-	public void setDistanceGDDH(float distanceGDDH) {
-		this.distanceGDDH = distanceGDDH;
 	}
 	
 	/**
