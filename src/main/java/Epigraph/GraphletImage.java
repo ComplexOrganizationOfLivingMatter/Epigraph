@@ -23,17 +23,14 @@ import ij.process.ImageProcessor;
  *
  */
 public class GraphletImage {
-	private ImagePlus raw_img;
-	private ImagePlus l_img;
-	private ArrayList<EpiCell> cells;
-	private int[][] adjacencyMatrix;
-	private Orca orcaProgram;
 	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
+	
+	public static final int NUMRANDOMVORONOI = 20;
 
 	//Hexagonal reference
-	private static BasicGraphlets hexagonRefInt;
+	private BasicGraphlets hexagonRefInt;
 	
 	//Random voronoi references //TODO: Get out from this class the random voronoi references
 	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
@@ -45,6 +42,15 @@ public class GraphletImage {
 	private static int[] basicGraphlets = {16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
 	private static int[] basicParcialGraphlets = {8, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
 		
+	
+	private ImagePlus raw_img;
+	private ImagePlus l_img;
+	private ArrayList<EpiCell> cells;
+	private int[][] adjacencyMatrix;
+	private Orca orcaProgram;
+	private float distanceGDDRV;
+	private float distanceGDDH;
+	
 	/**
 	 * @param img image
 	 */
@@ -61,7 +67,7 @@ public class GraphletImage {
 		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[20];
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[20];
 		//TODO: Get out from this class the random voronoi references
-		for (int i = 1; i <= 20; i++){
+		for (int i = 1; i <= NUMRANDOMVORONOI; i++){
 			//System.out.println("graphletsReferences/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			URL fileUrl = Epigraph.class.getResource("graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_4Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
@@ -196,8 +202,47 @@ public class GraphletImage {
 			}
 		}
 		
-		float distanceGDDH = calculateGDDH(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
-		System.out.println(distanceGDDH);
+		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
+		System.out.println(this.distanceGDDH);
+		
+		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
+		for (int i = 0; i < NUMRANDOMVORONOI; i++){
+			if (validCells5Graphlets)
+				distanceGDDRVArray[i] = calculateGDD(graphletsFinal, this.randomVoronoiValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
+			else
+				distanceGDDRVArray[i] = calculateGDD(graphletsFinal, this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+			
+		}
+		this.distanceGDDRV = mean(distanceGDDRVArray);
+		System.out.println(this.distanceGDDH);
+	}
+	
+	/**
+	 * @return the distanceGDDRV
+	 */
+	public float getDistanceGDDRV() {
+		return distanceGDDRV;
+	}
+
+	/**
+	 * @param distanceGDDRV the distanceGDDRV to set
+	 */
+	public void setDistanceGDDRV(float distanceGDDRV) {
+		this.distanceGDDRV = distanceGDDRV;
+	}
+
+	/**
+	 * @return the distanceGDDH
+	 */
+	public float getDistanceGDDH() {
+		return distanceGDDH;
+	}
+
+	/**
+	 * @param distanceGDDH the distanceGDDH to set
+	 */
+	public void setDistanceGDDH(float distanceGDDH) {
+		this.distanceGDDH = distanceGDDH;
 	}
 	
 	/**
@@ -319,9 +364,7 @@ public class GraphletImage {
 	 * @param vectorReferenceInt
 	 * @return
 	 */
-	public float calculateGDD(ArrayList<Integer[]> graphletsFinal, Integer[] vectorReferenceInt){
-		ArrayList<Integer[]> distanceReference = new ArrayList<Integer[]>();
-		distanceReference.add(vectorReferenceInt);
+	public float calculateGDD(ArrayList<Integer[]> graphletsFinal,  ArrayList<Integer[]> distanceReference){
 		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(distanceReference);
 		ArrayList<HashMap<Integer, Float>> graphletFreqImage = scaleGraphletDists(graphletsFinal);
 		
@@ -430,4 +473,6 @@ public class GraphletImage {
 		
 		return distributions;
 	}
+
+
 }

@@ -5,6 +5,7 @@ package Epigraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -17,7 +18,7 @@ public class BasicGraphlets {
 	/**
 	 * 
 	 */
-	public static int TOTALGRAPHLETS = 73;
+	public static final int TOTALGRAPHLETS = 73;
 
 	/**
 	 * This will only be seen by this class and the classes whose inherit from
@@ -88,19 +89,21 @@ public class BasicGraphlets {
 	/**
 	 * @return the graphlets
 	 */
-	public Integer[][] getGraphletsInteger(int[] graphletsWeDontWant) {
-		Integer[][] graph = new Integer[this.orbit.length][TOTALGRAPHLETS];
+	public ArrayList<Integer[]> getGraphletsInteger(int[] graphletsWeDontWant) {
+		ArrayList<Integer[]> graph = new ArrayList<Integer[]>();
+		Integer[] actualGraphlets;
 		int graphletIndex = 0;
 		for (int numNode = 0; numNode < this.orbit.length; numNode++) {
+			actualGraphlets = new Integer[TOTALGRAPHLETS];
 			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
-					graph[numNode][numOrbit] = this.orbit[numNode][numOrbit];
+					actualGraphlets[numOrbit] = this.orbit[numNode][numOrbit];
 				} else {
-					graph[numNode][numOrbit] = 0;
+					actualGraphlets[numOrbit] = 0;
 					graphletIndex++;
 				}
-
 			}
+			graph.add(actualGraphlets);
 		}
 		return graph;
 	}
