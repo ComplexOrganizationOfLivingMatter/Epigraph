@@ -15,6 +15,8 @@ import java.util.Stack;
  */
 public class BasicGraphlets {
 
+	public static int MAXORBITS = 73;
+
 	/**
 	 * This will only be seen by this class and the classes whose inherit from
 	 * this one.
@@ -29,29 +31,30 @@ public class BasicGraphlets {
 	public BasicGraphlets() {
 		orbit = null;
 	}
+
 	/**
 	 * 
 	 */
 	public BasicGraphlets(String fileName) {
 		Stack<String> data = readNdump(fileName);
-		orbit = new int[data.size()][73];
-		
+		orbit = new int[data.size()][MAXORBITS];
+
 		String row = "";
 		String orbitString = "";
 		int orbitNum = 0;
 		int numRow = 0;
-		while (data.isEmpty()){
+		while (data.isEmpty()) {
 			row = data.pop();
 			orbitNum = 0;
 			orbitString = "";
-			for (int j = 0; j < row.length(); j++){
-				if (row.substring(j, j+1) != " "){
-					if (orbitString != ""){
+			for (int j = 0; j < row.length(); j++) {
+				if (row.substring(j, j + 1) != " ") {
+					if (orbitString != "") {
 						orbit[numRow][orbitNum] = Integer.parseInt(orbitString);
 						orbitNum++;
 					}
 				} else {
-					orbitString += row.substring(j, j+1);
+					orbitString += row.substring(j, j + 1);
 				}
 			}
 			numRow++;
@@ -82,8 +85,28 @@ public class BasicGraphlets {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
+	}
+
+	/**
+	 * @return the graphlets
+	 */
+	public Integer[][] getGraphletsInteger(int[] graphletsWeDontWant) {
+		Integer[][] graph = new Integer[orbit.length][MAXORBITS];
+		int graphletIndex = 0;
+		for (int numNode = 0; numNode < orbit.length; numNode++) {
+			for (int i = 0; i < MAXORBITS; i++) {
+				if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]) {
+					graph[numNode][i] = orbit[numNode][i];
+				} else {
+					graph[numNode][i] = 0;
+					graphletIndex++;
+				}
+
+			}
+		}
+		return graph;
 	}
 
 }

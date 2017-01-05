@@ -160,9 +160,9 @@ public class EpiCell {
 		int graphletIndex = 0;
 		for (int i = 0; i < graphlets.length; i++){
 			if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]) {
-				graph[i] = new Integer(graphlets[i]);
+				graph[i] = graphlets[i];
 			}else{
-				graph[i] = new Integer(0);
+				graph[i] = 0;
 				graphletIndex++;
 			}
 				
