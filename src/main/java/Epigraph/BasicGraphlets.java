@@ -14,6 +14,9 @@ import java.util.Stack;
  */
 public class BasicGraphlets {
 
+	/**
+	 * 
+	 */
 	public static int MAXORBITS = 73;
 
 	/**

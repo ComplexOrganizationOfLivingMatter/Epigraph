@@ -31,6 +31,10 @@ public class Orca extends BasicGraphlets{
 	private int[] tri;
 	private int[] C5;
 
+	/**
+	 * 
+	 * @param adjacencyMatrix
+	 */
 	public Orca(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
 		this.orbit = new int[this.adjacencyMatrix[0].length][MAXORBITS];
@@ -130,10 +134,19 @@ public class Orca extends BasicGraphlets{
 		}
 	}
 
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	private int isAdjacent(int a, int b) {
 		return this.adjacencyMatrix[a][b];
 	}
 
+	/**
+	 * 
+	 */
 	private void countingFullGraphlets() {
 		this.C5 = new int[this.adjacencyMatrix[0].length];
 		int[] neigh = new int[this.adjacencyMatrix[0].length];
@@ -182,6 +195,9 @@ public class Orca extends BasicGraphlets{
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void buildingEquationSystems() {
 		int[] common_x = new int[this.adjacencyMatrix[0].length];
 		int[] common_x_list = new int[this.adjacencyMatrix[0].length];

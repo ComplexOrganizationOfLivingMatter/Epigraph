@@ -25,7 +25,9 @@ public class EpiCell {
 	private int[] perimeterPixelsX;
 	private int[] perimeterPixelsY;
 	
-	
+	/**
+	 * 
+	 */
 	public EpiCell() {
 		super();
 		this.id = -1;

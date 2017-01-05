@@ -60,7 +60,6 @@ public class GraphletImage {
 		int selectedShape = CIRCLE_SHAPE;
 		int modeNumGraphlets = 0;
 		
-		
 		EDM edm = new EDM();
 		this.cells = new ArrayList<EpiCell>();
 		
