@@ -214,7 +214,7 @@ public class GraphletImage {
 			
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
-		System.out.println(this.distanceGDDH);
+		System.out.println(this.distanceGDDRV);
 	}
 	
 	/**
