@@ -77,12 +77,12 @@ public class GraphletImage extends BasicGraphletImage {
 			// System.out.println("graphletsReferences/randomVoronoi_" +
 			// Integer.toString(i) + ".ndump2");
 			URL fileUrl = Epigraph.class
-					.getResource("graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl.getFile());
+					.getResource("/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
 
 			fileUrl = Epigraph.class
-					.getResource("graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlets(fileUrl.getFile());
+					.getResource("/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlets(fileUrl);
 		}
 		// END TODO
 

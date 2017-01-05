@@ -5,9 +5,11 @@ package epigraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 
 /**
  * @author Pablo Vicente-Munuera
@@ -49,13 +51,11 @@ public class BasicGraphlets {
 	 * @param fileName
 	 *            where we'll get the graphlets
 	 */
-	public BasicGraphlets(String fileName) {
+	public BasicGraphlets(URL fileName) {
 		// File class needed to turn stringName to actual file
-		File file = new File(fileName);
-
 		try {
 			// count lines
-			Scanner countLines = new Scanner(file);
+			Scanner countLines = new Scanner(fileName.openStream());
 
 			int numNodes = 0;
 			while (countLines.hasNextLine()) {
@@ -67,7 +67,7 @@ public class BasicGraphlets {
 			this.orbit = new int[numNodes][TOTALGRAPHLETS];
 
 			// read from filePooped with Scanner class
-			Scanner inputStream = new Scanner(file);
+			Scanner inputStream =  new Scanner(fileName.openStream());
 
 			int row = 0;
 			int col = 0;
@@ -86,6 +86,9 @@ public class BasicGraphlets {
 			inputStream.close();
 
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
