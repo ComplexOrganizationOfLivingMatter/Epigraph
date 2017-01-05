@@ -31,7 +31,14 @@ public class BasicGraphlets {
 	 * 
 	 */
 	public BasicGraphlets() {
-		orbit = null;
+		this.orbit = null;
+	}
+	
+	/**
+	 * 
+	 */
+	public BasicGraphlets(int[][] orbit) {
+		this.orbit = orbit;
 	}
 
 	/**
@@ -52,7 +59,7 @@ public class BasicGraphlets {
 			}
 			countLines.close();
 
-			orbit = new int[numNodes][TOTALGRAPHLETS];
+			this.orbit = new int[numNodes][TOTALGRAPHLETS];
 
 			// read from filePooped with Scanner class
 			Scanner inputStream = new Scanner(file);
@@ -64,7 +71,7 @@ public class BasicGraphlets {
 				col = 0;
 				// read single line, put in string
 				while (inputStream.hasNext() && col < TOTALGRAPHLETS) {
-					orbit[row][col] = inputStream.nextInt();
+					this.orbit[row][col] = inputStream.nextInt();
 					col++;
 				}
 				inputStream.nextLine();
@@ -82,12 +89,12 @@ public class BasicGraphlets {
 	 * @return the graphlets
 	 */
 	public Integer[][] getGraphletsInteger(int[] graphletsWeDontWant) {
-		Integer[][] graph = new Integer[orbit.length][TOTALGRAPHLETS];
+		Integer[][] graph = new Integer[this.orbit.length][TOTALGRAPHLETS];
 		int graphletIndex = 0;
-		for (int numNode = 0; numNode < orbit.length; numNode++) {
+		for (int numNode = 0; numNode < this.orbit.length; numNode++) {
 			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
-					graph[numNode][numOrbit] = orbit[numNode][numOrbit];
+					graph[numNode][numOrbit] = this.orbit[numNode][numOrbit];
 				} else {
 					graph[numNode][numOrbit] = 0;
 					graphletIndex++;

@@ -33,7 +33,7 @@ public class GraphletImage {
 	public static int SQUARE_SHAPE = 1;
 
 	//Hexagonal reference
-	private static Integer[] hexagonRefInt = {6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	private static BasicGraphlets hexagonRefInt;
 	
 	//Random voronoi references //TODO: Get out from this class the random voronoi references
 	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
@@ -55,16 +55,19 @@ public class GraphletImage {
 		int selectedShape = CIRCLE_SHAPE;
 		int modeNumGraphlets = 0;
 		
+		int[][] hexagonGraphlets = {{6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18, 0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+		this.hexagonRefInt = new BasicGraphlets(hexagonGraphlets);
+		
 		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[20];
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[20];
 		//TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= 20; i++){
-			System.out.println("graphletsReferences/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			//System.out.println("graphletsReferences/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			URL fileUrl = Epigraph.class.getResource("graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			randomVoronoiValidCells_4Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
+			this.randomVoronoiValidCells_4Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
 
 			fileUrl = Epigraph.class.getResource("graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			randomVoronoiValidCells_5Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
+			this.randomVoronoiValidCells_5Ref[i-1] = new BasicGraphlets(fileUrl.getFile());
 		}
 		//END TODO
 		
@@ -160,6 +163,7 @@ public class GraphletImage {
 		
 		
 		int[] graphletsWeDontWant;
+		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
 		case 0:
 			graphletsWeDontWant = totalGraphlets;
@@ -169,9 +173,11 @@ public class GraphletImage {
 			break;
 		case 2:
 			graphletsWeDontWant = basicGraphlets;
+			validCells5Graphlets = false;
 			break;
 		case 3:
 			graphletsWeDontWant = basicParcialGraphlets;
+			validCells5Graphlets = false;
 			break;
 
 		default:
@@ -190,8 +196,8 @@ public class GraphletImage {
 			}
 		}
 		
-		//float distanceGDDH = calculateGDDH(graphletsFinal);
-		//System.out.println(distanceGDDH);
+		float distanceGDDH = calculateGDDH(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
+		System.out.println(distanceGDDH);
 	}
 	
 	/**
