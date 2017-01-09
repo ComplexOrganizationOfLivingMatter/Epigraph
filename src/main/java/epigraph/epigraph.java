@@ -1,7 +1,7 @@
 /**
  * Epigraph
  */
-package Epigraph;
+package epigraph;
 
 
 import java.io.FileInputStream;
@@ -14,6 +14,7 @@ import ij.ImageJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.plugin.PlugIn;
+
 
 
 /**
