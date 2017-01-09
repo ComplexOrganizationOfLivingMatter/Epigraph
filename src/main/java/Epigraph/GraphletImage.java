@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Epigraph;
+package epigraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;

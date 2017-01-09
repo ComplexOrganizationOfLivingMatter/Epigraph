@@ -1,4 +1,4 @@
-package Epigraph;
+package epigraph;
 
 import java.io.File;
 import java.io.FileInputStream;
