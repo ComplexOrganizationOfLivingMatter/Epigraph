@@ -1,7 +1,7 @@
 /**
  * Epigraph
  */
-package Epigraph;
+package epigraph;
 
 
 import ij.IJ;
@@ -25,6 +25,16 @@ public class Epigraph implements PlugIn {
 //		
 //	}
 	
+	/**
+	 * 
+	 */
+	public Epigraph() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu
 		Class<?> clazz = Epigraph.class;
@@ -46,8 +56,6 @@ public class Epigraph implements PlugIn {
 	 */
 	public void run(String arg)
 	{
-
-		// instantiate segmentation backend
 		
 //
 		//get current image
