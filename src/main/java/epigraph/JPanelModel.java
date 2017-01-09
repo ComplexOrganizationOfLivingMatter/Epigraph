@@ -2,6 +2,7 @@ package epigraph;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +16,12 @@ import javax.swing.table.TableModel;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 /**
  * TableDemo is just like SimpleTableDemo, except that it uses a custom
@@ -25,15 +32,32 @@ public class JPanelModel extends JPanel {
 
   public JPanelModel() {
     super(new GridLayout(1, 0));
-
+    
+    JPanel panel = new JPanel();
+    panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+    add(panel);
+    
+    //Create buttons
+    JButton btnVisualize = new JButton("Visualize");
+    btnVisualize.setBounds(342, 255, 93, 29);
+    
+    JButton btnOpenButton = new JButton("Open");
+    btnOpenButton.setBounds(15, 255, 71, 29);
+    panel.setLayout(null);
+    
+	//Create table and scroll pane  
     JTable table = new JTable(new JTableModel());
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-
     //Create the scroll pane and add the table to it.
     JScrollPane scrollPane = new JScrollPane(table);
-
-    //Add the scroll pane to this panel.
-    add(scrollPane);
+    scrollPane.setBounds(15, 27, 420, 196);
+    //scrollPane.setPreferredSize(new Dimension(400, 200));
+    
+    panel.add(scrollPane);
+    panel.add(btnOpenButton);
+    panel.add(btnVisualize);
+    
+    
   }
 
   class JTableModel extends AbstractTableModel {
@@ -143,6 +167,7 @@ public class JPanelModel extends JPanel {
 
     //Display the window.
     frame.pack();
+    frame.setSize(500, 400);
     frame.setVisible(true);
   }
 
