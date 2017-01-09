@@ -15,6 +15,8 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * 
@@ -36,7 +38,16 @@ public class ImageWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public ImageWindow(ImagePlus raw_img) {
-		setDefaultCloseOperation(returnGraphletImages());
+		
+		newGraphletImages = new ArrayList<GraphletImage>();
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				returnGraphletImages();
+			}
+		});
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 562, 531);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -73,6 +84,11 @@ public class ImageWindow extends JFrame {
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		OverlayedImageCanvas canvas = new OverlayedImageCanvas(raw_img);
+		canvas.setShowCursorStatus(false);
+		canvas.setShowAllROIs(false);
+		canvas.setPaintPending(false);
+		canvas.setScaleToFit(false);
+		canvas.setCustomRoi(false);
 		contentPane.add(canvas, "4, 2, 7, 13, center, top");
 		
 		JButton btnNewButton = new JButton("Calculate graphlets!");
@@ -85,10 +101,9 @@ public class ImageWindow extends JFrame {
 		
 	}
 
-	private int returnGraphletImages() {
+	public void returnGraphletImages() {
 		// TODO Auto-generated method stub
 		JPanelModel daddy = (JPanelModel) this.getParent();
 		daddy.addNewImagesProcessed(newGraphletImages);
-		return 0;
 	}
 }
