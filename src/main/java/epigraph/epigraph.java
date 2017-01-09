@@ -4,11 +4,17 @@
 package epigraph;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.plugin.PlugIn;
+
 
 
 /**
@@ -71,7 +77,16 @@ public class Epigraph implements PlugIn {
 					WindowManager.getCurrentImage().getSlice() );
 		}
 		
-		ScatterDemo sc = new ScatterDemo();
+		//System.out.println(gddh)
+		ExcelClass ec=new ExcelClass();
+		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
+				
+		
+		for (int i = 0; i < ec.getB().size(); i++) {
+			System.out.println(ec.getGddh().get(i));
+		}
+
+		ec.exportData("D:/Pedro/Graphlet/pruebas exportar u3d/Export_test.xls");
 		
 		//GraphletImage graphletImage = new GraphletImage(raw_img);
 		
