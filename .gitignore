@@ -5,5 +5,7 @@
 /bin/
 /data/
 /docs/
+/.metadata/
+*/RemoteSystemsTempFiles/*
 
 *.jar
