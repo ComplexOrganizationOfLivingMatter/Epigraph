@@ -15,8 +15,14 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.Roi;
+import ij.process.ImageProcessor;
+import net.coobird.thumbnailator.Thumbnails;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * 
@@ -47,7 +53,6 @@ public class ImageWindow extends JFrame {
 				returnGraphletImages();
 			}
 		});
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 562, 531);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -83,12 +88,25 @@ public class ImageWindow extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
-		OverlayedImageCanvas canvas = new OverlayedImageCanvas(raw_img);
+		
+		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
+		BufferedImage thumbnail;
+		try {
+			thumbnail = Thumbnails.of(raw_img.getBufferedImage()).height(400).asBufferedImage();
+			imgToShow.setImage(thumbnail);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		OverlayedImageCanvas canvas = new OverlayedImageCanvas(imgToShow);
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
 		canvas.setPaintPending(false);
-		canvas.setScaleToFit(false);
+		canvas.setScaleToFit(true);
 		canvas.setCustomRoi(false);
+		Roi roi;
+		roi = new Roi(0, 0, imgToShow);
+		raw_img.setRoi(roi);
 		contentPane.add(canvas, "4, 2, 7, 13, center, top");
 		
 		JButton btnNewButton = new JButton("Calculate graphlets!");
