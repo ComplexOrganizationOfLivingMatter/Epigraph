@@ -70,7 +70,7 @@ public class Epigraph implements PlugIn {
 				new Runnable() {
 					public void run() {
 						mainWindow = new JPanelModel();
-						mainWindow.createAndShowGUI();
+						//mainWindow.createAndShowGUI();
 					}
 				});
 
