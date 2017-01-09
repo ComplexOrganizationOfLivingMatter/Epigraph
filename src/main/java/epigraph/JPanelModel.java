@@ -22,13 +22,18 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import ij.IJ;
+import ij.ImagePlus;
 
 /**
+ * @author Pedro Gomez-Galvez
+ * 
  * TableDemo is just like SimpleTableDemo, except that it uses a custom
  * TableModel.
  */
 public class JPanelModel extends JPanel {
   private boolean DEBUG = false;
+  private ArrayList<GraphletImage> allGraphletImages;
 
   public JPanelModel() {
     super(new GridLayout(1, 0));
@@ -43,6 +48,22 @@ public class JPanelModel extends JPanel {
     
     JButton btnOpenButton = new JButton("Open");
     btnOpenButton.setBounds(15, 255, 71, 29);
+	btnOpenButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						ImagePlus raw_img = IJ.openImage();
+						ImageWindow imageProcessing = new ImageWindow(raw_img);
+						imageProcessing.setVisible(true);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	});
     panel.setLayout(null);
     
 	//Create table and scroll pane  
@@ -179,5 +200,12 @@ public class JPanelModel extends JPanel {
         createAndShowGUI();
       }
     });
+  
+  /**
+   * 
+   * @param newImages
+   */
+  public void addNewImagesProcessed(ArrayList<GraphletImage> newImages){
+	  allGraphletImages.addAll(newImages);
   }
 }

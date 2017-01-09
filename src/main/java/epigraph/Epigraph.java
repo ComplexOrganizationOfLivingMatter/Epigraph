@@ -17,7 +17,6 @@ import ij.plugin.PlugIn;
 public class Epigraph implements PlugIn {
 
 	/** image to be used in the training */
-	private ImagePlus raw_img = null;
 	JPanelModel mainWindow;
 
 	/**
