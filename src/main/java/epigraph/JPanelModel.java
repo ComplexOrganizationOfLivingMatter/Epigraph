@@ -3,7 +3,9 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -23,10 +25,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 
-/**
- * TableDemo is just like SimpleTableDemo, except that it uses a custom
- * TableModel.
- */
+
+
 public class JPanelModel extends JPanel {
   private boolean DEBUG = false;
 
@@ -40,6 +40,11 @@ public class JPanelModel extends JPanel {
     //Create buttons
     JButton btnVisualize = new JButton("Visualize");
     btnVisualize.setBounds(342, 255, 93, 29);
+    btnVisualize.setBackground(Color.yellow);
+    
+    JColorChooser tcc = new JColorChooser(btnVisualize.getForeground());
+    add(tcc, BorderLayout.PAGE_END);
+    
     
     JButton btnOpenButton = new JButton("Open");
     btnOpenButton.setBounds(15, 255, 71, 29);
@@ -61,19 +66,24 @@ public class JPanelModel extends JPanel {
   }
 
   class JTableModel extends AbstractTableModel {
-    private String[] columnNames = { "First Name", "Last Name", "Sport",
-        "# of Years", "Vegetarian" };
+    private String[] columnNames = { "Color", "GDDH", "Label","Visualizing" };
 
+   
+    
     private Object[][] data = {
-        { "Mary", "Campione", "Snowboarding", new Integer(5),
+    		
+        { "", "Huml",  new Integer(3), new Boolean(true) },
+        
+        { "Kathy", "Walrath",  new Integer(2),
             new Boolean(false) },
-        { "Alison", "Huml", "Rowing", new Integer(3), new Boolean(true) },
-        { "Kathy", "Walrath", "Knitting", new Integer(2),
-            new Boolean(false) },
-        { "Sharon", "Zakhour", "Speed reading", new Integer(20),
+        { "Sharon", "Zakhour",  new Integer(20),
             new Boolean(true) },
-        { "Philip", "Milne", "Pool", new Integer(10),
+        { "Philip", "Milne",  new Integer(10),
             new Boolean(false) } };
+    
+    
+    
+    
 
     public int getColumnCount() {
       return columnNames.length;
