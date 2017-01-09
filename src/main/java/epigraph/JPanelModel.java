@@ -1,29 +1,15 @@
 package epigraph;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import javax.swing.table.AbstractTableModel;
 
 
 
@@ -42,9 +28,6 @@ public class JPanelModel extends JPanel {
     btnVisualize.setBounds(342, 255, 93, 29);
     btnVisualize.setBackground(Color.yellow);
     
-    JColorChooser tcc = new JColorChooser(btnVisualize.getForeground());
-    add(tcc, BorderLayout.PAGE_END);
-    
     
     JButton btnOpenButton = new JButton("Open");
     btnOpenButton.setBounds(15, 255, 71, 29);
@@ -53,10 +36,17 @@ public class JPanelModel extends JPanel {
 	//Create table and scroll pane  
     JTable table = new JTable(new JTableModel());
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+  //Set up renderer and editor for the Favorite Color column.
+    table.setDefaultRenderer(Color.class,
+                             new ColorRenderer(true));
+    table.setDefaultEditor(Color.class,
+            new JColorEditor());
     //Create the scroll pane and add the table to it.
     JScrollPane scrollPane = new JScrollPane(table);
     scrollPane.setBounds(15, 27, 420, 196);
     //scrollPane.setPreferredSize(new Dimension(400, 200));
+    
+    
     
     panel.add(scrollPane);
     panel.add(btnOpenButton);
@@ -72,13 +62,13 @@ public class JPanelModel extends JPanel {
     
     private Object[][] data = {
     		
-        { "", "Huml",  new Integer(3), new Boolean(true) },
+        { Color.black, "Huml",  new Integer(3), new Boolean(true) },
         
-        { "Kathy", "Walrath",  new Integer(2),
+        { Color.black, "Kathy",  new Integer(2),
             new Boolean(false) },
-        { "Sharon", "Zakhour",  new Integer(20),
+        { Color.black, "Sharon",  new Integer(20),
             new Boolean(true) },
-        { "Philip", "Milne",  new Integer(10),
+        { Color.red, "Philip",  new Integer(10),
             new Boolean(false) } };
     
     
@@ -114,13 +104,7 @@ public class JPanelModel extends JPanel {
      * Don't need to implement this method unless your table's editable.
      */
     public boolean isCellEditable(int row, int col) {
-      //Note that the data/cell address is constant,
-      //no matter where the cell appears onscreen.
-      if (col < 2) {
-        return false;
-      } else {
         return true;
-      }
     }
 
     /*
