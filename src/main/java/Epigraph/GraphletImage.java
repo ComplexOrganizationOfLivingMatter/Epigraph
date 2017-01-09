@@ -31,8 +31,8 @@ public class GraphletImage extends BasicGraphletImage {
 	// Hexagonal reference
 	private BasicGraphlets hexagonRefInt;
 
-	// Random voronoi references //TODO: Get out from this class the random
-	// voronoi references
+	// Random voronoi references
+	// TODO: Get out from this class the random voronoi references
 	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
 	private BasicGraphlets[] randomVoronoiValidCells_5Ref;
 
@@ -76,14 +76,15 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			// System.out.println("graphletsReferences/randomVoronoi_" +
 			// Integer.toString(i) + ".ndump2");
-			URL fileUrl = Epigraph.class
-					.getResource("/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			URL fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
 
-			fileUrl = Epigraph.class
-					.getResource("/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlets(fileUrl);
 		}
+
 		// END TODO
 
 		this.cells = new ArrayList<EpiCell>();
