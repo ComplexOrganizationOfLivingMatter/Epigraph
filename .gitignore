@@ -9,3 +9,5 @@
 */RemoteSystemsTempFiles/*
 
 *.jar
+
+/src/main/resources/epigraph/
