@@ -1,7 +1,10 @@
 package epigraph;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Random;
 
 import javax.swing.JComponent;
@@ -14,28 +17,35 @@ import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.analysis.AnalysisLauncher;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
+import org.jzy3d.chart.factories.IChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import org.jzy3d.plot3d.rendering.view.Renderer2d;
 
 import com.jgoodies.forms.layout.CellConstraints;
 
 
 
-public class ScatterDemo extends AbstractAnalysis{
-	public static void main(String[] args) throws Exception {
-		AnalysisLauncher.open(new ScatterDemo());
-	}
+public class ScatterDemo extends JFrame{
 	
+	Scatter scatter;
+
 	private JPanel scatterpanel;
 	/*load X Y Z coordenates*/
+
+	private Chart chart;
 	
-	@Override
-    public void init(){
-		
+	/**
+	 * 
+	 */
+	public ScatterDemo() {
+		super();
+		 chart = new Chart("swing");
+		// TODO Auto-generated constructor stub
 		ExcelClass ec = new ExcelClass();
 		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
 		
@@ -60,7 +70,7 @@ public class ScatterDemo extends AbstractAnalysis{
         }
         
         //Xf represent the size of dots
-        Scatter scatter = new Scatter(points, colors, 6f);
+        scatter = new Scatter(points, colors, 6f);
         
         //Nicest show dots shape, Advanced show squares shape
         chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
@@ -78,38 +88,15 @@ public class ScatterDemo extends AbstractAnalysis{
         l.setXTickRenderer(new FixedDecimalTickRenderer(2));
         l.setYTickRenderer(new FixedDecimalTickRenderer(2));
         l.setZTickRenderer(new FixedDecimalTickRenderer(2));
-        
-        
-        
-        
-        
-    }
-	
-	public void createAndShowF3d() {
-		
-		scatterpanel = new JPanel();
-        //Make sure we have nice window decorations.
-        JFrame.setDefaultLookAndFeelDecorated(true);
+              
 
-        //Create and set up the window.
-        JFrame frame = new JFrame("Scatter 3d");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
+        setContentPane(panel);
 
-        //Create and set up the content pane.
-        ScatterDemo newContentScatter = new ScatterDemo();
-        newContentScatter.getChart();
-        scatterpanel.setBorder(new MatteBorder(5, 5, 5, 5, java.awt.Color.BLACK));
-        scatterpanel.setLayout(new BorderLayout());
-        scatterpanel.add((Component)newContentScatter.getChart().getCanvas(), BorderLayout.CENTER);
+        pack();
+        setBounds(0, 0, 400, 400);
         
-        //Display the window.
-        frame.pack();
-        //frame.setSize(500, 400);
-        frame.setVisible(true);
-      }
-    
-	
-	
-    
-	
+        chart.getView().getCamera().setScreenGridDisplayed(true);
+	}
 }
