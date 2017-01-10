@@ -11,3 +11,4 @@
 *.jar
 
 /src/main/resources/epigraph/
+*.log

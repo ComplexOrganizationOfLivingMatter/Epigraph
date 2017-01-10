@@ -37,16 +37,9 @@ public class ImageProcessingWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ImageProcessingWindow(ImagePlus raw_img) {
+	public ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		
 		newGraphletImages = new ArrayList<GraphletImage>();
-		
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-				returnGraphletImages();
-			}
-		});
 		setBounds(100, 100, 935, 798);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -56,7 +49,7 @@ public class ImageProcessingWindow extends JFrame {
 		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
 		BufferedImage thumbnail = null;
 		try {
-			thumbnail = Thumbnails.of(raw_img.getBufferedImage()).height(CANVAS_SIZE).width(CANVAS_SIZE).asBufferedImage();
+			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(CANVAS_SIZE).width(CANVAS_SIZE).asBufferedImage();
 			imgToShow.setImage(thumbnail);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -74,7 +67,7 @@ public class ImageProcessingWindow extends JFrame {
 		btnCalculateGraphlets.setBounds(199, 596, 481, 49);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				newGraphletImages.add(new GraphletImage(raw_img));
+				tableInfo.addImage(new GraphletImage(raw_img));
 			}
 		});
 		
@@ -101,11 +94,5 @@ public class ImageProcessingWindow extends JFrame {
 //		wtd.show();
 //		Roi newRoi = new Roi();
 //		imgToShow.getChannelProcessor().drawRoi(newRoi);
-	}
-
-	public void returnGraphletImages() {
-		// TODO Auto-generated method stub
-		MainWindow daddy = (MainWindow) this.getParent();
-		daddy.addNewImagesProcessed(newGraphletImages);
 	}
 }

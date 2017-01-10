@@ -1,6 +1,7 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
@@ -10,11 +11,15 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.Popup;
 import javax.swing.border.LineBorder;
 import javax.swing.table.AbstractTableModel;
+
+import org.scijava.ui.DialogPrompt;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -58,8 +63,12 @@ public class MainWindow extends JPanel {
 					public void run() {
 						try {
 							ImagePlus raw_img = IJ.openImage();
-							ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img);
-							imageProcessing.setVisible(true);
+							if (raw_img != null) {
+								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+								imageProcessing.setVisible(true);
+							} else {
+								JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
+							}
 
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -97,7 +106,7 @@ public class MainWindow extends JPanel {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 
 		// Create and set up the window.
-		JFrame frame = new JFrame("TableDemo");
+		JFrame frame = new JFrame("Epigraph");
 
 		// Create and set up the content pane.
 		MainWindow newContentPane = new MainWindow();
@@ -108,13 +117,5 @@ public class MainWindow extends JPanel {
 		frame.pack();
 		frame.setSize(500, 400);
 		frame.setVisible(true);
-	}
-
-	/**
-	 * 
-	 * @param newImages
-	 */
-	public void addNewImagesProcessed(ArrayList<GraphletImage> newImages) {
-		this.tableInfo.addImages(newImages);
 	}
 }
