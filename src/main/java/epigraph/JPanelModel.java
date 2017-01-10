@@ -174,7 +174,7 @@ public class JPanelModel extends JPanel {
    * Create the GUI and show it. For thread safety, this method should be
    * invoked from the event-dispatching thread.
    */
-  private static void createAndShowGUI() {
+  public void createAndShowGUI() {
     //Make sure we have nice window decorations.
     JFrame.setDefaultLookAndFeelDecorated(true);
 
@@ -191,16 +191,6 @@ public class JPanelModel extends JPanel {
     frame.pack();
     frame.setSize(500, 400);
     frame.setVisible(true);
-  }
-
-  public static void main(String[] args) {
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        createAndShowGUI();
-      }
-    });
   }
   
   /**
