@@ -107,7 +107,6 @@ public class GraphletImage extends BasicGraphletImage {
 
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
-			img.show();
 		}
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
@@ -122,12 +121,11 @@ public class GraphletImage extends BasicGraphletImage {
 			img.getChannelProcessor().set(0, i, 0);
 			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
 		}
-		img.show();
 
 		MaximumFinder mxf = new MaximumFinder();
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
-		// img.show();
+		
 		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
 		pixels = img.getChannelProcessor().getIntArray();
 
@@ -147,7 +145,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// Create adjacency matrix from the found cells
 		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
 
-		this.l_img.show();
+		//this.l_img.show();
 
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
