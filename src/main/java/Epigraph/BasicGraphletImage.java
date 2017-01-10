@@ -3,13 +3,15 @@
  */
 package epigraph;
 
+import java.awt.Color;
+
 /**
- * @author Pablo Vicente-Munuera On this class we will represent only the
- *         reference images. This means, from this images, we'll only have the
- *         distances, just in case the user wants a reference in the graphics.
+ * @author Pablo Vicente-Munuera
+ * 
+ *         On this class we represent the basic information we aim to have
+ *         through the graphlet process.
  */
 public class BasicGraphletImage {
-
 	/**
 	 * 
 	 */
@@ -23,8 +25,28 @@ public class BasicGraphletImage {
 	/**
 	 * 
 	 */
+	protected float percentageOfHexagons;
+
+	/**
+	 * 
+	 */
+	protected Color color;
+
+	/**
+	 * 
+	 */
+	protected String labelName;
+
+	/**
+	 * 
+	 */
 	public BasicGraphletImage() {
 		// TODO Auto-generated constructor stub
+		this.color = null;
+		this.distanceGDDH = -1;
+		this.distanceGDDRV = -1;
+		this.labelName = "Wrong name";
+		this.percentageOfHexagons = -1;
 	}
 
 	/**
@@ -32,10 +54,31 @@ public class BasicGraphletImage {
 	 *            distance against random voronoi
 	 * @param distanceGDDH
 	 *            distance against a hexagonal grid
+	 * @param percentageOfHexagons
 	 */
-	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH) {
+	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons) {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
+		this.percentageOfHexagons = percentageOfHexagons;
+		this.color = null;
+		this.labelName = "ReferenceVoronoiNoise";
+	}
+
+	/**
+	 * @param distanceGDDRV
+	 * @param distanceGDDH
+	 * @param percentageOfHexagons
+	 * @param color
+	 * @param labelName
+	 */
+	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons, Color color,
+			String labelName) {
+		super();
+		this.distanceGDDRV = distanceGDDRV;
+		this.distanceGDDH = distanceGDDH;
+		this.percentageOfHexagons = percentageOfHexagons;
+		this.color = color;
+		this.labelName = labelName;
 	}
 
 	/**
@@ -66,5 +109,50 @@ public class BasicGraphletImage {
 	 */
 	public void setDistanceGDDH(float distanceGDDH) {
 		this.distanceGDDH = distanceGDDH;
+	}
+
+	/**
+	 * @return the percentageOfHexagons
+	 */
+	public float getPercentageOfHexagons() {
+		return percentageOfHexagons;
+	}
+
+	/**
+	 * @param percentageOfHexagons
+	 *            the percentageOfHexagons to set
+	 */
+	public void setPercentageOfHexagons(float percentageOfHexagons) {
+		this.percentageOfHexagons = percentageOfHexagons;
+	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color
+	 *            the color to set
+	 */
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	/**
+	 * @return the labelName
+	 */
+	public String getLabelName() {
+		return labelName;
+	}
+
+	/**
+	 * @param labelName
+	 *            the labelName to set
+	 */
+	public void setLabelName(String labelName) {
+		this.labelName = labelName;
 	}
 }
