@@ -22,14 +22,26 @@ class JTableModel extends AbstractTableModel {
 	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Visualizing" };
 
 	private ArrayList<GraphletImage> allGraphletImages;
-	private List<Boolean> listOfVisualizing;
+	private ArrayList<Boolean> listOfVisualizing;
+	
+	/**
+	 * 
+	 */
+	public JTableModel() {
+		super();
+		allGraphletImages = new ArrayList<GraphletImage>();
+		listOfVisualizing = new ArrayList<Boolean>();
+	}
 
+	/**
+	 * 
+	 */
 	public int getColumnCount() {
 		return columnNames.length;
 	}
 
 	public int getRowCount() {
-		return allGraphletImages.size() + 1;
+		return allGraphletImages.size();
 	}
 
 	public String getColumnName(int col) {
@@ -37,20 +49,21 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int row, int col) {
+		switch (col) {
+		case 0:
+			return allGraphletImages.get(row).getColor();
+		case 1:
+			return allGraphletImages.get(row).getLabelName();
+		case 2:
+			return allGraphletImages.get(row).getDistanceGDDH();
+		case 3:
+			return allGraphletImages.get(row).getDistanceGDDRV();
+		case 4:
+			return allGraphletImages.get(row).getPercentageOfHexagons();
+		case 5:
+			return listOfVisualizing.get(row);
+		}
 		return null;
-//		switch (column) {
-//		case 0:
-//			return obj.getId();
-//		case 1:
-//			return obj.getName();
-//		case 2:
-//			return obj.getNumber();
-//		case 3:
-//			return obj.isYes();
-//		default:
-//			return null;
-//		}
-//		return data[row][col];
 	}
 
 	/**
@@ -74,21 +87,26 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public void setValueAt(Object value, int row, int col) {
 		switch (col) {
-		case 0: allGraphletImages.get(row).setColor((Color) value);
+		case 0:
+			allGraphletImages.get(row).setColor((Color) value);
 			break;
-		case 1: allGraphletImages.get(row).setLabelName((String) value);
+		case 1:
+			allGraphletImages.get(row).setLabelName((String) value);
 			break;
-		case 2: allGraphletImages.get(row).setDistanceGDDH((float) value);
+		case 2:
+			allGraphletImages.get(row).setDistanceGDDH((float) value);
 			break;
-		case 3: allGraphletImages.get(row).setDistanceGDDRV((float) value);
+		case 3:
+			allGraphletImages.get(row).setDistanceGDDRV((float) value);
 			break;
-		case 4: allGraphletImages.get(row).setPercentageOfHexagons((float) value);
+		case 4:
+			allGraphletImages.get(row).setPercentageOfHexagons((float) value);
 			break;
-		case 5: listOfVisualizing.set(row, (Boolean) value);
+		case 5:
+			listOfVisualizing.set(row, (Boolean) value);
 			break;
 		}
-		//allGraphletImages.get(row).setColor(color);
-		//data[row][col] = value;
+		//Updating table
 		fireTableCellUpdated(row, col);
 	}
 
@@ -100,7 +118,8 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @param allGraphletImages the allGraphletImages to set
+	 * @param allGraphletImages
+	 *            the allGraphletImages to set
 	 */
 	public void setAllGraphletImages(ArrayList<GraphletImage> allGraphletImages) {
 		this.allGraphletImages = allGraphletImages;
@@ -112,6 +131,10 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public void addImages(ArrayList<GraphletImage> newImages) {
 		allGraphletImages.addAll(newImages);
+		
+		for (int i = 0; i < newImages.size(); i++){
+			listOfVisualizing.add(true);
+		}
 	}
 
 }

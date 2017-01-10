@@ -93,7 +93,6 @@ public class MainWindow extends JPanel {
 
 		// Create and set up the window.
 		JFrame frame = new JFrame("TableDemo");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
 		MainWindow newContentPane = new MainWindow();
