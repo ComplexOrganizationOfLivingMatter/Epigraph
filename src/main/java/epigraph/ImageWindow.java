@@ -14,10 +14,6 @@ import javax.swing.JPanel;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
-import ij.gui.Roi;
-import ij.gui.WaitForUserDialog;
-import ij.plugin.frame.RoiManager;
-import ij.plugin.RectToolOptions;
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
