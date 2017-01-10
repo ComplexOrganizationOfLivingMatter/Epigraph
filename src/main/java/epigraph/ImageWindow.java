@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Roi;
+import ij.gui.WaitForUserDialog;
+import ij.plugin.frame.RoiManager;
+import ij.plugin.RectToolOptions;
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
@@ -28,6 +31,8 @@ public class ImageWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final int CANVAS_SIZE = 512;
 
 	private JPanel contentPane;
 	
@@ -53,24 +58,24 @@ public class ImageWindow extends JFrame {
 		
 		
 		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
-		BufferedImage thumbnail;
+		BufferedImage thumbnail = null;
 		try {
-			thumbnail = Thumbnails.of(raw_img.getBufferedImage()).height(512).asBufferedImage();
+			thumbnail = Thumbnails.of(raw_img.getBufferedImage()).height(CANVAS_SIZE).width(CANVAS_SIZE).asBufferedImage();
 			imgToShow.setImage(thumbnail);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		OverlayedImageCanvas canvas = new OverlayedImageCanvas(imgToShow);
-		canvas.setLocation(419, 47);
+		canvas.setLocation(199, 42);
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
 		canvas.setPaintPending(false);
 		canvas.setCustomRoi(false);
-		canvas.setSize(102, 587);
+		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
 		
 		JButton btnCalculateGraphlets = new JButton("Calculate graphlets!");
-		btnCalculateGraphlets.setBounds(227, 741, 481, 25);
+		btnCalculateGraphlets.setBounds(199, 596, 481, 49);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				newGraphletImages.add(new GraphletImage(raw_img));
@@ -78,12 +83,10 @@ public class ImageWindow extends JFrame {
 		});
 		
 		JButton btnCreateRoi = new JButton("Create RoI");
-		btnCreateRoi.setBounds(820, 191, 95, 25);
+		btnCreateRoi.setBounds(752, 191, 124, 25);
 		btnCreateRoi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Roi roi;
-				roi = new Roi(4, 2, imgToShow);
-				raw_img.setRoi(roi);
+				createROI(imgToShow);
 			}
 		});
 		contentPane.setLayout(null);
@@ -91,6 +94,17 @@ public class ImageWindow extends JFrame {
 		contentPane.add(btnCreateRoi);
 		contentPane.add(btnCalculateGraphlets);
 		
+	}
+
+	private void createROI(ImagePlus imgToShow) {
+		// TODO Auto-generated method stub
+		
+//		imgToShow.getChannelProcessor().drawRect(x, y, width, height);
+//		
+//		WaitForUserDialog wtd = new WaitForUserDialog("USER ROI SELECTION","select a Roi");
+//		wtd.show();
+//		Roi newRoi = new Roi();
+//		imgToShow.getChannelProcessor().drawRoi(newRoi);
 	}
 
 	public void returnGraphletImages() {
