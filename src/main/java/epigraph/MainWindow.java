@@ -64,7 +64,7 @@ public class MainWindow extends JPanel {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
-								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img);
+								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
 								imageProcessing.setVisible(true);
 							} else {
 								JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
@@ -106,7 +106,7 @@ public class MainWindow extends JPanel {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 
 		// Create and set up the window.
-		JFrame frame = new JFrame("TableDemo");
+		JFrame frame = new JFrame("Epigraph");
 
 		// Create and set up the content pane.
 		MainWindow newContentPane = new MainWindow();
@@ -117,13 +117,5 @@ public class MainWindow extends JPanel {
 		frame.pack();
 		frame.setSize(500, 400);
 		frame.setVisible(true);
-	}
-
-	/**
-	 * 
-	 * @param newImages
-	 */
-	public void addNewImagesProcessed(ArrayList<GraphletImage> newImages) {
-		this.tableInfo.addImages(newImages);
 	}
 }

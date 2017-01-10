@@ -15,6 +15,7 @@ import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import imglib.ops.operator.binary.Min;
 
 /**
  * 
@@ -59,6 +60,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public GraphletImage(ImagePlus img) {
 		super();
+		
+		this.labelName = img.getFileInfo().url;
+		
 		// TODO: hardcoded variables, when interfaces come, they should be
 		// removed
 		int radiusOfShape = 3;
@@ -87,6 +91,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// END TODO
 
+		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
 		if (!img.getChannelProcessor().isBinary()) {
@@ -98,15 +103,18 @@ public class GraphletImage extends BasicGraphletImage {
 		int whitePixels = 0;
 		int blackPixels = 0;
 		for (int i = 0; i < img.getWidth(); i++) {
-			if (pixels[i][0] == 0)
-				blackPixels++;
-			else
-				whitePixels++;
+			for (int j = 0; j < img.getHeight(); j++) {
+				if (pixels[i][j] == 0)
+					blackPixels++;
+				else
+					whitePixels++;
+			}
 		}
 
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
 		}
+
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
 
@@ -121,10 +129,11 @@ public class GraphletImage extends BasicGraphletImage {
 			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
 		}
 
+		// img.show();
 		MaximumFinder mxf = new MaximumFinder();
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
-		
+
 		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
 		pixels = img.getChannelProcessor().getIntArray();
 
@@ -144,7 +153,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// Create adjacency matrix from the found cells
 		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
 
-		//this.l_img.show();
+		// this.l_img.show();
 
 		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -152,19 +161,18 @@ public class GraphletImage extends BasicGraphletImage {
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
-		int percentageOfHexagons = 0, percentageOfHexagonsOriginal = 0;
+		this.percentageOfHexagons = 0;
+		//int percentageOfHexagonsOriginal = 0;
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
 			if (graphlets[i][0] == 6) {
 				percentageOfHexagons++;
 			}
-			if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
-				percentageOfHexagonsOriginal++;
-			}
+			//if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
+			//	percentageOfHexagonsOriginal++;
+			//}
 		}
-
-		System.out.println(percentageOfHexagons);
-		System.out.println(percentageOfHexagonsOriginal);
+		this.percentageOfHexagons /= graphlets.length;
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
@@ -208,7 +216,6 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
-		System.out.println(this.distanceGDDH);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
@@ -221,7 +228,6 @@ public class GraphletImage extends BasicGraphletImage {
 
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
-		System.out.println(this.distanceGDDRV);
 	}
 
 	/**

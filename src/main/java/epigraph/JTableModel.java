@@ -135,6 +135,14 @@ class JTableModel extends AbstractTableModel {
 		for (int i = 0; i < newImages.size(); i++){
 			listOfVisualizing.add(true);
 		}
+		fireTableDataChanged();
+	}
+	
+	public void addImage(GraphletImage newImage){
+		allGraphletImages.add(newImage);
+		listOfVisualizing.add(true);
+
+		fireTableDataChanged();
 	}
 
 }
