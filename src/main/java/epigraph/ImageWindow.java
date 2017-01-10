@@ -2,29 +2,20 @@ package epigraph;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Roi;
-import ij.process.ImageProcessor;
 import net.coobird.thumbnailator.Thumbnails;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 /**
  * 
@@ -71,13 +62,15 @@ public class ImageWindow extends JFrame {
 			e.printStackTrace();
 		}
 		OverlayedImageCanvas canvas = new OverlayedImageCanvas(imgToShow);
+		canvas.setLocation(419, 47);
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
 		canvas.setPaintPending(false);
 		canvas.setCustomRoi(false);
-		canvas.setSize(imgToShow.getWidth(), imgToShow.getHeight());
+		canvas.setSize(102, 587);
 		
 		JButton btnCalculateGraphlets = new JButton("Calculate graphlets!");
+		btnCalculateGraphlets.setBounds(227, 741, 481, 25);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				newGraphletImages.add(new GraphletImage(raw_img));
@@ -85,6 +78,7 @@ public class ImageWindow extends JFrame {
 		});
 		
 		JButton btnCreateRoi = new JButton("Create RoI");
+		btnCreateRoi.setBounds(820, 191, 95, 25);
 		btnCreateRoi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Roi roi;
@@ -92,34 +86,10 @@ public class ImageWindow extends JFrame {
 				raw_img.setRoi(roi);
 			}
 		});
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(244)
-					.addComponent(canvas, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(581))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap(790, Short.MAX_VALUE)
-					.addComponent(btnCreateRoi)
-					.addGap(42))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addGap(432)
-					.addComponent(btnCalculateGraphlets, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(348))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(7)
-					.addComponent(canvas, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(121)
-					.addComponent(btnCreateRoi)
-					.addGap(490)
-					.addComponent(btnCalculateGraphlets)
-					.addGap(32))
-		);
-		contentPane.setLayout(gl_contentPane);
+		contentPane.setLayout(null);
+		contentPane.add(canvas);
+		contentPane.add(btnCreateRoi);
+		contentPane.add(btnCalculateGraphlets);
 		
 	}
 
