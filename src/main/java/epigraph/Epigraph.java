@@ -17,7 +17,7 @@ import ij.plugin.PlugIn;
 public class Epigraph implements PlugIn {
 
 	/** image to be used in the training */
-	JPanelModel mainWindow;
+	MainWindow mainWindow;
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public class Epigraph implements PlugIn {
 		// Build GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mainWindow = new JPanelModel();
+				mainWindow = new MainWindow();
 				mainWindow.createAndShowGUI();
 			}
 		});

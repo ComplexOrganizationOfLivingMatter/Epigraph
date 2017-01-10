@@ -105,7 +105,7 @@ public class ImageWindow extends JFrame {
 
 	public void returnGraphletImages() {
 		// TODO Auto-generated method stub
-		JPanelModel daddy = (JPanelModel) this.getParent();
+		MainWindow daddy = (MainWindow) this.getParent();
 		daddy.addNewImagesProcessed(newGraphletImages);
 	}
 }
