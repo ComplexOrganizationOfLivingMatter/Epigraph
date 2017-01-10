@@ -53,7 +53,7 @@ public class MainWindow extends JPanel {
 					public void run() {
 						try {
 							ImagePlus raw_img = IJ.openImage();
-							ImageWindow imageProcessing = new ImageWindow(raw_img);
+							ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img);
 							imageProcessing.setVisible(true);
 
 						} catch (Exception e) {

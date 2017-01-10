@@ -21,7 +21,7 @@ import net.coobird.thumbnailator.Thumbnails;
  * @author Pablo Vicente-Munuera
  *
  */
-public class ImageWindow extends JFrame {
+public class ImageProcessingWindow extends JFrame {
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class ImageWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ImageWindow(ImagePlus raw_img) {
+	public ImageProcessingWindow(ImagePlus raw_img) {
 		
 		newGraphletImages = new ArrayList<GraphletImage>();
 		

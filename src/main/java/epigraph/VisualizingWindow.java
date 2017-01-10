@@ -31,8 +31,13 @@ import com.jgoodies.forms.layout.CellConstraints;
 
 
 
-public class ScatterDemo extends JFrame{
+public class VisualizingWindow extends JFrame{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	Scatter scatter;
 
 	private JPanel scatterpanel;
@@ -43,7 +48,7 @@ public class ScatterDemo extends JFrame{
 	/**
 	 * 
 	 */
-	public ScatterDemo() {
+	public VisualizingWindow() {
 		super();
 		 chart = new Chart("swing");
 		// TODO Auto-generated constructor stub
