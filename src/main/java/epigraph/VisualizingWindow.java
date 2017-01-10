@@ -1,33 +1,20 @@
 package epigraph;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.Random;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.MatteBorder;
 
-import org.jzy3d.analysis.AbstractAnalysis;
-import org.jzy3d.analysis.AnalysisLauncher;
 import org.jzy3d.chart.Chart;
-import org.jzy3d.chart.controllers.keyboard.camera.AWTCameraKeyController;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
-import org.jzy3d.chart.factories.IChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-import org.jzy3d.plot3d.rendering.view.Renderer2d;
-
-import com.jgoodies.forms.layout.CellConstraints;
 
 
 /**
@@ -102,7 +89,6 @@ public class VisualizingWindow extends JFrame{
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-        //panel.add((Component) chart.getAxeLayout(), BorderLayout.CENTER);
         
         setContentPane(panel);
 

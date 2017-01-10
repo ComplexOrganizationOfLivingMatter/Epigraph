@@ -42,8 +42,13 @@ public class MainWindow extends JPanel {
 
 		// Create buttons
 		JButton btnVisualize = new JButton("Visualize");
+		btnVisualize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VisualizingWindow visualizingWindow = new VisualizingWindow();
+				visualizingWindow.setVisible(true);
+			}
+		});
 		btnVisualize.setBounds(342, 255, 93, 29);
-		btnVisualize.setBackground(Color.yellow);
 
 		JButton btnOpenButton = new JButton("Open");
 		btnOpenButton.setBounds(15, 255, 71, 29);
