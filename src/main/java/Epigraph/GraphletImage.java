@@ -70,8 +70,8 @@ public class GraphletImage extends BasicGraphletImage {
 				0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 		this.hexagonRefInt = new BasicGraphlets(hexagonGraphlets);
 
-		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[20];
-		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[20];
+		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[NUMRANDOMVORONOI];
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			// System.out.println("graphletsReferences/randomVoronoi_" +
@@ -92,7 +92,6 @@ public class GraphletImage extends BasicGraphletImage {
 		if (!img.getChannelProcessor().isBinary()) {
 			System.out.println("No binary image, improving...");
 			img.getChannelProcessor().autoThreshold();
-			img.show();
 		}
 
 		int[][] pixels = img.getChannelProcessor().getIntArray();
