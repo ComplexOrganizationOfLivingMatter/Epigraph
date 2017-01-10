@@ -16,6 +16,7 @@ import javax.swing.border.MatteBorder;
 import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.analysis.AnalysisLauncher;
 import org.jzy3d.chart.Chart;
+import org.jzy3d.chart.controllers.keyboard.camera.AWTCameraKeyController;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.chart.factories.IChartComponentFactory;
 import org.jzy3d.colors.Color;
@@ -75,7 +76,7 @@ public class ScatterDemo extends JFrame{
         //Nicest show dots shape, Advanced show squares shape
         chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
         chart.getScene().add(scatter);
-        
+        chart.addMouseCameraController();
         
         IAxeLayout l = chart.getAxeLayout();
         
@@ -92,11 +93,13 @@ public class ScatterDemo extends JFrame{
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
+        //panel.add((Component) chart.getAxeLayout(), BorderLayout.CENTER);
+        
         setContentPane(panel);
 
         pack();
         setBounds(0, 0, 400, 400);
         
-        chart.getView().getCamera().setScreenGridDisplayed(true);
+        //chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
 }
