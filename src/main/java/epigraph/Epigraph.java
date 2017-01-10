@@ -51,11 +51,7 @@ public class Epigraph implements PlugIn {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mainWindow = new JPanelModel();
-				//mainWindow.createAndShowGUI();
-				ScatterDemo mainScatter = new ScatterDemo();
-				
-				mainScatter.createAndShowF3d();
-						
+				mainWindow.createAndShowGUI();
 			}
 		});
 
