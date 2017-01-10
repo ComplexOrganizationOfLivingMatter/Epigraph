@@ -30,7 +30,11 @@ import org.jzy3d.plot3d.rendering.view.Renderer2d;
 import com.jgoodies.forms.layout.CellConstraints;
 
 
-
+/**
+ * 
+ * @author Pedro Gomez-Galvez
+ *
+ */
 public class VisualizingWindow extends JFrame{
 	
 	/**

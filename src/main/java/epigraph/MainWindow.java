@@ -31,7 +31,7 @@ public class MainWindow extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private boolean DEBUG = false;
-	private ArrayList<GraphletImage> allGraphletImages;
+	JTableModel tableInfo;
 
 	public MainWindow() {
 		super(new GridLayout(1, 0));
@@ -66,7 +66,8 @@ public class MainWindow extends JPanel {
 		panel.setLayout(null);
 
 		// Create table and scroll pane
-		JTable table = new JTable(new JTableModel());
+		this.tableInfo = new JTableModel();
+		JTable table = new JTable(tableInfo);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		// Set up renderer and editor for the Favorite Color column.
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
@@ -92,7 +93,6 @@ public class MainWindow extends JPanel {
 
 		// Create and set up the window.
 		JFrame frame = new JFrame("TableDemo");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
 		MainWindow newContentPane = new MainWindow();
@@ -110,6 +110,6 @@ public class MainWindow extends JPanel {
 	 * @param newImages
 	 */
 	public void addNewImagesProcessed(ArrayList<GraphletImage> newImages) {
-		allGraphletImages.addAll(newImages);
+		this.tableInfo.addImages(newImages);
 	}
 }
