@@ -42,7 +42,7 @@ public class BasicGraphletImage {
 	 */
 	public BasicGraphletImage() {
 		// TODO Auto-generated constructor stub
-		this.color = null;
+		this.color = Color.WHITE;
 		this.distanceGDDH = -1;
 		this.distanceGDDRV = -1;
 		this.labelName = "Wrong name";
@@ -60,7 +60,7 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
 		this.percentageOfHexagons = percentageOfHexagons;
-		this.color = null;
+		this.color = Color.BLACK;
 		this.labelName = "ReferenceVoronoiNoise";
 	}
 
