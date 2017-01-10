@@ -56,7 +56,7 @@ public class ImageProcessingWindow extends JFrame {
 		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
 		BufferedImage thumbnail = null;
 		try {
-			thumbnail = Thumbnails.of(raw_img.getBufferedImage()).height(CANVAS_SIZE).width(CANVAS_SIZE).asBufferedImage();
+			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(CANVAS_SIZE).width(CANVAS_SIZE).asBufferedImage();
 			imgToShow.setImage(thumbnail);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
