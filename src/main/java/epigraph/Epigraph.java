@@ -52,6 +52,10 @@ public class Epigraph implements PlugIn {
 			public void run() {
 				mainWindow = new JPanelModel();
 				//mainWindow.createAndShowGUI();
+				ScatterDemo mainScatter = new ScatterDemo();
+				
+				mainScatter.createAndShowF3d();
+						
 			}
 		});
 

@@ -1,9 +1,18 @@
 package epigraph;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.Random;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.MatteBorder;
 
 import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.analysis.AnalysisLauncher;
+import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
@@ -12,6 +21,8 @@ import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import com.jgoodies.forms.layout.CellConstraints;
+
 
 
 public class ScatterDemo extends AbstractAnalysis{
@@ -19,7 +30,7 @@ public class ScatterDemo extends AbstractAnalysis{
 		AnalysisLauncher.open(new ScatterDemo());
 	}
 	
-	
+	private JPanel scatterpanel;
 	/*load X Y Z coordenates*/
 	
 	@Override
@@ -59,14 +70,46 @@ public class ScatterDemo extends AbstractAnalysis{
         IAxeLayout l = chart.getAxeLayout();
         
         //Labelling axes
-        l.setXAxeLabel("Hexagons percentage");
-        l.setYAxeLabel("GDDH");
+        l.setXAxeLabel("GDDH");
+        l.setYAxeLabel("Hexagons percentage");
         l.setZAxeLabel("GDDRV");
                 
         //Presition displaying axes
         l.setXTickRenderer(new FixedDecimalTickRenderer(2));
         l.setYTickRenderer(new FixedDecimalTickRenderer(2));
         l.setZTickRenderer(new FixedDecimalTickRenderer(2));
-
+        
+        
+        
+        
+        
     }
+	
+	public void createAndShowF3d() {
+		
+		scatterpanel = new JPanel();
+        //Make sure we have nice window decorations.
+        JFrame.setDefaultLookAndFeelDecorated(true);
+
+        //Create and set up the window.
+        JFrame frame = new JFrame("Scatter 3d");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Create and set up the content pane.
+        ScatterDemo newContentScatter = new ScatterDemo();
+        newContentScatter.getChart();
+        scatterpanel.setBorder(new MatteBorder(5, 5, 5, 5, java.awt.Color.BLACK));
+        scatterpanel.setLayout(new BorderLayout());
+        scatterpanel.add((Component)newContentScatter.getChart().getCanvas(), BorderLayout.CENTER);
+        
+        //Display the window.
+        frame.pack();
+        //frame.setSize(500, 400);
+        frame.setVisible(true);
+      }
+    
+	
+	
+    
+	
 }
