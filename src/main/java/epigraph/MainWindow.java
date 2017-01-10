@@ -25,11 +25,15 @@ import ij.ImagePlus;
  *         TableDemo is just like SimpleTableDemo, except that it uses a custom
  *         TableModel.
  */
-public class JPanelModel extends JPanel {
+public class MainWindow extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean DEBUG = false;
 	private ArrayList<GraphletImage> allGraphletImages;
 
-	public JPanelModel() {
+	public MainWindow() {
 		super(new GridLayout(1, 0));
 
 		JPanel panel = new JPanel();
@@ -91,7 +95,7 @@ public class JPanelModel extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
-		JPanelModel newContentPane = new JPanelModel();
+		MainWindow newContentPane = new MainWindow();
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
