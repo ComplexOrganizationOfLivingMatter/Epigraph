@@ -24,8 +24,9 @@ import imglib.ops.operator.binary.Min;
  */
 public class GraphletImage extends BasicGraphletImage {
 
-	public static int CIRCLE_SHAPE = 0;
-	public static int SQUARE_SHAPE = 1;
+	
+	//public static int CIRCLE_SHAPE = 0;
+	//public static int SQUARE_SHAPE = 1;
 
 	public static final int NUMRANDOMVORONOI = 20;
 
@@ -58,16 +59,16 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param img
 	 *            image
 	 */
-	public GraphletImage(ImagePlus img) {
+	public GraphletImage(ImagePlus img, int selectedShape, int modeNumGraphleths) {
 		super();
 		
 		this.labelName = img.getFileInfo().url;
 		
 		// TODO: hardcoded variables, when interfaces come, they should be
 		// removed
-		int radiusOfShape = 3;
-		int selectedShape = CIRCLE_SHAPE;
-		int modeNumGraphlets = 0;
+		// int radiusOfShape = 3;
+		// int selectedShape = CIRCLE_SHAPE;
+		// int modeNumGraphlets = 0;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -276,14 +277,14 @@ public class GraphletImage extends BasicGraphletImage {
 			img.set(perimeterPixelX[numPixel], perimeterPixelY[numPixel], 255);
 
 		switch (shape) {
-		case 0:// CIRCLE_SHAPE
-			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
-			break;
-		case 1: // SQUARE_SHAPE
-			// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
-			// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
-			// mask[i][j] = img.getPixel(i, j);
-			break;
+			case 0:// CIRCLE_SHAPE
+				new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
+				break;
+			case 1: // SQUARE_SHAPE
+				// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
+				// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
+				// mask[i][j] = img.getPixel(i, j);
+				break;
 		}
 
 		return img;

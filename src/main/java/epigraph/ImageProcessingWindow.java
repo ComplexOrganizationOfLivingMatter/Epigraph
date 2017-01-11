@@ -159,8 +159,11 @@ public class ImageProcessingWindow extends JFrame {
 				Color c = JColorChooser.showDialog(btnPickAColor.getParent(), "Choose a Color", colorPicked.getBackground());
 				if (c != null){
 					colorPicked.setBackground(c);
-					newGraphletImage.setColor(c);
+					if (newGraphletImage != null){
+						newGraphletImage.setColor(c);
+					}
 				}
+				
 			}
 		});
 		btnPickAColor.setBounds(752, 510, 115, 29);
