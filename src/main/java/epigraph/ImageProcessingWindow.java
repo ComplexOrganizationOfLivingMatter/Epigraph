@@ -111,7 +111,7 @@ public class ImageProcessingWindow extends JDialog {
 					newGraphletImage = new GraphletImage(raw_img);
 
 				}
-				
+
 				if (newGraphletImage.getDistanceGDDH() == -1) {
 					newGraphletImage.runGraphlets(raw_img, cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex());
@@ -175,6 +175,7 @@ public class ImageProcessingWindow extends JDialog {
 
 				newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue());
+				JOptionPane.showConfirmDialog(btnTestNeighbours.getParent(), "Percentage of hexagons: " + newGraphletImage.getPercentageOfHexagons());
 			}
 		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);
