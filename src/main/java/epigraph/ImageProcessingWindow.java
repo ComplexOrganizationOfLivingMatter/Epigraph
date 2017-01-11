@@ -1,38 +1,29 @@
 package epigraph;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import net.coobird.thumbnailator.Thumbnails;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Button;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.AbstractListModel;
-import javax.swing.JRadioButton;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 
 /**
  * 
@@ -59,7 +50,7 @@ public class ImageProcessingWindow extends JFrame {
 
 	private JButton btnCreateRoi;
 
-	private JComboBox<String> comboBox;
+	private JComboBox<String> cbSelectedShape;
 
 	private JLabel lblRadius;
 
@@ -75,6 +66,8 @@ public class ImageProcessingWindow extends JFrame {
 	private JButton btnAddToTable;
 
 	private GraphletImage newGraphletImage;
+
+	private JComboBox<String> cbGraphletsMode;
 
 	/**
 	 * Create the frame.
@@ -109,10 +102,11 @@ public class ImageProcessingWindow extends JFrame {
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (newGraphletImage == null) {
-					newGraphletImage = new GraphletImage(raw_img);
+					newGraphletImage = new GraphletImage(raw_img, cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex());
 				}
 				newGraphletImage.setLabelName(tfImageName.getText());
 				newGraphletImage.setColor(colorPicked.getBackground());
+				btnAddToTable.setEnabled(true);
 			}
 		});
 
@@ -129,16 +123,6 @@ public class ImageProcessingWindow extends JFrame {
 		contentPane.add(btnCalculateGraphlets);
 
 		tfImageName = new JTextField();
-		tfImageName.addInputMethodListener(new InputMethodListener() {
-			public void caretPositionChanged(InputMethodEvent event) {
-			}
-
-			public void inputMethodTextChanged(InputMethodEvent event) {
-				if (newGraphletImage != null) {
-					newGraphletImage.setLabelName(tfImageName.getText());
-				}
-			}
-		});
 		tfImageName.setBounds(755, 458, 146, 26);
 		contentPane.add(tfImageName);
 		tfImageName.setColumns(10);
@@ -182,17 +166,20 @@ public class ImageProcessingWindow extends JFrame {
 		lblRadius.setBounds(757, 45, 69, 20);
 		contentPane.add(lblRadius);
 
-		comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
-		comboBox.setBounds(755, 102, 156, 26);
-		contentPane.add(comboBox);
+		cbSelectedShape = new JComboBox<String>();
+		cbSelectedShape.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
+		cbSelectedShape.setSelectedIndex(0);
+		cbSelectedShape.setBounds(755, 102, 156, 26);
+		contentPane.add(cbSelectedShape);
 
 		btnAddToTable = new JButton("Add to table");
+		btnAddToTable.setEnabled(false);
 		btnAddToTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (tfImageName.getText().isEmpty()){
 					JOptionPane.showMessageDialog(btnAddToTable.getParent(), "You should insert a name for the image");
 				} else {
+					newGraphletImage.setLabelName(tfImageName.getText());
 					int result = JOptionPane.showConfirmDialog(btnAddToTable.getParent(), "Everything is ok?",
 					        "Confirm", JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION)
@@ -202,6 +189,12 @@ public class ImageProcessingWindow extends JFrame {
 		});
 		btnAddToTable.setBounds(558, 606, 153, 29);
 		contentPane.add(btnAddToTable);
+		
+		cbGraphletsMode = new JComboBox<String>();
+		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] {"Total (25 graphlets)", "Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) "}));
+		cbGraphletsMode.setSelectedIndex(0);
+		cbGraphletsMode.setBounds(755, 245, 162, 26);
+		contentPane.add(cbGraphletsMode);
 	}
 
 	private void createROI(ImagePlus imgToShow) {

@@ -25,8 +25,8 @@ import imglib.ops.operator.binary.Min;
 public class GraphletImage extends BasicGraphletImage {
 
 	
-	//public static int CIRCLE_SHAPE = 0;
-	//public static int SQUARE_SHAPE = 1;
+	public static int CIRCLE_SHAPE = 0;
+	public static int SQUARE_SHAPE = 1;
 
 	public static final int NUMRANDOMVORONOI = 20;
 
@@ -59,7 +59,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param img
 	 *            image
 	 */
-	public GraphletImage(ImagePlus img, int selectedShape, int modeNumGraphleths) {
+	public GraphletImage(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		super();
 		
 		this.labelName = img.getFileInfo().url;
