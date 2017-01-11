@@ -80,7 +80,6 @@ public class ImageProcessingWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
-
 		newGraphletImages = new ArrayList<GraphletImage>();
 		setBounds(100, 100, 972, 798);
 		contentPane = new JPanel();
@@ -156,7 +155,8 @@ public class ImageProcessingWindow extends JFrame {
 		btnPickAColor = new JButton("Pick a color");
 		btnPickAColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Color c = JColorChooser.showDialog(null, "Choose a Color", colorPicked.getBackground());
+				
+				Color c = JColorChooser.showDialog(btnPickAColor.getParent(), "Choose a Color", colorPicked.getBackground());
 				if (c != null){
 					colorPicked.setBackground(c);
 					newGraphletImage.setColor(c);
@@ -187,9 +187,14 @@ public class ImageProcessingWindow extends JFrame {
 		btnAddToTable = new JButton("Add to table");
 		btnAddToTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog((Component) null, "Everything is ok?",
-				        "Confirm", JOptionPane.OK_CANCEL_OPTION);
-				tableInfo.addImage(newGraphletImage);
+				if (tfImageName.getText().isEmpty()){
+					JOptionPane.showMessageDialog(btnAddToTable.getParent(), "You should insert a name for the image");
+				} else {
+					int result = JOptionPane.showConfirmDialog(btnAddToTable.getParent(), "Everything is ok?",
+					        "Confirm", JOptionPane.OK_CANCEL_OPTION);
+					if (result == 1)
+						tableInfo.addImage(JOptionPane.OK_OPTION);
+				}
 			}
 		});
 		btnAddToTable.setBounds(558, 606, 153, 29);
