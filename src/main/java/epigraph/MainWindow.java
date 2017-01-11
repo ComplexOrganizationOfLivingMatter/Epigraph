@@ -37,16 +37,21 @@ public class MainWindow extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private boolean DEBUG = false;
 	JTableModel tableInfo;
+	private JScrollPane scrollPane;
+	private JTable table;
+	private JPanel panel;
+	private JButton btnVisualize;
+	private JButton btnOpenButton;
 
 	public MainWindow() {
 		super(new GridLayout(1, 0));
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		add(panel);
 
 		// Create buttons
-		JButton btnVisualize = new JButton("Visualize");
+		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VisualizingWindow visualizingWindow = new VisualizingWindow();
@@ -55,7 +60,7 @@ public class MainWindow extends JPanel {
 		});
 		btnVisualize.setBounds(342, 255, 93, 29);
 
-		JButton btnOpenButton = new JButton("Open");
+		btnOpenButton = new JButton("Open");
 		btnOpenButton.setBounds(15, 255, 71, 29);
 		btnOpenButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -81,13 +86,13 @@ public class MainWindow extends JPanel {
 
 		// Create table and scroll pane
 		this.tableInfo = new JTableModel();
-		JTable table = new JTable(tableInfo);
+		table = new JTable(tableInfo);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		// Set up renderer and editor for the Favorite Color column.
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 		table.setDefaultEditor(Color.class, new JColorEditor());
 		// Create the scroll pane and add the table to it.
-		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(15, 27, 420, 196);
 		// scrollPane.setPreferredSize(new Dimension(400, 200));
 
