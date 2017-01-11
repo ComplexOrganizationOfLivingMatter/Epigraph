@@ -192,8 +192,8 @@ public class ImageProcessingWindow extends JFrame {
 				} else {
 					int result = JOptionPane.showConfirmDialog(btnAddToTable.getParent(), "Everything is ok?",
 					        "Confirm", JOptionPane.OK_CANCEL_OPTION);
-					if (result == 1)
-						tableInfo.addImage(JOptionPane.OK_OPTION);
+					if (result == JOptionPane.OK_OPTION)
+						tableInfo.addImage(newGraphletImage);
 				}
 			}
 		});
