@@ -19,6 +19,16 @@ import net.coobird.thumbnailator.Thumbnails;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.awt.Button;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import javax.swing.AbstractListModel;
+import javax.swing.JRadioButton;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  * 
@@ -45,7 +55,7 @@ public class ImageProcessingWindow extends JFrame {
 	public ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		
 		newGraphletImages = new ArrayList<GraphletImage>();
-		setBounds(100, 100, 935, 798);
+		setBounds(100, 100, 972, 798);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
@@ -77,7 +87,7 @@ public class ImageProcessingWindow extends JFrame {
 		});
 		
 		JButton btnCreateRoi = new JButton("Create RoI");
-		btnCreateRoi.setBounds(752, 191, 124, 25);
+		btnCreateRoi.setBounds(755, 392, 124, 25);
 		btnCreateRoi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createROI(imgToShow);
@@ -89,17 +99,17 @@ public class ImageProcessingWindow extends JFrame {
 		contentPane.add(btnCalculateGraphlets);
 		
 		tfImageName = new JTextField();
-		tfImageName.setBounds(752, 257, 146, 26);
+		tfImageName.setBounds(755, 458, 146, 26);
 		contentPane.add(tfImageName);
 		tfImageName.setColumns(10);
 		
 		JLabel lblImageName = new JLabel("Image Name");
-		lblImageName.setBounds(751, 235, 113, 20);
+		lblImageName.setBounds(754, 436, 113, 20);
 		contentPane.add(lblImageName);
 		
 		JPanel colorPicked = new JPanel();
 		colorPicked.setBackground(Color.BLACK);
-		colorPicked.setBounds(752, 354, 113, 25);
+		colorPicked.setBounds(755, 555, 113, 25);
 		contentPane.add(colorPicked);
 		
 		JButton btnPickAColor = new JButton("Pick a color");
@@ -110,8 +120,26 @@ public class ImageProcessingWindow extends JFrame {
 			    	  colorPicked.setBackground(c);
 			}
 		});
-		btnPickAColor.setBounds(749, 309, 115, 29);
+		btnPickAColor.setBounds(752, 510, 115, 29);
 		contentPane.add(btnPickAColor);
+		
+		JButton btnTestNeighbours = new JButton("Test Neighbours");
+		btnTestNeighbours.setBounds(755, 180, 162, 29);
+		contentPane.add(btnTestNeighbours);
+		
+		JSpinner inputRadiusNeigh = new JSpinner();
+		inputRadiusNeigh.setModel(new SpinnerNumberModel(3, 1, 25, 1));
+		inputRadiusNeigh.setBounds(826, 42, 72, 26);
+		contentPane.add(inputRadiusNeigh);
+		
+		JLabel lblRadius = new JLabel("Radius");
+		lblRadius.setBounds(757, 45, 69, 20);
+		contentPane.add(lblRadius);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Circle", "Square"}));
+		comboBox.setBounds(755, 102, 156, 26);
+		contentPane.add(comboBox);
 	}
 
 	private void createROI(ImagePlus imgToShow) {
