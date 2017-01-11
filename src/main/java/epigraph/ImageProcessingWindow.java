@@ -72,6 +72,7 @@ public class ImageProcessingWindow extends JDialog {
 
 	/**
 	 * Create the frame.
+	 * 
 	 * @param raw_img
 	 * @param tableInfo
 	 */
@@ -107,11 +108,18 @@ public class ImageProcessingWindow extends JDialog {
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (newGraphletImage == null) {
-					newGraphletImage = new GraphletImage(raw_img, cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex());
+					newGraphletImage = new GraphletImage(raw_img);
+
+				}
+				
+				if (newGraphletImage.getDistanceGDDH() == -1) {
+					newGraphletImage.runGraphlets(raw_img, cbSelectedShape.getSelectedIndex(),
+							(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex());
+					btnAddToTable.setEnabled(true);
 				}
 				newGraphletImage.setLabelName(tfImageName.getText());
 				newGraphletImage.setColor(colorPicked.getBackground());
-				btnAddToTable.setEnabled(true);
+
 			}
 		});
 
@@ -144,21 +152,31 @@ public class ImageProcessingWindow extends JDialog {
 		btnPickAColor = new JButton("Pick a color");
 		btnPickAColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				Color c = JColorChooser.showDialog(btnPickAColor.getParent(), "Choose a Color", colorPicked.getBackground());
-				if (c != null){
+
+				Color c = JColorChooser.showDialog(btnPickAColor.getParent(), "Choose a Color",
+						colorPicked.getBackground());
+				if (c != null) {
 					colorPicked.setBackground(c);
-					if (newGraphletImage != null){
+					if (newGraphletImage != null) {
 						newGraphletImage.setColor(c);
 					}
 				}
-				
+
 			}
 		});
 		btnPickAColor.setBounds(752, 510, 115, 29);
 		contentPane.add(btnPickAColor);
 
 		btnTestNeighbours = new JButton("Test Neighbours");
+		btnTestNeighbours.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (newGraphletImage == null)
+					newGraphletImage = new GraphletImage(raw_img);
+
+				newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue());
+			}
+		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);
 		contentPane.add(btnTestNeighbours);
 
@@ -181,12 +199,12 @@ public class ImageProcessingWindow extends JDialog {
 		btnAddToTable.setEnabled(false);
 		btnAddToTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (tfImageName.getText().isEmpty()){
+				if (tfImageName.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(btnAddToTable.getParent(), "You should insert a name for the image");
 				} else {
 					newGraphletImage.setLabelName(tfImageName.getText());
 					int result = JOptionPane.showConfirmDialog(btnAddToTable.getParent(), "Everything is ok?",
-					        "Confirm", JOptionPane.OK_CANCEL_OPTION);
+							"Confirm", JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION)
 						tableInfo.addImage(newGraphletImage);
 				}
@@ -194,9 +212,10 @@ public class ImageProcessingWindow extends JDialog {
 		});
 		btnAddToTable.setBounds(558, 606, 153, 29);
 		contentPane.add(btnAddToTable);
-		
+
 		cbGraphletsMode = new JComboBox<String>();
-		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] {"Total (25 graphlets)", "Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) "}));
+		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (25 graphlets)",
+				"Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
 		cbGraphletsMode.setSelectedIndex(0);
 		cbGraphletsMode.setBounds(755, 245, 162, 26);
 		contentPane.add(cbGraphletsMode);

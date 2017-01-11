@@ -59,7 +59,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param img
 	 *            image
 	 */
-	public GraphletImage(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
+	public GraphletImage(ImagePlus img) {
 		super();
 		
 		this.labelName = img.getFileInfo().url;
@@ -85,56 +85,6 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
-		testNeighbours(img, selectedShape, radiusOfShape);
-		
-
-		int[] graphletsWeDontWant;
-		boolean validCells5Graphlets = true;
-		switch (modeNumGraphlets) {
-		case 0:
-			graphletsWeDontWant = totalGraphlets;
-			break;
-		case 1:
-			graphletsWeDontWant = totalParcialGraphlets;
-			break;
-		case 2:
-			graphletsWeDontWant = basicGraphlets;
-			validCells5Graphlets = false;
-			break;
-		case 3:
-			graphletsWeDontWant = basicParcialGraphlets;
-			validCells5Graphlets = false;
-			break;
-
-		default:
-			graphletsWeDontWant = totalGraphlets;
-			break;
-		}
-
-		Arrays.sort(graphletsWeDontWant);
-
-		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
-		Integer[] actualGraphlets;
-		for (EpiCell cell : this.cells) {
-			if (cell.isValid_cell_5()) {
-				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
-				graphletsFinal.add(actualGraphlets);
-			}
-		}
-
-		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
-
-		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
-		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
-			if (validCells5Graphlets)
-				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
-						this.randomVoronoiValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
-			else
-				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
-						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
-
-		}
-		this.distanceGDDRV = mean(distanceGDDRVArray);
 	}
 	
 	public void preprocessImage(ImagePlus img){
@@ -230,6 +180,58 @@ public class GraphletImage extends BasicGraphletImage {
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
+	}
+	
+	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets){
+		testNeighbours(img, selectedShape, radiusOfShape);
+		
+		int[] graphletsWeDontWant;
+		boolean validCells5Graphlets = true;
+		switch (modeNumGraphlets) {
+		case 0:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		case 1:
+			graphletsWeDontWant = totalParcialGraphlets;
+			break;
+		case 2:
+			graphletsWeDontWant = basicGraphlets;
+			validCells5Graphlets = false;
+			break;
+		case 3:
+			graphletsWeDontWant = basicParcialGraphlets;
+			validCells5Graphlets = false;
+			break;
+
+		default:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		}
+
+		Arrays.sort(graphletsWeDontWant);
+
+		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
+		Integer[] actualGraphlets;
+		for (EpiCell cell : this.cells) {
+			if (cell.isValid_cell_5()) {
+				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+				graphletsFinal.add(actualGraphlets);
+			}
+		}
+
+		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
+
+		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
+		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
+			if (validCells5Graphlets)
+				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
+						this.randomVoronoiValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
+			else
+				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
+						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+
+		}
+		this.distanceGDDRV = mean(distanceGDDRVArray);
 	}
 
 	/**
