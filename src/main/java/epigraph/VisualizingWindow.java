@@ -39,7 +39,7 @@ public class VisualizingWindow extends JDialog {
 	/**
 	 * 
 	 */
-	public VisualizingWindow() {
+	public VisualizingWindow(JTableModel tableInfo) {
 		super();
 		setModal(true);
 		chart = new Chart("swing");

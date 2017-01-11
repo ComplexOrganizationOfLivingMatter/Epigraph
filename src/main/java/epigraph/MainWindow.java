@@ -54,7 +54,7 @@ public class MainWindow extends JPanel {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VisualizingWindow visualizingWindow = new VisualizingWindow();
+				VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
 				visualizingWindow.setVisible(true);
 			}
 		});
@@ -99,6 +99,22 @@ public class MainWindow extends JPanel {
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
+		
+		JButton btnExport = new JButton("Export");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnExport.setBounds(240, 255, 87, 29);
+		panel.add(btnExport);
+		
+		JButton btnImport = new JButton("Import");
+		btnImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnImport.setBounds(101, 255, 81, 29);
+		panel.add(btnImport);
 
 	}
 

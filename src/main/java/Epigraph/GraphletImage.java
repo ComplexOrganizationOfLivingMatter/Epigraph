@@ -63,12 +63,6 @@ public class GraphletImage extends BasicGraphletImage {
 		super();
 		
 		this.labelName = img.getFileInfo().url;
-		
-		// TODO: hardcoded variables, when interfaces come, they should be
-		// removed
-		// int radiusOfShape = 3;
-		// int selectedShape = CIRCLE_SHAPE;
-		// int modeNumGraphlets = 0;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -91,96 +85,8 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
-
-		/* Preprocessing */
-		this.cells = new ArrayList<EpiCell>();
-
-		if (!img.getChannelProcessor().isBinary()) {
-			System.out.println("No binary image, improving...");
-			img.getChannelProcessor().autoThreshold();
-		}
-
-		int[][] pixels = img.getChannelProcessor().getIntArray();
-		int whitePixels = 0;
-		int blackPixels = 0;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				if (pixels[i][j] == 0)
-					blackPixels++;
-				else
-					whitePixels++;
-			}
-		}
-
-		if (blackPixels > whitePixels) {
-			img.getChannelProcessor().invert();
-		}
-
-		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
-		this.raw_img = new ImagePlus("", imp);
-
-		// Add a frame
-		for (int i = 0; i < img.getWidth(); i++) {
-			img.getChannelProcessor().set(i, 0, 0);
-			img.getChannelProcessor().set(i, img.getHeight() - 1, 0);
-		}
-
-		for (int i = 0; i < img.getHeight(); i++) {
-			img.getChannelProcessor().set(0, i, 0);
-			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
-		}
-
-		// img.show();
-		MaximumFinder mxf = new MaximumFinder();
-		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
-		img.setProcessor(btp);
-
-		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
-		pixels = img.getChannelProcessor().getIntArray();
-
-		int indexEpiCell = 0;
-		EpiCell epicell = null;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				if (pixels[i][j] != 0) {
-					epicell = new EpiCell(indexEpiCell);
-					this.cells.add(epicell);
-					labelPropagation(i, j, indexEpiCell);
-					epicell.addPixel(i, j);
-					indexEpiCell++;
-				}
-			}
-		}
-		// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
-
-		// this.l_img.show();
-
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
-			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-
-		this.orcaProgram = new Orca(this.adjacencyMatrix);
-
-		int[][] graphlets = this.orcaProgram.getOrbit();
-		this.percentageOfHexagons = 0;
-		//int percentageOfHexagonsOriginal = 0;
-		for (int i = 0; i < graphlets.length; i++) {
-			this.cells.get(i).setGraphlets(graphlets[i]);
-			if (graphlets[i][0] == 6) {
-				percentageOfHexagons++;
-			}
-			//if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
-			//	percentageOfHexagonsOriginal++;
-			//}
-		}
-		this.percentageOfHexagons /= graphlets.length;
-		this.orcaProgram = null;
-
-		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
-			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
-		}
+		testNeighbours(img, selectedShape, radiusOfShape);
+		
 
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
@@ -229,6 +135,101 @@ public class GraphletImage extends BasicGraphletImage {
 
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
+	}
+	
+	public void preprocessImage(ImagePlus img){
+		/* Preprocessing */
+		this.cells = new ArrayList<EpiCell>();
+
+		if (!img.getChannelProcessor().isBinary()) {
+			System.out.println("No binary image, improving...");
+			img.getChannelProcessor().autoThreshold();
+		}
+
+		int[][] pixels = img.getChannelProcessor().getIntArray();
+		int whitePixels = 0;
+		int blackPixels = 0;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				if (pixels[i][j] == 0)
+					blackPixels++;
+				else
+					whitePixels++;
+			}
+		}
+
+		if (blackPixels > whitePixels) {
+			img.getChannelProcessor().invert();
+		}
+
+		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
+		this.raw_img = new ImagePlus("", imp);
+	}
+	
+	public void testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape){
+		preprocessImage(img);
+		// Add a frame
+		for (int i = 0; i < img.getWidth(); i++) {
+			img.getChannelProcessor().set(i, 0, 0);
+			img.getChannelProcessor().set(i, img.getHeight() - 1, 0);
+		}
+
+		for (int i = 0; i < img.getHeight(); i++) {
+			img.getChannelProcessor().set(0, i, 0);
+			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
+		}
+
+		// img.show();
+		MaximumFinder mxf = new MaximumFinder();
+		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
+		img.setProcessor(btp);
+
+		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
+		int[][] pixels = img.getChannelProcessor().getIntArray();
+
+		int indexEpiCell = 0;
+		EpiCell epicell = null;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				if (pixels[i][j] != 0) {
+					epicell = new EpiCell(indexEpiCell);
+					this.cells.add(epicell);
+					labelPropagation(i, j, indexEpiCell);
+					epicell.addPixel(i, j);
+					indexEpiCell++;
+				}
+			}
+		}
+		// Create adjacency matrix from the found cells
+		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
+
+		// this.l_img.show();
+
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
+
+		this.orcaProgram = new Orca(this.adjacencyMatrix);
+
+		int[][] graphlets = this.orcaProgram.getOrbit();
+		this.percentageOfHexagons = 0;
+		//int percentageOfHexagonsOriginal = 0;
+		for (int i = 0; i < graphlets.length; i++) {
+			this.cells.get(i).setGraphlets(graphlets[i]);
+			if (graphlets[i][0] == 6) {
+				percentageOfHexagons++;
+			}
+			//if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
+			//	percentageOfHexagonsOriginal++;
+			//}
+		}
+		this.percentageOfHexagons /= graphlets.length;
+		this.orcaProgram = null;
+
+		// int numValidCells = 0;
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
+			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
+		}
 	}
 
 	/**
