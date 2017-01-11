@@ -13,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,7 +31,7 @@ import net.coobird.thumbnailator.Thumbnails;
  * @author Pablo Vicente-Munuera
  *
  */
-public class ImageProcessingWindow extends JFrame {
+public class ImageProcessingWindow extends JDialog {
 
 	/**
 	 * 
@@ -71,8 +72,12 @@ public class ImageProcessingWindow extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param raw_img
+	 * @param tableInfo
 	 */
 	public ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
+		super();
+		setModal(true);
 		newGraphletImages = new ArrayList<GraphletImage>();
 		setBounds(100, 100, 972, 798);
 		contentPane = new JPanel();
