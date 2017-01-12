@@ -121,6 +121,8 @@
 
 	<build>
 		<plugins>
+			<!-- In case you want to install a plugin manually add those lines and 
+				then remove then when you've done it http://www.baeldung.com/install-local-jar-with-maven/ -->
 			<plugin>
 				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
 				<artifactId>maven-java-formatter-plugin</artifactId>
