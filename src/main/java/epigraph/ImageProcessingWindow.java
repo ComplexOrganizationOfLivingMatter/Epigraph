@@ -25,6 +25,7 @@ import javax.swing.SpinnerNumberModel;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import net.coobird.thumbnailator.Thumbnails;
+import java.awt.Font;
 
 /**
  * 
@@ -69,6 +70,9 @@ public class ImageProcessingWindow extends JDialog {
 	private GraphletImage newGraphletImage;
 
 	private JComboBox<String> cbGraphletsMode;
+
+	private JLabel lblTestedPolDist;
+	private JLabel lblShape;
 
 	/**
 	 * Create the frame.
@@ -141,6 +145,7 @@ public class ImageProcessingWindow extends JDialog {
 		tfImageName.setColumns(10);
 
 		lblImageName = new JLabel("Image Name");
+		lblImageName.setLabelFor(tfImageName);
 		lblImageName.setBounds(754, 436, 113, 20);
 		contentPane.add(lblImageName);
 
@@ -173,9 +178,8 @@ public class ImageProcessingWindow extends JDialog {
 				if (newGraphletImage == null)
 					newGraphletImage = new GraphletImage(raw_img);
 
-				newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue());
-				JOptionPane.showConfirmDialog(btnTestNeighbours.getParent(), "Percentage of hexagons: " + newGraphletImage.getPercentageOfHexagons());
+				lblTestedPolDist.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), imgToShow));
 			}
 		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);
@@ -187,13 +191,14 @@ public class ImageProcessingWindow extends JDialog {
 		contentPane.add(inputRadiusNeigh);
 
 		lblRadius = new JLabel("Radius");
+		lblRadius.setLabelFor(inputRadiusNeigh);
 		lblRadius.setBounds(757, 45, 69, 20);
 		contentPane.add(lblRadius);
 
 		cbSelectedShape = new JComboBox<String>();
 		cbSelectedShape.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
 		cbSelectedShape.setSelectedIndex(0);
-		cbSelectedShape.setBounds(755, 102, 156, 26);
+		cbSelectedShape.setBounds(755, 124, 156, 26);
 		contentPane.add(cbSelectedShape);
 
 		btnAddToTable = new JButton("Add to table");
@@ -220,6 +225,16 @@ public class ImageProcessingWindow extends JDialog {
 		cbGraphletsMode.setSelectedIndex(0);
 		cbGraphletsMode.setBounds(755, 245, 162, 26);
 		contentPane.add(cbGraphletsMode);
+
+		lblTestedPolDist = new JLabel("");
+		lblTestedPolDist.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
+		lblTestedPolDist.setBounds(33, 13, 818, 16);
+		contentPane.add(lblTestedPolDist);
+
+		lblShape = new JLabel("Shape");
+		lblShape.setLabelFor(cbSelectedShape);
+		lblShape.setBounds(755, 101, 56, 16);
+		contentPane.add(lblShape);
 	}
 
 	private void createROI(ImagePlus imgToShow) {
