@@ -4,6 +4,7 @@
 package epigraph;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import imglib.ops.operator.binary.Min;
  */
 public class GraphletImage extends BasicGraphletImage {
 
-	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
 
@@ -61,7 +61,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public GraphletImage(ImagePlus img) {
 		super();
-		
+
 		this.labelName = img.getFileInfo().url;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
@@ -86,8 +86,8 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// END TODO
 	}
-	
-	public void preprocessImage(ImagePlus img){
+
+	public void preprocessImage(ImagePlus img) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -115,8 +115,8 @@ public class GraphletImage extends BasicGraphletImage {
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
 	}
-	
-	public void testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape){
+
+	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		preprocessImage(img);
 		// Add a frame
 		for (int i = 0; i < img.getWidth(); i++) {
@@ -161,30 +161,59 @@ public class GraphletImage extends BasicGraphletImage {
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
+		float percentageOfSquares = 0;
+		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
-		//int percentageOfHexagonsOriginal = 0;
+		float percentageOfHeptagons = 0;
+		float percentageOfOctogons = 0;
+		int validCells = 0;
+		// int percentageOfHexagonsOriginal = 0;
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
-			if (graphlets[i][0] == 6) {
-				percentageOfHexagons++;
+			if (this.cells.get(i).isValid_cell()) {
+				switch (graphlets[i][0]) {
+				case 4:
+					percentageOfSquares++;
+					break;
+				case 5:
+					percentageOfPentagons++;
+					break;
+				case 6:
+					percentageOfHexagons++;
+					break;
+				case 7:
+					percentageOfHeptagons++;
+					break;
+				case 8:
+					percentageOfOctogons++;
+					break;
+				}
+				validCells++;
 			}
-			//if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
-			//	percentageOfHexagonsOriginal++;
-			//}
 		}
-		this.percentageOfHexagons /= graphlets.length;
+		percentageOfSquares /= validCells;
+		percentageOfPentagons /= validCells;
+		this.percentageOfHexagons /= validCells;
+		percentageOfHeptagons /= validCells;
+		percentageOfOctogons /= validCells;
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+
+		{
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
+
+		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+		defaultFormat.setMaximumFractionDigits(2);
+		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
 	}
-	
-	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets){
+
+	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		testNeighbours(img, selectedShape, radiusOfShape);
-		
+
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
@@ -280,14 +309,14 @@ public class GraphletImage extends BasicGraphletImage {
 			img.set(perimeterPixelX[numPixel], perimeterPixelY[numPixel], 255);
 
 		switch (shape) {
-			case 0:// CIRCLE_SHAPE
-				new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
-				break;
-			case 1: // SQUARE_SHAPE
-				// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
-				// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
-				// mask[i][j] = img.getPixel(i, j);
-				break;
+		case 0:// CIRCLE_SHAPE
+			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
+			break;
+		case 1: // SQUARE_SHAPE
+			// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
+			// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
+			// mask[i][j] = img.getPixel(i, j);
+			break;
 		}
 
 		return img;
