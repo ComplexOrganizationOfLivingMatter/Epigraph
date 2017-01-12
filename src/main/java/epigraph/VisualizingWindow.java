@@ -43,56 +43,50 @@ public class VisualizingWindow extends JDialog {
 		super();
 		setModal(true);
 		chart = new Chart("swing");
-		// TODO Auto-generated constructor stub
-		ExcelClass ec = new ExcelClass();
-		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
+		 
+        int size_array = tableInfo.getRowCount();
+        
+               
+        Coord3d[] points = new Coord3d[size_array];
+        Color[]   colors = new Color[size_array];
+        
+        for(int i=0; i<size_array; i++){
+            
+        	//creating coord array
+            points[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV());
+            //creating color array
+            colors[i] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(), tableInfo.getAllGraphletImages().get(i).getColor().getGreen(), tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
+        }
+        
+        //Xf represent the size of dots
+        scatter = new Scatter(points, colors, 6f);
+        
+        //Nicest show dots shape, Advanced show squares shape
+        chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
+        chart.getScene().add(scatter);
+        chart.addMouseCameraController();
+        
+        IAxeLayout l = chart.getAxeLayout();
+        
+        //Labelling axes
+        l.setXAxeLabel("GDDH");
+        l.setYAxeLabel("Hexagons percentage");
+        l.setZAxeLabel("GDDRV");
+                
+        //Presition displaying axes
+        l.setXTickRenderer(new FixedDecimalTickRenderer(2));
+        l.setYTickRenderer(new FixedDecimalTickRenderer(2));
+        l.setZTickRenderer(new FixedDecimalTickRenderer(2));
+              
 
-		int size_array = ec.getGddh().size();
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
+        
+        setContentPane(panel);
 
-		Coord3d[] points = new Coord3d[size_array];
-		Color[] colors = new Color[size_array];
-
-		/* create an color array */
-
-		Random r = new Random();
-		r.setSeed(0);
-
-		for (int i = 0; i < size_array; i++) {
-
-			// creating coord array
-			points[i] = new Coord3d(ec.getHexagonsPercentage().get(i), ec.getGddh().get(i), ec.getGddrv().get(i));
-			// creating color array
-			colors[i] = new Color(ec.getR().get(i), ec.getG().get(i), ec.getB().get(i));
-		}
-
-		// Xf represent the size of dots
-		scatter = new Scatter(points, colors, 6f);
-
-		// Nicest show dots shape, Advanced show squares shape
-		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
-		chart.getScene().add(scatter);
-		chart.addMouseCameraController();
-
-		IAxeLayout l = chart.getAxeLayout();
-
-		// Labelling axes
-		l.setXAxeLabel("GDDH");
-		l.setYAxeLabel("Hexagons percentage");
-		l.setZAxeLabel("GDDRV");
-
-		// Presition displaying axes
-		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
-		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
-		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
-
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-
-		setContentPane(panel);
-
-		pack();
-		setBounds(0, 0, 400, 400);
-
-		// chart.getView().getCamera().setScreenGridDisplayed(true);
+        pack();
+        setBounds(0, 0, 400, 400);
+        
+        //chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
 }
