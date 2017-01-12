@@ -16,7 +16,7 @@ import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import imglib.ops.operator.binary.Min;
+
 
 /**
  * 
@@ -107,7 +107,7 @@ public class GraphletImage extends BasicGraphletImage {
 					whitePixels++;
 			}
 		}
-
+		
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
 		}
@@ -212,7 +212,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
-		testNeighbours(img, selectedShape, radiusOfShape);
+		testNeighbours(img, selectedShape, radiusOfShape, null);
 
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
