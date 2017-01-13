@@ -223,6 +223,12 @@ public class GraphletImage extends BasicGraphletImage {
 				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
 			}
 		}
+		
+		percentageOfSquares /= validCells;
+		percentageOfPentagons /= validCells;
+		this.percentageOfHexagons /= validCells;
+		percentageOfHeptagons /= validCells;
+		percentageOfOctogons /= validCells;
 
 		if (imgToShow != null){
 			imgToShow.setProcessor(colorImgToShow);
@@ -235,11 +241,6 @@ public class GraphletImage extends BasicGraphletImage {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			percentageOfSquares /= validCells;
-			percentageOfPentagons /= validCells;
-			this.percentageOfHexagons /= validCells;
-			percentageOfHeptagons /= validCells;
-			percentageOfOctogons /= validCells;
 	
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);
