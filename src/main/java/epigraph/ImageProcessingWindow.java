@@ -115,7 +115,7 @@ public class ImageProcessingWindow extends JDialog {
 					if (newGraphletImage == null) {
 						newGraphletImage = new GraphletImage(raw_img);
 						newGraphletImage.preprocessImage(raw_img);
-						if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == false){
+						if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == -1){
 							JOptionPane.showMessageDialog(canvas, "No cell selected");
 						}
 					}
@@ -202,6 +202,7 @@ public class ImageProcessingWindow extends JDialog {
 
 				lblTestedPolDist.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), imgToShow));
+				canvas.repaint();
 			}
 		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);

@@ -287,15 +287,18 @@ public class EpiCell {
 		this.pixelsY = newPixelsY;
 	}
 	
-	public boolean searchSelectedPixel(int x1, int y1) {
+	public int searchSelectedPixel(int x1, int y1) {
 		for (int x = 0; x < this.pixelsX.length; x++){
 			if (this.pixelsX[x] == x1){
 				if (this.pixelsY[x] == y1){
-					this.setSelected(this.isSelected());
-					return true;
+					this.setSelected(!this.isSelected());
+					if (this.isSelected())
+						return 1;
+					else
+						return 0;
 				}
 			}
 		}
-		return false;
+		return -1;
 	}
 }

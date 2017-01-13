@@ -503,12 +503,14 @@ public class GraphletImage extends BasicGraphletImage {
 		return distributions;
 	}
 
-	public boolean addCellToSelected(int x, int y) {
+	public int addCellToSelected(int x, int y) {
+		int pixelsIsSelected;
 		for (int numCell = 0; numCell < this.cells.size(); numCell++){
-			if (this.cells.get(numCell).getPixelValue(x, y)){
-				return true;
+			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
+			if (pixelsIsSelected != -1){
+				return pixelsIsSelected;
 			}
 		}
-		return false;
+		return -1;
 	}
 }
