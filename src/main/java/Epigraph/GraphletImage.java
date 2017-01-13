@@ -3,6 +3,9 @@
  */
 package epigraph;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import ij.ImageStack;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 
 import inra.ijpb.binary.BinaryImages;
@@ -24,6 +28,8 @@ import inra.ijpb.label.*;
 import inra.ijpb.morphology.MinimaAndMaxima3D;
 import inra.ijpb.morphology.Morphology;
 import inra.ijpb.morphology.Strel3D;
+import inra.ijpb.morphology.strel.SquareStrel;
+import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * 
@@ -156,28 +162,59 @@ public class GraphletImage extends BasicGraphletImage {
 		float percentageOfOctogons = 0;
 		int validCells = 0;
 		// int percentageOfHexagonsOriginal = 0;
+		int[][] actualPixels;
+
+		ColorProcessor colorImgToShow = img.getChannelProcessor().convertToColorProcessor();
+		Color colorOfCell;
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
+			colorOfCell = Color.WHITE;
 			if (this.cells.get(i).isValid_cell()) {
 				switch (graphlets[i][0]) {
 				case 4:
 					percentageOfSquares++;
+					colorOfCell = Color.GREEN;
 					break;
 				case 5:
 					percentageOfPentagons++;
+					colorOfCell = Color.BLUE;
 					break;
 				case 6:
 					percentageOfHexagons++;
+					colorOfCell = Color.RED;
 					break;
 				case 7:
 					percentageOfHeptagons++;
+					colorOfCell = Color.YELLOW;
 					break;
 				case 8:
 					percentageOfOctogons++;
+					colorOfCell = Color.PINK;
 					break;
 				}
 				validCells++;
+			} else {
+				colorOfCell = Color.BLACK;
 			}
+			
+			actualPixels = this.cells.get(i).getPixels();
+			int color;
+			for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
+				color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
+						| (colorOfCell.getBlue() & 0xFF));
+				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
+			}
+		}
+		
+		imgToShow = new ImagePlus("", colorImgToShow);
+		BufferedImage thumbnail = null;
+		try {
+			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE).width(ImageProcessingWindow.CANVAS_SIZE)
+					.asBufferedImage();
+			imgToShow.setImage(thumbnail);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
@@ -301,9 +338,8 @@ public class GraphletImage extends BasicGraphletImage {
 			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
 			break;
 		case 1: // SQUARE_SHAPE
-			// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
-			// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
-			// mask[i][j] = img.getPixel(i, j);
+			SquareStrel sq = SquareStrel.fromRadius(dimensionOfShape);
+			img = sq.dilation(img);
 			break;
 		}
 
@@ -464,5 +500,14 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		return distributions;
+	}
+
+	public boolean addCellToSelected(int x, int y) {
+		for (int numCell = 0; numCell < this.cells.size(); numCell++){
+			if (this.cells.get(numCell).getPixelValue(x, y)){
+				return true;
+			}
+		}
+		return false;
 	}
 }
