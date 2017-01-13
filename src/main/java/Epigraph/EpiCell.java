@@ -24,6 +24,8 @@ public class EpiCell {
 	private int[] perimeterPixelsX;
 	private int[] perimeterPixelsY;
 
+	private boolean selected;
+
 	/**
 	 * 
 	 */
@@ -222,6 +224,20 @@ public class EpiCell {
 	}
 
 	/**
+	 * @return the selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	/**
 	 * @return the pixels
 	 */
 	public int[][] getPixels() {
@@ -310,5 +326,17 @@ public class EpiCell {
 
 		this.perimeterPixelsX = newPixelsX;
 		this.perimeterPixelsY = newPixelsY;
+	}
+
+	public boolean getPixelValue(int x1, int y1) {
+		for (int x = 0; x < this.pixelsX.length; x++){
+			if (this.pixelsX[x] == x1){
+				if (this.pixelsY[x] == y1){
+					this.setSelected(true);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -26,6 +27,8 @@ import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * 
@@ -73,6 +76,10 @@ public class ImageProcessingWindow extends JDialog {
 
 	private JLabel lblTestedPolDist;
 	private JLabel lblShape;
+	
+	private boolean modeSelectionCells;
+
+	private AbstractButton btnSelectCells;
 
 	/**
 	 * Create the frame.
@@ -84,6 +91,7 @@ public class ImageProcessingWindow extends JDialog {
 		super();
 		setModal(true);
 		newGraphletImages = new ArrayList<GraphletImage>();
+		modeSelectionCells = false;
 		setBounds(100, 100, 972, 798);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -100,6 +108,21 @@ public class ImageProcessingWindow extends JDialog {
 			e.printStackTrace();
 		}
 		canvas = new OverlayedImageCanvas(imgToShow);
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (modeSelectionCells){
+					if (newGraphletImage == null) {
+						newGraphletImage = new GraphletImage(raw_img);
+						newGraphletImage.preprocessImage(raw_img);
+						if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == false){
+							JOptionPane.showMessageDialog(canvas, "No cell selected");
+						}
+					}
+					
+				}
+			}
+		});
 		canvas.setLocation(199, 42);
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
@@ -113,7 +136,6 @@ public class ImageProcessingWindow extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if (newGraphletImage == null) {
 					newGraphletImage = new GraphletImage(raw_img);
-
 				}
 
 				if (newGraphletImage.getDistanceGDDH() == -1) {
@@ -235,6 +257,21 @@ public class ImageProcessingWindow extends JDialog {
 		lblShape.setLabelFor(cbSelectedShape);
 		lblShape.setBounds(755, 101, 56, 16);
 		contentPane.add(lblShape);
+		
+		btnSelectCells = new JButton("Select cells");
+		btnSelectCells.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (modeSelectionCells){
+					modeSelectionCells = false;
+					btnSelectCells.setBackground(new Color(212, 208, 200));
+				} else {
+					modeSelectionCells = true;
+					btnSelectCells.setBackground(Color.red);
+				}
+			}
+		});
+		btnSelectCells.setBounds(755, 343, 124, 25);
+		contentPane.add(btnSelectCells);
 	}
 
 	private void createROI(ImagePlus imgToShow) {
