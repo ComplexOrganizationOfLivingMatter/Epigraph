@@ -22,6 +22,8 @@ public class EpiCell {
 	private int[] pixelsY;
 	private int[] pixelsX;
 
+	private boolean selected;
+
 	/**
 	 * 
 	 */
@@ -216,6 +218,20 @@ public class EpiCell {
 	}
 
 	/**
+	 * @return the selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	/**
 	 * @return the pixels
 	 */
 	public int[][] getPixels() {
@@ -271,5 +287,4 @@ public class EpiCell {
 		this.pixelsY = newPixelsY;
 	}
 
-	
 }
