@@ -141,11 +141,11 @@ public class GraphletImage extends BasicGraphletImage {
 		/*// Create adjacency matrix from the found cells
 		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
 
-		// this.l_img.show();
+		// this.l_img.show();*/
 
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-
+/*
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
@@ -195,7 +195,8 @@ public class GraphletImage extends BasicGraphletImage {
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
 		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
-	*/return "";
+	*/
+		return "";
 		}
 
 
@@ -318,8 +319,8 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
-		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPerimeterPixelsX(),
-				cell.getPerimeterPixelsY());
+		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(),
+				cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
