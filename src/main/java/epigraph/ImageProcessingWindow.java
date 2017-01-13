@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -29,6 +30,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Canvas;
 
 /**
  * 
@@ -94,6 +96,7 @@ public class ImageProcessingWindow extends JDialog {
 		modeSelectionCells = false;
 		setBounds(100, 100, 972, 798);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 
@@ -126,7 +129,10 @@ public class ImageProcessingWindow extends JDialog {
 		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
 
 		newGraphletImage = new GraphletImage(raw_img);
-
+		
+		
+		
+		
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.setBounds(199, 596, 329, 49);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
@@ -263,6 +269,14 @@ public class ImageProcessingWindow extends JDialog {
 		});
 		btnSelectCells.setBounds(755, 343, 124, 25);
 		contentPane.add(btnSelectCells);
+		
+		JLabel lblShapes = new JLabel("");
+		lblShapes.setIcon(new ImageIcon("C:\\Users\\Luisma\\Desktop\\Synopsis EMBO J.jpg"));
+		lblShapes.setBounds(91, 42, 91, 424);
+		contentPane.add(lblShapes);
+		
+		
+		
 	}
 
 	private void createROI(ImagePlus imgToShow) {
