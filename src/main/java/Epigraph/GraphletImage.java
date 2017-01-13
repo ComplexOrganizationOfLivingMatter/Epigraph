@@ -159,8 +159,9 @@ public class GraphletImage extends BasicGraphletImage {
 				valuePxl = matrixImg[indexImgX][indexImgY];
 				if (valuePxl != 0) {
 					this.cells.get(valuePxl - 1).addPixel(indexImgX, indexImgY);
+					if (indexImgX == 0 || indexImgX == H - 1 || indexImgY == 0 || indexImgY == W - 1)
+						this.cells.get(valuePxl - 1).setValid_cell(false);
 				}
-
 			}
 		}
 
@@ -190,23 +191,23 @@ public class GraphletImage extends BasicGraphletImage {
 				switch (this.cells.get(i).getNeighbours().size()) {
 				case 4:
 					percentageOfSquares++;
-					colorOfCell = Color.GREEN;
+					colorOfCell = new Color((int) 255, (int) (0.4*255), (int) (0*255));
 					break;
 				case 5:
 					percentageOfPentagons++;
-					colorOfCell = Color.BLUE;
+					colorOfCell = Color.green;
 					break;
 				case 6:
 					percentageOfHexagons++;
-					colorOfCell = Color.RED;
+					colorOfCell = new Color(0, (int) (0.4*255), (int) (1*255));
 					break;
 				case 7:
 					percentageOfHeptagons++;
-					colorOfCell = Color.YELLOW;
+					colorOfCell = new Color((int) (0.6*255), 0*255, 1*255);
 					break;
 				case 8:
 					percentageOfOctogons++;
-					colorOfCell = Color.PINK;
+					colorOfCell = new Color(0, (int) (0.4*255), (int) (0.6*255));
 					break;
 				}
 				validCells++;
