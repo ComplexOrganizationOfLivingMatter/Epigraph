@@ -24,7 +24,6 @@ import inra.ijpb.morphology.MinimaAndMaxima3D;
 import inra.ijpb.morphology.Morphology;
 import inra.ijpb.morphology.Strel3D;
 
-
 /**
  * 
  * @author Pablo Vicente-Munuera
@@ -114,7 +113,7 @@ public class GraphletImage extends BasicGraphletImage {
 					whitePixels++;
 			}
 		}
-		
+
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
 		}
@@ -139,8 +138,9 @@ public class GraphletImage extends BasicGraphletImage {
 		// img.show();
 		MaximumFinder mxf = new MaximumFinder();
 
-		//ByteProcessor createLabelImage(ImageProcessor... images). This is the code
-		
+		// ByteProcessor createLabelImage(ImageProcessor... images). This is the
+		// code
+
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
 
@@ -209,16 +209,18 @@ public class GraphletImage extends BasicGraphletImage {
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
-
-		{
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
 
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
-		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
+		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
+				+ defaultFormat.format(percentageOfPentagons) + ", Hexagons "
+				+ defaultFormat.format(this.percentageOfHexagons) + ", Heptagons "
+				+ defaultFormat.format(percentageOfHeptagons) + ", Octogons "
+				+ defaultFormat.format(percentageOfOctogons);
 	}
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
