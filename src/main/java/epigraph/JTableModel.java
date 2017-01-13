@@ -126,6 +126,20 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
+	 * @return the listOfVisualizing
+	 */
+	public ArrayList<Boolean> getListOfVisualizing() {
+		return listOfVisualizing;
+	}
+
+	/**
+	 * @param listOfVisualizing the listOfVisualizing to set
+	 */
+	public void setListOfVisualizing(ArrayList<Boolean> listOfVisualizing) {
+		this.listOfVisualizing = listOfVisualizing;
+	}
+
+	/**
 	 * 
 	 * @param newImages
 	 */

@@ -51,11 +51,12 @@ public class VisualizingWindow extends JDialog {
         Color[]   colors = new Color[size_array];
         
         for(int i=0; i<size_array; i++){
-            
-        	//creating coord array
-            points[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV());
-            //creating color array
-            colors[i] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(), tableInfo.getAllGraphletImages().get(i).getColor().getGreen(), tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
+            if (tableInfo.getListOfVisualizing().get(i)){
+	        	//creating coord array
+	            points[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV());
+	            //creating color array
+	            colors[i] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(), tableInfo.getAllGraphletImages().get(i).getColor().getGreen(), tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
+            }
         }
         
         //Xf represent the size of dots
