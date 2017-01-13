@@ -134,49 +134,45 @@ public class GraphletImage extends BasicGraphletImage {
 	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		preprocessImage(img);
 
-
-		//Labelling image			
-		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());		
-		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling (4);//define connectivity
+		// Labelling image
+		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
+																				// connectivity
 		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
 		this.l_img = new ImagePlus("", img.getChannelProcessor());
-		
-		//get unique labels from labelled imageplus
-		int[] labelunique = LabelImages.findAllLabels(img);
-		img.show();
-		
-		//get image in a matrix of labels
-		int [][] matrixImg = img.getChannelProcessor().getIntArray();
-		
-		//Create epicells
 
-		
-		for (int indexEpiCell = 1; indexEpiCell < labelunique.length+1; indexEpiCell++){
-			this.cells.add(new EpiCell(indexEpiCell));			
-			}
-		
-		//Add pixel to each epicell
+		// get unique labels from labelled imageplus
+		int[] labelunique = LabelImages.findAllLabels(img);
+
+		// get image in a matrix of labels
+		int[][] matrixImg = img.getChannelProcessor().getIntArray();
+
+		// Create epicells
+
+		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
+			this.cells.add(new EpiCell(indexEpiCell));
+		}
+
+		// Add pixel to each epicell
 		int W = img.getWidth();
 		int H = img.getHeight();
 		int valuePxl;
-		for (int indexImgX = 0; indexImgX < H; indexImgX++){
-			for (int indexImgY = 0; indexImgY < W; indexImgY++){
+		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
+			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
 				valuePxl = matrixImg[indexImgX][indexImgY];
-				if (valuePxl != 0){
-					this.cells.get(valuePxl-1).addPixel(indexImgX, indexImgY);
+				if (valuePxl != 0) {
+					this.cells.get(valuePxl - 1).addPixel(indexImgX, indexImgY);
 				}
-				
+
 			}
 		}
-		
-			
+
 		// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[labelunique.length+1][labelunique.length+1];
+		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-			
-		
+
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
@@ -221,7 +217,7 @@ public class GraphletImage extends BasicGraphletImage {
 			} else {
 				colorOfCell = Color.BLACK;
 			}
-			
+
 			actualPixels = this.cells.get(i).getPixels();
 			int color;
 			for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
@@ -230,12 +226,12 @@ public class GraphletImage extends BasicGraphletImage {
 				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
 			}
 		}
-		
+
 		imgToShow = new ImagePlus("", colorImgToShow);
 		BufferedImage thumbnail = null;
 		try {
-			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE).width(ImageProcessingWindow.CANVAS_SIZE)
-					.asBufferedImage();
+			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
+					.width(ImageProcessingWindow.CANVAS_SIZE).asBufferedImage();
 			imgToShow.setImage(thumbnail);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -249,16 +245,19 @@ public class GraphletImage extends BasicGraphletImage {
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
 
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
-		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
-		}
-
+		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
+				+ defaultFormat.format(percentageOfPentagons) + ", Hexagons "
+				+ defaultFormat.format(this.percentageOfHexagons) + ", Heptagons "
+				+ defaultFormat.format(percentageOfHeptagons) + ", Octogons "
+				+ defaultFormat.format(percentageOfOctogons);
+	}
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		testNeighbours(img, selectedShape, radiusOfShape, null);
@@ -312,8 +311,6 @@ public class GraphletImage extends BasicGraphletImage {
 		this.distanceGDDRV = mean(distanceGDDRVArray);
 	}
 
-	
-
 	/**
 	 * 
 	 * @param shape
@@ -349,8 +346,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
-		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(),
-				cell.getPixelsY());
+		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
@@ -499,9 +495,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 	public int addCellToSelected(int x, int y) {
 		int pixelsIsSelected;
-		for (int numCell = 0; numCell < this.cells.size(); numCell++){
+		for (int numCell = 0; numCell < this.cells.size(); numCell++) {
 			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
-			if (pixelsIsSelected != -1){
+			if (pixelsIsSelected != -1) {
 				return pixelsIsSelected;
 			}
 		}
