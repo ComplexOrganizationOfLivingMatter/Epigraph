@@ -12,10 +12,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+
+import inra.*;
+import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.morphology.MinimaAndMaxima3D;
+import inra.ijpb.morphology.Morphology;
+import inra.ijpb.morphology.Strel3D;
 
 
 /**
@@ -131,6 +138,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// img.show();
 		MaximumFinder mxf = new MaximumFinder();
+
+		//ByteProcessor createLabelImage(ImageProcessor... images). This is the code
+		
 		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
 		img.setProcessor(btp);
 
