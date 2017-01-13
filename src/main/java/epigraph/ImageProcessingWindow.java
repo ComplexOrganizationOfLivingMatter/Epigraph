@@ -39,7 +39,7 @@ public class ImageProcessingWindow extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final int CANVAS_SIZE = 512;
+	public static final int CANVAS_SIZE = 512;
 
 	private JPanel contentPane;
 
