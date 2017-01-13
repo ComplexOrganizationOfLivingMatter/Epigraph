@@ -25,7 +25,6 @@ import inra.ijpb.morphology.MinimaAndMaxima3D;
 import inra.ijpb.morphology.Morphology;
 import inra.ijpb.morphology.Strel3D;
 
-
 /**
  * 
  * @author Pablo Vicente-Munuera
@@ -115,7 +114,7 @@ public class GraphletImage extends BasicGraphletImage {
 					whitePixels++;
 			}
 		}
-		
+
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
 		}
@@ -126,7 +125,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		preprocessImage(img);
-		
+
 
 		//Labelling image			
 		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());		
@@ -188,9 +187,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
-
-		{
+		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
@@ -200,6 +197,7 @@ public class GraphletImage extends BasicGraphletImage {
 		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
 	*/return "";
 		}
+
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		testNeighbours(img, selectedShape, radiusOfShape, null);
