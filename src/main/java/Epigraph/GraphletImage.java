@@ -18,8 +18,9 @@ import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
-import inra.*;
 import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.binary.conncomp.*;
+import inra.ijpb.label.*;
 import inra.ijpb.morphology.MinimaAndMaxima3D;
 import inra.ijpb.morphology.Morphology;
 import inra.ijpb.morphology.Strel3D;
@@ -125,42 +126,20 @@ public class GraphletImage extends BasicGraphletImage {
 
 	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		preprocessImage(img);
-		// Add a frame
-		for (int i = 0; i < img.getWidth(); i++) {
-			img.getChannelProcessor().set(i, 0, 0);
-			img.getChannelProcessor().set(i, img.getHeight() - 1, 0);
-		}
-
-		for (int i = 0; i < img.getHeight(); i++) {
-			img.getChannelProcessor().set(0, i, 0);
-			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
-		}
-
-		// img.show();
-		MaximumFinder mxf = new MaximumFinder();
-
-		//ByteProcessor createLabelImage(ImageProcessor... images). This is the code
 		
-		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
-		img.setProcessor(btp);
 
+		//Labelling image			
+		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());		
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling (4);//define connectivity
+		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
 		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
-		int[][] pixels = img.getChannelProcessor().getIntArray();
+		
+		//get unique labels from labelled imageplus
+		int[] labelunique = LabelImages.findAllLabels(img);
 
-		int indexEpiCell = 0;
-		EpiCell epicell = null;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				if (pixels[i][j] != 0) {
-					epicell = new EpiCell(indexEpiCell);
-					this.cells.add(epicell);
-					labelPropagation(i, j, indexEpiCell);
-					epicell.addPixel(i, j);
-					indexEpiCell++;
-				}
-			}
-		}
-		// Create adjacency matrix from the found cells
+		
+		
+		/*// Create adjacency matrix from the found cells
 		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
 
 		// this.l_img.show();
@@ -219,7 +198,8 @@ public class GraphletImage extends BasicGraphletImage {
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
 		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
-	}
+	*/return "";
+		}
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		testNeighbours(img, selectedShape, radiusOfShape, null);
