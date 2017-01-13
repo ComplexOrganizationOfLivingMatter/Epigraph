@@ -100,6 +100,8 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
+		
+		preprocessImage(img);
 	}
 
 	public void preprocessImage(ImagePlus img) {
@@ -129,10 +131,6 @@ public class GraphletImage extends BasicGraphletImage {
 
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
-	}
-
-	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
-		preprocessImage(img);
 
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());
@@ -148,7 +146,6 @@ public class GraphletImage extends BasicGraphletImage {
 		int[][] matrixImg = img.getChannelProcessor().getIntArray();
 
 		// Create epicells
-
 		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
 			this.cells.add(new EpiCell(indexEpiCell));
 		}
@@ -169,13 +166,13 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// Create adjacency matrix from the found cells
 		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
+	}
 
+	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 
-		this.orcaProgram = new Orca(this.adjacencyMatrix);
-
-		int[][] graphlets = this.orcaProgram.getOrbit();
+		
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
@@ -187,11 +184,10 @@ public class GraphletImage extends BasicGraphletImage {
 
 		ColorProcessor colorImgToShow = img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
-		for (int i = 0; i < graphlets.length; i++) {
-			this.cells.get(i).setGraphlets(graphlets[i]);
+		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
 			if (this.cells.get(i).isValid_cell()) {
-				switch (graphlets[i][0]) {
+				switch (this.cells.get(i).getNeighbours().size()) {
 				case 4:
 					percentageOfSquares++;
 					colorOfCell = Color.GREEN;
@@ -242,13 +238,8 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons /= validCells;
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
-		this.orcaProgram = null;
 
-		// int numValidCells = 0;
-		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
-			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
-		}
+
 
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
@@ -262,6 +253,22 @@ public class GraphletImage extends BasicGraphletImage {
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
 		testNeighbours(img, selectedShape, radiusOfShape, null);
 
+		this.orcaProgram = new Orca(this.adjacencyMatrix);
+
+		int[][] graphlets = this.orcaProgram.getOrbit();
+		
+		this.orcaProgram = null;
+		
+		for (int i = 0; i < graphlets.length; i++) {
+			this.cells.get(i).setGraphlets(graphlets[i]);
+		}
+		
+		// int numValidCells = 0;
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
+			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
+		}
+		
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
