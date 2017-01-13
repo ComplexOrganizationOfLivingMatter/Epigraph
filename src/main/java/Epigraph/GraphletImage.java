@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.common.primitives.Ints;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.plugin.filter.MaximumFinder;
@@ -137,21 +139,44 @@ public class GraphletImage extends BasicGraphletImage {
 		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());		
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling (4);//define connectivity
 		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
-		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
+		this.l_img = new ImagePlus("", img.getChannelProcessor());
 		
 		//get unique labels from labelled imageplus
 		int[] labelunique = LabelImages.findAllLabels(img);
+		img.show();
+		
+		//get image in a matrix of labels
+		int [][] matrixImg = img.getChannelProcessor().getIntArray();
+		
+		//Create epicells
 
 		
+		for (int indexEpiCell = 1; indexEpiCell < labelunique.length+1; indexEpiCell++){
+			this.cells.add(new EpiCell(indexEpiCell));			
+			}
 		
-		/*// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
-
-		// this.l_img.show();*/
+		//Add pixel to each epicell
+		int W = img.getWidth();
+		int H = img.getHeight();
+		int valuePxl;
+		for (int indexImgX = 0; indexImgX < H; indexImgX++){
+			for (int indexImgY = 0; indexImgY < W; indexImgY++){
+				valuePxl = matrixImg[indexImgX][indexImgY];
+				if (valuePxl != 0){
+					this.cells.get(valuePxl-1).addPixel(indexImgX, indexImgY);
+				}
+				
+			}
+		}
+		
+			
+		// Create adjacency matrix from the found cells
+		this.adjacencyMatrix = new int[labelunique.length+1][labelunique.length+1];
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-/*
+			
+		
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
@@ -232,8 +257,6 @@ public class GraphletImage extends BasicGraphletImage {
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
 		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons " + defaultFormat.format(percentageOfPentagons) + ", Hexagons " + defaultFormat.format(this.percentageOfHexagons) + ", Heptagons " + defaultFormat.format(percentageOfHeptagons) + ", Octogons " + defaultFormat.format(percentageOfOctogons);
-	*/
-		return "";
 		}
 
 
@@ -289,36 +312,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.distanceGDDRV = mean(distanceGDDRVArray);
 	}
 
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param label
-	 * @return
-	 */
-	private boolean labelPropagation(int x, int y, int label) {
-		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0
-				&& this.l_img.getChannelProcessor().getPixel(x, y) != label + 1) {
-			this.l_img.getChannelProcessor().set(x, y, label + 1);
-			this.cells.get(label).addPixel(x, y);
-			// System.out.println("l" + label + ", XY:" + x + " "+ y);
-
-			boolean isPerimeter1 = labelPropagation(x - 1, y, label);
-			boolean isPerimeter2 = labelPropagation(x + 1, y, label);
-			boolean isPerimeter3 = labelPropagation(x, y - 1, label);
-			boolean isPerimeter4 = labelPropagation(x, y + 1, label);
-			// If some pixel is at the perimeter
-			if (isPerimeter1 || isPerimeter2 || isPerimeter3 || isPerimeter4)
-				this.cells.get(label).addPixelToPerimeter(x, y);
-			// if it's in the border, then it is a no valid cell
-		} else if (this.raw_img.getChannelProcessor().getPixel(x, y) == 0) {
-			return true;
-		}
-		// no valid cell
-		if (x == 0 || y == 0 || y == this.l_img.getWidth() - 1 || x == this.l_img.getHeight() - 1)
-			this.cells.get(label).setValid_cell(false);
-		return false;
-	}
+	
 
 	/**
 	 * 
