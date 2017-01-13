@@ -97,6 +97,8 @@ public class ImageProcessingWindow extends JDialog {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 
+		newGraphletImage = new GraphletImage(raw_img);
+
 		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
 		BufferedImage thumbnail = null;
 		try {
@@ -112,31 +114,23 @@ public class ImageProcessingWindow extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (modeSelectionCells){
-					if (newGraphletImage == null) {
-						newGraphletImage = new GraphletImage(raw_img);
-						newGraphletImage.preprocessImage(raw_img);
-						if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == -1){
-							JOptionPane.showMessageDialog(canvas, "No cell selected");
-						}
+					if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == -1){
+						JOptionPane.showMessageDialog(canvas, "No cell selected");
 					}
-					
 				}
 			}
 		});
 		canvas.setLocation(199, 42);
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
-		canvas.setPaintPending(false);
 		canvas.setCustomRoi(false);
+		canvas.setPaintPending(true);
 		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.setBounds(199, 596, 329, 49);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (newGraphletImage == null) {
-					newGraphletImage = new GraphletImage(raw_img);
-				}
 
 				if (newGraphletImage.getDistanceGDDH() == -1) {
 					newGraphletImage.runGraphlets(raw_img, cbSelectedShape.getSelectedIndex(),
@@ -145,7 +139,6 @@ public class ImageProcessingWindow extends JDialog {
 				}
 				newGraphletImage.setLabelName(tfImageName.getText());
 				newGraphletImage.setColor(colorPicked.getBackground());
-
 			}
 		});
 
@@ -197,12 +190,10 @@ public class ImageProcessingWindow extends JDialog {
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (newGraphletImage == null)
-					newGraphletImage = new GraphletImage(raw_img);
 
 				lblTestedPolDist.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), imgToShow));
-				canvas.repaint();
+				canvas.setImageUpdated();
 			}
 		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);
