@@ -76,7 +76,7 @@ public class ImageProcessingWindow extends JDialog {
 
 	private JLabel lblTestedPolDist;
 	private JLabel lblShape;
-	
+
 	private boolean modeSelectionCells;
 
 	private AbstractButton btnSelectCells;
@@ -97,8 +97,6 @@ public class ImageProcessingWindow extends JDialog {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 
-		newGraphletImage = new GraphletImage(raw_img);
-
 		ImagePlus imgToShow = new ImagePlus("", raw_img.getChannelProcessor());
 		BufferedImage thumbnail = null;
 		try {
@@ -109,12 +107,13 @@ public class ImageProcessingWindow extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		canvas = new OverlayedImageCanvas(imgToShow);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (modeSelectionCells){
-					if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == -1){
+				if (modeSelectionCells) {
+					if (newGraphletImage.addCellToSelected(e.getX(), e.getY()) == -1) {
 						JOptionPane.showMessageDialog(canvas, "No cell selected");
 					}
 				}
@@ -124,8 +123,9 @@ public class ImageProcessingWindow extends JDialog {
 		canvas.setShowCursorStatus(false);
 		canvas.setShowAllROIs(false);
 		canvas.setCustomRoi(false);
-		canvas.setPaintPending(true);
 		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
+
+		newGraphletImage = new GraphletImage(raw_img);
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.setBounds(199, 596, 329, 49);
@@ -190,10 +190,9 @@ public class ImageProcessingWindow extends JDialog {
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				lblTestedPolDist.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), imgToShow));
-				canvas.setImageUpdated();
+				canvas.repaint();
 			}
 		});
 		btnTestNeighbours.setBounds(755, 180, 162, 29);
@@ -249,11 +248,11 @@ public class ImageProcessingWindow extends JDialog {
 		lblShape.setLabelFor(cbSelectedShape);
 		lblShape.setBounds(755, 101, 56, 16);
 		contentPane.add(lblShape);
-		
+
 		btnSelectCells = new JButton("Select cells");
 		btnSelectCells.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (modeSelectionCells){
+				if (modeSelectionCells) {
 					modeSelectionCells = false;
 					btnSelectCells.setBackground(new Color(212, 208, 200));
 				} else {

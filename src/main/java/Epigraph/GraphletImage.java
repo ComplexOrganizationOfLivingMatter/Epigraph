@@ -223,10 +223,10 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
-		imgToShow = new ImagePlus("", colorImgToShow);
+		imgToShow.setProcessor(colorImgToShow);
 		BufferedImage thumbnail = null;
 		try {
-			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
+			thumbnail = Thumbnails.of(colorImgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
 					.width(ImageProcessingWindow.CANVAS_SIZE).asBufferedImage();
 			imgToShow.setImage(thumbnail);
 		} catch (IOException e) {
@@ -238,8 +238,6 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons /= validCells;
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
-
-
 
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
