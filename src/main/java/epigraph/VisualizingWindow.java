@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.Random;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -16,14 +17,13 @@ import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
-
 /**
  * 
  * @author Pedro Gomez-Galvez
  *
  */
-public class VisualizingWindow extends JFrame{
-	
+public class VisualizingWindow extends JDialog {
+
 	/**
 	 * 
 	 */
@@ -32,38 +32,30 @@ public class VisualizingWindow extends JFrame{
 	Scatter scatter;
 
 	private JPanel scatterpanel;
-	/*load X Y Z coordenates*/
+	/* load X Y Z coordenates */
 
 	private Chart chart;
-	
+
 	/**
 	 * 
 	 */
-	public VisualizingWindow() {
+	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-		 chart = new Chart("swing");
-		// TODO Auto-generated constructor stub
-		ExcelClass ec = new ExcelClass();
-		ec.importData("D:/Pedro/Graphlet/pruebas exportar u3d/TotalParcial_3Ddimensions_test.xls");
-		
-		
-        int size_array = ec.getGddh().size();
+		setModal(true);
+		chart = new Chart("swing");
+		 
+        int size_array = tableInfo.getRowCount();
         
                
         Coord3d[] points = new Coord3d[size_array];
         Color[]   colors = new Color[size_array];
         
-        /*create an color array*/
-        
-        Random r = new Random();
-        r.setSeed(0);
-        
         for(int i=0; i<size_array; i++){
             
         	//creating coord array
-            points[i] = new Coord3d(ec.getHexagonsPercentage().get(i), ec.getGddh().get(i), ec.getGddrv().get(i));
+            points[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(), tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV());
             //creating color array
-            colors[i] = new Color(ec.getR().get(i), ec.getG().get(i), ec.getB().get(i));
+            colors[i] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(), tableInfo.getAllGraphletImages().get(i).getColor().getGreen(), tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
         }
         
         //Xf represent the size of dots

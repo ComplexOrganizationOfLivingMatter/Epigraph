@@ -3,19 +3,35 @@
  */
 package epigraph;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.common.primitives.Ints;
+
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
-import imglib.ops.operator.binary.Min;
+
+import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.binary.conncomp.*;
+import inra.ijpb.label.*;
+import inra.ijpb.morphology.MinimaAndMaxima3D;
+import inra.ijpb.morphology.Morphology;
+import inra.ijpb.morphology.Strel3D;
+import inra.ijpb.morphology.strel.SquareStrel;
+import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * 
@@ -24,7 +40,6 @@ import imglib.ops.operator.binary.Min;
  */
 public class GraphletImage extends BasicGraphletImage {
 
-	
 	public static int CIRCLE_SHAPE = 0;
 	public static int SQUARE_SHAPE = 1;
 
@@ -59,16 +74,10 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param img
 	 *            image
 	 */
-	public GraphletImage(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
+	public GraphletImage(ImagePlus img) {
 		super();
-		
+
 		this.labelName = img.getFileInfo().url;
-		
-		// TODO: hardcoded variables, when interfaces come, they should be
-		// removed
-		// int radiusOfShape = 3;
-		// int selectedShape = CIRCLE_SHAPE;
-		// int modeNumGraphlets = 0;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -91,7 +100,9 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
+	}
 
+	public void preprocessImage(ImagePlus img) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -118,69 +129,138 @@ public class GraphletImage extends BasicGraphletImage {
 
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
+	}
 
-		// Add a frame
-		for (int i = 0; i < img.getWidth(); i++) {
-			img.getChannelProcessor().set(i, 0, 0);
-			img.getChannelProcessor().set(i, img.getHeight() - 1, 0);
+	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
+		preprocessImage(img);
+
+		// Labelling image
+		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
+																				// connectivity
+		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
+		this.l_img = new ImagePlus("", img.getChannelProcessor());
+
+		// get unique labels from labelled imageplus
+		int[] labelunique = LabelImages.findAllLabels(img);
+
+		// get image in a matrix of labels
+		int[][] matrixImg = img.getChannelProcessor().getIntArray();
+
+		// Create epicells
+
+		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
+			this.cells.add(new EpiCell(indexEpiCell));
 		}
 
-		for (int i = 0; i < img.getHeight(); i++) {
-			img.getChannelProcessor().set(0, i, 0);
-			img.getChannelProcessor().set(img.getWidth() - 1, i, 0);
-		}
-
-		// img.show();
-		MaximumFinder mxf = new MaximumFinder();
-		ByteProcessor btp = mxf.findMaxima(img.getChannelProcessor(), 0.5, MaximumFinder.SINGLE_POINTS, true);
-		img.setProcessor(btp);
-
-		this.l_img = new ImagePlus("", img.getChannelProcessor().convertToFloat());
-		pixels = img.getChannelProcessor().getIntArray();
-
-		int indexEpiCell = 0;
-		EpiCell epicell = null;
-		for (int i = 0; i < img.getWidth(); i++) {
-			for (int j = 0; j < img.getHeight(); j++) {
-				if (pixels[i][j] != 0) {
-					epicell = new EpiCell(indexEpiCell);
-					this.cells.add(epicell);
-					labelPropagation(i, j, indexEpiCell);
-					epicell.addPixel(i, j);
-					indexEpiCell++;
+		// Add pixel to each epicell
+		int W = img.getWidth();
+		int H = img.getHeight();
+		int valuePxl;
+		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
+			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
+				valuePxl = matrixImg[indexImgX][indexImgY];
+				if (valuePxl != 0) {
+					this.cells.get(valuePxl - 1).addPixel(indexImgX, indexImgY);
 				}
+
 			}
 		}
+
 		// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[indexEpiCell][indexEpiCell];
+		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 
-		// this.l_img.show();
-
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
+		float percentageOfSquares = 0;
+		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
-		//int percentageOfHexagonsOriginal = 0;
+		float percentageOfHeptagons = 0;
+		float percentageOfOctogons = 0;
+		int validCells = 0;
+		// int percentageOfHexagonsOriginal = 0;
+		int[][] actualPixels;
+
+		ColorProcessor colorImgToShow = img.getChannelProcessor().convertToColorProcessor();
+		Color colorOfCell;
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
-			if (graphlets[i][0] == 6) {
-				percentageOfHexagons++;
+			colorOfCell = Color.WHITE;
+			if (this.cells.get(i).isValid_cell()) {
+				switch (graphlets[i][0]) {
+				case 4:
+					percentageOfSquares++;
+					colorOfCell = Color.GREEN;
+					break;
+				case 5:
+					percentageOfPentagons++;
+					colorOfCell = Color.BLUE;
+					break;
+				case 6:
+					percentageOfHexagons++;
+					colorOfCell = Color.RED;
+					break;
+				case 7:
+					percentageOfHeptagons++;
+					colorOfCell = Color.YELLOW;
+					break;
+				case 8:
+					percentageOfOctogons++;
+					colorOfCell = Color.PINK;
+					break;
+				}
+				validCells++;
+			} else {
+				colorOfCell = Color.BLACK;
 			}
-			//if (this.cells.get(i).getNeighbours().size() == 6 && this.cells.get(i).isValid_cell()) {
-			//	percentageOfHexagonsOriginal++;
-			//}
+
+			actualPixels = this.cells.get(i).getPixels();
+			int color;
+			for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
+				color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
+						| (colorOfCell.getBlue() & 0xFF));
+				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
+			}
 		}
-		this.percentageOfHexagons /= graphlets.length;
+
+		imgToShow = new ImagePlus("", colorImgToShow);
+		BufferedImage thumbnail = null;
+		try {
+			thumbnail = Thumbnails.of(imgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
+					.width(ImageProcessingWindow.CANVAS_SIZE).asBufferedImage();
+			imgToShow.setImage(thumbnail);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		percentageOfSquares /= validCells;
+		percentageOfPentagons /= validCells;
+		this.percentageOfHexagons /= validCells;
+		percentageOfHeptagons /= validCells;
+		percentageOfOctogons /= validCells;
 		this.orcaProgram = null;
 
 		// int numValidCells = 0;
-		for (indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
+
+		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+		defaultFormat.setMaximumFractionDigits(2);
+		return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
+				+ defaultFormat.format(percentageOfPentagons) + ", Hexagons "
+				+ defaultFormat.format(this.percentageOfHexagons) + ", Heptagons "
+				+ defaultFormat.format(percentageOfHeptagons) + ", Octogons "
+				+ defaultFormat.format(percentageOfOctogons);
+	}
+
+	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
+		testNeighbours(img, selectedShape, radiusOfShape, null);
 
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
@@ -233,37 +313,6 @@ public class GraphletImage extends BasicGraphletImage {
 
 	/**
 	 * 
-	 * @param x
-	 * @param y
-	 * @param label
-	 * @return
-	 */
-	private boolean labelPropagation(int x, int y, int label) {
-		if (this.raw_img.getChannelProcessor().getPixel(x, y) != 0
-				&& this.l_img.getChannelProcessor().getPixel(x, y) != label + 1) {
-			this.l_img.getChannelProcessor().set(x, y, label + 1);
-			this.cells.get(label).addPixel(x, y);
-			// System.out.println("l" + label + ", XY:" + x + " "+ y);
-
-			boolean isPerimeter1 = labelPropagation(x - 1, y, label);
-			boolean isPerimeter2 = labelPropagation(x + 1, y, label);
-			boolean isPerimeter3 = labelPropagation(x, y - 1, label);
-			boolean isPerimeter4 = labelPropagation(x, y + 1, label);
-			// If some pixel is at the perimeter
-			if (isPerimeter1 || isPerimeter2 || isPerimeter3 || isPerimeter4)
-				this.cells.get(label).addPixelToPerimeter(x, y);
-			// if it's in the border, then it is a no valid cell
-		} else if (this.raw_img.getChannelProcessor().getPixel(x, y) == 0) {
-			return true;
-		}
-		// no valid cell
-		if (x == 0 || y == 0 || y == this.l_img.getWidth() - 1 || x == this.l_img.getHeight() - 1)
-			this.cells.get(label).setValid_cell(false);
-		return false;
-	}
-
-	/**
-	 * 
 	 * @param shape
 	 * @param dimensionOfShape
 	 * @param perimeterPixelX
@@ -277,14 +326,13 @@ public class GraphletImage extends BasicGraphletImage {
 			img.set(perimeterPixelX[numPixel], perimeterPixelY[numPixel], 255);
 
 		switch (shape) {
-			case 0:// CIRCLE_SHAPE
-				new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
-				break;
-			case 1: // SQUARE_SHAPE
-				// for (int i = 0; i < dimensionOfShape*2 - 1; i++)
-				// for (int j = 0; j < dimensionOfShape*2 - 1; j++)
-				// mask[i][j] = img.getPixel(i, j);
-				break;
+		case 0:// CIRCLE_SHAPE
+			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
+			break;
+		case 1: // SQUARE_SHAPE
+			SquareStrel sq = SquareStrel.fromRadius(dimensionOfShape);
+			img = sq.dilation(img);
+			break;
 		}
 
 		return img;
@@ -298,8 +346,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
-		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPerimeterPixelsX(),
-				cell.getPerimeterPixelsY());
+		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
@@ -444,5 +491,16 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		return distributions;
+	}
+
+	public int addCellToSelected(int x, int y) {
+		int pixelsIsSelected;
+		for (int numCell = 0; numCell < this.cells.size(); numCell++) {
+			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
+			if (pixelsIsSelected != -1) {
+				return pixelsIsSelected;
+			}
+		}
+		return -1;
 	}
 }

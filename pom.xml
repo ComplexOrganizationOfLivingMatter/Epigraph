@@ -90,12 +90,8 @@
 			<groupId>org.jzy3d</groupId>
 			<artifactId>jzy3d-api</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-			<!--<exclusions>
-				<exclusion>
-					<groupId>net.sf.opencsv</groupId>
-					<artifactId>opencsv</artifactId>
-				</exclusion>
-			</exclusions>-->
+			<!--<exclusions> <exclusion> <groupId>net.sf.opencsv</groupId> <artifactId>opencsv</artifactId> 
+				</exclusion> </exclusions> -->
 		</dependency>
 
 		<dependency>
@@ -115,10 +111,18 @@
 			<artifactId>thumbnailator</artifactId>
 			<version>[0.4, 0.5)</version>
 		</dependency>
+		<dependency>
+			<groupId>fr.inra.ijpb</groupId>
+			<artifactId>MorphoLibJ_</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- In case you want to install a plugin manually add those lines and 
+				then remove then when you've done it http://www.baeldung.com/install-local-jar-with-maven/ -->
 			<plugin>
 				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
 				<artifactId>maven-java-formatter-plugin</artifactId>
