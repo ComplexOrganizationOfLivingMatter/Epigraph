@@ -328,11 +328,11 @@ public class EpiCell {
 		this.perimeterPixelsY = newPixelsY;
 	}
 
-	public boolean getPixelValue(int x1, int y1) {
+	public boolean searchSelectedPixel(int x1, int y1) {
 		for (int x = 0; x < this.pixelsX.length; x++){
 			if (this.pixelsX[x] == x1){
 				if (this.pixelsY[x] == y1){
-					this.setSelected(true);
+					this.setSelected(this.isSelected());
 					return true;
 				}
 			}
