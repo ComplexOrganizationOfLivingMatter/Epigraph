@@ -28,6 +28,7 @@ import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Canvas;
@@ -271,8 +272,9 @@ public class ImageProcessingWindow extends JDialog {
 		contentPane.add(btnSelectCells);
 		
 		JLabel lblShapes = new JLabel("");
-		lblShapes.setIcon(new ImageIcon("C:\\Users\\Luisma\\Desktop\\Synopsis EMBO J.jpg"));
-		lblShapes.setBounds(91, 42, 91, 424);
+		Image imag = new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage();
+		lblShapes.setIcon(new ImageIcon(imag));
+		lblShapes.setBounds(49, 99, 91, 405);
 		contentPane.add(lblShapes);
 		
 		
