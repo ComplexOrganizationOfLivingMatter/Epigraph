@@ -169,7 +169,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 	}
 
-	public String testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
+	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 
@@ -229,6 +229,8 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons /= validCells;
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
+		
+		ArrayList<String> percentajesList = new ArrayList<String>();
 
 		if (imgToShow != null){
 			imgToShow.setProcessor(colorImgToShow);
@@ -244,13 +246,22 @@ public class GraphletImage extends BasicGraphletImage {
 	
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);
-			return "Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
+			
+			
+			
+			percentajesList.add(defaultFormat.format(percentageOfSquares));
+			percentajesList.add(defaultFormat.format(percentageOfPentagons));
+			percentajesList.add(defaultFormat.format(this.percentageOfHexagons));
+			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
+			percentajesList.add(defaultFormat.format(percentageOfOctogons));
+
+			return percentajesList; /*"Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
 					+ defaultFormat.format(percentageOfPentagons) + ", Hexagons "
 					+ defaultFormat.format(this.percentageOfHexagons) + ", Heptagons "
 					+ defaultFormat.format(percentageOfHeptagons) + ", Octogons "
-					+ defaultFormat.format(percentageOfOctogons);
+					+ defaultFormat.format(percentageOfOctogons);*/
 		}
-		return "";
+		return percentajesList;
 	}
 
 	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
