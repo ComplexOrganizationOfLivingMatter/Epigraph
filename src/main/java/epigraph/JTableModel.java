@@ -21,15 +21,17 @@ class JTableModel extends AbstractTableModel {
 
 	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Visualizing" };
 
-	private ArrayList<GraphletImage> allGraphletImages;
+	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfVisualizing;
+
+	private int[] rgbs;
 	
 	/**
 	 * 
 	 */
 	public JTableModel() {
 		super();
-		allGraphletImages = new ArrayList<GraphletImage>();
+		allGraphletImages = new ArrayList<BasicGraphletImage>();
 		listOfVisualizing = new ArrayList<Boolean>();
 	}
 
@@ -47,6 +49,8 @@ class JTableModel extends AbstractTableModel {
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
+	
+	
 
 	public Object getValueAt(int row, int col) {
 		switch (col) {
@@ -113,7 +117,7 @@ class JTableModel extends AbstractTableModel {
 	/**
 	 * @return the allGraphletImages
 	 */
-	public ArrayList<GraphletImage> getAllGraphletImages() {
+	public ArrayList<BasicGraphletImage> getAllGraphletImages() {
 		return allGraphletImages;
 	}
 
@@ -121,7 +125,7 @@ class JTableModel extends AbstractTableModel {
 	 * @param allGraphletImages
 	 *            the allGraphletImages to set
 	 */
-	public void setAllGraphletImages(ArrayList<GraphletImage> allGraphletImages) {
+	public void setAllGraphletImages(ArrayList<BasicGraphletImage> allGraphletImages) {
 		this.allGraphletImages = allGraphletImages;
 	}
 
@@ -143,7 +147,7 @@ class JTableModel extends AbstractTableModel {
 	 * 
 	 * @param newImages
 	 */
-	public void addImages(ArrayList<GraphletImage> newImages) {
+	public void addImages(ArrayList<BasicGraphletImage> newImages) {
 		allGraphletImages.addAll(newImages);
 		
 		for (int i = 0; i < newImages.size(); i++){
@@ -152,7 +156,7 @@ class JTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
-	public void addImage(GraphletImage newImage){
+	public void addImage(BasicGraphletImage newImage){
 		allGraphletImages.add(newImage);
 		listOfVisualizing.add(true);
 
