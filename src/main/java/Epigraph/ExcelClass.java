@@ -3,12 +3,16 @@ package epigraph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -23,6 +27,7 @@ public class ExcelClass {
 	 */
 	public ExcelClass() {
 		super();
+		this.imageName = new ArrayList<String>();
 		this.gddh = new ArrayList<Float>();
 		this.gddrv = new ArrayList<Float>();
 		this.hexagonsPercentage = new ArrayList<Float>();
@@ -34,9 +39,10 @@ public class ExcelClass {
 	
 	
 
-	public ExcelClass(String filename, ArrayList<Float> gddh, ArrayList<Float> gddrv,
+	public ExcelClass(String filename,ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b) {
 		super();
+		this.imageName = imageName;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
 		this.hexagonsPercentage = hexagonsPercentage;
@@ -45,6 +51,7 @@ public class ExcelClass {
 		B = b;
 	}
 
+	private ArrayList<String> imageName;
 	private ArrayList<Float> gddh;
 	private ArrayList<Float> gddrv;
 	private ArrayList<Float> hexagonsPercentage;
@@ -52,6 +59,14 @@ public class ExcelClass {
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
 
+	
+	public ArrayList<String> getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(ArrayList<String> imageName) {
+		this.imageName = imageName;
+	}
 	
 	public ArrayList<Float> getGddh() {
 		return gddh;
@@ -101,7 +116,18 @@ public class ExcelClass {
 		B = b;
 	}
 
-	
+	public ArrayList<Object> getRow(int row){
+		ArrayList<Object> rowExcel=new ArrayList<Object>();
+		rowExcel.add(imageName.get(row));
+		rowExcel.add(gddh.get(row));
+		rowExcel.add(gddrv.get(row));
+		rowExcel.add(hexagonsPercentage.get(row));
+		rowExcel.add(R.get(row));
+		rowExcel.add(G.get(row));
+		rowExcel.add(B.get(row));
+
+		return rowExcel;
+	}
 	
 	
 	/*IMPORT DATA FROM EXCEL*/
@@ -145,22 +171,25 @@ public class ExcelClass {
 							switch (c) {
 
 							case 0:
-								this.gddh.add((float) cell.getNumericCellValue());
+								this.imageName.add(cell.getStringCellValue());
 								break;
-							case 1:
-								this.gddrv.add((float) cell.getNumericCellValue());
+							case 1:				
+								this.hexagonsPercentage.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 2:
-								this.hexagonsPercentage.add((float) cell.getNumericCellValue());
+								this.gddrv.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 3:
-								this.R.add((float) cell.getNumericCellValue());
+								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 4:
-								this.G.add((float) cell.getNumericCellValue());
+								this.R.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 5:
-								this.B.add((float) cell.getNumericCellValue());
+								this.G.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								break;
+							case 6:
+								this.B.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 
 							}
@@ -171,7 +200,7 @@ public class ExcelClass {
 						}
 					
 						//If colors aren't define, default will be 0,0,0 (black) 
-						if (cols <= 3 && c == cols){
+						if (cols <= 4 && c == cols){
 							
 							this.R.add((float) 0);
 							this.G.add((float) 0);
@@ -205,35 +234,40 @@ public class ExcelClass {
 		
 		//Blank workbook
 	    HSSFWorkbook workbook = new HSSFWorkbook();
-
+    
 	    
 	    //Create a blank sheet
 	    HSSFSheet sheet = workbook.createSheet("Graphlets_distance");
 
 	    //This data needs to be written (Object[])
 	    Map<String, Object[]> data = new TreeMap<String, Object[]>();
-	    data.put("1", new Object[]{"GDDH", "GDDRV", "Hexagons percentage","R","G","B"});
+	    data.put("1", new Object[]{"Image name","Hexagons percentage", "GDDRV", "GDDH","R","G","B"});
+	    
+	    DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
+	    otherSymbols.setDecimalSeparator(',');
+	    DecimalFormat df1 = new DecimalFormat("#0.00", otherSymbols);
+	    DecimalFormat df2 = new DecimalFormat("#0.000", otherSymbols);
+    
+	    
 	    
 	    for (int i = 0; i < gddh.size(); i++) {
 			
 	    	Integer j = i+2;
 	    	
-	    	data.put(j.toString(), new Object[]{gddh.get(i).toString(),gddrv.get(i).toString(),hexagonsPercentage.get(i).toString(),R.get(i).toString(),G.get(i).toString(),B.get(i).toString()});
+	    	data.put(j.toString(), new Object[]{imageName.get(i),df1.format(hexagonsPercentage.get(i)),df2.format(gddrv.get(i)),df2.format(gddh.get(i)),df2.format(R.get(i)),df2.format(G.get(i)),df2.format(B.get(i))});
 	    	
 		}
 	    
 
 	    //Iterate over data and write to sheet
-	    Set<String> keyset = data.keySet();
-
 	    int rownum = 0;
-	    for (String key : keyset) 
+	    for (Integer keyint=1;keyint<gddh.size()+2;keyint ++) 
 	    {
 	        //create a row of excelsheet
 	        Row row = sheet.createRow(rownum++);
 
 	        //get object array of prerticuler key
-	        Object[] objArr = data.get(key);
+	        Object[] objArr = data.get(keyint.toString());
 
 	        int cellnum = 0;
 
@@ -241,9 +275,9 @@ public class ExcelClass {
 	        {
 	            Cell cell = row.createCell(cellnum++);
 	            
-	            if (obj instanceof Integer) 
+	            if (obj instanceof Float) 
 	            {
-	                cell.setCellValue((Integer) obj);
+	                cell.setCellValue((Float) obj);
 	            }
 	            else if (obj instanceof String) 
 	            {

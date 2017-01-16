@@ -7,9 +7,12 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.Popup;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 
 import org.scijava.ui.DialogPrompt;
@@ -103,6 +107,52 @@ public class MainWindow extends JPanel {
 		JButton btnExport = new JButton("Export");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ExcelClass excelclass = new ExcelClass();				
+				ArrayList<String> arrayNames=new ArrayList<String>();
+				ArrayList<Float> arrayHexagons=new ArrayList<Float>();
+				ArrayList<Float> arrayGDDH=new ArrayList<Float>();
+				ArrayList<Float> arraGDDRV=new ArrayList<Float>();
+				ArrayList<Float> arrayR=new ArrayList<Float>();
+				ArrayList<Float> arrayG=new ArrayList<Float>();
+				ArrayList<Float> arrayB=new ArrayList<Float>();
+				
+				for (BasicGraphletImage graphletImg:tableInfo.getAllGraphletImages()){
+					
+					arrayNames.add(graphletImg.getLabelName());
+					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
+					arrayGDDH.add(graphletImg.getDistanceGDDH());
+					arraGDDRV.add(graphletImg.getDistanceGDDH());
+					arrayR.add((float) graphletImg.getColor().getRed());
+					arrayG.add((float) graphletImg.getColor().getGreen());
+					arrayB.add((float) graphletImg.getColor().getBlue());
+
+				}			
+				excelclass.setR(arrayR);
+				excelclass.setG(arrayG);
+				excelclass.setB(arrayB);
+				excelclass.setImageName(arrayNames);
+				excelclass.setGddh(arrayGDDH);
+				excelclass.setGddrv(arraGDDRV);
+				excelclass.setHexagonsPercentage(arrayHexagons);
+
+				JFrame parentFrame = new JFrame();
+				 
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Save data excel");   
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
+			    fileChooser.setFileFilter(filter);
+			    fileChooser.setAcceptAllFileFilterUsed(false); 
+				
+				int userSelection = fileChooser.showSaveDialog(parentFrame);
+				 
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+				    File fileToSave = fileChooser.getSelectedFile();
+				    System.out.println("Save as file: " + fileToSave.getAbsolutePath() + ".xls");
+				    excelclass.exportData(fileToSave.getAbsolutePath().toString() + ".xls");
+				}
+				
+				
+				
 			}
 		});
 		btnExport.setBounds(240, 255, 87, 29);
@@ -111,6 +161,39 @@ public class MainWindow extends JPanel {
 		JButton btnImport = new JButton("Import");
 		btnImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				JFileChooser chooser = new JFileChooser();
+			    chooser.setCurrentDirectory(new java.io.File("."));
+			    chooser.setDialogTitle("choosertitle");
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
+			    chooser.setFileFilter(filter);
+			    chooser.setAcceptAllFileFilterUsed(false);
+
+			    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			      System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+			      System.out.println("getSelectedFile() : " + chooser.getSelectedFile().getPath());
+			      
+			      ExcelClass excelclass = new ExcelClass();
+			      excelclass.importData(chooser.getSelectedFile().getPath());
+			      
+			      for(int row = 0;row<excelclass.getImageName().size()-1;row++){
+//			    	  tableInfo.setValueAt(new Color((float) excelclass.getRow(row+1).get(4),(float) excelclass.getRow(row+1).get(5),(float) excelclass.getRow(row+1).get(6)), row, 0);
+//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(0), row, 1);//label name
+//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(1), row, 2);//ggdh
+//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(2), row, 3);//gddrv
+//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(3), row, 4);//hexagons
+//			    	  tableInfo.setValueAt(true, row, 5);//visualize default
+			    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row+1).get(2),(float) excelclass.getRow(row+1).get(1),(float) excelclass.getRow(row+1).get(3), new Color((float) excelclass.getRow(row+1).get(4),(float) excelclass.getRow(row+1).get(5),(float) excelclass.getRow(row+1).get(6)),(String) excelclass.getRow(row+1).get(0)));
+			      }
+			      
+			      
+			      
+			    } else {
+			      System.out.println("No Selection ");
+			    }
+				
+				
+				
 			}
 		});
 		btnImport.setBounds(101, 255, 81, 29);
