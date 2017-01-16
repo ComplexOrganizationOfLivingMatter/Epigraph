@@ -71,7 +71,7 @@ public class VisualizingWindow extends JDialog {
 		for (int i = 0; i < voronoiReference.size(); i++) {
 			// creating coord array
 			String[] row = voronoiReference.get(i);
-			points[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			points[i] = new Coord3d(Float.parseFloat(row[1].replace(',', '.')), Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[3].replace(',', '.')));
 			// creating color array
 			colors[i] = new Color(0, 0, 0);
 		}
@@ -79,9 +79,9 @@ public class VisualizingWindow extends JDialog {
 		for (int i = 0; i < size_array; i++) {
 			if (tableInfo.getListOfVisualizing().get(i)) {
 				// creating coord array
-				points[i + voronoiReference.size()] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons(),
+				points[i + voronoiReference.size()] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
-						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV());
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
 				colors[i + voronoiReference.size()] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
