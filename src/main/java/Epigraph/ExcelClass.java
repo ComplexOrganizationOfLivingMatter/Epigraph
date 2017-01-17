@@ -247,14 +247,15 @@ public class ExcelClass {
 	    otherSymbols.setDecimalSeparator(',');
 	    DecimalFormat df1 = new DecimalFormat("#0.00", otherSymbols);
 	    DecimalFormat df2 = new DecimalFormat("#0.000", otherSymbols);
-    
+	    DecimalFormat df3 = new DecimalFormat("#0", otherSymbols);
+
 	    
 	    
 	    for (int i = 0; i < gddh.size(); i++) {
 			
 	    	Integer j = i+2;
 	    	
-	    	data.put(j.toString(), new Object[]{imageName.get(i),df1.format(hexagonsPercentage.get(i)),df2.format(gddrv.get(i)),df2.format(gddh.get(i)),df2.format(R.get(i)),df2.format(G.get(i)),df2.format(B.get(i))});
+	    	data.put(j.toString(), new Object[]{imageName.get(i),df1.format(hexagonsPercentage.get(i)),df2.format(gddrv.get(i)),df2.format(gddh.get(i)),df3.format(R.get(i)),df3.format(G.get(i)),df3.format(B.get(i))});
 	    	
 		}
 	    

@@ -23,6 +23,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.io.FilenameUtils;
 import org.scijava.ui.DialogPrompt;
 
 import ij.IJ;
@@ -136,25 +137,29 @@ public class MainWindow extends JPanel {
 				excelclass.setHexagonsPercentage(arrayHexagons);
 
 				JFrame parentFrame = new JFrame();
-				 
 				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Save data excel");   
-			    FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
-			    fileChooser.setFileFilter(filter);
+				//set it to be a save dialog
+				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+				//set a default filename (this is where you default extension first comes in)
+				fileChooser.setSelectedFile(new File("myfile.xls"));
+				//Set an extension filter, so the user sees other XML files
+				fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
+				 
 			    fileChooser.setAcceptAllFileFilterUsed(false); 
 				
 				int userSelection = fileChooser.showSaveDialog(parentFrame);
-				 
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
-				    File fileToSave = fileChooser.getSelectedFile();
-				    System.out.println("Save as file: " + fileToSave.getAbsolutePath() + ".xls");
-				    excelclass.exportData(fileToSave.getAbsolutePath().toString() + ".xls");
-				}
-				
-				
-				
+									
+					String filename = fileChooser.getSelectedFile().toString();
+					if (!filename .endsWith(".xls"))
+					     filename += ".xls";
+
+					   //DO something with filename
+					excelclass.exportData(filename);   
+				}				
 			}
 		});
+		
 		btnExport.setBounds(240, 255, 87, 29);
 		panel.add(btnExport);
 		
@@ -175,19 +180,28 @@ public class MainWindow extends JPanel {
 			      
 			      ExcelClass excelclass = new ExcelClass();
 			      excelclass.importData(chooser.getSelectedFile().getPath());
-			      
-			      for(int row = 0;row<excelclass.getImageName().size()-1;row++){
-//			    	  tableInfo.setValueAt(new Color((float) excelclass.getRow(row+1).get(4),(float) excelclass.getRow(row+1).get(5),(float) excelclass.getRow(row+1).get(6)), row, 0);
-//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(0), row, 1);//label name
-//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(1), row, 2);//ggdh
-//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(2), row, 3);//gddrv
-//			    	  tableInfo.setValueAt(excelclass.getRow(row+1).get(3), row, 4);//hexagons
-//			    	  tableInfo.setValueAt(true, row, 5);//visualize default
-			    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row+1).get(2),(float) excelclass.getRow(row+1).get(1),(float) excelclass.getRow(row+1).get(3), new Color((float) excelclass.getRow(row+1).get(4),(float) excelclass.getRow(row+1).get(5),(float) excelclass.getRow(row+1).get(6)),(String) excelclass.getRow(row+1).get(0)));
+			      int flat=0;
+			      for(int row = 0;row<excelclass.getImageName().size();row++){
+
+			    	  if (flat==1){
+				    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),(float) excelclass.getRow(row).get(1),(float) excelclass.getRow(row).get(3), new Color(Math.round((float) excelclass.getRow(row).get(4)),Math.round((float) excelclass.getRow(row).get(5)),Math.round((float) excelclass.getRow(row).get(6))),(String) excelclass.getRow(row).get(0)));
+			    	  }else if(flat==2){
+				    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),(float) excelclass.getRow(row).get(1),(float) excelclass.getRow(row).get(3), new Color((float) excelclass.getRow(row).get(4),(float) excelclass.getRow(row).get(5),(float) excelclass.getRow(row).get(6)),(String) excelclass.getRow(row).get(0)));
+			    	  }else {
+				    	  if ((float) excelclass.getRow(row).get(4)>1.0 || (float) excelclass.getRow(row).get(5)>1.0||(float) excelclass.getRow(row).get(6) > 1.0){
+					    	  flat=1;
+					    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),(float) excelclass.getRow(row).get(1),(float) excelclass.getRow(row).get(3), new Color(Math.round((float) excelclass.getRow(row).get(4)),Math.round((float) excelclass.getRow(row).get(5)),Math.round((float) excelclass.getRow(row).get(6))),(String) excelclass.getRow(row).get(0)));
+				    	  }
+				    	  else if(((float) excelclass.getRow(row).get(4)<1.0 & (float) excelclass.getRow(row).get(4)>1.0)|| ((float) excelclass.getRow(row).get(5)<1.0 & (float) excelclass.getRow(row).get(5)>0.0)||((float) excelclass.getRow(row).get(6)<1.0 & (float) excelclass.getRow(row).get(6)>0.0)){
+					    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),(float) excelclass.getRow(row).get(1),(float) excelclass.getRow(row).get(3), new Color((float) excelclass.getRow(row).get(4),(float) excelclass.getRow(row).get(5),(float) excelclass.getRow(row).get(6)),(String) excelclass.getRow(row).get(0)));
+					    	  flat=2;}
+			      	      else{
+			      	    	  tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),(float) excelclass.getRow(row).get(1),(float) excelclass.getRow(row).get(3), new Color((float) excelclass.getRow(row).get(4),(float) excelclass.getRow(row).get(5),(float) excelclass.getRow(row).get(6)),(String) excelclass.getRow(row).get(0)));					    
+			      	      }    	  	    
+			    	  }
+		    	  
 			      }
-			      
-			      
-			      
+
 			    } else {
 			      System.out.println("No Selection ");
 			    }

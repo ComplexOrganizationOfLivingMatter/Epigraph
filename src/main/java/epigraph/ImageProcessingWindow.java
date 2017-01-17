@@ -8,6 +8,7 @@ import java.awt.event.InputMethodListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
@@ -27,6 +28,9 @@ import javax.swing.SpinnerNumberModel;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.PolygonRoi;
+import ij.gui.Roi;
+import ij.plugin.frame.RoiManager;
 import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
 import java.awt.Image;
@@ -34,6 +38,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Canvas;
 import javax.swing.SwingConstants;
+import javax.swing.JProgressBar;
 
 /**
  * 
@@ -137,6 +142,8 @@ public class ImageProcessingWindow extends JDialog {
 		canvas.setShowAllROIs(false);
 		canvas.setCustomRoi(false);
 		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
+		
+		
 
 		newGraphletImage = new GraphletImage(raw_img);
 		
@@ -208,16 +215,14 @@ public class ImageProcessingWindow extends JDialog {
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Lsquares.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imgToShow).get(0));
-				Lpentagons.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imgToShow).get(1));
-				Lhexagons.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imgToShow).get(2));
-				Lheptagons.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imgToShow).get(3));
-				Loctogons.setText(newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imgToShow).get(4));
+				
+				ArrayList<String> polDistri=newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),(int) inputRadiusNeigh.getValue(), imgToShow);
+				
+				Lsquares.setText(polDistri.get(0));
+				Lpentagons.setText(polDistri.get(1));
+				Lhexagons.setText(polDistri.get(2));
+				Lheptagons.setText(polDistri.get(3));
+				Loctogons.setText(polDistri.get(4));
 				
 				legend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
 				LTitlePoligonDistr.setText("Tested polygon distribution:");
@@ -330,25 +335,13 @@ public class ImageProcessingWindow extends JDialog {
 		btnSelectCells.setBounds(755, 343, 124, 25);
 		contentPane.add(btnSelectCells);
 		
-		
-		
-		
-		
-		
-		
-
-		
-	}
-
+		}
+	
 	private void createROI(ImagePlus imgToShow) {
-		// TODO Auto-generated method stub
-
-		// imgToShow.getChannelProcessor().drawRect(x, y, width, height);
-		//
-		// WaitForUserDialog wtd = new WaitForUserDialog("USER ROI
-		// SELECTION","select a Roi");
-		// wtd.show();
-		// Roi newRoi = new Roi();
-		// imgToShow.getChannelProcessor().drawRoi(newRoi);
+		
+	        int[] xpoints = {10,100,100,10};
+	        int[] ypoints = {10,100,10,100};
+	        imgToShow.setRoi(new PolygonRoi(xpoints,ypoints,4,Roi.POLYGON));
+	    
 	}
 }
