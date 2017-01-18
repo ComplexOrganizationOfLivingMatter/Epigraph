@@ -230,6 +230,9 @@ public class GraphletImage extends BasicGraphletImage {
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
 		
+		float percentageOfHexagonsToShow = this.percentageOfHexagons;
+		this.percentageOfHexagons = this.percentageOfHexagons * 100;
+		
 		ArrayList<String> percentajesList = new ArrayList<String>();
 
 		if (imgToShow != null){
@@ -251,7 +254,7 @@ public class GraphletImage extends BasicGraphletImage {
 			
 			percentajesList.add(defaultFormat.format(percentageOfSquares));
 			percentajesList.add(defaultFormat.format(percentageOfPentagons));
-			percentajesList.add(defaultFormat.format(this.percentageOfHexagons));
+			percentajesList.add(defaultFormat.format(percentageOfHexagonsToShow));
 			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
 			percentajesList.add(defaultFormat.format(percentageOfOctogons));
 
