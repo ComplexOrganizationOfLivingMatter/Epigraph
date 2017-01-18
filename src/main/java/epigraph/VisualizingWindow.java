@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +59,9 @@ public class VisualizingWindow extends JDialog {
 		int size_array = tableInfo.getRowCount();
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
-			File tempFile = getResourceAsFile(Epigraph.class.getResource("/epigraph/voronoiNoiseReference/Total.txt").toString());
-			CSVReader reader = new CSVReader(new FileReader(tempFile), '\t');
-			voronoiReference = reader.readAll();
+			Reader reader = new InputStreamReader(Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/Total.txt"));
+			CSVReader csvReader = new CSVReader(reader, '\t');
+			voronoiReference = csvReader.readAll();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
