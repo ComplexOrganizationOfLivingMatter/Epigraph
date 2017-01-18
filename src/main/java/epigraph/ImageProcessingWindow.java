@@ -34,10 +34,12 @@ import ij.plugin.frame.RoiManager;
 import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Canvas;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 
 /**
@@ -97,6 +99,10 @@ public class ImageProcessingWindow extends JDialog {
 
 	private AbstractButton btnSelectCells;
 	private JLabel LTitlePoligonDistr;
+	
+	private ImagePlus actualRawImage;
+
+	private JProgressBar progressBar;
 
 	/**
 	 * Create the frame.
@@ -107,6 +113,7 @@ public class ImageProcessingWindow extends JDialog {
 	public ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		super();
 		setModal(true);
+		actualRawImage = raw_img;
 		newGraphletImages = new ArrayList<GraphletImage>();
 		modeSelectionCells = false;
 		setBounds(100, 100, 972, 798);
@@ -153,11 +160,15 @@ public class ImageProcessingWindow extends JDialog {
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.setBounds(199, 596, 329, 49);
 		btnCalculateGraphlets.addActionListener(new ActionListener() {
+			private Task task;
+
 			public void actionPerformed(ActionEvent arg0) {
 
 				if (newGraphletImage.getDistanceGDDH() == -1) {
-					newGraphletImage.runGraphlets(raw_img, cbSelectedShape.getSelectedIndex(),
-							(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex());
+			        btnTestNeighbours.setEnabled(false);
+					btnCalculateGraphlets.setEnabled(false);
+					task = new Task();
+			        task.execute();
 					btnAddToTable.setEnabled(true);
 				}
 				newGraphletImage.setLabelName(tfImageName.getText());
@@ -216,7 +227,7 @@ public class ImageProcessingWindow extends JDialog {
 		btnTestNeighbours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ArrayList<String> polDistri=newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),(int) inputRadiusNeigh.getValue(), imgToShow);
+				ArrayList<String> polDistri=newGraphletImage.testNeighbours(raw_img, cbSelectedShape.getSelectedIndex(),(int) inputRadiusNeigh.getValue(), imgToShow, progressBar);
 				
 				Lsquares.setText(polDistri.get(0));
 				Lpentagons.setText(polDistri.get(1));
@@ -335,6 +346,10 @@ public class ImageProcessingWindow extends JDialog {
 		btnSelectCells.setBounds(755, 343, 124, 25);
 		contentPane.add(btnSelectCells);
 		
+		progressBar = new JProgressBar();
+		progressBar.setBounds(199, 691, 512, 25);
+		contentPane.add(progressBar);
+		
 		}
 	
 	private void createROI(ImagePlus imgToShow) {
@@ -343,5 +358,31 @@ public class ImageProcessingWindow extends JDialog {
 	        int[] ypoints = {10,100,10,100};
 	        imgToShow.setRoi(new PolygonRoi(xpoints,ypoints,4,Roi.POLYGON));
 	    
+	}
+	
+	//Based on https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ProgressBarDemoProject/src/components/ProgressBarDemo.java
+	public class Task extends SwingWorker<Void, Void> {
+
+		/*
+		 * Main task. Executed in background thread.
+		 */
+		@Override
+		public Void doInBackground() {
+			setProgress(0);
+			newGraphletImage.runGraphlets(actualRawImage, cbSelectedShape.getSelectedIndex(),
+					(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar);
+			
+			return null;
+		}
+
+		/*
+		 * Executed in event dispatching thread
+		 */
+		@Override
+		public void done() {
+			Toolkit.getDefaultToolkit().beep();
+			btnCalculateGraphlets.setEnabled(true);
+			btnTestNeighbours.setEnabled(true);
+		}
 	}
 }

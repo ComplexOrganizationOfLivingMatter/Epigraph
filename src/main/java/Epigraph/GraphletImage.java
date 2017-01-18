@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javax.swing.JProgressBar;
+
 import com.google.common.primitives.Ints;
 
 import ij.ImagePlus;
@@ -76,7 +78,6 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public GraphletImage(ImagePlus img) {
 		super();
-
 		this.labelName = img.getFileInfo().url;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
@@ -169,10 +170,13 @@ public class GraphletImage extends BasicGraphletImage {
 		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 	}
 
-	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
-		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow, JProgressBar progressBar) {
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
+			progressBar.setValue(indexEpiCell/this.cells.size()*40);
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
+		}
 
+		progressBar.setValue(40);
 		
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
@@ -224,6 +228,8 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 		
+		progressBar.setValue(60);
+		
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
 		this.percentageOfHexagons /= validCells;
@@ -267,12 +273,18 @@ public class GraphletImage extends BasicGraphletImage {
 		return percentajesList;
 	}
 
-	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
-		testNeighbours(img, selectedShape, radiusOfShape, null);
+	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar) {
+		if (this.percentageOfHexagons == -1){
+			testNeighbours(img, selectedShape, radiusOfShape, null, progressBar);
+		}
+		
+		progressBar.setValue(70);
 
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
+		
+		progressBar.setValue(75);
 		
 		this.orcaProgram = null;
 		
@@ -319,9 +331,15 @@ public class GraphletImage extends BasicGraphletImage {
 				graphletsFinal.add(actualGraphlets);
 			}
 		}
+		
+		//Percentage 70
+		progressBar.setValue(80);
 
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
 
+		//Percentage 85
+		progressBar.setValue(90);
+		
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
 			if (validCells5Graphlets)
@@ -333,6 +351,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
+		
+		//Percentage 100
+		progressBar.setValue(100);
 	}
 
 	/**
@@ -371,7 +392,7 @@ public class GraphletImage extends BasicGraphletImage {
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
 		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
-
+		
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
 		for (int x = 0; x < this.l_img.getWidth(); x++) {
