@@ -26,11 +26,14 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.FreehandRoi;
+import ij.gui.ImageCanvas;
+import ij.gui.ImageRoi;
+import ij.gui.ImageWindow;
 import ij.gui.PolygonRoi;
 import ij.gui.Roi;
-import ij.plugin.frame.RoiManager;
+import ij.process.ImageProcessor;
 import net.coobird.thumbnailator.Thumbnails;
 import java.awt.Font;
 import java.awt.Image;
@@ -38,6 +41,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Canvas;
 import javax.swing.SwingConstants;
+
+import com.jogamp.nativewindow.util.Rectangle;
+
 import javax.swing.JProgressBar;
 
 /**
@@ -51,7 +57,6 @@ public class ImageProcessingWindow extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	public static final int CANVAS_SIZE = 512;
 
 	private JPanel contentPane;
@@ -59,7 +64,7 @@ public class ImageProcessingWindow extends JDialog {
 	private ArrayList<GraphletImage> newGraphletImages;
 	private JTextField tfImageName;
 
-	private OverlayedImageCanvas canvas;
+	private ImageCanvas canvas;
 
 	private JButton btnCalculateGraphlets;
 
@@ -97,6 +102,7 @@ public class ImageProcessingWindow extends JDialog {
 
 	private AbstractButton btnSelectCells;
 	private JLabel LTitlePoligonDistr;
+	//private PolygonRoi poligonRoi;
 
 	/**
 	 * Create the frame.
@@ -125,9 +131,9 @@ public class ImageProcessingWindow extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		canvas = new OverlayedImageCanvas(imgToShow);
-		canvas.addMouseListener(new MouseAdapter() {
+		
+		canvas = new ImageCanvas(imgToShow);
+		/*canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (modeSelectionCells) {
@@ -136,11 +142,13 @@ public class ImageProcessingWindow extends JDialog {
 					}
 				}
 			}
-		});
+			
+			@Override
+			public void mousePressed(MouseEvent e){
+				 canvas.repaint();
+			}
+		});*/
 		canvas.setLocation(199, 42);
-		canvas.setShowCursorStatus(false);
-		canvas.setShowAllROIs(false);
-		canvas.setCustomRoi(false);
 		canvas.setSize(CANVAS_SIZE, CANVAS_SIZE);
 		
 		
@@ -169,7 +177,7 @@ public class ImageProcessingWindow extends JDialog {
 		btnCreateRoi.setBounds(755, 392, 124, 25);
 		btnCreateRoi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createROI(imgToShow);
+				createROI();
 			}
 		});
 		contentPane.setLayout(null);
@@ -337,11 +345,29 @@ public class ImageProcessingWindow extends JDialog {
 		
 		}
 	
-	private void createROI(ImagePlus imgToShow) {
+	private void createROI() {
+//		int[] xpoints = {10,10,500,500};
+//        int[] ypoints = {10,500,500,10};
+        Roi roi = new Roi(10,10,490,490);
+        roi.setDrawOffset(true);
+        //roi.setImage(canvas.getImage());
+        canvas.getCustomRoi();//
+//        PolygonRoi poligonRoi = new PolygonRoi(xpoints,ypoints,4,Roi.POLYGON);
+//		poligonRoi.setImage(canvas.getImage());
+//		canvas.getImage().setRoi(poligonRoi); 
+        //contentPane.repaint();
+		canvas.repaint();
 		
-	        int[] xpoints = {10,100,100,10};
-	        int[] ypoints = {10,100,10,100};
-	        imgToShow.setRoi(new PolygonRoi(xpoints,ypoints,4,Roi.POLYGON));
-	    
+		ImageWindow imgwin = new ImageWindow(canvas.getImage(), canvas) ;
+		imgwin.setBounds(100, 100, 972, 798);
+		
+		imgwin.add(btnAddToTable,0);
+		imgwin.add(btnTestNeighbours,-1);
+		imgwin.add(btnSelectCells,2);
+		imgwin.add(btnPickAColor,3);
+		imgwin.add(btnCalculateGraphlets);
+		imgwin.add(btnCreateRoi);
+		
+		//contentPane.add(imgwin);
 	}
 }
