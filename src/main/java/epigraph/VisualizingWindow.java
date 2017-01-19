@@ -2,9 +2,13 @@ package epigraph;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +16,9 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.jzy3d.chart.Chart;
+import org.jzy3d.chart.SwingChart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
@@ -48,14 +54,14 @@ public class VisualizingWindow extends JDialog {
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
 		setModal(true);
-		chart = new Chart("swing");
+		chart = new SwingChart();
 
 		int size_array = tableInfo.getRowCount();
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
-			CSVReader reader = new CSVReader(
-					new FileReader(Epigraph.class.getResource("/epigraph/voronoiNoiseReference/Total.txt").getFile()), '\t');
-			voronoiReference = reader.readAll();
+			Reader reader = new InputStreamReader(Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/Total.txt"));
+			CSVReader csvReader = new CSVReader(reader, '\t');
+			voronoiReference = csvReader.readAll();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -117,5 +123,30 @@ public class VisualizingWindow extends JDialog {
 		setBounds(0, 0, 700, 700);
 
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
+	}
+	
+	public File getResourceAsFile(String resourcePath) {
+	    try {
+	        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+	        if (in == null) {
+	            return null;
+	        }
+
+	        File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
+	        tempFile.deleteOnExit();
+
+	        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+	            //copy stream
+	            byte[] buffer = new byte[1024];
+	            int bytesRead;
+	            while ((bytesRead = in.read(buffer)) != -1) {
+	                out.write(buffer, 0, bytesRead);
+	            }
+	        }
+	        return tempFile;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 }
