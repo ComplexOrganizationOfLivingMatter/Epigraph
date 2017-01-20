@@ -152,13 +152,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		setupPanel();
 
 		pack();
+		setMinimumSize(getPreferredSize());
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		Point loc = getLocation();
 		Dimension size = getSize();
 		if (loc.y + size.height > screen.height)
 			getCanvas().zoomOut(0, 0);
 
-		setMinimumSize(getPreferredSize());
+		
 	}
 
 	private void setupPanel() {
