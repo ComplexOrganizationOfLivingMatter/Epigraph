@@ -48,7 +48,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JButton button1, button2, btnCreateRoi, btnCalculateGraphlets, btnTestNeighbours, btnPickAColor,
 			btnAddToTable;
 	private JComboBox<String> cbSelectedShape, cbGraphletsMode;
-	private JLabel lblRadius, lblImageName, legend, Lsquares, Lpentagons, Lhexagons, Lheptagons, Loctogons;
+	private JLabel lblRadius, lblImageName;
 	private JSpinner inputRadiusNeigh;
 	private JPanel colorPicked;
 	private JProgressBar progressBar;
@@ -57,7 +57,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel configPanel = new JPanel();
 	private Container buttonsPanel = new Container();
 	
+	private JLabel legend;
+	
+	private JLabel Lsquares;
+	private JLabel Lpentagons;
+	private JLabel Lhexagons;
+	private JLabel Lheptagons;
+	private JLabel Loctogons;
+	private JLabel lblShape;
+
+	
 	private Panel all = new Panel();
+	private JPanel graphletsPanel;
 
 	/**
 	 * 
@@ -126,28 +137,34 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		tfImageName = new JTextField();
 
+		/* Generic panel layout */
+		GridBagLayout genericPanelLayout = new GridBagLayout();
+		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
+		genericPanelConstrainst.anchor = GridBagConstraints.NORTHWEST;
+		genericPanelConstrainst.fill = GridBagConstraints.HORIZONTAL;
+		resetGenericConstrainst(genericPanelConstrainst);
+		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		
 		// Setup the config panel
 		configPanel = new JPanel();
-		configPanel.setBorder(BorderFactory.createTitledBorder("Training"));
-		GridBagLayout configPanelLayout = new GridBagLayout();
-		GridBagConstraints configPanelConstrainst = new GridBagConstraints();
-		configPanelConstrainst.anchor = GridBagConstraints.NORTHEAST;
-		configPanelConstrainst.fill = GridBagConstraints.HORIZONTAL;
-		configPanelConstrainst.gridwidth = 1;
-		configPanelConstrainst.gridheight = 1;
-		configPanelConstrainst.gridx = 0;
-		configPanelConstrainst.gridy = 0;
-		configPanelConstrainst.insets = new Insets(5, 5, 6, 6);
-		configPanel.setLayout(configPanelLayout);
+		configPanel.setLayout(genericPanelLayout);
 
 		// Adding to the panel all the buttons
-		configPanel.add(inputRadiusNeigh, configPanelConstrainst);
-		configPanelConstrainst.gridy++;
-		configPanel.add(cbSelectedShape, configPanelConstrainst);
-		configPanelConstrainst.gridy++;
-		configPanel.add(btnTestNeighbours, configPanelConstrainst);
+		configPanel.add(inputRadiusNeigh, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		configPanel.add(cbSelectedShape, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		configPanel.add(btnTestNeighbours, genericPanelConstrainst);
 
-		setupPanel();
+		graphletsPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
+		graphletsPanel.setLayout(genericPanelLayout);
+
+		//Adding buttons to panel
+		graphletsPanel.add(tfImageName, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+
+		setupPanels();
 
 		pack();
 		setMinimumSize(getPreferredSize());
@@ -160,26 +177,33 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		
 	}
 
-	private void setupPanel() {
-		// TODO Auto-generated method stub
-		// Buttons panel (including training and options)
+	/**
+	 * @param genericPanelConstrainst
+	 */
+	private void resetGenericConstrainst(GridBagConstraints genericPanelConstrainst) {
+		genericPanelConstrainst.gridwidth = 1;
+		genericPanelConstrainst.gridheight = 1;
+		genericPanelConstrainst.gridx = 0;
+		genericPanelConstrainst.gridy = 0;
+	}
+
+	private void setupPanels() {
 		GridBagLayout buttonsLayout = new GridBagLayout();
 		GridBagConstraints buttonsConstraints = new GridBagConstraints();
 		buttonsPanel.setLayout(buttonsLayout);
 		buttonsConstraints.anchor = GridBagConstraints.NORTHWEST;
 		buttonsConstraints.fill = GridBagConstraints.HORIZONTAL;
-		buttonsConstraints.gridwidth = 1;
-		buttonsConstraints.gridheight = 1;
-		buttonsConstraints.gridx = 0;
-		buttonsConstraints.gridy = 0;
+		resetGenericConstrainst(buttonsConstraints);
 		buttonsPanel.add(configPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
 
+		/* MAIN DEFINITION OF THE GUI */
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints allConstraints = new GridBagConstraints();
 		all.setLayout(layout);
 
+		/* LEFT SIDE */
 		allConstraints.anchor = GridBagConstraints.NORTHWEST;
 		allConstraints.fill = GridBagConstraints.BOTH;
 		allConstraints.gridwidth = 1;
@@ -190,6 +214,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.weighty = 0;
 		all.add(buttonsPanel, allConstraints);
 
+		/* CENTER FOR THE CANVAS IMAGE */
 		allConstraints.gridx++;
 		allConstraints.weightx = 1;
 		allConstraints.weighty = 1;
@@ -201,11 +226,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.weighty = 0;
 		allConstraints.gridy--;
 
+		/* LEFT SIDE */
 		allConstraints.gridx++;
 		allConstraints.anchor = GridBagConstraints.NORTHEAST;
 		allConstraints.weightx = 0;
 		allConstraints.weighty = 0;
 		allConstraints.gridheight = 1;
+		all.add( buttonsPanel, allConstraints );
 
 		GridBagLayout wingb = new GridBagLayout();
 		GridBagConstraints winc = new GridBagConstraints();
