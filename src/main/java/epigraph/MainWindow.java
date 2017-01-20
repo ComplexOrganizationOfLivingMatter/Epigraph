@@ -75,7 +75,7 @@ public class MainWindow extends JPanel {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
 								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
-								imageProcessing.setVisible(true);
+								imageProcessing.pack();
 							} else {
 								JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
 							}
