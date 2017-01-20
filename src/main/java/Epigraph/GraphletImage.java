@@ -172,7 +172,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow, JProgressBar progressBar) {
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
-			progressBar.setValue(indexEpiCell/this.cells.size()*40);
+			progressBar.setValue(indexEpiCell*40/this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
 
