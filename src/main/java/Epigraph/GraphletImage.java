@@ -539,9 +539,13 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int numCell = 0; numCell < this.cells.size(); numCell++) {
 			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
 			if (pixelsIsSelected != -1) {
-				return pixelsIsSelected;
+				return numCell;
 			}
 		}
 		return -1;
+	}
+
+	public void runGraphletsWithSelection(int selectedIndex, int value, int selectedIndex2, JProgressBar progressBar) {
+		
 	}
 }

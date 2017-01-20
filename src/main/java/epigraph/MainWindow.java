@@ -74,6 +74,7 @@ public class MainWindow extends JPanel {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
+								IJ.log("Initializing...");
 								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
 								imageProcessing.pack();
 							} else {

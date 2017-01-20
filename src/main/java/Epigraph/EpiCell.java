@@ -37,6 +37,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -53,6 +54,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -78,6 +80,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -291,11 +294,8 @@ public class EpiCell {
 		for (int x = 0; x < this.pixelsX.length; x++){
 			if (this.pixelsX[x] == x1){
 				if (this.pixelsY[x] == y1){
-					this.setSelected(!this.isSelected());
-					if (this.isSelected())
-						return 1;
-					else
-						return 0;
+					this.setSelected(true);
+					return 1;
 				}
 			}
 		}

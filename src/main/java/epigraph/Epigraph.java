@@ -60,5 +60,9 @@ public class Epigraph implements PlugIn {
 	public static void callToolbarPoint(){
 		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
 	}
+	
+	public static void callToolbarRectangle(){
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.RECTANGLE);
+	}
 
 }

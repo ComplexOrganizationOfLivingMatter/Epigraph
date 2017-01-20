@@ -40,13 +40,14 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
+import ij.gui.Roi;
 import ij.plugin.frame.RoiManager;
 
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private ArrayList<GraphletImage> newGraphletImages;
-	
+
 	private GraphletImage newGraphletImage;
 	private JTextField tfImageName;
 	private ImagePlus imgToShow, actualRawImage;
@@ -87,8 +88,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 */
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		super(raw_img, new CustomCanvas(raw_img));
-		
-		IJ.log("Initializing...");
 
 		canvas = (CustomCanvas) getCanvas();
 
@@ -118,7 +117,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
-		/* RIGHT PANEL FORMED BY THESE 2 PANELS*/
+		/* RIGHT PANEL FORMED BY THESE 2 PANELS */
 		// Setup the config panel
 		configPanel = new JPanel();
 		configPanel.setLayout(genericPanelLayout);
@@ -129,16 +128,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		configPanel.add(cbSelectedShape, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		configPanel.add(btnTestNeighbours, genericPanelConstrainst);
-		
+
 		// Selection ROI panel
 		roiPanel = new JPanel();
 		roiPanel.setLayout(genericPanelLayout);
-		
+
 		roiPanel.add(btnCreateRoi, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		roiPanel.add(btnSelectCells, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		
+
 		// Graphlet Image properties
 		graphletsPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
@@ -155,21 +154,21 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnCalculateGraphlets, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(progressBar, genericPanelConstrainst);
-		
+
 		/* LEFT PANEL */
-		//Image of polygon distribution
+		// Image of polygon distribution
 		imgPolDistPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		imgPolDistPanel.setLayout(genericPanelLayout);
 		imgPolDistPanel.add(lbImageLegend, genericPanelConstrainst);
-		
-		//labels of polygon distribution
+
+		// labels of polygon distribution
 		polDistPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		polDistPanel.setLayout(genericPanelLayout);
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
-		
-		//Adding buttons
+
+		// Adding buttons
 		polDistPanel.add(lbSquares, genericPanelConstrainst);
 		genericPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbSquares, genericPanelConstrainst);
@@ -182,7 +181,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		genericPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, genericPanelConstrainst);
 		genericPanelConstrainst.gridy += 1;
-		
+
 		setupPanels();
 
 		pack();
@@ -226,39 +225,39 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		btnCreateRoi = new JButton("Create RoI");
 		btnCreateRoi.addActionListener(this);
-		
+
 		btnSelectCells = new JButton("Select cells");
 		btnSelectCells.addActionListener(this);
 
 		btnPickAColor = new JButton("Pick a color");
 		btnPickAColor.addActionListener(this);
-		
+
 		colorPicked = new JPanel();
 		colorPicked.setBackground(Color.BLACK);
-		
+
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(this);
 
 		tfImageName = new JTextField();
-		
-		//Labels for polygon distribution
+
+		// Labels for polygon distribution
 		lbImageLegend = new JLabel("");
-		
+
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbPentagons = new JLabel("");
 		lbPentagons.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbHexagons = new JLabel("");
 		lbHexagons.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbHeptagons = new JLabel("");
 		lbHeptagons.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbOctogons = new JLabel("");
 		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 	}
 
 	/**
@@ -285,11 +284,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		buttonsConstraints.gridy++;
 		buttonsPanel.add(roiPanel, buttonsConstraints);
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
-		
+
 		/* DEFINITION OF LEFT SIDE PANEL */
 		GridBagLayout labelsLayout = new GridBagLayout();
 		GridBagConstraints labelsConstraints = new GridBagConstraints();
-		labelsJPanel.setLayout( labelsLayout );
+		labelsJPanel.setLayout(labelsLayout);
 		labelsConstraints.anchor = GridBagConstraints.NORTHWEST;
 		labelsConstraints.fill = GridBagConstraints.BOTH;
 		resetGenericConstrainst(labelsConstraints);
@@ -357,7 +356,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			newGraphletImage.setColor(colorPicked.getBackground());
 		}
 		if (e.getSource() == btnCreateRoi) {
-			RoiManager.getRoiManager();
+			if (btnCreateRoi.getText() != "Done") {
+				Epigraph.callToolbarRectangle();
+				roiManager = RoiManager.getRoiManager();
+				btnCreateRoi.setText("Done");
+			} else {
+				addROI();
+				btnCreateRoi.setText("Create ROI");
+			}
 		}
 
 		if (e.getSource() == btnAddToTable) {
@@ -372,8 +378,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 		if (e.getSource() == btnPickAColor) {
-			Color c = JColorChooser.showDialog(this.getParent(), "Choose a Color",
-					colorPicked.getBackground());
+			Color c = JColorChooser.showDialog(this.getParent(), "Choose a Color", colorPicked.getBackground());
 			if (c != null) {
 				colorPicked.setBackground(c);
 				if (newGraphletImage != null) {
@@ -394,13 +399,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
 			repaintAll();
 		}
-		
-		if (e.getSource() == btnSelectCells){
-			if (btnSelectCells.getText() != "Done"){
+
+		if (e.getSource() == btnSelectCells) {
+			if (btnSelectCells.getText() != "Done") {
+				roiManager = RoiManager.getRoiManager();
 				Epigraph.callToolbarPoint();
 				btnSelectCells.setText("Done");
 			} else {
-				//Add selected cells
+				// Add selected cells
+				addROI();
+
 				btnSelectCells.setText("Select cells");
 			}
 		}
@@ -411,10 +419,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	/**
+	 * 
+	 */
+	private void addROI() {
+		Roi r = this.getImagePlus().getRoi();
+
+		for (Point point : r) {
+			newGraphletImage.addCellToSelected(point.x, point.y);
+		}
+
+		this.getImagePlus().killRoi();
+	}
+
+	/**
 	 * Repaint all panels
 	 */
-	private void repaintAll()
-	{
+	private void repaintAll() {
 		this.labelsJPanel.repaint();
 		getCanvas().repaint();
 		this.buttonsPanel.repaint();
@@ -429,8 +449,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		@Override
 		public Void doInBackground() {
 			setProgress(0);
-			newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
-					(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar);
+			Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+			if (roiArray.length <= 0) {
+				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar);
+			} else {
+				newGraphletImage.runGraphletsWithSelection(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar);
+			}
 
 			return null;
 		}
