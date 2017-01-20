@@ -1,8 +1,12 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -13,6 +17,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -23,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 
 import ij.ImagePlus;
@@ -48,7 +55,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JProgressBar progressBar;
 	private JTableModel tableInf;
 	private ImageCanvas canvas;
+	private JPanel configPanel = new JPanel();
+	private Container buttonsPanel = new Container();
 	
+	private Panel all = new Panel();
 
 	/**
 	 * 
@@ -63,72 +73,154 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		tableInf = tableInfo;
 
 		newGraphletImage = new GraphletImage(raw_img);
-		
-		canvas = getCanvas();
-		Dimension dim = new Dimension(Math.min(512, raw_img.getWidth()), Math.min(512, raw_img.getHeight()));
-		canvas.setMinimumSize(dim);
-		canvas.setSize(dim.width, dim.height);
-			
-		canvas.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent ce) {
-				Rectangle r = canvas.getBounds();
-				canvas.setSize(r.width, r.height);
-			}
-		});	
-		
+
 		addPanel();
-		
+
 	}
 
 	/**
 	 * 
 	 */
 	void addPanel() {
-		Panel panel = new Panel();
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		canvas = getCanvas();
+		Dimension dim = new Dimension(Math.min(512, this.imp.getWidth()), Math.min(512, this.imp.getHeight()));
+		canvas.setMinimumSize(dim);
+		canvas.setSize(dim.width, dim.height);
+
+		canvas.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent ce) {
+				Rectangle r = canvas.getBounds();
+				canvas.setSize(r.width, r.height);
+			}
+		});
+
+		// Radius of neighbours
+		inputRadiusNeigh = new JSpinner();
+		inputRadiusNeigh.setModel(new SpinnerNumberModel(3, 1, 25, 1));
+
+		// The shape of the mask
+		cbSelectedShape = new JComboBox<String>();
+		cbSelectedShape.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
+		cbSelectedShape.setSelectedIndex(0);
 
 		progressBar = new JProgressBar();
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.addActionListener(this);
 		IbtnCalculateGraphlets = btnCalculateGraphlets.hashCode();
-		panel.add(btnCalculateGraphlets);
 
 		btnAddToTable = new JButton("add to table");
 		btnAddToTable.setEnabled(false);
 		IbtnAddToTable = btnAddToTable.hashCode();
 		btnAddToTable.addActionListener(this);
-		panel.add(btnAddToTable);
 
 		btnCreateRoi = new JButton("Create RoI");
 		btnCreateRoi.addActionListener(this);
 		IbtnCreateRoi = btnCreateRoi.hashCode();
-		panel.add(btnCreateRoi);
 
 		btnPickAColor = new JButton("Pick a color");
 		btnPickAColor.addActionListener(this);
 		IbtnPickAColor = btnPickAColor.hashCode();
-		panel.add(btnPickAColor);
 
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(this);
-		panel.add(btnTestNeighbours);
 		IbtnTestNeighbours = btnTestNeighbours.hashCode();
 
 		tfImageName = new JTextField();
-		panel.add(tfImageName);
 
-		add(panel);
+		// Setup the config panel
+		configPanel = new JPanel();
+		configPanel.setBorder(BorderFactory.createTitledBorder("Training"));
+		GridBagLayout configPanelLayout = new GridBagLayout();
+		GridBagConstraints configPanelConstrainst = new GridBagConstraints();
+		configPanelConstrainst.anchor = GridBagConstraints.NORTHEAST;
+		configPanelConstrainst.fill = GridBagConstraints.HORIZONTAL;
+		configPanelConstrainst.gridwidth = 1;
+		configPanelConstrainst.gridheight = 1;
+		configPanelConstrainst.gridx = 0;
+		configPanelConstrainst.gridy = 0;
+		configPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		configPanel.setLayout(configPanelLayout);
+
+		// Adding to the panel all the buttons
+		configPanel.add(inputRadiusNeigh, configPanelConstrainst);
+		configPanelConstrainst.gridy++;
+		configPanel.add(cbSelectedShape, configPanelConstrainst);
+		configPanelConstrainst.gridy++;
+		configPanel.add(btnTestNeighbours, configPanelConstrainst);
+
+		setupPanel();
+
 		pack();
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		Point loc = getLocation();
 		Dimension size = getSize();
 		if (loc.y + size.height > screen.height)
 			getCanvas().zoomOut(0, 0);
+
+		setMinimumSize(getPreferredSize());
+	}
+
+	private void setupPanel() {
+		// TODO Auto-generated method stub
+		// Buttons panel (including training and options)
+		GridBagLayout buttonsLayout = new GridBagLayout();
+		GridBagConstraints buttonsConstraints = new GridBagConstraints();
+		buttonsPanel.setLayout(buttonsLayout);
+		buttonsConstraints.anchor = GridBagConstraints.NORTHWEST;
+		buttonsConstraints.fill = GridBagConstraints.HORIZONTAL;
+		buttonsConstraints.gridwidth = 1;
+		buttonsConstraints.gridheight = 1;
+		buttonsConstraints.gridx = 0;
+		buttonsConstraints.gridy = 0;
+		buttonsPanel.add(configPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
+		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
+
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints allConstraints = new GridBagConstraints();
+		all.setLayout(layout);
+
+		allConstraints.anchor = GridBagConstraints.NORTHWEST;
+		allConstraints.fill = GridBagConstraints.BOTH;
+		allConstraints.gridwidth = 1;
+		allConstraints.gridheight = 2;
+		allConstraints.gridx = 0;
+		allConstraints.gridy = 0;
+		allConstraints.weightx = 0;
+		allConstraints.weighty = 0;
+
+		all.add(buttonsPanel, allConstraints);
+
+		allConstraints.gridx++;
+		allConstraints.weightx = 1;
+		allConstraints.weighty = 1;
+		allConstraints.gridheight = 1;
+		all.add(canvas, allConstraints);
+
+		allConstraints.gridy++;
+		allConstraints.weightx = 0;
+		allConstraints.weighty = 0;
+		allConstraints.gridy--;
+
+		allConstraints.gridx++;
+		allConstraints.anchor = GridBagConstraints.NORTHEAST;
+		allConstraints.weightx = 0;
+		allConstraints.weighty = 0;
+		allConstraints.gridheight = 1;
+
+		GridBagLayout wingb = new GridBagLayout();
+		GridBagConstraints winc = new GridBagConstraints();
+		winc.anchor = GridBagConstraints.NORTHWEST;
+		winc.fill = GridBagConstraints.BOTH;
+		winc.weightx = 1;
+		winc.weighty = 1;
+		setLayout(wingb);
+		add(all, winc);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
+
 		if (e.getSource() == btnCalculateGraphlets) {
 			if (newGraphletImage.getDistanceGDDH() == -1) {
 				btnTestNeighbours.setEnabled(false);
