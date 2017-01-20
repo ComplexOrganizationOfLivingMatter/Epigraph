@@ -4,8 +4,6 @@
 package epigraph;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -16,24 +14,14 @@ import java.util.Iterator;
 
 import javax.swing.JProgressBar;
 
-import com.google.common.primitives.Ints;
-
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
-
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.binary.conncomp.*;
-import inra.ijpb.label.*;
-import inra.ijpb.morphology.MinimaAndMaxima3D;
-import inra.ijpb.morphology.Morphology;
-import inra.ijpb.morphology.Strel3D;
+import inra.ijpb.binary.conncomp.FloodFillComponentsLabeling;
+import inra.ijpb.label.LabelImages;
 import inra.ijpb.morphology.strel.SquareStrel;
-import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * 
@@ -68,6 +56,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
+
 	private ArrayList<EpiCell> cells;
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
@@ -103,6 +92,20 @@ public class GraphletImage extends BasicGraphletImage {
 		// END TODO
 
 		preprocessImage(img);
+	}
+	
+	/**
+	 * @return the l_img
+	 */
+	public ImagePlus getLabelledImage() {
+		return l_img;
+	}
+
+	/**
+	 * @param l_img the l_img to set
+	 */
+	public void setLabelledImage(ImagePlus l_img) {
+		this.l_img = l_img;
 	}
 
 	public void preprocessImage(ImagePlus img) {
@@ -172,7 +175,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
-			JProgressBar progressBar) {
+			JProgressBar progressBar, boolean selectionMode) {
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -193,7 +196,7 @@ public class GraphletImage extends BasicGraphletImage {
 		Color colorOfCell;
 		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
-			if (this.cells.get(i).isValid_cell()) {
+			if (this.cells.get(i).isValid_cell() && (!selectionMode || this.cells.get(i).isSelected())) {
 				switch (this.cells.get(i).getNeighbours().size()) {
 				case 4:
 					percentageOfSquares++;
@@ -271,9 +274,9 @@ public class GraphletImage extends BasicGraphletImage {
 		return percentajesList;
 	}
 
-	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar) {
+	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar, boolean selectionMode) {
 		if (this.percentageOfHexagons == -1) {
-			testNeighbours(selectedShape, radiusOfShape, null, progressBar);
+			testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode);
 		}
 
 		progressBar.setValue(70);
@@ -534,18 +537,11 @@ public class GraphletImage extends BasicGraphletImage {
 		return distributions;
 	}
 
-	public int addCellToSelected(int x, int y) {
-		int pixelsIsSelected;
-		for (int numCell = 0; numCell < this.cells.size(); numCell++) {
-			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
-			if (pixelsIsSelected != -1) {
-				return numCell;
-			}
+	public int addCellToSelected(int labelPixel) {
+		if (labelPixel != 0){
+			this.cells.get(labelPixel - 1).setSelected(true);
+			return 1;
 		}
 		return -1;
-	}
-
-	public void runGraphletsWithSelection(int selectedIndex, int value, int selectedIndex2, JProgressBar progressBar) {
-		
 	}
 }

@@ -387,8 +387,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 		if (e.getSource() == btnTestNeighbours) {
-			ArrayList<String> polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-					(int) inputRadiusNeigh.getValue(), imp, progressBar);
+			ArrayList<String> polDistri;
+			if (roiManager.getSelectedRoisAsArray().length <= 0) {
+				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, false);
+			} else {
+				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, true);
+			}
 
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
@@ -423,12 +429,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 */
 	private void addROI() {
 		Roi r = this.getImagePlus().getRoi();
-
 		for (Point point : r) {
-			newGraphletImage.addCellToSelected(point.x, point.y);
+			int[] pixelInfo = newGraphletImage.getLabelledImage().getPixel(point.x, point.y);
+			this.newGraphletImage.addCellToSelected(pixelInfo[0]);
 		}
 
-		this.getImagePlus().killRoi();
+		roiManager.addRoi(r);
 	}
 
 	/**
@@ -452,10 +458,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 			if (roiArray.length <= 0) {
 				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar);
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false);
 			} else {
-				newGraphletImage.runGraphletsWithSelection(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar);
+				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, true);
 			}
 
 			return null;
