@@ -59,7 +59,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private Container buttonsPanel = new Container();
 	private Container labelsJPanel = new Container();
 
-	private JLabel lbImagelegend;
+	private JLabel lbImageLegend;
 
 	private JLabel lbSquares;
 	private JLabel lbPentagons;
@@ -71,6 +71,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private Panel all = new Panel();
 	private JPanel graphletsPanel;
 	private JPanel polDistPanel;
+	private JPanel imgPolDistPanel;
 
 	/**
 	 * 
@@ -104,7 +105,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		GridBagLayout genericPanelLayout = new GridBagLayout();
 		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
 		genericPanelConstrainst.anchor = GridBagConstraints.NORTHWEST;
-		genericPanelConstrainst.fill = GridBagConstraints.HORIZONTAL;
+		genericPanelConstrainst.fill = GridBagConstraints.BOTH;
 		resetGenericConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
@@ -138,16 +139,19 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(progressBar, genericPanelConstrainst);
 		
 		/* LEFT PANEL */
+		//Image of polygon distribution
+		imgPolDistPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
+		imgPolDistPanel.setLayout(genericPanelLayout);
+		imgPolDistPanel.add(lbImageLegend, genericPanelConstrainst);
+		
+		//labels of polygon distribution
 		polDistPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		polDistPanel.setLayout(genericPanelLayout);
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
 		
-		
 		//Adding buttons
-		polDistPanel.add(lbImagelegend, genericPanelConstrainst);
-		//genericPanelConstrainst.gridy++;
-		genericPanelConstrainst.gridx++;
 		polDistPanel.add(lbSquares, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		polDistPanel.add(lbSquares, genericPanelConstrainst);
@@ -217,7 +221,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		tfImageName = new JTextField();
 		
 		//Labels for polygon distribution
-		lbImagelegend = new JLabel("");
+		lbImageLegend = new JLabel("");
 		
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
@@ -267,6 +271,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		labelsConstraints.anchor = GridBagConstraints.NORTHWEST;
 		labelsConstraints.fill = GridBagConstraints.BOTH;
 		resetGenericConstrainst(labelsConstraints);
+		labelsJPanel.add(imgPolDistPanel, labelsConstraints);
+		labelsConstraints.gridx++;
 		labelsJPanel.add(polDistPanel, labelsConstraints);
 
 		/* MAIN DEFINITION OF THE GUI */
@@ -363,7 +369,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
 
-			lbImagelegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
+			lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.bmp")).getImage()));
 			repaintAll();
 		}
 
