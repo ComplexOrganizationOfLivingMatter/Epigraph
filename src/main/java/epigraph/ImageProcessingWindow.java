@@ -58,6 +58,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private CustomCanvas canvas;
 	private JPanel configPanel = new JPanel();
 	private Container buttonsPanel = new Container();
+	private Container labelsJPanel = new Container();
 
 	private JLabel lbImagelegend;
 
@@ -143,7 +144,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		
 		//Adding buttons
 		polDistPanel.add(lbImagelegend, genericPanelConstrainst);
-		genericPanelConstrainst.gridy++;
+		//genericPanelConstrainst.gridy++;
 		genericPanelConstrainst.gridx++;
 		polDistPanel.add(lbSquares, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
@@ -246,6 +247,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	private void setupPanels() {
+		/* DEFINITION OF RIGHT SIDE PANEL */
 		GridBagLayout buttonsLayout = new GridBagLayout();
 		GridBagConstraints buttonsConstraints = new GridBagConstraints();
 		buttonsPanel.setLayout(buttonsLayout);
@@ -254,7 +256,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(buttonsConstraints);
 		buttonsPanel.add(configPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
+		buttonsPanel.add(graphletsPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
+		
+		/* DEFINITION OF LEFT SIDE PANEL */
+		GridBagLayout labelsLayout = new GridBagLayout();
+		GridBagConstraints labelsConstraints = new GridBagConstraints();
+		labelsJPanel.setLayout( labelsLayout );
+		labelsConstraints.anchor = GridBagConstraints.NORTHWEST;
+		labelsConstraints.fill = GridBagConstraints.HORIZONTAL;
+		resetGenericConstrainst(labelsConstraints);
+		labelsJPanel.add(polDistPanel, labelsConstraints);
 
 		/* MAIN DEFINITION OF THE GUI */
 		GridBagLayout layout = new GridBagLayout();
@@ -270,7 +283,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.gridy = 0;
 		allConstraints.weightx = 0;
 		allConstraints.weighty = 0;
-		all.add(buttonsPanel, allConstraints);
+		all.add(labelsJPanel, allConstraints);
 
 		/* CENTER FOR THE CANVAS IMAGE */
 		allConstraints.gridx++;
@@ -284,7 +297,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.weighty = 0;
 		allConstraints.gridy--;
 
-		/* LEFT SIDE */
+		/* RIGHT SIDE */
 		allConstraints.gridx++;
 		allConstraints.anchor = GridBagConstraints.NORTHEAST;
 		allConstraints.weightx = 0;
@@ -341,8 +354,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 		if (e.getSource() == btnTestNeighbours) {
-			ArrayList<String> polDistri = newGraphletImage.testNeighbours(imp, cbSelectedShape.getSelectedIndex(),
-					(int) inputRadiusNeigh.getValue(), imgToShow, progressBar);
+			ArrayList<String> polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+					(int) inputRadiusNeigh.getValue(), imp, progressBar);
 
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
@@ -351,11 +364,23 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbOctogons.setText(polDistri.get(4));
 
 			lbImagelegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
+			repaintAll();
 		}
 
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
+	}
+
+	/**
+	 * Repaint all panels
+	 */
+	private void repaintAll()
+	{
+		this.labelsJPanel.repaint();
+		getCanvas().repaint();
+		this.buttonsPanel.repaint();
+		this.all.repaint();
 	}
 
 	public class Task extends SwingWorker<Void, Void> {
@@ -366,7 +391,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		@Override
 		public Void doInBackground() {
 			setProgress(0);
-			newGraphletImage.runGraphlets(actualRawImage, cbSelectedShape.getSelectedIndex(),
+			newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 					(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar);
 
 			return null;

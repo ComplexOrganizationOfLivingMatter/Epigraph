@@ -171,7 +171,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 	}
 
-	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow, JProgressBar progressBar) {
+	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow, JProgressBar progressBar) {
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++){
 			progressBar.setValue(indexEpiCell*40/this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -188,7 +188,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// int percentageOfHexagonsOriginal = 0;
 		int[][] actualPixels;
 
-		ColorProcessor colorImgToShow = img.getChannelProcessor().convertToColorProcessor();
+		ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
 		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
@@ -244,20 +244,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		if (imgToShow != null){
 			imgToShow.setProcessor(colorImgToShow);
-			BufferedImage thumbnail = null;
-			try {
-				thumbnail = Thumbnails.of(colorImgToShow.getBufferedImage()).height(512/*ImageProcessingWindow.CANVAS_SIZE*/)
-						.width(512/*ImageProcessingWindow.CANVAS_SIZE*/).asBufferedImage();
-				imgToShow.setImage(thumbnail);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 	
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);
-			
-			
 			
 			percentajesList.add(defaultFormat.format(percentageOfSquares));
 			percentajesList.add(defaultFormat.format(percentageOfPentagons));
@@ -274,9 +263,9 @@ public class GraphletImage extends BasicGraphletImage {
 		return percentajesList;
 	}
 
-	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar) {
+	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar) {
 		if (this.percentageOfHexagons == -1){
-			testNeighbours(img, selectedShape, radiusOfShape, null, progressBar);
+			testNeighbours(selectedShape, radiusOfShape, null, progressBar);
 		}
 		
 		progressBar.setValue(70);
