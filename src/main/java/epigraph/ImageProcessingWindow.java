@@ -42,8 +42,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private static final long serialVersionUID = 1L;
 	private ArrayList<GraphletImage> newGraphletImages;
-	private Integer Ibutton1, Ibutton2, IbtnCreateRoi, IbtnCalculateGraphlets, IbtnTestNeighbours, IbtnPickAColor,
-			IbtnAddToTable;
+	
 	private GraphletImage newGraphletImage;
 	private JTextField tfImageName;
 	private ImagePlus imgToShow, actualRawImage;
@@ -130,6 +129,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(tfImageName, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(btnPickAColor, genericPanelConstrainst);
+		genericPanelConstrainst.gridx++;
+		graphletsPanel.add(colorPicked, genericPanelConstrainst);
+		genericPanelConstrainst.gridx--;
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(btnCalculateGraphlets, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
@@ -195,24 +197,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.addActionListener(this);
-		IbtnCalculateGraphlets = btnCalculateGraphlets.hashCode();
 
 		btnAddToTable = new JButton("add to table");
 		btnAddToTable.setEnabled(false);
-		IbtnAddToTable = btnAddToTable.hashCode();
 		btnAddToTable.addActionListener(this);
 
 		btnCreateRoi = new JButton("Create RoI");
 		btnCreateRoi.addActionListener(this);
-		IbtnCreateRoi = btnCreateRoi.hashCode();
 
 		btnPickAColor = new JButton("Pick a color");
 		btnPickAColor.addActionListener(this);
-		IbtnPickAColor = btnPickAColor.hashCode();
-
+		
+		colorPicked = new JPanel();
+		colorPicked.setBackground(Color.BLACK);
+		
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(this);
-		IbtnTestNeighbours = btnTestNeighbours.hashCode();
 
 		tfImageName = new JTextField();
 		
@@ -265,7 +265,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		GridBagConstraints labelsConstraints = new GridBagConstraints();
 		labelsJPanel.setLayout( labelsLayout );
 		labelsConstraints.anchor = GridBagConstraints.NORTHWEST;
-		labelsConstraints.fill = GridBagConstraints.HORIZONTAL;
+		labelsConstraints.fill = GridBagConstraints.BOTH;
 		resetGenericConstrainst(labelsConstraints);
 		labelsJPanel.add(polDistPanel, labelsConstraints);
 
@@ -334,17 +334,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		if (e.getSource() == btnAddToTable) {
 			if (tfImageName.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(btnAddToTable.getParent(), "You should insert a name for the image");
+				JOptionPane.showMessageDialog(this.getParent(), "You should insert a name for the image");
 			} else {
 				newGraphletImage.setLabelName(tfImageName.getText());
-				int result = JOptionPane.showConfirmDialog(btnAddToTable.getParent(), "Everything is ok?", "Confirm",
+				int result = JOptionPane.showConfirmDialog(this.getParent(), "Everything is ok?", "Confirm",
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION)
 					tableInf.addImage(newGraphletImage);
 			}
 		}
 		if (e.getSource() == btnPickAColor) {
-			Color c = JColorChooser.showDialog(btnPickAColor.getParent(), "Choose a Color",
+			Color c = JColorChooser.showDialog(this.getParent(), "Choose a Color",
 					colorPicked.getBackground());
 			if (c != null) {
 				colorPicked.setBackground(c);
