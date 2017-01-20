@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Panel;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -44,19 +47,42 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel colorPicked;
 	private JProgressBar progressBar;
 	private JTableModel tableInf;
+	private ImageCanvas canvas;
+	
 
+	/**
+	 * 
+	 * @param raw_img
+	 * @param tableInfo
+	 */
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		super(raw_img, raw_img.getCanvas());
 
 		newGraphletImages = new ArrayList<GraphletImage>();
 
-		setBounds(100, 100, 450, 300);
 		tableInf = tableInfo;
 
 		newGraphletImage = new GraphletImage(raw_img);
+		
+		canvas = getCanvas();
+		Dimension dim = new Dimension(Math.min(512, raw_img.getWidth()), Math.min(512, raw_img.getHeight()));
+		canvas.setMinimumSize(dim);
+		canvas.setSize(dim.width, dim.height);
+			
+		canvas.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent ce) {
+				Rectangle r = canvas.getBounds();
+				canvas.setSize(r.width, r.height);
+			}
+		});	
+		
 		addPanel();
+		
 	}
 
+	/**
+	 * 
+	 */
 	void addPanel() {
 		Panel panel = new Panel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -102,16 +128,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == button1) {
-			imp.getProcessor().invert();
-			imp.updateAndDraw();
-		}
-
-		if (e.getSource() == button2) {
-			imp.getProcessor().flipVertical();
-			imp.updateAndDraw();
-		}
+		
 		if (e.getSource() == btnCalculateGraphlets) {
 			if (newGraphletImage.getDistanceGDDH() == -1) {
 				btnTestNeighbours.setEnabled(false);
@@ -192,33 +209,4 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			btnTestNeighbours.setEnabled(true);
 		}
 	}
-
-	// CustomWindow inner class
-
-	/*
-	 * class CustomStackWindow extends StackWindow implements ActionListener {
-	 * 
-	 * private Button button1, button2;
-	 * 
-	 * CustomStackWindow(ImagePlus imp, ImageCanvas ic) { super(imp, ic);
-	 * addPanel(); }
-	 * 
-	 * void addPanel() { Panel panel = new Panel(); panel.setLayout(new
-	 * FlowLayout(FlowLayout.RIGHT)); button1 = new Button(" Invert ");
-	 * button1.addActionListener(this); panel.add(button1);
-	 * 
-	 * button2 = new Button(" Flip "); button2.addActionListener(this);
-	 * panel.add(button2); add(panel); pack(); Dimension screen =
-	 * Toolkit.getDefaultToolkit().getScreenSize(); Point loc = getLocation();
-	 * Dimension size = getSize(); if (loc.y+size.height>screen.height)
-	 * getCanvas().zoomOut(0, 0); }
-	 * 
-	 * public void actionPerformed(ActionEvent e) { Object b = e.getSource(); if
-	 * (b==button1) { imp.getProcessor().invert(); imp.updateAndDraw(); } else {
-	 * imp.getProcessor().flipVertical(); imp.updateAndDraw(); } ImageCanvas ic
-	 * = imp.getCanvas(); if (ic!=null) ic.requestFocus(); }
-	 * 
-	 * }
-	 */
-
 }
