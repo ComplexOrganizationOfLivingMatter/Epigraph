@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -30,6 +31,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import ij.ImagePlus;
@@ -57,17 +59,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel configPanel = new JPanel();
 	private Container buttonsPanel = new Container();
 
-	private JLabel legend;
+	private JLabel lbImagelegend;
 
-	private JLabel Lsquares;
-	private JLabel Lpentagons;
-	private JLabel Lhexagons;
-	private JLabel Lheptagons;
-	private JLabel Loctogons;
+	private JLabel lbSquares;
+	private JLabel lbPentagons;
+	private JLabel lbHexagons;
+	private JLabel lbHeptagons;
+	private JLabel lbOctogons;
 	private JLabel lblShape;
 
 	private Panel all = new Panel();
 	private JPanel graphletsPanel;
+	private JPanel polDistPanel;
 
 	/**
 	 * 
@@ -105,6 +108,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
+		/* RIGHT PANEL FORMED BY THESE 2 PANELS*/
 		// Setup the config panel
 		configPanel = new JPanel();
 		configPanel.setLayout(genericPanelLayout);
@@ -126,8 +130,34 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(btnPickAColor, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		graphletsPanel.add(btnPickAColor, genericPanelConstrainst);
-
+		graphletsPanel.add(btnCalculateGraphlets, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		graphletsPanel.add(progressBar, genericPanelConstrainst);
+		
+		/* LEFT PANEL */
+		polDistPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
+		polDistPanel.setLayout(genericPanelLayout);
+		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
+		
+		
+		//Adding buttons
+		polDistPanel.add(lbImagelegend, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		genericPanelConstrainst.gridx++;
+		polDistPanel.add(lbSquares, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		polDistPanel.add(lbSquares, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		polDistPanel.add(lbPentagons, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		polDistPanel.add(lbHexagons, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		polDistPanel.add(lbHeptagons, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		polDistPanel.add(lbOctogons, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		
 		setupPanels();
 
 		pack();
@@ -184,6 +214,25 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		IbtnTestNeighbours = btnTestNeighbours.hashCode();
 
 		tfImageName = new JTextField();
+		
+		//Labels for polygon distribution
+		lbImagelegend = new JLabel("");
+		
+		lbSquares = new JLabel("");
+		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lbPentagons = new JLabel("");
+		lbPentagons.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lbHexagons = new JLabel("");
+		lbHexagons.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lbHeptagons = new JLabel("");
+		lbHeptagons.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lbOctogons = new JLabel("");
+		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
+		
 	}
 
 	/**
@@ -295,15 +344,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			ArrayList<String> polDistri = newGraphletImage.testNeighbours(imp, cbSelectedShape.getSelectedIndex(),
 					(int) inputRadiusNeigh.getValue(), imgToShow, progressBar);
 
-			Lsquares.setText(polDistri.get(0));
-			Lpentagons.setText(polDistri.get(1));
-			Lhexagons.setText(polDistri.get(2));
-			Lheptagons.setText(polDistri.get(3));
-			Loctogons.setText(polDistri.get(4));
+			lbSquares.setText(polDistri.get(0));
+			lbPentagons.setText(polDistri.get(1));
+			lbHexagons.setText(polDistri.get(2));
+			lbHeptagons.setText(polDistri.get(3));
+			lbOctogons.setText(polDistri.get(4));
 
-			legend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
-			// LTitlePoligonDistr.setText("Tested polygon distribution:");
-			// canvas.repaint();
+			lbImagelegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
 		}
 
 		ImageCanvas ic = imp.getCanvas();
