@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -76,6 +78,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel imgPolDistPanel;
 	private RoiManager roiManager;
 	private JButton btnSelectCells;
+	private JPanel roiPanel;
 
 	/**
 	 * 
@@ -126,7 +129,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		configPanel.add(cbSelectedShape, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		configPanel.add(btnTestNeighbours, genericPanelConstrainst);
-
+		
+		// Selection ROI panel
+		roiPanel = new JPanel();
+		roiPanel.setLayout(genericPanelLayout);
+		
+		roiPanel.add(btnCreateRoi, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		roiPanel.add(btnSelectCells, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		
 		// Graphlet Image properties
 		graphletsPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
@@ -271,6 +283,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		buttonsConstraints.gridy++;
 		buttonsPanel.add(graphletsPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
+		buttonsPanel.add(roiPanel, buttonsConstraints);
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
 		
 		/* DEFINITION OF LEFT SIDE PANEL */
@@ -383,7 +396,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		
 		if (e.getSource() == btnSelectCells){
-			Epigraph.callToolbarPoint();
+			if (btnSelectCells.getText() != "Done"){
+				Epigraph.callToolbarPoint();
+				btnSelectCells.setText("Done");
+			} else {
+				//Add selected cells
+				btnSelectCells.setText("Select cells");
+			}
 		}
 
 		ImageCanvas ic = imp.getCanvas();
