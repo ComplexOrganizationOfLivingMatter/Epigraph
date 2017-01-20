@@ -47,6 +47,7 @@ public class Epigraph implements PlugIn {
 	 * Plugin run method
 	 */
 	public void run(String arg) {
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
 		// Build GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -54,6 +55,10 @@ public class Epigraph implements PlugIn {
 				mainWindow.createAndShowGUI();
 			}
 		});
+	}
+	
+	public static void callToolbarPoint(){
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
 	}
 
 }
