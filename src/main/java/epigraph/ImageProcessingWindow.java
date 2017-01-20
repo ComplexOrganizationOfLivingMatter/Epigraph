@@ -46,7 +46,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JTableModel tableInf;
 
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
-		super(raw_img);
+		super(raw_img, raw_img.getCanvas());
 
 		newGraphletImages = new ArrayList<GraphletImage>();
 
