@@ -369,7 +369,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
 
-			lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.bmp")).getImage()));
+			lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
 			repaintAll();
 		}
 
