@@ -133,18 +133,19 @@ public class GraphletImage extends BasicGraphletImage {
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
 
+		ImagePlus imgTemp = new ImagePlus("", img.getChannelProcessor());
 		// Labelling image
-		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());
+		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
 																				// connectivity
-		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
-		this.l_img = new ImagePlus("", img.getChannelProcessor());
+		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
+		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 
 		// get unique labels from labelled imageplus
-		int[] labelunique = LabelImages.findAllLabels(img);
+		int[] labelunique = LabelImages.findAllLabels(imgTemp);
 
 		// get image in a matrix of labels
-		int[][] matrixImg = img.getChannelProcessor().getIntArray();
+		int[][] matrixImg = imgTemp.getChannelProcessor().getIntArray();
 
 		// Create epicells
 		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
@@ -152,8 +153,8 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// Add pixel to each epicell
-		int W = img.getWidth();
-		int H = img.getHeight();
+		int W = imgTemp.getWidth();
+		int H = imgTemp.getHeight();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
 			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
