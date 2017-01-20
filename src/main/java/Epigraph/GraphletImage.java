@@ -245,8 +245,8 @@ public class GraphletImage extends BasicGraphletImage {
 			imgToShow.setProcessor(colorImgToShow);
 			BufferedImage thumbnail = null;
 			try {
-				thumbnail = Thumbnails.of(colorImgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
-						.width(ImageProcessingWindow.CANVAS_SIZE).asBufferedImage();
+				thumbnail = Thumbnails.of(colorImgToShow.getBufferedImage()).height(512/*ImageProcessingWindow.CANVAS_SIZE*/)
+						.width(512/*ImageProcessingWindow.CANVAS_SIZE*/).asBufferedImage();
 				imgToShow.setImage(thumbnail);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
