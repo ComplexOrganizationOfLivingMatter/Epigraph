@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 
@@ -21,7 +22,7 @@ import ij.gui.ImageCanvas;
  *
  *         Custom canvas to deal with zooming an panning
  */
-public class CustomCanvas extends ImageCanvas {
+public class CustomCanvas extends OverlayedImageCanvas {
 	/**
 	 * default serial version UID
 	 */

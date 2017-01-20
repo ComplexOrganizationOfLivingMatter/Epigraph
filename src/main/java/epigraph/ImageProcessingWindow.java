@@ -39,7 +39,6 @@ import ij.gui.ImageWindow;
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private ArrayList<GraphletImage> newGraphletImages;
 	private Integer Ibutton1, Ibutton2, IbtnCreateRoi, IbtnCalculateGraphlets, IbtnTestNeighbours, IbtnPickAColor,
 			IbtnAddToTable;
@@ -54,7 +53,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel colorPicked;
 	private JProgressBar progressBar;
 	private JTableModel tableInf;
-	private ImageCanvas canvas;
+	private CustomCanvas canvas;
 	private JPanel configPanel = new JPanel();
 	private Container buttonsPanel = new Container();
 	
@@ -66,13 +65,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * @param tableInfo
 	 */
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
-		super(raw_img, raw_img.getCanvas());
+		super(raw_img, new CustomCanvas(raw_img));
 
+		canvas = (CustomCanvas) getCanvas();
+		
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
 
 		newGraphletImage = new GraphletImage(raw_img);
+		removeAll();
 
 		addPanel();
 
@@ -82,15 +84,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * 
 	 */
 	void addPanel() {
-		canvas = getCanvas();
-		Dimension dim = new Dimension(Math.min(512, this.imp.getWidth()), Math.min(512, this.imp.getHeight()));
-		canvas.setMinimumSize(dim);
-		canvas.setSize(dim.width, dim.height);
 
 		canvas.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent ce) {
 				Rectangle r = canvas.getBounds();
-				canvas.setSize(r.width, r.height);
+				canvas.setDstDimensions(r.width, r.height);
 			}
 		});
 
@@ -190,7 +188,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.gridy = 0;
 		allConstraints.weightx = 0;
 		allConstraints.weighty = 0;
-
 		all.add(buttonsPanel, allConstraints);
 
 		allConstraints.gridx++;
