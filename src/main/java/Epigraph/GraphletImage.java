@@ -327,9 +327,16 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell : this.cells) {
-			if (cell.isValid_cell_5()) {
-				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
-				graphletsFinal.add(actualGraphlets);
+			if (validCells5Graphlets){
+				if (cell.isValid_cell_5()) {
+					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+					graphletsFinal.add(actualGraphlets);
+				}
+			} else {
+				if (cell.isValid_cell_4()) {
+					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+					graphletsFinal.add(actualGraphlets);
+				}
 			}
 		}
 
