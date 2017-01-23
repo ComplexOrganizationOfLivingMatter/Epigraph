@@ -393,7 +393,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				int result = JOptionPane.showConfirmDialog(this.getParent(), "Everything is ok?", "Confirm",
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION)
-					tableInf.addImage(newGraphletImage);
+					tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
 			}
 		}
 		if (e.getSource() == btnPickAColor) {

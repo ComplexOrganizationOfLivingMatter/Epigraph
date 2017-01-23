@@ -23,6 +23,7 @@ class JTableModel extends AbstractTableModel {
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfVisualizing;
+	private ArrayList<String> listOfModes;
 
 	private int[] rgbs;
 	
@@ -33,6 +34,7 @@ class JTableModel extends AbstractTableModel {
 		super();
 		allGraphletImages = new ArrayList<BasicGraphletImage>();
 		listOfVisualizing = new ArrayList<Boolean>();
+		listOfModes = new ArrayList<String>();
 	}
 
 	/**
@@ -65,6 +67,8 @@ class JTableModel extends AbstractTableModel {
 		case 4:
 			return allGraphletImages.get(row).getPercentageOfHexagons();
 		case 5:
+			return listOfModes.get(row);
+		case 6:
 			return listOfVisualizing.get(row);
 		}
 		return null;
@@ -107,6 +111,8 @@ class JTableModel extends AbstractTableModel {
 			allGraphletImages.get(row).setPercentageOfHexagons((float) value);
 			break;
 		case 5:
+			listOfModes.set(row, (String) value);
+		case 6:
 			listOfVisualizing.set(row, (Boolean) value);
 			break;
 		}
@@ -156,9 +162,10 @@ class JTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
-	public void addImage(BasicGraphletImage newImage){
+	public void addImage(BasicGraphletImage newImage, String graphletsMode){
 		allGraphletImages.add(newImage);
 		listOfVisualizing.add(true);
+		listOfModes.add(graphletsMode);
 
 		fireTableDataChanged();
 	}
