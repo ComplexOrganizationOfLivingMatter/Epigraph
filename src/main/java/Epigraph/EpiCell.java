@@ -23,6 +23,7 @@ public class EpiCell {
 	private int[] pixelsX;
 
 	private boolean selected;
+	private boolean withinTheRange;
 
 	/**
 	 * 
@@ -232,6 +233,20 @@ public class EpiCell {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	/**
+	 * @return whether or not the cell is within the range of a selected cell
+	 */
+	public boolean isWithinTheRange() {
+		return withinTheRange;
+	}
+
+	/**
+	 * @param withinTheRange if the cell is within the range of a selected cell
+	 */
+	public void setWithinTheRange(boolean withinTheRange) {
+		this.withinTheRange = withinTheRange;
 	}
 
 	/**

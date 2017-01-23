@@ -175,7 +175,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
-			JProgressBar progressBar, boolean selectionMode) {
+			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets) {
+		//TODO: Check when something is changed to rerun all these info
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -194,6 +195,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
+		int color;
 		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
 			if (this.cells.get(i).isValid_cell() && (!selectionMode || this.cells.get(i).isSelected())) {
@@ -220,15 +222,20 @@ public class GraphletImage extends BasicGraphletImage {
 					break;
 				}
 				validCells++;
+			} else if (selectionMode){
+				if (modeNumGraphlets < 2){
+					this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
+				} else {
+					this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
+				}
 			} else {
 				colorOfCell = Color.BLACK;
 			}
 
 			actualPixels = this.cells.get(i).getPixels();
-			int color;
+			color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
+					| (colorOfCell.getBlue() & 0xFF));
 			for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
-				color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
-						| (colorOfCell.getBlue() & 0xFF));
 				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
 			}
 		}
@@ -275,9 +282,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar, boolean selectionMode) {
-		if (this.percentageOfHexagons == -1) {
-			testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode);
-		}
+		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets);
 
 		progressBar.setValue(70);
 
@@ -292,13 +297,7 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
 		}
-
-		// int numValidCells = 0;
-		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
-			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
-		}
-
+		
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
@@ -322,18 +321,26 @@ public class GraphletImage extends BasicGraphletImage {
 			break;
 		}
 
+		
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
+			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
+		}
+
+		
+
 		Arrays.sort(graphletsWeDontWant);
 
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell : this.cells) {
 			if (validCells5Graphlets){
-				if (cell.isValid_cell_5()) {
+				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
 					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
 					graphletsFinal.add(actualGraphlets);
 				}
 			} else {
-				if (cell.isValid_cell_4()) {
+				if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected())) {
 					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
 					graphletsFinal.add(actualGraphlets);
 				}
@@ -446,6 +453,30 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param indexEpiCell
+	 * @param length
+	 * @return
+	 */
+	private boolean selectedCellWithinAGivenLength(int indexEpiCell, int length) {
+		if (!this.cells.get(indexEpiCell).isSelected()) {
+			if (length > 1) {
+				HashSet<Integer> neighbours = this.cells.get(indexEpiCell).getNeighbours();
+				Iterator<Integer> itNeigh = neighbours.iterator();
+				int neighbourActual = -1;
+				while (itNeigh.hasNext()) {
+					neighbourActual = itNeigh.next();
+					if (selectedCellWithinAGivenLength(neighbourActual, length - 1))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

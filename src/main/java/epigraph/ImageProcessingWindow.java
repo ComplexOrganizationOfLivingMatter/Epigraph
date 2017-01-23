@@ -390,10 +390,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			ArrayList<String> polDistri;
 			if (roiManager.getSelectedRoisAsArray().length <= 0) {
 				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, false);
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex());
 			} else {
 				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, true);
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, true, cbGraphletsMode.getSelectedIndex());
 			}
 
 			lbSquares.setText(polDistri.get(0));
