@@ -364,13 +364,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnCalculateGraphlets) {
-			if (newGraphletImage.getDistanceGDDH() == -1) {
-				btnTestNeighbours.setEnabled(false);
-				btnCalculateGraphlets.setEnabled(false);
-				Task task = new Task();
-				task.execute();
-				btnAddToTable.setEnabled(true);
-			}
+			btnTestNeighbours.setEnabled(false);
+			btnCalculateGraphlets.setEnabled(false);
+			Task task = new Task();
+			task.execute();
 			newGraphletImage.setLabelName(tfImageName.getText());
 			newGraphletImage.setColor(colorPicked.getBackground());
 		}
@@ -484,8 +481,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	public class Task extends SwingWorker<Void, Void> {
-
-		/*
+		/**
 		 * Main task. Executed in background thread.
 		 */
 		@Override
@@ -494,7 +490,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length <= 0, overlayResult);
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length > 0, overlayResult);
 			} else {
 				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
 						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
@@ -503,7 +499,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			return null;
 		}
 
-		/*
+		/**
 		 * Executed in event dispatching thread
 		 */
 		@Override
@@ -511,6 +507,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			Toolkit.getDefaultToolkit().beep();
 			btnCalculateGraphlets.setEnabled(true);
 			btnTestNeighbours.setEnabled(true);
+			btnAddToTable.setEnabled(true);
 		}
 	}
 }
