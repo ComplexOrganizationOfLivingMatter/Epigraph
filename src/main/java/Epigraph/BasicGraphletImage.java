@@ -48,6 +48,14 @@ public class BasicGraphletImage {
 		this.labelName = "Wrong name";
 		this.percentageOfHexagons = -1;
 	}
+	
+	public BasicGraphletImage(BasicGraphletImage bci){
+		this.color = bci.color;
+		this.distanceGDDH = bci.distanceGDDH;
+		this.distanceGDDRV = bci.distanceGDDRV;
+		this.labelName = bci.labelName;
+		this.percentageOfHexagons = bci.percentageOfHexagons;
+	}
 
 	/**
 	 * @param distanceGDDRV
