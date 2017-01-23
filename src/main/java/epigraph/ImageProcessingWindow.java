@@ -50,7 +50,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private GraphletImage newGraphletImage;
 	private JTextField tfImageName;
-	private ImagePlus imgToShow, actualRawImage;
 	private JButton button1, button2, btnCreateRoi, btnCalculateGraphlets, btnTestNeighbours, btnPickAColor,
 			btnAddToTable;
 	private JComboBox<String> cbSelectedShape, cbGraphletsMode;
@@ -436,9 +435,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		
 		if (e.getSource() == btnToggleOverlay) {
-			
+			imp.setHideOverlay(!imp.getHideOverlay());
 		}
 
+		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
