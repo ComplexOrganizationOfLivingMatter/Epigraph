@@ -2,6 +2,7 @@ package epigraph;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,6 +16,9 @@ import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.jzy3d.chart.Chart;
@@ -27,7 +31,9 @@ import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import ij.plugin.Slicer;
 import util.opencsv.CSVReader;
+import javax.swing.JSlider;
 
 /**
  * 
@@ -48,12 +54,27 @@ public class VisualizingWindow extends JDialog {
 
 	private Chart chart;
 
+	private JSlider slSizeOfPoints;
+
 	/**
 	 * 
 	 */
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-		setModal(true);
+		
+		scatterpanel = new JPanel(new GridLayout(1, 0));
+		add(scatterpanel);
+		
+		slSizeOfPoints = new JSlider(3, 20, 6);
+		slSizeOfPoints.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				scatter.setWidth((float) slSizeOfPoints.getValue());
+			}
+		});
+		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
+		
 		chart = new SwingChart();
 
 		int size_array = tableInfo.getRowCount();
@@ -95,10 +116,8 @@ public class VisualizingWindow extends JDialog {
 			}
 		}
 
-		// Xf represent the size of dots
-		scatter = new Scatter(points, colors, 6f);
+		scatter = new Scatter(points, colors, (float)slSizeOfPoints.getValue());
 
-		// Nicest show dots shape, Advanced show squares shape
 		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
 		chart.getScene().add(scatter);
 		chart.addMouseCameraController();
@@ -115,12 +134,12 @@ public class VisualizingWindow extends JDialog {
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
 
-		scatterpanel = new JPanel(new BorderLayout());
-		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-		setContentPane(scatterpanel);
-
+		
+		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);		
+		
+		
 		pack();
-		setBounds(0, 0, 700, 700);
+		setBounds(0, 0, 1000, 1000);
 
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
