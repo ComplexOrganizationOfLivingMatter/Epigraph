@@ -225,7 +225,7 @@ public class EpiCell {
 	 * @return the selected
 	 */
 	public boolean isSelected() {
-		return selected;
+		return selected && valid_cell;
 	}
 
 	/**
