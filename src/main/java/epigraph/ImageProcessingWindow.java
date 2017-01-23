@@ -158,7 +158,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(cbGraphletsMode, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(btnCalculateGraphlets, genericPanelConstrainst);
+		genericPanelConstrainst.gridx++;
+		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
+		genericPanelConstrainst.gridx--;
 		graphletsPanel.add(progressBar, genericPanelConstrainst);
 
 		/* LEFT PANEL */
@@ -415,7 +418,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 							cbGraphletsMode.getSelectedIndex(), overlayResult);
 			} else {
 				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex(), overlayResult);
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex(),
+						overlayResult);
 			}
 
 			lbSquares.setText(polDistri.get(0));
@@ -442,7 +446,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (e.getSource() == btnToggleOverlay) {
-			if (imp.getOverlay() == null && overlayResult != null){
+			if (imp.getOverlay() == null && overlayResult != null) {
 				canvas.addOverlay(overlayResult);
 			} else {
 				canvas.clearOverlay();
@@ -460,7 +464,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 */
 	private void addROI() {
 		Roi r = this.getImagePlus().getRoi();
-		if (r != null){
+		if (r != null) {
 			for (Point point : r) {
 				int[] pixelInfo = newGraphletImage.getLabelledImage().getPixel(point.x, point.y);
 				this.newGraphletImage.addCellToSelected(pixelInfo[0]);
@@ -487,13 +491,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		@Override
 		public Void doInBackground() {
 			setProgress(0);
-			Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-			if (roiArray.length <= 0) {
+			if (roiManager != null) {
+				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length <= 0, overlayResult);
 			} else {
 				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, true, overlayResult);
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
 			}
 
 			return null;
