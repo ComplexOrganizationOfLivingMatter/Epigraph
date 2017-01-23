@@ -163,7 +163,7 @@ class JTableModel extends AbstractTableModel {
 	}
 	
 	public void addImage(BasicGraphletImage newImage, String graphletsMode){
-		allGraphletImages.add(newImage);
+		allGraphletImages.add(new BasicGraphletImage(newImage));
 		listOfVisualizing.add(true);
 		listOfModes.add(graphletsMode);
 
