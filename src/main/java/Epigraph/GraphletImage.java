@@ -14,6 +14,8 @@ import java.util.Iterator;
 
 import javax.swing.JProgressBar;
 
+import fiji.util.gui.OverlayedImageCanvas;
+import fiji.util.gui.OverlayedImageCanvas.Overlay;
 import ij.ImagePlus;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
@@ -228,6 +230,25 @@ public class GraphletImage extends BasicGraphletImage {
 				} else {
 					this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
 				}
+				
+				switch (this.cells.get(i).getNeighbours().size()) {
+				case 4:
+					percentageOfSquares++;
+					break;
+				case 5:
+					percentageOfPentagons++;
+					colorOfCell = Color.green;
+					break;
+				case 6:
+					percentageOfHexagons++;
+					break;
+				case 7:
+					percentageOfHeptagons++;
+					break;
+				case 8:
+					percentageOfOctogons++;
+					break;
+				}
 			} else {
 				colorOfCell = Color.BLACK;
 			}
@@ -254,7 +275,9 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<String> percentajesList = new ArrayList<String>();
 
 		if (imgToShow != null) {
-			imgToShow.setProcessor(colorImgToShow);
+			OverlayedImageCanvas colors = new OverlayedImageCanvas(new ImagePlus("", colorImgToShow));
+			imgToShow.setOverlay(colors.getOverlay());
+			imgToShow.setHideOverlay(false);
 
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);

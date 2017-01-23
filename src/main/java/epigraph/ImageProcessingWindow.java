@@ -80,6 +80,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private RoiManager roiManager;
 	private JButton btnSelectCells;
 	private JPanel roiPanel;
+	private JButton btnToggleOverlay;
 
 	/**
 	 * 
@@ -213,11 +214,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		cbSelectedShape = new JComboBox<String>();
 		cbSelectedShape.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
 		cbSelectedShape.setSelectedIndex(0);
-
+		
 		progressBar = new JProgressBar();
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.addActionListener(this);
+		
+		cbGraphletsMode = new JComboBox<String>();
+		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (25 graphlets)",
+				"Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
+		cbGraphletsMode.setSelectedIndex(0);
 
 		btnAddToTable = new JButton("add to table");
 		btnAddToTable.setEnabled(false);
@@ -237,6 +243,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(this);
+		
+		btnToggleOverlay = new JButton("Toggle overlay");
+		btnToggleOverlay.addActionListener(this);
 
 		tfImageName = new JTextField();
 
@@ -257,6 +266,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		lbOctogons = new JLabel("");
 		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		
 
 	}
 
@@ -388,12 +399,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		if (e.getSource() == btnTestNeighbours) {
 			ArrayList<String> polDistri;
-			if (roiManager.getSelectedRoisAsArray().length <= 0) {
-				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex());
+			if (roiManager != null) {
+				if (roiManager.getSelectedRoisAsArray().length > 0)
+					polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+							(int) inputRadiusNeigh.getValue(), imp, progressBar, true,
+							cbGraphletsMode.getSelectedIndex());
+				else
+					polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+							(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex());
 			} else {
 				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, true, cbGraphletsMode.getSelectedIndex());
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex());
 			}
 
 			lbSquares.setText(polDistri.get(0));
@@ -417,6 +433,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 				btnSelectCells.setText("Select cells");
 			}
+		}
+		
+		if (e.getSource() == btnToggleOverlay) {
+			
 		}
 
 		ImageCanvas ic = imp.getCanvas();
