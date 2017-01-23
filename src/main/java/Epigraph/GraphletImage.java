@@ -224,6 +224,7 @@ public class GraphletImage extends BasicGraphletImage {
 						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
 						break;
 					}
+					validCells++;
 				} else if (selectionMode) { //Some cells are selected 
 					if (modeNumGraphlets < 2) {
 						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
@@ -233,6 +234,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 					if (this.cells.get(i).isWithinTheRange()) {
 						colorOfCell = Color.red;
+						validCells++;
 					} else {
 						colorOfCell = Color.black;
 					}
@@ -255,7 +257,6 @@ public class GraphletImage extends BasicGraphletImage {
 						break;
 					}
 				}
-				validCells++;
 			} else {
 				colorOfCell = Color.BLACK;
 			}
