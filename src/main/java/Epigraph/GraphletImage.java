@@ -200,59 +200,60 @@ public class GraphletImage extends BasicGraphletImage {
 		int color;
 		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
-			if (this.cells.get(i).isValid_cell() && (!selectionMode || this.cells.get(i).isSelected())) {
-				switch (this.cells.get(i).getNeighbours().size()) {
-				case 4:
-					percentageOfSquares++;
-					colorOfCell = new Color((int) 255, (int) (0.4 * 255), (int) (0 * 255));
-					break;
-				case 5:
-					percentageOfPentagons++;
-					colorOfCell = Color.green;
-					break;
-				case 6:
-					percentageOfHexagons++;
-					colorOfCell = new Color(0, (int) (0.4 * 255), (int) (1 * 255));
-					break;
-				case 7:
-					percentageOfHeptagons++;
-					colorOfCell = new Color((int) (0.6 * 255), 0 * 255, 1 * 255);
-					break;
-				case 8:
-					percentageOfOctogons++;
-					colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
-					break;
-				}
-				validCells++;
-			} else if (selectionMode) {
-				if (modeNumGraphlets < 2) {
-					this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
-				} else {
-					this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
-				}
-				
-				if (this.cells.get(i).isWithinTheRange()){
-					colorOfCell = Color.red;
-				} else {
-					colorOfCell = Color.black;
-				}
-				
-				switch (this.cells.get(i).getNeighbours().size()) {
-				case 4:
-					percentageOfSquares++;
-					break;
-				case 5:
-					percentageOfPentagons++;
-					break;
-				case 6:
-					percentageOfHexagons++;
-					break;
-				case 7:
-					percentageOfHeptagons++;
-					break;
-				case 8:
-					percentageOfOctogons++;
-					break;
+			if (this.cells.get(i).isValid_cell()) {
+				if (!selectionMode || this.cells.get(i).isSelected()) {
+					switch (this.cells.get(i).getNeighbours().size()) {
+					case 4:
+						percentageOfSquares++;
+						colorOfCell = new Color((int) 255, (int) (0.4 * 255), (int) (0 * 255));
+						break;
+					case 5:
+						percentageOfPentagons++;
+						colorOfCell = Color.green;
+						break;
+					case 6:
+						percentageOfHexagons++;
+						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (1 * 255));
+						break;
+					case 7:
+						percentageOfHeptagons++;
+						colorOfCell = new Color((int) (0.6 * 255), 0 * 255, 1 * 255);
+						break;
+					case 8:
+						percentageOfOctogons++;
+						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
+						break;
+					}
+				} else if (selectionMode) { //Some cells are selected 
+					if (modeNumGraphlets < 2) {
+						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
+					} else {
+						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
+					}
+
+					if (this.cells.get(i).isWithinTheRange()) {
+						colorOfCell = Color.red;
+					} else {
+						colorOfCell = Color.black;
+					}
+
+					switch (this.cells.get(i).getNeighbours().size()) {
+					case 4:
+						percentageOfSquares++;
+						break;
+					case 5:
+						percentageOfPentagons++;
+						break;
+					case 6:
+						percentageOfHexagons++;
+						break;
+					case 7:
+						percentageOfHeptagons++;
+						break;
+					case 8:
+						percentageOfOctogons++;
+						break;
+					}
 				}
 				validCells++;
 			} else {
@@ -478,6 +479,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @return
 	 */
 	private boolean selectedCellWithinAGivenLength(int indexEpiCell, int length) {
+		if (this.cells.get(indexEpiCell).isValid_cell() == false)
+			return false;
+
 		if (!this.cells.get(indexEpiCell).isSelected()) {
 			if (length > 1) {
 				HashSet<Integer> neighbours = this.cells.get(indexEpiCell).getNeighbours();
