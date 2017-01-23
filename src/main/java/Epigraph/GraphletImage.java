@@ -177,7 +177,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
-			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets) {
+			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
 		// TODO: Check when something is changed to rerun all these info
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
@@ -254,6 +254,7 @@ public class GraphletImage extends BasicGraphletImage {
 					percentageOfOctogons++;
 					break;
 				}
+				validCells++;
 			} else {
 				colorOfCell = Color.BLACK;
 			}
@@ -280,7 +281,7 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<String> percentajesList = new ArrayList<String>();
 
 		if (imgToShow != null) {
-			ImageOverlay overlay = new ImageOverlay(colorImgToShow);
+			overlay = new ImageOverlay(colorImgToShow);
 			((OverlayedImageCanvas) imgToShow.getCanvas()).clearOverlay();
 			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlay);
 
@@ -299,8 +300,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
-			boolean selectionMode) {
-		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets);
+			boolean selectionMode, ImageOverlay overlay) {
+		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
 
 		progressBar.setValue(70);
 
