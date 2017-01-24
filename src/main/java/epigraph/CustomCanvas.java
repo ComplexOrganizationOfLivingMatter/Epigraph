@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
-import ij.gui.ImageCanvas;
 
 /**
  * @author Ignacio Arganda-Carreras (iargandacarreras@gmail.com), Verena Kaynig,
