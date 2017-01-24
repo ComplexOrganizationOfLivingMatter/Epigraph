@@ -13,14 +13,9 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * @author Luisma
+ * @author Pedro Gomez-Galvez
  *
  */
-/*
- * ColorRenderer.java (compiles with releases 1.2, 1.3, and 1.4) is used by
- * TableDialogEditDemo.java.
- */
-
 class ColorRenderer extends JLabel implements TableCellRenderer {
 	/**
 	 * 

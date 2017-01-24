@@ -45,6 +45,11 @@ import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.plugin.frame.RoiManager;
 
+/**
+ * 
+ * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
+ *
+ */
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -480,6 +485,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		this.all.repaint();
 	}
 
+	/**
+	 * 
+	 * @author Pablo Vicente-Munuera
+	 *
+	 */
 	public class Task extends SwingWorker<Void, Void> {
 		/**
 		 * Main task. Executed in background thread.
