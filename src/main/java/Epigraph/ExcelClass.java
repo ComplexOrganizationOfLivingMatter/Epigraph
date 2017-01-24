@@ -7,12 +7,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,6 +17,11 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
+/**
+ * 
+ * @author Pedro Gomez-Galvez
+ *
+ */
 public class ExcelClass {
 
 	private ArrayList<String> imageName;
@@ -29,6 +31,7 @@ public class ExcelClass {
 	private ArrayList<Float> R;
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
+	private ArrayList<String> graphletsMode;
 
 	/**
 	 * 
@@ -42,74 +45,163 @@ public class ExcelClass {
 		this.R = new ArrayList<Float>();
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
+		this.graphletsMode = new ArrayList<String>();
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param imageName
+	 * @param gddh
+	 * @param gddrv
+	 * @param hexagonsPercentage
+	 * @param r
+	 * @param g
+	 * @param b
+	 * @param graphletsMode
+	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
-			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b) {
+			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
+			ArrayList<String> graphletsMode) {
 		super();
 		this.imageName = imageName;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
 		this.hexagonsPercentage = hexagonsPercentage;
-		R = r;
-		G = g;
-		B = b;
+		this.R = r;
+		this.G = g;
+		this.B = b;
+		this.graphletsMode = graphletsMode;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<String> getImageName() {
 		return imageName;
 	}
 
+	/**
+	 * 
+	 * @param imageName
+	 */
 	public void setImageName(ArrayList<String> imageName) {
 		this.imageName = imageName;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getGddh() {
 		return gddh;
 	}
 
+	/**
+	 * 
+	 * @param gddh
+	 */
 	public void setGddh(ArrayList<Float> gddh) {
 		this.gddh = gddh;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getGddrv() {
 		return gddrv;
 	}
 
+	/**
+	 * 
+	 * @param gddrv
+	 */
 	public void setGddrv(ArrayList<Float> gddrv) {
 		this.gddrv = gddrv;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getHexagonsPercentage() {
 		return hexagonsPercentage;
 	}
 
+	/**
+	 * 
+	 * @param hexagonsPercentage
+	 */
 	public void setHexagonsPercentage(ArrayList<Float> hexagonsPercentage) {
 		this.hexagonsPercentage = hexagonsPercentage;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getR() {
 		return R;
 	}
 
+	/**
+	 * 
+	 * @param r
+	 */
 	public void setR(ArrayList<Float> r) {
 		R = r;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getG() {
 		return G;
 	}
 
+	/**
+	 * 
+	 * @param g
+	 */
 	public void setG(ArrayList<Float> g) {
 		G = g;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Float> getB() {
 		return B;
 	}
 
+	/**
+	 * 
+	 * @param b
+	 */
 	public void setB(ArrayList<Float> b) {
 		B = b;
+	}
+
+	/**
+	 * 
+	 */
+	/**
+	 * @return the graphletsMode
+	 */
+	public ArrayList<String> getGraphletsMode() {
+		return graphletsMode;
+	}
+
+	/**
+	 * @param graphletsMode
+	 *            the graphletsMode to set
+	 */
+	public void setGraphletsMode(ArrayList<String> graphletsMode) {
+		this.graphletsMode = graphletsMode;
 	}
 
 	/**
@@ -119,18 +211,18 @@ public class ExcelClass {
 	 */
 	public ArrayList<Object> getRow(int row) {
 		ArrayList<Object> rowExcel = new ArrayList<Object>();
-		rowExcel.add(imageName.get(row));
-		rowExcel.add(gddh.get(row));
-		rowExcel.add(gddrv.get(row));
-		rowExcel.add(hexagonsPercentage.get(row));
-		rowExcel.add(R.get(row));
-		rowExcel.add(G.get(row));
-		rowExcel.add(B.get(row));
+		rowExcel.add(this.imageName.get(row));
+		rowExcel.add(this.gddh.get(row));
+		rowExcel.add(this.gddrv.get(row));
+		rowExcel.add(this.hexagonsPercentage.get(row));
+		rowExcel.add(this.R.get(row));
+		rowExcel.add(this.G.get(row));
+		rowExcel.add(this.B.get(row));
+		rowExcel.add(this.graphletsMode.get(row));
 
 		return rowExcel;
 	}
 
-	
 	/**
 	 * 
 	 * @param filename
@@ -195,6 +287,8 @@ public class ExcelClass {
 							case 6:
 								this.B.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
+							case 7:
+								this.graphletsMode.add(cell.getStringCellValue());
 
 							}
 
@@ -220,8 +314,11 @@ public class ExcelClass {
 
 	}
 
-	/* EXPORT DATA TO EXCEL */
-
+	/**
+	 * EXPORT DATA TO EXCEL
+	 * 
+	 * @param fname
+	 */
 	public void exportData(String fname) {
 
 		// Blank workbook
@@ -232,7 +329,8 @@ public class ExcelClass {
 
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("1", new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B" });
+		data.put("1",
+				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode" });
 
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
 		otherSymbols.setDecimalSeparator(',');
@@ -246,8 +344,8 @@ public class ExcelClass {
 
 			data.put(j.toString(),
 					new Object[] { imageName.get(i), df1.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
-							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)),
-							df3.format(B.get(i)) });
+							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)), df3.format(B.get(i)),
+							this.graphletsMode.get(i) });
 
 		}
 
