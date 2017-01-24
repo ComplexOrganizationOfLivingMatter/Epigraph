@@ -187,50 +187,65 @@ public class MainWindow extends JPanel {
 					for (int row = 0; row < excelclass.getImageName().size(); row++) {
 
 						if (flat == 1) {
-							tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-									(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-									new Color(Math.round((float) excelclass.getRow(row).get(4)),
-											Math.round((float) excelclass.getRow(row).get(5)),
-											Math.round((float) excelclass.getRow(row).get(6))),
-									(String) excelclass.getRow(row).get(0)));
+							tableInfo.addImage(
+									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+											(float) excelclass.getRow(row).get(1),
+											(float) excelclass.getRow(row).get(3),
+											new Color(Math.round((float) excelclass.getRow(row).get(4)),
+													Math.round((float) excelclass.getRow(row).get(5)), Math
+															.round((float) excelclass.getRow(row).get(6))),
+											(String) excelclass.getRow(row).get(0)),
+									(String) excelclass.getRow(row).get(7));
 						} else if (flat == 2) {
-							tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-									(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-									new Color((float) excelclass.getRow(row).get(4),
-											(float) excelclass.getRow(row).get(5),
-											(float) excelclass.getRow(row).get(6)),
-									(String) excelclass.getRow(row).get(0)));
+							tableInfo.addImage(
+									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+											(float) excelclass.getRow(row).get(1),
+											(float) excelclass.getRow(row).get(3),
+											new Color((float) excelclass.getRow(row).get(4),
+													(float) excelclass.getRow(row).get(5), (float) excelclass
+															.getRow(row).get(6)),
+											(String) excelclass.getRow(row).get(0)),
+									(String) excelclass.getRow(row).get(7));
 						} else {
 							if ((float) excelclass.getRow(row).get(4) > 1.0
 									|| (float) excelclass.getRow(row).get(5) > 1.0
 									|| (float) excelclass.getRow(row).get(6) > 1.0) {
 								flat = 1;
-								tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color(Math.round((float) excelclass.getRow(row).get(4)),
-												Math.round((float) excelclass.getRow(row).get(5)),
-												Math.round((float) excelclass.getRow(row).get(6))),
-										(String) excelclass.getRow(row).get(0)));
+								tableInfo.addImage(
+										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+												(float) excelclass.getRow(row).get(1),
+												(float) excelclass.getRow(row).get(3),
+												new Color(Math.round((float) excelclass.getRow(row).get(4)),
+														Math.round((float) excelclass.getRow(row).get(5)), Math
+																.round((float) excelclass.getRow(row).get(6))),
+												(String) excelclass.getRow(row).get(0)),
+										(String) excelclass.getRow(row).get(7));
 							} else if (((float) excelclass.getRow(row).get(4) < 1.0
 									& (float) excelclass.getRow(row).get(4) > 1.0)
 									|| ((float) excelclass.getRow(row).get(5) < 1.0
 											& (float) excelclass.getRow(row).get(5) > 0.0)
 									|| ((float) excelclass.getRow(row).get(6) < 1.0
 											& (float) excelclass.getRow(row).get(6) > 0.0)) {
-								tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color((float) excelclass.getRow(row).get(4),
-												(float) excelclass.getRow(row).get(5),
-												(float) excelclass.getRow(row).get(6)),
-										(String) excelclass.getRow(row).get(0)));
+								tableInfo.addImage(
+										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+												(float) excelclass.getRow(row).get(1),
+												(float) excelclass.getRow(row).get(3),
+												new Color((float) excelclass.getRow(row).get(4),
+														(float) excelclass.getRow(row).get(5), (float) excelclass
+																.getRow(row).get(6)),
+												(String) excelclass.getRow(row).get(0)),
+										(String) excelclass.getRow(row).get(7));
 								flat = 2;
 							} else {
-								tableInfo.addImage(new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color((float) excelclass.getRow(row).get(4),
-												(float) excelclass.getRow(row).get(5),
-												(float) excelclass.getRow(row).get(6)),
-										(String) excelclass.getRow(row).get(0)));
+								tableInfo.addImage(
+										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+												(float) excelclass.getRow(row).get(1),
+												(float) excelclass.getRow(row).get(3),
+												new Color((float) excelclass.getRow(row).get(4),
+														(float) excelclass.getRow(row).get(5), (float) excelclass
+																.getRow(row).get(6)),
+												(String) excelclass.getRow(row).get(0)),
+										(String) excelclass.getRow(row).get(7));
 							}
 						}
 

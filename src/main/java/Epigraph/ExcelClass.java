@@ -289,7 +289,7 @@ public class ExcelClass {
 								break;
 							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
-
+								break;
 							}
 
 						}
@@ -301,7 +301,6 @@ public class ExcelClass {
 							this.R.add((float) 0);
 							this.G.add((float) 0);
 							this.B.add((float) 0);
-
 						}
 
 					}
