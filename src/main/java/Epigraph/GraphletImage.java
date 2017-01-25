@@ -224,8 +224,9 @@ public class GraphletImage extends BasicGraphletImage {
 						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
 						break;
 					}
+
 					validCells++;
-				} else if (selectionMode) { //Some cells are selected 
+				} else if (selectionMode) { // Some cells are selected
 					if (modeNumGraphlets < 2) {
 						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
 					} else {
@@ -235,26 +236,26 @@ public class GraphletImage extends BasicGraphletImage {
 					if (this.cells.get(i).isWithinTheRange()) {
 						colorOfCell = Color.red;
 						validCells++;
+
+						switch (this.cells.get(i).getNeighbours().size()) {
+						case 4:
+							percentageOfSquares++;
+							break;
+						case 5:
+							percentageOfPentagons++;
+							break;
+						case 6:
+							percentageOfHexagons++;
+							break;
+						case 7:
+							percentageOfHeptagons++;
+							break;
+						case 8:
+							percentageOfOctogons++;
+							break;
+						}
 					} else {
 						colorOfCell = Color.black;
-					}
-
-					switch (this.cells.get(i).getNeighbours().size()) {
-					case 4:
-						percentageOfSquares++;
-						break;
-					case 5:
-						percentageOfPentagons++;
-						break;
-					case 6:
-						percentageOfHexagons++;
-						break;
-					case 7:
-						percentageOfHeptagons++;
-						break;
-					case 8:
-						percentageOfOctogons++;
-						break;
 					}
 				}
 			} else {
