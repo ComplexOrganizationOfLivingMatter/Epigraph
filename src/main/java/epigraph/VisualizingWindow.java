@@ -37,7 +37,7 @@ import javax.swing.JSlider;
 
 /**
  * 
- * @author Pedro Gomez-Galvez
+ * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
  *
  */
 public class VisualizingWindow extends JDialog {
@@ -61,10 +61,10 @@ public class VisualizingWindow extends JDialog {
 	 */
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-		
+
 		scatterpanel = new JPanel(new GridLayout(1, 0));
 		add(scatterpanel);
-		
+
 		slSizeOfPoints = new JSlider(3, 20, 6);
 		slSizeOfPoints.addChangeListener(new ChangeListener() {
 			@Override
@@ -80,7 +80,8 @@ public class VisualizingWindow extends JDialog {
 		int size_array = tableInfo.getRowCount();
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
-			Reader reader = new InputStreamReader(Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/Total.txt"));
+			Reader reader = new InputStreamReader(
+					Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/Total.txt"));
 			CSVReader csvReader = new CSVReader(reader, '\t');
 			voronoiReference = csvReader.readAll();
 
@@ -92,13 +93,13 @@ public class VisualizingWindow extends JDialog {
 			e.printStackTrace();
 		}
 
-		
 		Coord3d[] points = new Coord3d[size_array + voronoiReference.size()];
 		Color[] colors = new Color[size_array + voronoiReference.size()];
 		for (int i = 0; i < voronoiReference.size(); i++) {
 			// creating coord array
 			String[] row = voronoiReference.get(i);
-			points[i] = new Coord3d(Float.parseFloat(row[1].replace(',', '.')), Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[3].replace(',', '.')));
+			points[i] = new Coord3d(Float.parseFloat(row[1].replace(',', '.')),
+					Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[3].replace(',', '.')));
 			// creating color array
 			colors[i] = new Color(0, 0, 0);
 		}
@@ -106,17 +107,19 @@ public class VisualizingWindow extends JDialog {
 		for (int i = 0; i < size_array; i++) {
 			if (tableInfo.getListOfVisualizing().get(i)) {
 				// creating coord array
-				points[i + voronoiReference.size()] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+				points[i + voronoiReference.size()] = new Coord3d(
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[i + voronoiReference.size()] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
+				colors[i + voronoiReference.size()] = new Color(
+						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
 			}
 		}
 
-		scatter = new Scatter(points, colors, (float)slSizeOfPoints.getValue());
+		scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 
 		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
 		chart.getScene().add(scatter);
@@ -134,10 +137,8 @@ public class VisualizingWindow extends JDialog {
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
 
-		
-		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);		
-		
-		
+		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
+
 		pack();
 		setBounds(0, 0, 1000, 1000);
 
