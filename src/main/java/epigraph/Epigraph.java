@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 
 import ij.IJ;
 import ij.ImageJ;
-import ij.ImagePlus;
 import ij.plugin.PlugIn;
 
 /**
@@ -27,6 +26,10 @@ public class Epigraph implements PlugIn {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins
 		// menu
@@ -47,6 +50,7 @@ public class Epigraph implements PlugIn {
 	 * Plugin run method
 	 */
 	public void run(String arg) {
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
 		// Build GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -54,6 +58,20 @@ public class Epigraph implements PlugIn {
 				mainWindow.createAndShowGUI();
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 */
+	public static void callToolbarPoint(){
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
+	}
+	
+	/**
+	 * 
+	 */
+	public static void callToolbarRectangle(){
+		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.RECTANGLE);
 	}
 
 }

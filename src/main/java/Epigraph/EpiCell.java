@@ -23,6 +23,7 @@ public class EpiCell {
 	private int[] pixelsX;
 
 	private boolean selected;
+	private boolean withinTheRange;
 
 	/**
 	 * 
@@ -37,6 +38,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -53,6 +55,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -78,6 +81,7 @@ public class EpiCell {
 		this.graphlets = null;
 		this.pixelsY = null;
 		this.pixelsX = null;
+		this.selected = false;
 	}
 
 	/**
@@ -221,7 +225,7 @@ public class EpiCell {
 	 * @return the selected
 	 */
 	public boolean isSelected() {
-		return selected;
+		return selected && valid_cell;
 	}
 
 	/**
@@ -229,6 +233,20 @@ public class EpiCell {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	/**
+	 * @return whether or not the cell is within the range of a selected cell
+	 */
+	public boolean isWithinTheRange() {
+		return withinTheRange;
+	}
+
+	/**
+	 * @param withinTheRange if the cell is within the range of a selected cell
+	 */
+	public void setWithinTheRange(boolean withinTheRange) {
+		this.withinTheRange = withinTheRange;
 	}
 
 	/**
@@ -291,11 +309,8 @@ public class EpiCell {
 		for (int x = 0; x < this.pixelsX.length; x++){
 			if (this.pixelsX[x] == x1){
 				if (this.pixelsY[x] == y1){
-					this.setSelected(!this.isSelected());
-					if (this.isSelected())
-						return 1;
-					else
-						return 0;
+					this.setSelected(true);
+					return 1;
 				}
 			}
 		}

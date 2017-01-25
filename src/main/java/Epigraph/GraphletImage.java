@@ -4,8 +4,6 @@
 package epigraph;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -14,24 +12,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import com.google.common.primitives.Ints;
+import javax.swing.JProgressBar;
 
+import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
-
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.binary.conncomp.*;
-import inra.ijpb.label.*;
-import inra.ijpb.morphology.MinimaAndMaxima3D;
-import inra.ijpb.morphology.Morphology;
-import inra.ijpb.morphology.Strel3D;
+import inra.ijpb.binary.conncomp.FloodFillComponentsLabeling;
+import inra.ijpb.label.LabelImages;
 import inra.ijpb.morphology.strel.SquareStrel;
-import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * 
@@ -66,6 +57,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
+
 	private ArrayList<EpiCell> cells;
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
@@ -76,7 +68,6 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public GraphletImage(ImagePlus img) {
 		super();
-
 		this.labelName = img.getFileInfo().url;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
@@ -100,8 +91,23 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
-		
+
 		preprocessImage(img);
+	}
+
+	/**
+	 * @return the l_img
+	 */
+	public ImagePlus getLabelledImage() {
+		return l_img;
+	}
+
+	/**
+	 * @param l_img
+	 *            the l_img to set
+	 */
+	public void setLabelledImage(ImagePlus l_img) {
+		this.l_img = l_img;
 	}
 
 	public void preprocessImage(ImagePlus img) {
@@ -132,18 +138,19 @@ public class GraphletImage extends BasicGraphletImage {
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
 
+		ImagePlus imgTemp = new ImagePlus("", img.getChannelProcessor());
 		// Labelling image
-		ByteProcessor btp = LabelImages.createLabelImage(img.getChannelProcessor());
+		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
 																				// connectivity
-		img.setProcessor(ffcl.computeLabels(img.getChannelProcessor()));
-		this.l_img = new ImagePlus("", img.getChannelProcessor());
+		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
+		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 
 		// get unique labels from labelled imageplus
-		int[] labelunique = LabelImages.findAllLabels(img);
+		int[] labelunique = LabelImages.findAllLabels(imgTemp);
 
 		// get image in a matrix of labels
-		int[][] matrixImg = img.getChannelProcessor().getIntArray();
+		int[][] matrixImg = imgTemp.getChannelProcessor().getIntArray();
 
 		// Create epicells
 		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
@@ -151,8 +158,8 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// Add pixel to each epicell
-		int W = img.getWidth();
-		int H = img.getHeight();
+		int W = imgTemp.getWidth();
+		int H = imgTemp.getHeight();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
 			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
@@ -169,11 +176,16 @@ public class GraphletImage extends BasicGraphletImage {
 		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
 	}
 
-	public ArrayList<String> testNeighbours(ImagePlus img, int selectedShape, int radiusOfShape, ImagePlus imgToShow) {
-		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++)
+	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
+			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
+		// TODO: Check when something is changed to rerun all these info
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
+		}
 
-		
+		progressBar.setValue(40);
+
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
@@ -183,106 +195,131 @@ public class GraphletImage extends BasicGraphletImage {
 		// int percentageOfHexagonsOriginal = 0;
 		int[][] actualPixels;
 
-		ColorProcessor colorImgToShow = img.getChannelProcessor().convertToColorProcessor();
+		ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
+		int color;
 		for (int i = 0; i < this.cells.size(); i++) {
 			colorOfCell = Color.WHITE;
 			if (this.cells.get(i).isValid_cell()) {
-				switch (this.cells.get(i).getNeighbours().size()) {
-				case 4:
-					percentageOfSquares++;
-					colorOfCell = new Color((int) 255, (int) (0.4*255), (int) (0*255));
-					break;
-				case 5:
-					percentageOfPentagons++;
-					colorOfCell = Color.green;
-					break;
-				case 6:
-					percentageOfHexagons++;
-					colorOfCell = new Color(0, (int) (0.4*255), (int) (1*255));
-					break;
-				case 7:
-					percentageOfHeptagons++;
-					colorOfCell = new Color((int) (0.6*255), 0*255, 1*255);
-					break;
-				case 8:
-					percentageOfOctogons++;
-					colorOfCell = new Color(0, (int) (0.4*255), (int) (0.6*255));
-					break;
+				if (!selectionMode || this.cells.get(i).isSelected()) {
+					switch (this.cells.get(i).getNeighbours().size()) {
+					case 4:
+						percentageOfSquares++;
+						colorOfCell = new Color((int) 255, (int) (0.4 * 255), (int) (0 * 255));
+						break;
+					case 5:
+						percentageOfPentagons++;
+						colorOfCell = Color.green;
+						break;
+					case 6:
+						percentageOfHexagons++;
+						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (1 * 255));
+						break;
+					case 7:
+						percentageOfHeptagons++;
+						colorOfCell = new Color((int) (0.6 * 255), 0 * 255, 1 * 255);
+						break;
+					case 8:
+						percentageOfOctogons++;
+						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
+						break;
+					}
+
+					validCells++;
+				} else if (selectionMode) { // Some cells are selected
+					if (modeNumGraphlets < 2) {
+						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
+					} else {
+						this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
+					}
+
+					if (this.cells.get(i).isWithinTheRange()) {
+						colorOfCell = Color.red;
+						validCells++;
+
+						switch (this.cells.get(i).getNeighbours().size()) {
+						case 4:
+							percentageOfSquares++;
+							break;
+						case 5:
+							percentageOfPentagons++;
+							break;
+						case 6:
+							percentageOfHexagons++;
+							break;
+						case 7:
+							percentageOfHeptagons++;
+							break;
+						case 8:
+							percentageOfOctogons++;
+							break;
+						}
+					} else {
+						colorOfCell = Color.black;
+					}
 				}
-				validCells++;
 			} else {
 				colorOfCell = Color.BLACK;
 			}
 
 			actualPixels = this.cells.get(i).getPixels();
-			int color;
+			color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
+					| (colorOfCell.getBlue() & 0xFF));
 			for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
-				color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
-						| (colorOfCell.getBlue() & 0xFF));
 				colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
 			}
 		}
-		
+
+		progressBar.setValue(60);
+
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
 		this.percentageOfHexagons /= validCells;
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
-		
+
+		float percentageOfHexagonsToShow = this.percentageOfHexagons;
+		this.percentageOfHexagons = this.percentageOfHexagons * 100;
+
 		ArrayList<String> percentajesList = new ArrayList<String>();
 
-		if (imgToShow != null){
-			imgToShow.setProcessor(colorImgToShow);
-			BufferedImage thumbnail = null;
-			try {
-				thumbnail = Thumbnails.of(colorImgToShow.getBufferedImage()).height(ImageProcessingWindow.CANVAS_SIZE)
-						.width(ImageProcessingWindow.CANVAS_SIZE).asBufferedImage();
-				imgToShow.setImage(thumbnail);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	
+		if (imgToShow != null) {
+			overlay = new ImageOverlay(colorImgToShow);
+			((OverlayedImageCanvas) imgToShow.getCanvas()).clearOverlay();
+			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlay);
+
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);
-			
-			
-			
+
 			percentajesList.add(defaultFormat.format(percentageOfSquares));
 			percentajesList.add(defaultFormat.format(percentageOfPentagons));
-			percentajesList.add(defaultFormat.format(this.percentageOfHexagons));
+			percentajesList.add(defaultFormat.format(percentageOfHexagonsToShow));
 			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
 			percentajesList.add(defaultFormat.format(percentageOfOctogons));
 
-			return percentajesList; /*"Tested polygon distribution: Squares " + defaultFormat.format(percentageOfSquares) + ", Pentagons "
-					+ defaultFormat.format(percentageOfPentagons) + ", Hexagons "
-					+ defaultFormat.format(this.percentageOfHexagons) + ", Heptagons "
-					+ defaultFormat.format(percentageOfHeptagons) + ", Octogons "
-					+ defaultFormat.format(percentageOfOctogons);*/
+			return percentajesList;
 		}
-		return percentajesList;
+		return null;
 	}
 
-	public void runGraphlets(ImagePlus img, int selectedShape, int radiusOfShape, int modeNumGraphlets) {
-		testNeighbours(img, selectedShape, radiusOfShape, null);
+	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
+			boolean selectionMode, ImageOverlay overlay) {
+		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
+
+		progressBar.setValue(70);
 
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
-		
+
+		progressBar.setValue(75);
+
 		this.orcaProgram = null;
-		
+
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
 		}
-		
-		// int numValidCells = 0;
-		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
-			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
-		}
-		
+
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
@@ -306,18 +343,36 @@ public class GraphletImage extends BasicGraphletImage {
 			break;
 		}
 
+		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
+			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
+		}
+
 		Arrays.sort(graphletsWeDontWant);
 
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell : this.cells) {
-			if (cell.isValid_cell_5()) {
-				actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
-				graphletsFinal.add(actualGraphlets);
+			if (validCells5Graphlets) {
+				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
+					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+					graphletsFinal.add(actualGraphlets);
+				}
+			} else {
+				if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected())) {
+					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+					graphletsFinal.add(actualGraphlets);
+				}
 			}
 		}
 
+		// Percentage 70
+		progressBar.setValue(80);
+
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
+
+		// Percentage 85
+		progressBar.setValue(90);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
@@ -330,6 +385,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
+
+		// Percentage 100
+		progressBar.setValue(100);
 	}
 
 	/**
@@ -378,10 +436,8 @@ public class GraphletImage extends BasicGraphletImage {
 							&& this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1) {
 						labelNeigh = this.l_img.getChannelProcessor().get(x, y) - 1;
 						neighbours.add(labelNeigh);
-						if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(labelNeigh).isValid_cell()) { // Only
-																														// valid
-																														// cells'
-																														// relationships
+						if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(labelNeigh).isValid_cell()) {
+							// Only valid cells' relationships
 							this.adjacencyMatrix[idEpiCell][labelNeigh] = 1;
 							this.adjacencyMatrix[labelNeigh][idEpiCell] = 1;
 						}
@@ -416,6 +472,33 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param indexEpiCell
+	 * @param length
+	 * @return
+	 */
+	private boolean selectedCellWithinAGivenLength(int indexEpiCell, int length) {
+		if (this.cells.get(indexEpiCell).isValid_cell() == false)
+			return false;
+
+		if (!this.cells.get(indexEpiCell).isSelected()) {
+			if (length > 1) {
+				HashSet<Integer> neighbours = this.cells.get(indexEpiCell).getNeighbours();
+				Iterator<Integer> itNeigh = neighbours.iterator();
+				int neighbourActual = -1;
+				while (itNeigh.hasNext()) {
+					neighbourActual = itNeigh.next();
+					if (selectedCellWithinAGivenLength(neighbourActual, length - 1))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -514,13 +597,10 @@ public class GraphletImage extends BasicGraphletImage {
 		return distributions;
 	}
 
-	public int addCellToSelected(int x, int y) {
-		int pixelsIsSelected;
-		for (int numCell = 0; numCell < this.cells.size(); numCell++) {
-			pixelsIsSelected = this.cells.get(numCell).searchSelectedPixel(x, y);
-			if (pixelsIsSelected != -1) {
-				return pixelsIsSelected;
-			}
+	public int addCellToSelected(int labelPixel) {
+		if (labelPixel != 0) {
+			this.cells.get(labelPixel - 1).setSelected(true);
+			return 1;
 		}
 		return -1;
 	}
