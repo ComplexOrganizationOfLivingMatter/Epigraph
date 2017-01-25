@@ -161,12 +161,12 @@ public class GraphletImage extends BasicGraphletImage {
 		int W = imgTemp.getWidth();
 		int H = imgTemp.getHeight();
 		int valuePxl;
-		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
-			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
+		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
+			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
 				valuePxl = matrixImg[indexImgX][indexImgY];
 				if (valuePxl != 0) {
 					this.cells.get(valuePxl - 1).addPixel(indexImgX, indexImgY);
-					if (indexImgX == 0 || indexImgX == H - 1 || indexImgY == 0 || indexImgY == W - 1)
+					if (indexImgX == 0 || indexImgX == W - 1 || indexImgY == 0 || indexImgY == H - 1)
 						this.cells.get(valuePxl - 1).setValid_cell(false);
 				}
 			}
