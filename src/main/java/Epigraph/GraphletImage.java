@@ -114,6 +114,8 @@ public class GraphletImage extends BasicGraphletImage {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
+		img = img.flatten();
+		img.setProcessor(img.getChannelProcessor().convertToByteProcessor());
 		if (!img.getChannelProcessor().isBinary()) {
 			System.out.println("No binary image, improving...");
 			img.getChannelProcessor().autoThreshold();
@@ -134,6 +136,7 @@ public class GraphletImage extends BasicGraphletImage {
 		if (blackPixels > whitePixels) {
 			img.getChannelProcessor().invert();
 		}
+		
 
 		ImageProcessor imp = new ByteProcessor(img.getChannelProcessor(), true);
 		this.raw_img = new ImagePlus("", imp);
@@ -141,6 +144,7 @@ public class GraphletImage extends BasicGraphletImage {
 		ImagePlus imgTemp = new ImagePlus("", img.getChannelProcessor());
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
+		imgTemp.setProcessor(btp);
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
 																				// connectivity
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
