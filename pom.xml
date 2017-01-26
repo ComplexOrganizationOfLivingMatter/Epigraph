@@ -80,11 +80,6 @@
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-ij</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>mpicbg</groupId>
-			<artifactId>mpicbg</artifactId>
-		</dependency>
 		<!-- Visualization -->
 		<dependency>
 			<groupId>org.jzy3d</groupId>
