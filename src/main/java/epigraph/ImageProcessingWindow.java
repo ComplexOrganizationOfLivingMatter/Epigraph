@@ -519,6 +519,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 			invalidRegionRoi = r;
 		}
+		this.getImagePlus().deleteRoi();
 	}
 
 	/**
@@ -529,6 +530,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		if (r != null) {
 			roiManager.addRoi(r);
 		}
+		this.getImagePlus().deleteRoi();
 	}
 
 	/**

@@ -4,6 +4,7 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -16,7 +17,9 @@ import javax.swing.JProgressBar;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
+import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -183,6 +186,18 @@ public class GraphletImage extends BasicGraphletImage {
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
 		// TODO: Check when something is changed to rerun all these info
+		
+		RoiManager roiManager = RoiManager.getInstance();
+		resetSelection();
+		if (roiManager != null && selectionMode){
+			for (Roi r : roiManager.getRoisAsArray()){
+				for (Point point : r) {
+					int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
+					this.addCellToSelected(pixelInfo[0]);
+				}
+			}
+		}
+		
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -635,5 +650,10 @@ public class GraphletImage extends BasicGraphletImage {
 	public void resetInvalidRegion() {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setInvalidRegion(false);
+	}
+	
+	public void resetSelection() {
+		for (int i = 0; i < this.cells.size(); i++)
+			this.cells.get(i).setSelected(false);
 	}
 }
