@@ -83,6 +83,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JButton btnSelectCells;
 	private JPanel roiPanel;
 	private JButton btnToggleOverlay;
+	private JButton btnSelectInvalidRegion;
+
+	private boolean selectionMode;
+	private Roi invalidRegionRoi;
 
 	/**
 	 * 
@@ -148,6 +152,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		genericPanelConstrainst.gridy++;
 		roiPanel.add(btnSelectCells, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
+		roiPanel.add(btnSelectInvalidRegion, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
 
 		// Graphlet Image properties
 		graphletsPanel = new JPanel();
@@ -190,10 +196,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(polDistPanelConstrainst);
 		polDistPanel.setLayout(polDistPanelLayout);
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
-		polDistPanelConstrainst.insets =  new Insets(5, 5, 6, 6);
+		polDistPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 		polDistPanelConstrainst.weighty = 1;
-		
-		
+
 		polDistPanel.add(lbSquares, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbPentagons, polDistPanelConstrainst);
@@ -227,13 +232,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				canvas.setDstDimensions(r.width, r.height);
 			}
 		});
-		
-		
 
 		// Radius of neighbours
 		inputRadiusNeigh = new JSpinner();
 		inputRadiusNeigh.setModel(new SpinnerNumberModel(3, 1, 25, 1));
-		
+
 		lblRadius = new JLabel("Radius:");
 		lblRadius.setLabelFor(inputRadiusNeigh);
 
@@ -241,7 +244,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		cbSelectedShape = new JComboBox<String>();
 		cbSelectedShape.setModel(new DefaultComboBoxModel<String>(new String[] { "Circle", "Square" }));
 		cbSelectedShape.setSelectedIndex(0);
-		
+
 		lblShape = new JLabel("Shape:");
 		lblShape.setLabelFor(cbSelectedShape);
 
@@ -277,8 +280,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnToggleOverlay = new JButton("Toggle overlay");
 		btnToggleOverlay.addActionListener(this);
 
+		btnSelectInvalidRegion = new JButton("Add invalid regions");
+		btnSelectInvalidRegion.addActionListener(this);
+
 		tfImageName = new JTextField();
-		
+
 		lblImageName = new JLabel("Image label:");
 		lblImageName.setLabelFor(tfImageName);
 
@@ -432,19 +438,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		if (e.getSource() == btnTestNeighbours) {
 			ArrayList<String> polDistri;
 			if (roiManager != null) {
-				if (roiManager.getSelectedRoisAsArray().length > 0)
-					polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-							(int) inputRadiusNeigh.getValue(), imp, progressBar, true,
-							cbGraphletsMode.getSelectedIndex(), overlayResult);
-				else
-					polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-							(int) inputRadiusNeigh.getValue(), imp, progressBar, false,
-							cbGraphletsMode.getSelectedIndex(), overlayResult);
+				if (roiManager.getSelectedRoisAsArray().length > 0) {
+					selectionMode = true;
+				} else {
+					selectionMode = false;
+				}
 			} else {
-				polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), imp, progressBar, false, cbGraphletsMode.getSelectedIndex(),
-						overlayResult);
+				selectionMode = false;
 			}
+			polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
+					cbGraphletsMode.getSelectedIndex(), overlayResult);
 
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
@@ -477,10 +481,44 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 
+		if (e.getSource() == btnSelectInvalidRegion) {
+			if (btnSelectInvalidRegion.getText() != "Done") {
+				if (invalidRegionRoi != null) {
+					int result = JOptionPane.showConfirmDialog(this.getParent(),
+							"This will remove the previous invalid region", "New invalid region",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						Epigraph.callToolbarPoint();
+						btnSelectInvalidRegion.setText("Done");
+					}
+				} else {
+					Epigraph.callToolbarPoint();
+					btnSelectInvalidRegion.setText("Done");
+				}
+
+			} else {
+				// Add selected cells
+				addInvalidRegion();
+				btnSelectInvalidRegion.setText("Pick invalid regions");
+			}
+		}
+
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
+	}
+
+	private void addInvalidRegion() {
+		Roi r = this.getImagePlus().getRoi();
+		if (r != null) {
+			this.newGraphletImage.resetInvalidRegion();
+			for (Point point : r) {
+				int[] pixelInfo = newGraphletImage.getLabelledImage().getPixel(point.x, point.y);
+				this.newGraphletImage.addCellToInvalidRegion(pixelInfo[0]);
+			}
+			invalidRegionRoi = r;
+		}
 	}
 
 	/**
@@ -489,10 +527,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private void addROI() {
 		Roi r = this.getImagePlus().getRoi();
 		if (r != null) {
-			for (Point point : r) {
-				int[] pixelInfo = newGraphletImage.getLabelledImage().getPixel(point.x, point.y);
-				this.newGraphletImage.addCellToSelected(pixelInfo[0]);
-			}
 			roiManager.addRoi(r);
 		}
 	}
