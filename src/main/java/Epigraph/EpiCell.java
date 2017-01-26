@@ -17,6 +17,7 @@ public class EpiCell {
 	private boolean valid_cell;
 	private boolean valid_cell_4;
 	private boolean valid_cell_5;
+	private boolean invalidRegion;
 
 	private int[] graphlets;
 	private int[] pixelsY;
@@ -39,6 +40,7 @@ public class EpiCell {
 		this.pixelsY = null;
 		this.pixelsX = null;
 		this.selected = false;
+		this.invalidRegion = false;
 	}
 
 	/**
@@ -56,6 +58,7 @@ public class EpiCell {
 		this.pixelsY = null;
 		this.pixelsX = null;
 		this.selected = false;
+		this.invalidRegion = false;
 	}
 
 	/**
@@ -82,6 +85,7 @@ public class EpiCell {
 		this.pixelsY = null;
 		this.pixelsX = null;
 		this.selected = false;
+		this.invalidRegion = false;
 	}
 
 	/**
@@ -118,7 +122,7 @@ public class EpiCell {
 	 * @return the valid_cell
 	 */
 	public boolean isValid_cell() {
-		return valid_cell;
+		return valid_cell && !invalidRegion;
 	}
 
 	/**
@@ -247,6 +251,20 @@ public class EpiCell {
 	 */
 	public void setWithinTheRange(boolean withinTheRange) {
 		this.withinTheRange = withinTheRange;
+	}
+
+	/**
+	 * @return the invalidRegion
+	 */
+	public boolean isInvalidRegion() {
+		return invalidRegion;
+	}
+
+	/**
+	 * @param invalidRegion the invalidRegion to set
+	 */
+	public void setInvalidRegion(boolean invalidRegion) {
+		this.invalidRegion = invalidRegion;
 	}
 
 	/**

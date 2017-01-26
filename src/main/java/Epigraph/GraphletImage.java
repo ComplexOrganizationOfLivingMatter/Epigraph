@@ -4,6 +4,7 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -16,7 +17,9 @@ import javax.swing.JProgressBar;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
+import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -114,6 +117,8 @@ public class GraphletImage extends BasicGraphletImage {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
+		img = img.flatten();
+		img.setProcessor(img.getChannelProcessor().convertToByteProcessor());
 		if (!img.getChannelProcessor().isBinary()) {
 			System.out.println("No binary image, improving...");
 			img.getChannelProcessor().autoThreshold();
@@ -141,6 +146,7 @@ public class GraphletImage extends BasicGraphletImage {
 		ImagePlus imgTemp = new ImagePlus("", img.getChannelProcessor());
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
+		imgTemp.setProcessor(btp);
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
 																				// connectivity
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
@@ -161,13 +167,14 @@ public class GraphletImage extends BasicGraphletImage {
 		int W = imgTemp.getWidth();
 		int H = imgTemp.getHeight();
 		int valuePxl;
-		for (int indexImgX = 0; indexImgX < H; indexImgX++) {
-			for (int indexImgY = 0; indexImgY < W; indexImgY++) {
+		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
+			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
 				valuePxl = matrixImg[indexImgX][indexImgY];
 				if (valuePxl != 0) {
 					this.cells.get(valuePxl - 1).addPixel(indexImgX, indexImgY);
-					if (indexImgX == 0 || indexImgX == H - 1 || indexImgY == 0 || indexImgY == W - 1)
+					if (indexImgX == 0 || indexImgX == W - 1 || indexImgY == 0 || indexImgY == H - 1) {
 						this.cells.get(valuePxl - 1).setValid_cell(false);
+					}
 				}
 			}
 		}
@@ -179,12 +186,38 @@ public class GraphletImage extends BasicGraphletImage {
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
 		// TODO: Check when something is changed to rerun all these info
+		
+		RoiManager roiManager = RoiManager.getInstance();
+		resetSelection();
+		if (roiManager != null && selectionMode){
+			for (Roi r : roiManager.getRoisAsArray()){
+				for (Point point : r) {
+					int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
+					this.addCellToSelected(pixelInfo[0]);
+				}
+			}
+		}
+		
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
 
 		progressBar.setValue(40);
+
+		HashSet<Integer> neighbours;
+		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
+			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
+				neighbours = this.cells.get(idEpiCell).getNeighbours();
+				for (int idNeighbour = 0; idNeighbour < neighbours.size(); idNeighbour++) {
+					if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
+						// Only valid cells' relationships
+						this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
+						this.adjacencyMatrix[idNeighbour][idEpiCell] = 1;
+					}
+				}
+			}
+		}
 
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
@@ -425,21 +458,20 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
+
 		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
 		for (int x = 0; x < this.l_img.getWidth(); x++) {
 			for (int y = 0; y < this.l_img.getHeight(); y++) {
-				if (imgProc.get(x, y) == 255) {
+				if (imgProc.get(x, y) != 0) {
 					if (this.l_img.getChannelProcessor().get(x, y) != 0
 							&& this.l_img.getChannelProcessor().get(x, y) != idEpiCell + 1) {
 						labelNeigh = this.l_img.getChannelProcessor().get(x, y) - 1;
 						neighbours.add(labelNeigh);
-						if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(labelNeigh).isValid_cell()) {
-							// Only valid cells' relationships
-							this.adjacencyMatrix[idEpiCell][labelNeigh] = 1;
-							this.adjacencyMatrix[labelNeigh][idEpiCell] = 1;
+						if (cell.isInvalidRegion()) {
+							this.cells.get(labelNeigh).setValid_cell(false);
 						}
 					}
 
@@ -448,6 +480,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		// System.out.println(neighbours);
 		cell.setNeighbours(neighbours);
+
 	}
 
 	/**
@@ -603,5 +636,24 @@ public class GraphletImage extends BasicGraphletImage {
 			return 1;
 		}
 		return -1;
+	}
+	
+	public int addCellToInvalidRegion(int labelPixel) {
+		if (labelPixel != 0) {
+			this.cells.get(labelPixel - 1).setInvalidRegion(true);
+			this.cells.get(labelPixel - 1).setValid_cell(false);
+			return 1;
+		}
+		return -1;
+	}
+
+	public void resetInvalidRegion() {
+		for (int i = 0; i < this.cells.size(); i++)
+			this.cells.get(i).setInvalidRegion(false);
+	}
+	
+	public void resetSelection() {
+		for (int i = 0; i < this.cells.size(); i++)
+			this.cells.get(i).setSelected(false);
 	}
 }
