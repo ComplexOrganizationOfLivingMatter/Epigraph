@@ -571,6 +571,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		for (Component c : graphletsPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
+		
+		if (newGraphletImage.getDistanceGDDH() == -1)
+			btnAddToTable.setEnabled(false);
 	}
 
 	public void disableActionButtons() {
@@ -582,7 +585,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	public void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
-		btnAddToTable.setEnabled(true);
+		if (newGraphletImage.getDistanceGDDH() != -1)
+			btnAddToTable.setEnabled(true);
 		btnTestNeighbours.setEnabled(true);
 		btnLabelImage.setEnabled(true);
 	}
