@@ -82,8 +82,6 @@ public class GraphletImage extends BasicGraphletImage {
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[NUMRANDOMVORONOI];
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
-			// System.out.println("graphletsReferences/randomVoronoi_" +
-			// Integer.toString(i) + ".ndump2");
 			URL fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
@@ -154,13 +152,13 @@ public class GraphletImage extends BasicGraphletImage {
 		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 
 		// get unique labels from labelled imageplus
-		int[] labelunique = LabelImages.findAllLabels(imgTemp);
+		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
 
 		// get image in a matrix of labels
 		int[][] matrixImg = imgTemp.getChannelProcessor().getIntArray();
 
 		// Create epicells
-		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
+		for (int indexEpiCell = 1; indexEpiCell < maxValue; indexEpiCell++) {
 			this.cells.add(new EpiCell(indexEpiCell));
 		}
 
@@ -181,7 +179,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
+		this.adjacencyMatrix = new int[maxValue - 1][maxValue - 1];
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
@@ -206,7 +204,6 @@ public class GraphletImage extends BasicGraphletImage {
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
-
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
 
@@ -214,7 +211,7 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
 			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
 				neighbours = this.cells.get(idEpiCell).getNeighbours();
-				for (int idNeighbour = 0; idNeighbour < neighbours.size(); idNeighbour++) {
+				for (int idNeighbour : neighbours){
 					if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
 						// Only valid cells' relationships
 						this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
@@ -422,7 +419,6 @@ public class GraphletImage extends BasicGraphletImage {
 			else
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
-
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
 
