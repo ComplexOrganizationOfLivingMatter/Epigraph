@@ -29,7 +29,7 @@ import javax.swing.ScrollPaneConstants;
  *         TableDemo is just like SimpleTableDemo, except that it uses a custom
  *         TableModel.
  */
-public class MainWindow extends JPanel {
+public class MainWindow extends JFrame {
 	/**
 	 * 
 	 */
@@ -45,11 +45,12 @@ public class MainWindow extends JPanel {
 	 * 
 	 */
 	public MainWindow() {
-		super(new GridLayout(1, 0));
+		setTitle("Epigraph");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel = new JPanel();
+		panel = new JPanel(new GridLayout(1, 0));
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		add(panel);
+		getContentPane().add(panel);
 
 		// Create buttons
 		btnVisualize = new JButton("Visualize");
@@ -273,27 +274,5 @@ public class MainWindow extends JPanel {
 		btnImport.setBounds(160, 255, 81, 29);
 		panel.add(btnImport);
 
-	}
-
-	/**
-	 * Create the GUI and show it. For thread safety, this method should be
-	 * invoked from the event-dispatching thread.
-	 */
-	public void createAndShowGUI() {
-		// Make sure we have nice window decorations.
-		JFrame.setDefaultLookAndFeelDecorated(true);
-
-		// Create and set up the window.
-		JFrame frame = new JFrame("Epigraph");
-
-		// Create and set up the content pane.
-		MainWindow newContentPane = new MainWindow();
-		newContentPane.setOpaque(true); // content panes must be opaque
-		frame.setContentPane(newContentPane);
-
-		// Display the window.
-		frame.pack();
-		frame.setSize(650, 350);
-		frame.setVisible(true);
 	}
 }
