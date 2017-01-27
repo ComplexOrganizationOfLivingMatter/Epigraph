@@ -198,6 +198,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
 		polDistPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 		polDistPanelConstrainst.weighty = 1;
+		//Minimum size of the labels
+		int[] widths = {60};
+		polDistPanelLayout.columnWidths = widths;
 
 		polDistPanel.add(lbSquares, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
@@ -342,7 +345,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		GridBagConstraints labelsConstraints = new GridBagConstraints();
 		labelsJPanel.setLayout(labelsLayout);
 		labelsConstraints.anchor = GridBagConstraints.NORTHWEST;
-		labelsConstraints.fill = GridBagConstraints.BOTH;
+		labelsConstraints.fill = GridBagConstraints.VERTICAL;
 		resetGenericConstrainst(labelsConstraints);
 		labelsJPanel.add(imgPolDistPanel, labelsConstraints);
 		labelsConstraints.gridx++;

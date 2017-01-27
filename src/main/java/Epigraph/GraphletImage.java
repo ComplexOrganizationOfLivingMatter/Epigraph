@@ -331,6 +331,7 @@ public class GraphletImage extends BasicGraphletImage {
 			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
 			percentajesList.add(defaultFormat.format(percentageOfOctogons));
 
+			progressBar.setValue(100);
 			return percentajesList;
 		}
 		return null;
