@@ -239,23 +239,23 @@ public class GraphletImage extends BasicGraphletImage {
 					switch (this.cells.get(i).getNeighbours().size()) {
 					case 4:
 						percentageOfSquares++;
-						colorOfCell = new Color((int) 255, (int) (0.4 * 255), (int) (0 * 255));
+						colorOfCell = new Color((int) 255, (int) 101, (int) 6);
 						break;
 					case 5:
 						percentageOfPentagons++;
-						colorOfCell = Color.green;
+						colorOfCell = new Color((int) 17, (int) 157, (int) 24);
 						break;
 					case 6:
 						percentageOfHexagons++;
-						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (1 * 255));
+						colorOfCell = new Color(52, (int) 102, (int) 249);
 						break;
 					case 7:
 						percentageOfHeptagons++;
-						colorOfCell = new Color((int) (0.6 * 255), 0 * 255, 1 * 255);
+						colorOfCell = new Color((int) 119, 5, 116);
 						break;
 					case 8:
 						percentageOfOctogons++;
-						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
+						colorOfCell = new Color(18, (int) 107, (int) 121);
 						break;
 					}
 
