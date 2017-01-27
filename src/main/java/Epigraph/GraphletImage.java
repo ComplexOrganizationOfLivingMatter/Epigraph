@@ -110,7 +110,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.l_img = l_img;
 	}
 
-	public void preprocessImage(ImagePlus img, int connectivity) {
+	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -121,10 +121,12 @@ public class GraphletImage extends BasicGraphletImage {
 			img.getChannelProcessor().autoThreshold();
 		}
 
+		progressBar.setValue(20);
 		int[][] pixels = img.getChannelProcessor().getIntArray();
 		int whitePixels = 0;
 		int blackPixels = 0;
 		for (int i = 0; i < img.getWidth(); i++) {
+			progressBar.setValue(20 + i / img.getWidth() * 20);
 			for (int j = 0; j < img.getHeight(); j++) {
 				if (pixels[i][j] == 0)
 					blackPixels++;
@@ -144,7 +146,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		imgTemp.setProcessor(btp);
-
+		progressBar.setValue(50);
 		// Define connectivity with 8
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(connectivity);
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
@@ -152,6 +154,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// get unique labels from labelled imageplus
 		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
+		progressBar.setValue(60);
 
 		// get image in a matrix of labels
 		int[][] matrixImg = imgTemp.getChannelProcessor().getIntArray();
@@ -160,12 +163,14 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int indexEpiCell = 1; indexEpiCell < maxValue; indexEpiCell++) {
 			this.cells.add(new EpiCell(indexEpiCell));
 		}
+		progressBar.setValue(70);
 
 		// Add pixel to each epicell
 		int W = imgTemp.getWidth();
 		int H = imgTemp.getHeight();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
+			progressBar.setValue(70 + indexImgX * 30 / W);
 			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
 				valuePxl = matrixImg[indexImgX][indexImgY];
 				if (valuePxl != 0) {
@@ -210,7 +215,7 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
 			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
 				neighbours = this.cells.get(idEpiCell).getNeighbours();
-				for (int idNeighbour : neighbours){
+				for (int idNeighbour : neighbours) {
 					if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
 						// Only valid cells' relationships
 						this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;

@@ -90,6 +90,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel preProcessingPanel;
 	private JComboBox<Integer> cbConnectivity;
 	private JButton btnLabelImage;
+	private Task backgroundTask;
+	private JPanel progressBarPanel;
 
 	/**
 	 * 
@@ -109,7 +111,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		removeAll();
 
 		initGUI();
-		
+
 		setEnablePanels(false);
 	}
 
@@ -129,17 +131,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
 		/* RIGHT PANEL FORMED BY THESE 4 PANELS */
-		//Setup labelling panel
+		// Setup labelling panel
 		preProcessingPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		preProcessingPanel.setLayout(genericPanelLayout);
-		
-		//Adding to the panel the items
+
+		// Adding to the panel the items
 		preProcessingPanel.add(cbConnectivity, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		preProcessingPanel.add(btnLabelImage, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		
+
 		// Setup the config panel
 		configPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
@@ -164,7 +166,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		roiPanel = new JPanel();
 		roiPanel.setLayout(genericPanelLayout);
 		resetGenericConstrainst(genericPanelConstrainst);
-		
+
 		roiPanel.add(btnCreateRoi, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		roiPanel.add(btnSelectCells, genericPanelConstrainst);
@@ -194,7 +196,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		genericPanelConstrainst.gridx--;
-		graphletsPanel.add(progressBar, genericPanelConstrainst);
+		
+		progressBarPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
+		progressBarPanel.setLayout(genericPanelLayout);
+		progressBarPanel.add(progressBar, genericPanelConstrainst);
 
 		/* LEFT PANEL */
 		// Image of polygon distribution
@@ -215,8 +221,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
 		polDistPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 		polDistPanelConstrainst.weighty = 1;
-		//Minimum size of the labels
-		int[] widths = {60};
+		// Minimum size of the labels
+		int[] widths = { 60 };
 		polDistPanelLayout.columnWidths = widths;
 
 		polDistPanel.add(lbSquares, polDistPanelConstrainst);
@@ -229,9 +235,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
-		
+
 		setupPanels();
-		
+
 		pack();
 		setMinimumSize(getPreferredSize());
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -252,12 +258,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				canvas.setDstDimensions(r.width, r.height);
 			}
 		});
-		
-		//Connectivitiy
+
+		// Connectivitiy
 		cbConnectivity = new JComboBox<Integer>();
 		cbConnectivity.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 4, 8 }));
 		cbConnectivity.setSelectedIndex(1);
-		
+
 		btnLabelImage = new JButton("Label image");
 		btnLabelImage.addActionListener(this);
 
@@ -277,6 +283,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		lblShape.setLabelFor(cbSelectedShape);
 
 		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
 
 		btnCalculateGraphlets = new JButton("Calculate graphlets!");
 		btnCalculateGraphlets.addActionListener(this);
@@ -365,6 +372,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		buttonsPanel.add(roiPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
 		buttonsPanel.add(graphletsPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
+		buttonsConstraints.gridy++;
+		buttonsPanel.add(progressBarPanel, buttonsConstraints);
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
 
 		/* DEFINITION OF LEFT SIDE PANEL */
@@ -427,10 +437,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnCalculateGraphlets) {
-			btnTestNeighbours.setEnabled(false);
-			btnCalculateGraphlets.setEnabled(false);
-			Task task = new Task();
-			task.execute();
+			disableActionButtons();
+			backgroundTask = new Task(0);
+			backgroundTask.execute();
 			newGraphletImage.setLabelName(tfImageName.getText());
 			newGraphletImage.setColor(colorPicked.getBackground());
 		}
@@ -473,28 +482,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 		if (e.getSource() == btnTestNeighbours) {
-			ArrayList<String> polDistri;
-			if (roiManager != null) {
-				if (roiManager.getSelectedRoisAsArray().length > 0) {
-					selectionMode = true;
-				} else {
-					selectionMode = false;
-				}
-			} else {
-				selectionMode = false;
-			}
+			disableActionButtons();
+			//Execute in background
+			backgroundTask = new Task(1);
+			backgroundTask.execute();
 			
-			polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
-					cbGraphletsMode.getSelectedIndex(), overlayResult);
-
-			lbSquares.setText(polDistri.get(0));
-			lbPentagons.setText(polDistri.get(1));
-			lbPentagons.setVisible(true);
-			lbHexagons.setText(polDistri.get(2));
-			lbHeptagons.setText(polDistri.get(3));
-			lbOctogons.setText(polDistri.get(4));
-
 			repaintAll();
 		}
 
@@ -554,10 +546,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnSelectCells.setEnabled(true);
 			}
 		}
-		
-		if (e.getSource() == btnLabelImage){
-			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem());
-			setEnablePanels(true);
+
+		if (e.getSource() == btnLabelImage) {
+			disableActionButtons();
+			backgroundTask = new Task(2);
+			backgroundTask.execute();
 		}
 
 		imp.updateAndDraw();
@@ -567,21 +560,31 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	private void setEnablePanels(boolean enabled) {
-		roiPanel.setEnabled(enabled);
-		configPanel.setEnabled(enabled);
-		graphletsPanel.setEnabled(enabled);
+		for (Component c : roiPanel.getComponents()) {
+			c.setEnabled(enabled);
+		}
+
+		for (Component c : configPanel.getComponents()) {
+			c.setEnabled(enabled);
+		}
+
+		for (Component c : graphletsPanel.getComponents()) {
+			c.setEnabled(enabled);
+		}
 	}
 
 	public void disableActionButtons() {
 		btnCalculateGraphlets.setEnabled(false);
 		btnAddToTable.setEnabled(false);
 		btnTestNeighbours.setEnabled(false);
+		btnLabelImage.setEnabled(false);
 	}
 
 	public void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
 		btnAddToTable.setEnabled(true);
 		btnTestNeighbours.setEnabled(true);
+		btnLabelImage.setEnabled(true);
 	}
 
 	private void addInvalidRegion() {
@@ -617,8 +620,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		this.buttonsPanel.repaint();
 		this.all.repaint();
 	}
-	
-	private void openRoiManager(){
+
+	private void openRoiManager() {
 		if (roiManager == null)
 			roiManager = RoiManager.getRoiManager();
 		else
@@ -631,19 +634,34 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 *
 	 */
 	public class Task extends SwingWorker<Void, Void> {
+
+		int option;
+
+		/**
+		 * 
+		 * @param option
+		 */
+		public Task(int option) {
+			super();
+			this.option = option;
+		}
+
 		/**
 		 * Main task. Executed in background thread.
 		 */
 		@Override
 		public Void doInBackground() {
 			setProgress(0);
-			if (roiManager != null) {
-				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length > 0, overlayResult);
-			} else {
-				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
+			switch (option) {
+			case 0:
+				calculateGraphlets();
+				break;
+			case 1:
+				testNeighbours();
+				break;
+			case 2:
+				labelImage();
+				break;
 			}
 
 			return null;
@@ -654,10 +672,52 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 */
 		@Override
 		public void done() {
+			progressBar.setValue(100);
 			Toolkit.getDefaultToolkit().beep();
-			btnCalculateGraphlets.setEnabled(true);
-			btnTestNeighbours.setEnabled(true);
-			btnAddToTable.setEnabled(true);
+			repaintAll();
+			if (option == 2)
+				setEnablePanels(true);
+			else
+				enableActionButtons();
+		}
+
+		private void calculateGraphlets() {
+			if (roiManager != null) {
+				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length > 0, overlayResult);
+			} else {
+				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
+			}
+		}
+
+		private void testNeighbours() {
+			ArrayList<String> polDistri;
+			if (roiManager != null) {
+				if (roiManager.getSelectedRoisAsArray().length > 0) {
+					selectionMode = true;
+				} else {
+					selectionMode = false;
+				}
+			} else {
+				selectionMode = false;
+			}
+
+			polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
+					cbGraphletsMode.getSelectedIndex(), overlayResult);
+
+			lbSquares.setText(polDistri.get(0));
+			lbPentagons.setText(polDistri.get(1));
+			lbPentagons.setVisible(true);
+			lbHexagons.setText(polDistri.get(2));
+			lbHeptagons.setText(polDistri.get(3));
+			lbOctogons.setText(polDistri.get(4));
+		}
+
+		private void labelImage() {
+			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 		}
 	}
 }
