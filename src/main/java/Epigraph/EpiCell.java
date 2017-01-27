@@ -3,6 +3,7 @@
  */
 package epigraph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.IntStream;
 
@@ -20,8 +21,8 @@ public class EpiCell {
 	private boolean invalidRegion;
 
 	private int[] graphlets;
-	private int[] pixelsY;
-	private int[] pixelsX;
+	private ArrayList<Integer> pixelsY;
+	private ArrayList<Integer> pixelsX;
 
 	private boolean selected;
 	private boolean withinTheRange;
@@ -201,13 +202,17 @@ public class EpiCell {
 
 	
 	public int[] getPixelsY() {
-		return pixelsY;
+		int[] pixels = new int[pixelsY.size()];
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] = pixelsY.get(i);
+		}
+		return pixels;
 	}
 
 	/**
 	 * @param pixelsY the pixelsY to set
 	 */
-	public void setPixelsY(int[] pixelsY) {
+	public void setPixelsY(ArrayList<Integer> pixelsY) {
 		this.pixelsY = pixelsY;
 	}
 
@@ -215,13 +220,17 @@ public class EpiCell {
 	 * @return the pixelsX
 	 */
 	public int[] getPixelsX() {
-		return pixelsX;
+		int[] pixels = new int[pixelsX.size()];
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] = pixelsX.get(i);
+		}
+		return pixels;
 	}
 
 	/**
 	 * @param pixelsX the pixelsX to set
 	 */
-	public void setPixelsX(int[] pixelsX) {
+	public void setPixelsX(ArrayList<Integer> pixelsX) {
 		this.pixelsX = pixelsX;
 	}
 
@@ -271,22 +280,12 @@ public class EpiCell {
 	 * @return the pixels
 	 */
 	public int[][] getPixels() {
-		int[][] pixels = new int[pixelsX.length][2];
+		int[][] pixels = new int[pixelsX.size()][2];
 		for (int i = 0; i < pixels.length; i++) {
-			pixels[i][0] = pixelsX[i];
-			pixels[i][1] = pixelsY[i];
+			pixels[i][0] = pixelsX.get(i);
+			pixels[i][1] = pixelsY.get(i);
 		}
 		return pixels;
-	}
-
-	/**
-	 * @return the pixels
-	 */
-	public int[] getCentroid() {
-		int[] centroid = new int[2];
-		centroid[0] = (int) IntStream.of(pixelsX).average().getAsDouble();
-		centroid[1] = (int) IntStream.of(pixelsY).average().getAsDouble();
-		return centroid;
 	}
 
 	/**
@@ -297,36 +296,14 @@ public class EpiCell {
 	 *            coordinate Y
 	 */
 	public void addPixel(int newPixelX, int newPixelY) {
-		int[] newPixelsX;
-		int[] newPixelsY;
-
-		if (this.pixelsX == null) {
-			newPixelsX = new int[1];
-			newPixelsY = new int[1];
-			newPixelsX[0] = newPixelX;
-			newPixelsY[0] = newPixelY;
-		} else {
-			newPixelsX = new int[this.pixelsX.length + 1];
-			newPixelsY = new int[this.pixelsY.length + 1];
-			// Copying the old array into the new one
-			for (int i = 0; i < this.pixelsX.length; i++) {
-				newPixelsX[i] = this.pixelsX[i];
-				newPixelsY[i] = this.pixelsY[i];
-			}
-
-			// Adding the new ones
-			newPixelsX[this.pixelsX.length] = newPixelX;
-			newPixelsY[this.pixelsY.length] = newPixelY;
-		}
-
-		this.pixelsX = newPixelsX;
-		this.pixelsY = newPixelsY;
+		this.pixelsX.add(newPixelX);
+		this.pixelsY.add(newPixelY);
 	}
 	
 	public int searchSelectedPixel(int x1, int y1) {
-		for (int x = 0; x < this.pixelsX.length; x++){
-			if (this.pixelsX[x] == x1){
-				if (this.pixelsY[x] == y1){
+		for (int x = 0; x < this.pixelsX.size(); x++){
+			if (this.pixelsX.get(x) == x1){
+				if (this.pixelsY.get(x) == y1){
 					this.setSelected(true);
 					return 1;
 				}
