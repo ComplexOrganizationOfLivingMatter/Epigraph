@@ -42,6 +42,8 @@ public class EpiCell {
 		this.pixelsX = null;
 		this.selected = false;
 		this.invalidRegion = false;
+		this.pixelsY = new ArrayList<Integer>();
+		this.pixelsX = new ArrayList<Integer>();
 	}
 
 	/**
@@ -60,6 +62,8 @@ public class EpiCell {
 		this.pixelsX = null;
 		this.selected = false;
 		this.invalidRegion = false;
+		this.pixelsY = new ArrayList<Integer>();
+		this.pixelsX = new ArrayList<Integer>();
 	}
 
 	/**
@@ -87,6 +91,8 @@ public class EpiCell {
 		this.pixelsX = null;
 		this.selected = false;
 		this.invalidRegion = false;
+		this.pixelsY = new ArrayList<Integer>();
+		this.pixelsX = new ArrayList<Integer>();
 	}
 
 	/**
