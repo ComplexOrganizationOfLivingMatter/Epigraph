@@ -147,7 +147,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		imgTemp.setProcessor(btp);
-		
+
 		// Define connectivity with 4
 		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
@@ -186,7 +186,12 @@ public class GraphletImage extends BasicGraphletImage {
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
+		double totalPercentageToReach;
 		// TODO: Check when something is changed to rerun all these info
+		if (imgToShow != null)
+			totalPercentageToReach = 0.6;
+		else
+			totalPercentageToReach = 1;
 
 		RoiManager roiManager = RoiManager.getInstance();
 		resetSelection();
@@ -200,11 +205,10 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
+			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
+
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
-
-		progressBar.setValue(40);
 
 		HashSet<Integer> neighbours;
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
@@ -219,6 +223,8 @@ public class GraphletImage extends BasicGraphletImage {
 				}
 			}
 		}
+
+		progressBar.setValue((int) (55 / totalPercentageToReach));
 
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
@@ -304,8 +310,6 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
-		progressBar.setValue(60);
-
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
 		this.percentageOfHexagons /= validCells;
@@ -316,6 +320,8 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 		ArrayList<String> percentajesList = new ArrayList<String>();
+
+		progressBar.setValue((int) (60 / totalPercentageToReach));
 
 		if (imgToShow != null) {
 			overlay = new ImageOverlay(colorImgToShow);
@@ -331,7 +337,6 @@ public class GraphletImage extends BasicGraphletImage {
 			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
 			percentajesList.add(defaultFormat.format(percentageOfOctogons));
 
-			progressBar.setValue(100);
 			return percentajesList;
 		}
 		return null;
@@ -341,19 +346,19 @@ public class GraphletImage extends BasicGraphletImage {
 			boolean selectionMode, ImageOverlay overlay) {
 		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
 
-		progressBar.setValue(70);
-
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
 
-		progressBar.setValue(75);
+		progressBar.setValue(65);
 
 		this.orcaProgram = null;
 
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
 		}
+
+		progressBar.setValue(70);
 
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
@@ -379,6 +384,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			progressBar.setValue((70 + indexEpiCell * 5) / this.cells.size());
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
@@ -388,6 +394,7 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell : this.cells) {
+			progressBar.setValue((75 + cell.getId() * 5) / this.cells.size());
 			if (validCells5Graphlets) {
 				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
 					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
@@ -401,12 +408,10 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
-		// Percentage 70
 		progressBar.setValue(80);
 
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
 
-		// Percentage 85
 		progressBar.setValue(90);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
