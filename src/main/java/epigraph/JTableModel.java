@@ -111,6 +111,7 @@ class JTableModel extends AbstractTableModel {
 			break;
 		case 5:
 			listOfModes.set(row, (String) value);
+			break;
 		case 6:
 			listOfVisualizing.set(row, (Boolean) value);
 			break;

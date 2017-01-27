@@ -3,10 +3,13 @@
  */
 package epigraph;
 
+import java.awt.Dimension;
+
 import javax.swing.SwingUtilities;
 
 import ij.IJ;
 import ij.ImageJ;
+import ij.gui.Toolbar;
 import ij.plugin.PlugIn;
 
 /**
@@ -50,12 +53,13 @@ public class Epigraph implements PlugIn {
 	 * Plugin run method
 	 */
 	public void run(String arg) {
-		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
 		// Build GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mainWindow = new MainWindow();
-				mainWindow.createAndShowGUI();
+				mainWindow.pack();
+				mainWindow.setMinimumSize(new Dimension(650, 350));
+				mainWindow.setVisible(true);
 			}
 		});
 	}
@@ -63,8 +67,8 @@ public class Epigraph implements PlugIn {
 	/**
 	 * 
 	 */
-	public static void callToolbarPoint(){
-		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
+	public static void callToolbarMultiPoint(){
+		ij.gui.Toolbar.getInstance().setTool("multi");
 	}
 	
 	/**
@@ -73,5 +77,4 @@ public class Epigraph implements PlugIn {
 	public static void callToolbarRectangle(){
 		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.RECTANGLE);
 	}
-
 }

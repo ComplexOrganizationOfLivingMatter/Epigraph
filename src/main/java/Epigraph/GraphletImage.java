@@ -72,6 +72,7 @@ public class GraphletImage extends BasicGraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		this.labelName = img.getFileInfo().url;
+		this.raw_img = img;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -82,8 +83,6 @@ public class GraphletImage extends BasicGraphletImage {
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[NUMRANDOMVORONOI];
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
-			// System.out.println("graphletsReferences/randomVoronoi_" +
-			// Integer.toString(i) + ".ndump2");
 			URL fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
@@ -94,8 +93,6 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
-
-		preprocessImage(img);
 	}
 
 	/**
@@ -113,7 +110,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.l_img = l_img;
 	}
 
-	public void preprocessImage(ImagePlus img) {
+	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -124,10 +121,12 @@ public class GraphletImage extends BasicGraphletImage {
 			img.getChannelProcessor().autoThreshold();
 		}
 
+		progressBar.setValue(20);
 		int[][] pixels = img.getChannelProcessor().getIntArray();
 		int whitePixels = 0;
 		int blackPixels = 0;
 		for (int i = 0; i < img.getWidth(); i++) {
+			progressBar.setValue(20 + i / img.getWidth() * 20);
 			for (int j = 0; j < img.getHeight(); j++) {
 				if (pixels[i][j] == 0)
 					blackPixels++;
@@ -147,27 +146,31 @@ public class GraphletImage extends BasicGraphletImage {
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		imgTemp.setProcessor(btp);
-		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
-																				// connectivity
+		progressBar.setValue(50);
+		// Define connectivity with 8
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(connectivity);
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
 		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 
 		// get unique labels from labelled imageplus
-		int[] labelunique = LabelImages.findAllLabels(imgTemp);
+		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
+		progressBar.setValue(60);
 
 		// get image in a matrix of labels
 		int[][] matrixImg = imgTemp.getChannelProcessor().getIntArray();
 
 		// Create epicells
-		for (int indexEpiCell = 1; indexEpiCell < labelunique.length + 1; indexEpiCell++) {
+		for (int indexEpiCell = 1; indexEpiCell < maxValue; indexEpiCell++) {
 			this.cells.add(new EpiCell(indexEpiCell));
 		}
+		progressBar.setValue(70);
 
 		// Add pixel to each epicell
 		int W = imgTemp.getWidth();
 		int H = imgTemp.getHeight();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
+			progressBar.setValue(70 + indexImgX * 30 / W);
 			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
 				valuePxl = matrixImg[indexImgX][indexImgY];
 				if (valuePxl != 0) {
@@ -180,36 +183,39 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// Create adjacency matrix from the found cells
-		this.adjacencyMatrix = new int[labelunique.length][labelunique.length];
+		this.adjacencyMatrix = new int[maxValue - 1][maxValue - 1];
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
+		double totalPercentageToReach;
 		// TODO: Check when something is changed to rerun all these info
-		
+		if (imgToShow != null)
+			totalPercentageToReach = 0.6;
+		else
+			totalPercentageToReach = 1;
+
 		RoiManager roiManager = RoiManager.getInstance();
 		resetSelection();
-		if (roiManager != null && selectionMode){
-			for (Roi r : roiManager.getRoisAsArray()){
+		if (roiManager != null && selectionMode) {
+			for (Roi r : roiManager.getRoisAsArray()) {
 				for (Point point : r) {
 					int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
 					this.addCellToSelected(pixelInfo[0]);
 				}
 			}
 		}
-		
+
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
+			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
-
-		progressBar.setValue(40);
 
 		HashSet<Integer> neighbours;
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
 			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
 				neighbours = this.cells.get(idEpiCell).getNeighbours();
-				for (int idNeighbour = 0; idNeighbour < neighbours.size(); idNeighbour++) {
+				for (int idNeighbour : neighbours) {
 					if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
 						// Only valid cells' relationships
 						this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
@@ -218,6 +224,8 @@ public class GraphletImage extends BasicGraphletImage {
 				}
 			}
 		}
+
+		progressBar.setValue((int) (55 / totalPercentageToReach));
 
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
@@ -238,23 +246,23 @@ public class GraphletImage extends BasicGraphletImage {
 					switch (this.cells.get(i).getNeighbours().size()) {
 					case 4:
 						percentageOfSquares++;
-						colorOfCell = new Color((int) 255, (int) (0.4 * 255), (int) (0 * 255));
+						colorOfCell = new Color((int) 255, (int) 101, (int) 6);
 						break;
 					case 5:
 						percentageOfPentagons++;
-						colorOfCell = Color.green;
+						colorOfCell = new Color((int) 17, (int) 157, (int) 24);
 						break;
 					case 6:
 						percentageOfHexagons++;
-						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (1 * 255));
+						colorOfCell = new Color(52, (int) 102, (int) 249);
 						break;
 					case 7:
 						percentageOfHeptagons++;
-						colorOfCell = new Color((int) (0.6 * 255), 0 * 255, 1 * 255);
+						colorOfCell = new Color((int) 119, 5, 116);
 						break;
 					case 8:
 						percentageOfOctogons++;
-						colorOfCell = new Color(0, (int) (0.4 * 255), (int) (0.6 * 255));
+						colorOfCell = new Color(18, (int) 107, (int) 121);
 						break;
 					}
 
@@ -267,7 +275,7 @@ public class GraphletImage extends BasicGraphletImage {
 					}
 
 					if (this.cells.get(i).isWithinTheRange()) {
-						colorOfCell = Color.red;
+						colorOfCell = Color.GRAY;
 						validCells++;
 
 						switch (this.cells.get(i).getNeighbours().size()) {
@@ -303,8 +311,6 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
-		progressBar.setValue(60);
-
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
 		this.percentageOfHexagons /= validCells;
@@ -315,6 +321,8 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 		ArrayList<String> percentajesList = new ArrayList<String>();
+
+		progressBar.setValue((int) (60 / totalPercentageToReach));
 
 		if (imgToShow != null) {
 			overlay = new ImageOverlay(colorImgToShow);
@@ -339,19 +347,19 @@ public class GraphletImage extends BasicGraphletImage {
 			boolean selectionMode, ImageOverlay overlay) {
 		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
 
-		progressBar.setValue(70);
-
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
 		int[][] graphlets = this.orcaProgram.getOrbit();
 
-		progressBar.setValue(75);
+		progressBar.setValue(65);
 
 		this.orcaProgram = null;
 
 		for (int i = 0; i < graphlets.length; i++) {
 			this.cells.get(i).setGraphlets(graphlets[i]);
 		}
+
+		progressBar.setValue(70);
 
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
@@ -377,6 +385,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
+			progressBar.setValue((70 + indexEpiCell * 5) / this.cells.size());
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
@@ -386,6 +395,7 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell : this.cells) {
+			progressBar.setValue((75 + cell.getId() * 5) / this.cells.size());
 			if (validCells5Graphlets) {
 				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
 					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
@@ -399,12 +409,10 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
-		// Percentage 70
 		progressBar.setValue(80);
 
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
 
-		// Percentage 85
 		progressBar.setValue(90);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
@@ -415,7 +423,6 @@ public class GraphletImage extends BasicGraphletImage {
 			else
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
-
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
 
@@ -637,7 +644,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		return -1;
 	}
-	
+
 	public int addCellToInvalidRegion(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setInvalidRegion(true);
@@ -651,7 +658,7 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setInvalidRegion(false);
 	}
-	
+
 	public void resetSelection() {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setSelected(false);
