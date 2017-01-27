@@ -21,6 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ij.IJ;
 import ij.ImagePlus;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
@@ -58,10 +59,10 @@ public class MainWindow extends JPanel {
 				visualizingWindow.setVisible(true);
 			}
 		});
-		btnVisualize.setBounds(342, 255, 93, 29);
+		btnVisualize.setBounds(495, 255, 93, 29);
 
 		btnOpenButton = new JButton("Open");
-		btnOpenButton.setBounds(15, 255, 71, 29);
+		btnOpenButton.setBounds(37, 255, 71, 29);
 		btnOpenButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -89,13 +90,30 @@ public class MainWindow extends JPanel {
 		// Create table and scroll pane
 		this.tableInfo = new JTableModel();
 		table = new JTable(tableInfo);
+		table.setRowSelectionAllowed(false);
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		// Set up renderer and editor for the Favorite Color column.
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 		table.setDefaultEditor(Color.class, new JColorEditor());
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table.getColumnModel().getColumn(0).setMaxWidth(50);
+		table.getColumnModel().getColumn(0).setMinWidth(50);
+		table.getColumnModel().getColumn(2).setMaxWidth(47);
+		table.getColumnModel().getColumn(2).setMinWidth(47);
+		table.getColumnModel().getColumn(3).setMaxWidth(55);
+		table.getColumnModel().getColumn(3).setMinWidth(55);
+		table.getColumnModel().getColumn(4).setMinWidth(80);
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
+		table.getColumnModel().getColumn(5).setMaxWidth(150);
+		table.getColumnModel().getColumn(5).setMinWidth(150);
+		table.getColumnModel().getColumn(6).setMaxWidth(70);
+		table.getColumnModel().getColumn(6).setMinWidth(70);
+		
+		
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(15, 27, 420, 196);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(15, 27, 598, 215);
 		// scrollPane.setPreferredSize(new Dimension(400, 200));
 
 		panel.add(scrollPane);
@@ -158,7 +176,7 @@ public class MainWindow extends JPanel {
 			}
 		});
 
-		btnExport.setBounds(240, 255, 87, 29);
+		btnExport.setBounds(369, 255, 87, 29);
 		panel.add(btnExport);
 
 		JButton btnImport = new JButton("Import");
@@ -167,7 +185,7 @@ public class MainWindow extends JPanel {
 
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
-				chooser.setDialogTitle("choosertitle");
+				chooser.setDialogTitle("Import");
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
 				chooser.setFileFilter(filter);
 				chooser.setAcceptAllFileFilterUsed(false);
@@ -252,7 +270,7 @@ public class MainWindow extends JPanel {
 
 			}
 		});
-		btnImport.setBounds(101, 255, 81, 29);
+		btnImport.setBounds(160, 255, 81, 29);
 		panel.add(btnImport);
 
 	}
@@ -275,7 +293,7 @@ public class MainWindow extends JPanel {
 
 		// Display the window.
 		frame.pack();
-		frame.setSize(500, 400);
+		frame.setSize(650, 350);
 		frame.setVisible(true);
 	}
 }

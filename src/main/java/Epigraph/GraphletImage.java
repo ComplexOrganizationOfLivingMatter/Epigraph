@@ -147,8 +147,9 @@ public class GraphletImage extends BasicGraphletImage {
 		// Labelling image
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		imgTemp.setProcessor(btp);
-		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);// define
-																				// connectivity
+		
+		// Define connectivity with 4
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
 		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 
@@ -186,18 +187,18 @@ public class GraphletImage extends BasicGraphletImage {
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
 		// TODO: Check when something is changed to rerun all these info
-		
+
 		RoiManager roiManager = RoiManager.getInstance();
 		resetSelection();
-		if (roiManager != null && selectionMode){
-			for (Roi r : roiManager.getRoisAsArray()){
+		if (roiManager != null && selectionMode) {
+			for (Roi r : roiManager.getRoisAsArray()) {
 				for (Point point : r) {
 					int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
 					this.addCellToSelected(pixelInfo[0]);
 				}
 			}
 		}
-		
+
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue(indexEpiCell * 40 / this.cells.size());
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
@@ -267,7 +268,7 @@ public class GraphletImage extends BasicGraphletImage {
 					}
 
 					if (this.cells.get(i).isWithinTheRange()) {
-						colorOfCell = Color.red;
+						colorOfCell = Color.GRAY;
 						validCells++;
 
 						switch (this.cells.get(i).getNeighbours().size()) {
@@ -637,7 +638,7 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		return -1;
 	}
-	
+
 	public int addCellToInvalidRegion(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setInvalidRegion(true);
@@ -651,7 +652,7 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setInvalidRegion(false);
 	}
-	
+
 	public void resetSelection() {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setSelected(false);

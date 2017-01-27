@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import ij.IJ;
 import ij.ImageJ;
+import ij.gui.Toolbar;
 import ij.plugin.PlugIn;
 
 /**
@@ -63,8 +64,8 @@ public class Epigraph implements PlugIn {
 	/**
 	 * 
 	 */
-	public static void callToolbarPoint(){
-		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.POINT);
+	public static void callToolbarMultiPoint(){
+		ij.gui.Toolbar.getInstance().setTool("multi");
 	}
 	
 	/**

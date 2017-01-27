@@ -332,9 +332,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(buttonsConstraints);
 		buttonsPanel.add(configPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
-		buttonsPanel.add(graphletsPanel, buttonsConstraints);
-		buttonsConstraints.gridy++;
 		buttonsPanel.add(roiPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
+		buttonsPanel.add(graphletsPanel, buttonsConstraints);
 		buttonsConstraints.insets = new Insets(5, 5, 6, 6);
 
 		/* DEFINITION OF LEFT SIDE PANEL */
@@ -404,14 +404,21 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			newGraphletImage.setLabelName(tfImageName.getText());
 			newGraphletImage.setColor(colorPicked.getBackground());
 		}
+
 		if (e.getSource() == btnCreateRoi) {
 			if (btnCreateRoi.getText() != "Done") {
 				Epigraph.callToolbarRectangle();
-				roiManager = RoiManager.getRoiManager();
+				openRoiManager();
 				btnCreateRoi.setText("Done");
+				disableActionButtons();
+				btnSelectCells.setEnabled(false);
+				btnSelectInvalidRegion.setEnabled(false);
 			} else {
 				addROI();
 				btnCreateRoi.setText("Create ROI");
+				enableActionButtons();
+				btnSelectCells.setEnabled(true);
+				btnSelectInvalidRegion.setEnabled(true);
 			}
 		}
 
@@ -446,6 +453,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			} else {
 				selectionMode = false;
 			}
+			
 			polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
 					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
 					cbGraphletsMode.getSelectedIndex(), overlayResult);
@@ -462,14 +470,19 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		if (e.getSource() == btnSelectCells) {
 			if (btnSelectCells.getText() != "Done") {
-				roiManager = RoiManager.getRoiManager();
-				Epigraph.callToolbarPoint();
+				openRoiManager();
+				Epigraph.callToolbarMultiPoint();
 				btnSelectCells.setText("Done");
+				disableActionButtons();
+				btnCreateRoi.setEnabled(false);
+				btnSelectInvalidRegion.setEnabled(false);
 			} else {
 				// Add selected cells
 				addROI();
-
 				btnSelectCells.setText("Select cells");
+				enableActionButtons();
+				btnCreateRoi.setEnabled(true);
+				btnSelectInvalidRegion.setEnabled(true);
 			}
 		}
 
@@ -488,18 +501,27 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 							"This will remove the previous invalid region", "New invalid region",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						Epigraph.callToolbarPoint();
+						Epigraph.callToolbarMultiPoint();
 						btnSelectInvalidRegion.setText("Done");
+						disableActionButtons();
+						btnCreateRoi.setEnabled(false);
+						btnSelectCells.setEnabled(false);
 					}
 				} else {
-					Epigraph.callToolbarPoint();
+					Epigraph.callToolbarMultiPoint();
 					btnSelectInvalidRegion.setText("Done");
+					disableActionButtons();
+					btnCreateRoi.setEnabled(false);
+					btnSelectCells.setEnabled(false);
 				}
 
 			} else {
 				// Add selected cells
 				addInvalidRegion();
 				btnSelectInvalidRegion.setText("Pick invalid regions");
+				enableActionButtons();
+				btnCreateRoi.setEnabled(true);
+				btnSelectCells.setEnabled(true);
 			}
 		}
 
@@ -507,6 +529,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
+	}
+
+	public void disableActionButtons() {
+		btnCalculateGraphlets.setEnabled(false);
+		btnAddToTable.setEnabled(false);
+		btnTestNeighbours.setEnabled(false);
+	}
+
+	public void enableActionButtons() {
+		btnCalculateGraphlets.setEnabled(true);
+		btnAddToTable.setEnabled(true);
+		btnTestNeighbours.setEnabled(true);
 	}
 
 	private void addInvalidRegion() {
@@ -541,6 +575,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		this.labelsJPanel.repaint();
 		this.buttonsPanel.repaint();
 		this.all.repaint();
+	}
+	
+	private void openRoiManager(){
+		if (roiManager == null)
+			roiManager = RoiManager.getRoiManager();
+		else
+			roiManager.toFront();
 	}
 
 	/**
