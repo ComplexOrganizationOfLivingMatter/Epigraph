@@ -72,6 +72,7 @@ public class GraphletImage extends BasicGraphletImage {
 	public GraphletImage(ImagePlus img) {
 		super();
 		this.labelName = img.getFileInfo().url;
+		this.raw_img = img;
 
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -92,8 +93,6 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		// END TODO
-
-		preprocessImage(img);
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.l_img = l_img;
 	}
 
-	public void preprocessImage(ImagePlus img) {
+	public void preprocessImage(ImagePlus img, int connectivity) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -146,8 +145,8 @@ public class GraphletImage extends BasicGraphletImage {
 		ByteProcessor btp = LabelImages.createLabelImage(imgTemp.getChannelProcessor());
 		imgTemp.setProcessor(btp);
 
-		// Define connectivity with 4
-		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(4);
+		// Define connectivity with 8
+		FloodFillComponentsLabeling ffcl = new FloodFillComponentsLabeling(connectivity);
 		imgTemp.setProcessor(ffcl.computeLabels(imgTemp.getChannelProcessor()));
 		this.l_img = new ImagePlus("", imgTemp.getChannelProcessor());
 

@@ -71,7 +71,6 @@ public class MainWindow extends JFrame {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
-								IJ.log("Initializing...");
 								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
 								imageProcessing.pack();
 							} else {
@@ -86,6 +85,7 @@ public class MainWindow extends JFrame {
 				});
 			}
 		});
+		
 		panel.setLayout(null);
 
 		// Create table and scroll pane
@@ -271,6 +271,7 @@ public class MainWindow extends JFrame {
 
 			}
 		});
+		
 		btnImport.setBounds(160, 255, 81, 29);
 		panel.add(btnImport);
 

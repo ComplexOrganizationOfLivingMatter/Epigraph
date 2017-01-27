@@ -87,6 +87,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private boolean selectionMode;
 	private Roi invalidRegionRoi;
+	private JPanel preProcessingPanel;
+	private JComboBox<Integer> cbConnectivity;
+	private JButton btnLabelImage;
 
 	/**
 	 * 
@@ -106,7 +109,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		removeAll();
 
 		initGUI();
-
+		
+		setEnablePanels(false);
 	}
 
 	/**
@@ -124,9 +128,21 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
-		/* RIGHT PANEL FORMED BY THESE 2 PANELS */
+		/* RIGHT PANEL FORMED BY THESE 4 PANELS */
+		//Setup labelling panel
+		preProcessingPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
+		preProcessingPanel.setLayout(genericPanelLayout);
+		
+		//Adding to the panel the items
+		preProcessingPanel.add(cbConnectivity, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		preProcessingPanel.add(btnLabelImage, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		
 		// Setup the config panel
 		configPanel = new JPanel();
+		resetGenericConstrainst(genericPanelConstrainst);
 		configPanel.setLayout(genericPanelLayout);
 
 		// Adding to the panel all the buttons
@@ -147,7 +163,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Selection ROI panel
 		roiPanel = new JPanel();
 		roiPanel.setLayout(genericPanelLayout);
-
+		resetGenericConstrainst(genericPanelConstrainst);
+		
 		roiPanel.add(btnCreateRoi, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		roiPanel.add(btnSelectCells, genericPanelConstrainst);
@@ -212,9 +229,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
-
+		
 		setupPanels();
-
+		
 		pack();
 		setMinimumSize(getPreferredSize());
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -235,6 +252,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				canvas.setDstDimensions(r.width, r.height);
 			}
 		});
+		
+		//Connectivitiy
+		cbConnectivity = new JComboBox<Integer>();
+		cbConnectivity.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 4, 8 }));
+		cbConnectivity.setSelectedIndex(1);
+		
+		btnLabelImage = new JButton("Label image");
+		btnLabelImage.addActionListener(this);
 
 		// Radius of neighbours
 		inputRadiusNeigh = new JSpinner();
@@ -333,6 +358,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		buttonsConstraints.anchor = GridBagConstraints.NORTHWEST;
 		buttonsConstraints.fill = GridBagConstraints.HORIZONTAL;
 		resetGenericConstrainst(buttonsConstraints);
+		buttonsPanel.add(preProcessingPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
 		buttonsPanel.add(configPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
 		buttonsPanel.add(roiPanel, buttonsConstraints);
@@ -527,11 +554,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnSelectCells.setEnabled(true);
 			}
 		}
+		
+		if (e.getSource() == btnLabelImage){
+			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem());
+			setEnablePanels(true);
+		}
 
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
+	}
+
+	private void setEnablePanels(boolean enabled) {
+		roiPanel.setEnabled(enabled);
+		configPanel.setEnabled(enabled);
+		graphletsPanel.setEnabled(enabled);
 	}
 
 	public void disableActionButtons() {
