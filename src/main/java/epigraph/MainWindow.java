@@ -22,6 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import ij.IJ;
 import ij.ImagePlus;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 /**
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
@@ -45,10 +47,20 @@ public class MainWindow extends JFrame {
 	 * 
 	 */
 	public MainWindow() {
+		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel = new JPanel(new GridLayout(1, 0));
+		panel = new JPanel();
+		panel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				table.setPreferredScrollableViewportSize(new Dimension(panel.getWidth(), table.getHeight()));
+				table.setPreferredSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
+				table.setMinimumSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
+				repaintAll();
+			}
+		});
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		getContentPane().add(panel);
 
@@ -60,10 +72,10 @@ public class MainWindow extends JFrame {
 				visualizingWindow.setVisible(true);
 			}
 		});
-		btnVisualize.setBounds(495, 255, 93, 29);
+		btnVisualize.setBounds(607, 496, 93, 29);
 
 		btnOpenButton = new JButton("Open");
-		btnOpenButton.setBounds(37, 255, 71, 29);
+		btnOpenButton.setBounds(92, 496, 71, 29);
 		btnOpenButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -92,7 +104,6 @@ public class MainWindow extends JFrame {
 		this.tableInfo = new JTableModel();
 		table = new JTable(tableInfo);
 		table.setRowSelectionAllowed(false);
-		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		// Set up renderer and editor for the Favorite Color column.
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 		table.setDefaultEditor(Color.class, new JColorEditor());
@@ -114,7 +125,7 @@ public class MainWindow extends JFrame {
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(15, 27, 598, 215);
+		scrollPane.setBounds(15, 27, 765, 425);
 		// scrollPane.setPreferredSize(new Dimension(400, 200));
 
 		panel.add(scrollPane);
@@ -177,7 +188,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnExport.setBounds(369, 255, 87, 29);
+		btnExport.setBounds(428, 496, 87, 29);
 		panel.add(btnExport);
 
 		JButton btnImport = new JButton("Import");
@@ -272,8 +283,14 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-		btnImport.setBounds(160, 255, 81, 29);
+		btnImport.setBounds(255, 496, 81, 29);
 		panel.add(btnImport);
 
+	}
+
+	private void repaintAll() {
+		// TODO Auto-generated method stub
+		this.table.repaint();
+		this.repaint();
 	}
 }

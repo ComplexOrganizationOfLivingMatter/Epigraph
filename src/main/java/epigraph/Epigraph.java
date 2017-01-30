@@ -58,7 +58,6 @@ public class Epigraph implements PlugIn {
 			public void run() {
 				mainWindow = new MainWindow();
 				mainWindow.pack();
-				mainWindow.setMinimumSize(new Dimension(650, 350));
 				mainWindow.setVisible(true);
 			}
 		});
