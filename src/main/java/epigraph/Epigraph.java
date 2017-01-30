@@ -3,13 +3,10 @@
  */
 package epigraph;
 
-import java.awt.Dimension;
-
 import javax.swing.SwingUtilities;
 
 import ij.IJ;
 import ij.ImageJ;
-import ij.gui.Toolbar;
 import ij.plugin.PlugIn;
 
 /**

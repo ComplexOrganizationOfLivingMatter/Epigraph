@@ -5,7 +5,6 @@ package epigraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.stream.IntStream;
 
 /**
  * @author Pablo Vicente-Munuera

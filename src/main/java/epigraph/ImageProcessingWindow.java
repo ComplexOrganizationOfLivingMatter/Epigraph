@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -33,8 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
-import javax.swing.border.Border;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
@@ -196,7 +195,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		genericPanelConstrainst.gridx--;
-		
+
 		progressBarPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		progressBarPanel.setLayout(genericPanelLayout);
@@ -483,10 +482,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		if (e.getSource() == btnTestNeighbours) {
 			disableActionButtons();
-			//Execute in background
+			// Execute in background
 			backgroundTask = new Task(1);
 			backgroundTask.execute();
-			
+
 			repaintAll();
 		}
 
@@ -571,7 +570,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		for (Component c : graphletsPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
-		
+
 		if (newGraphletImage.getDistanceGDDH() == -1)
 			btnAddToTable.setEnabled(false);
 	}
@@ -655,19 +654,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 */
 		@Override
 		public Void doInBackground() {
-			setProgress(0);
-			switch (option) {
-			case 0:
-				calculateGraphlets();
-				break;
-			case 1:
-				testNeighbours();
-				break;
-			case 2:
-				labelImage();
-				break;
+			try {
+				setProgress(0);
+				switch (option) {
+				case 0:
+					calculateGraphlets();
+					break;
+				case 1:
+					testNeighbours();
+					break;
+				case 2:
+					labelImage();
+					break;
+				}
+			} catch (Exception e) {
+				IJ.log(e.getMessage());
 			}
-
 			return null;
 		}
 
