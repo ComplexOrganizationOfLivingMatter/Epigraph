@@ -187,7 +187,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
-			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlay) {
+			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
 		// TODO: Check when something is changed to rerun all these info
 		if (imgToShow != null)
@@ -325,9 +325,10 @@ public class GraphletImage extends BasicGraphletImage {
 		progressBar.setValue((int) (60 / totalPercentageToReach));
 
 		if (imgToShow != null) {
-			overlay = new ImageOverlay(colorImgToShow);
+			overlayResult.setImage(colorImgToShow);
 			((OverlayedImageCanvas) imgToShow.getCanvas()).clearOverlay();
-			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlay);
+			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlayResult);
+			((CustomCanvas) imgToShow.getCanvas()).setImageOverlay(overlayResult);
 
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);

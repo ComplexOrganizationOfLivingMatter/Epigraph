@@ -33,12 +33,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
+import fiji.util.gui.OverlayedImageCanvas;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.plugin.frame.RoiManager;
+import ij.process.ColorProcessor;
 
 /**
  * 
@@ -105,6 +107,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
+		
+		overlayResult = new ImageOverlay();
 
 		newGraphletImage = new GraphletImage(raw_img);
 		removeAll();
@@ -508,10 +512,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (e.getSource() == btnToggleOverlay) {
-			if (imp.getOverlay() == null && overlayResult != null) {
-				canvas.addOverlay(overlayResult);
-			} else {
-				canvas.clearOverlay();
+			if(overlayResult != null){
+				if (canvas.getImageOverlay() == null) {
+					canvas.clearOverlay();
+					canvas.addOverlay(overlayResult);
+					canvas.setImageOverlay(overlayResult);
+				} else {
+					overlayResult = new ImageOverlay(overlayResult.getImage());
+					canvas.setImageOverlay(null);
+					canvas.clearOverlay();
+				}
 			}
 		}
 
