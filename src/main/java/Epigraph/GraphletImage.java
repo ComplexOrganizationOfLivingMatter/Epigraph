@@ -664,4 +664,13 @@ public class GraphletImage extends BasicGraphletImage {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setSelected(false);
 	}
+
+	public ArrayList<int[][]> getCentroids() {
+		// TODO Auto-generated method stub
+		ArrayList<int[][]> centroids = new ArrayList<int[][]>();
+		for (int i = 0; i < this.cells.size(); i++){
+			centroids.add(this.cells.get(i).getCentroid());
+		}
+		return centroids;
+	}
 }

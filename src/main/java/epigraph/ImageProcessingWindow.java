@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -39,6 +40,8 @@ import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
+import ij.gui.TextRoi;
+import ij.plugin.Text;
 import ij.plugin.frame.RoiManager;
 import ij.process.ColorProcessor;
 
@@ -734,6 +737,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		private void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
+			TextRoi text;
+			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
+			for (int i = 0; i < centroids.size(); i++){
+				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i));
+				text.setStrokeColor(Color.red);
+				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth()/2), centroids.get(i)[0][1] - (text.getFloatHeight()/2));
+				imp.getChannelProcessor().drawRoi(text);
+				
+			}
+			
+			imp.updateAndDraw();
+			repaintAll();	
 		}
 	}
 }
