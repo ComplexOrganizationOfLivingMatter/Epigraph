@@ -3,6 +3,7 @@ package epigraph;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,11 +27,20 @@ import org.jzy3d.chart.SwingChart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
+import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
+import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
+import org.jzy3d.plot3d.rendering.canvas.OffscreenCanvas;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
+
+import fiji.util.gui.OverlayedImageCanvas;
+import ij.gui.ImageCanvas;
 import ij.plugin.Slicer;
 import util.opencsv.CSVReader;
 import javax.swing.JSlider;
@@ -61,7 +71,6 @@ public class VisualizingWindow extends JDialog {
 	 */
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-
 		scatterpanel = new JPanel(new GridLayout(1, 0));
 		add(scatterpanel);
 
@@ -81,7 +90,7 @@ public class VisualizingWindow extends JDialog {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
 			Reader reader = new InputStreamReader(
-					Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/Total.txt"));
+					Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/TotalPartial.txt"));
 			CSVReader csvReader = new CSVReader(reader, '\t');
 			voronoiReference = csvReader.readAll();
 
@@ -92,14 +101,49 @@ public class VisualizingWindow extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
+		
+		String[] firstRow = voronoiReference.get(0);
+		String[] row;
+		String[] rowToCompare;
+		
+		String name = firstRow[0];
+		String numRealization = name.substring(13, 17);
+		
+		float meanHexagons = 0;
+		float meanGDDH = 0;
+		float meanGDDRV = 0;
+		for (int i = 0; i < voronoiReference.size(); i++){
+			row = voronoiReference.get(i);
+			if (!numRealization.equals(row[0].substring(13, 17))){
+				break;
+			}
+			meanGDDRV = 0;
+			meanGDDH = 0;
+			meanHexagons = 0;
+			
+			String numDiagram = row[0].substring(row[0].length()-3);
+			for (int j = i; j < voronoiReference.size(); j++){
+				rowToCompare = voronoiReference.get(j);
+				if (numDiagram.equals(rowToCompare[0].substring(rowToCompare[0].length()-3))){
+					meanGDDRV +=  Float.parseFloat(row[1].replace(',', '.'));
+					meanGDDH +=  Float.parseFloat(row[2].replace(',', '.'));
+					meanHexagons +=  Float.parseFloat(row[3].replace(',', '.'));
+				}
+			}
+			
+			String[] newMean = {numDiagram, Float.toString(meanGDDRV/20), Float.toString(meanGDDH/20), Float.toString(meanHexagons/20)};
+			voronoiReferenceMean.add(newMean);
+		}
 
-		Coord3d[] points = new Coord3d[size_array + voronoiReference.size()];
-		Color[] colors = new Color[size_array + voronoiReference.size()];
-		for (int i = 0; i < voronoiReference.size(); i++) {
+		Coord3d[] points = new Coord3d[size_array + voronoiReferenceMean.size()];
+		Color[] colors = new Color[size_array + voronoiReferenceMean.size()];
+		for (int i = 0; i < voronoiReferenceMean.size(); i++) {
 			// creating coord array
-			String[] row = voronoiReference.get(i);
-			points[i] = new Coord3d(Float.parseFloat(row[1].replace(',', '.')),
-					Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[3].replace(',', '.')));
+			row = voronoiReferenceMean.get(i);
+			points[i] = new Coord3d(Float.parseFloat(row[1]),
+					Float.parseFloat(row[2]), Float.parseFloat(row[3]));
 			// creating color array
 			colors[i] = new Color(0, 0, 0);
 		}
@@ -120,17 +164,18 @@ public class VisualizingWindow extends JDialog {
 		}
 
 		scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
-
+		
 		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
 		chart.getScene().add(scatter);
 		chart.addMouseCameraController();
+		
 
 		IAxeLayout l = chart.getAxeLayout();
 
 		// Labelling axes
-		l.setXAxeLabel("GDDH");
-		l.setYAxeLabel("Hexagons percentage");
-		l.setZAxeLabel("GDDRV");
+		l.setXAxeLabel("GDDRV");
+		l.setYAxeLabel("GDDH");
+		l.setZAxeLabel("Percentage of hexagons");
 
 		// Presition displaying axes
 		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
