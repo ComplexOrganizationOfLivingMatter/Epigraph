@@ -142,7 +142,7 @@ public class MainWindow extends JFrame {
 					arrayNames.add(graphletImg.getLabelName());
 					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
 					arrayGDDH.add(graphletImg.getDistanceGDDH());
-					arrayGDDRV.add(graphletImg.getDistanceGDDH());
+					arrayGDDRV.add(graphletImg.getDistanceGDDRV());
 					arrayR.add((float) graphletImg.getColor().getRed());
 					arrayG.add((float) graphletImg.getColor().getGreen());
 					arrayB.add((float) graphletImg.getColor().getBlue());
