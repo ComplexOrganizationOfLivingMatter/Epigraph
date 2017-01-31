@@ -67,8 +67,12 @@ public class MainWindow extends JFrame {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
-				visualizingWindow.setVisible(true);
+				try {
+					VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
+					visualizingWindow.setVisible(true);
+				} catch (Exception e) {
+					IJ.log(e.getMessage());
+				}
 			}
 		});
 		btnVisualize.setBounds(607, 496, 93, 29);
@@ -96,7 +100,7 @@ public class MainWindow extends JFrame {
 				});
 			}
 		});
-		
+
 		panel.setLayout(null);
 
 		// Create table and scroll pane
@@ -119,8 +123,7 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(5).setMinWidth(150);
 		table.getColumnModel().getColumn(6).setMaxWidth(70);
 		table.getColumnModel().getColumn(6).setMinWidth(70);
-		
-		
+
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -281,7 +284,7 @@ public class MainWindow extends JFrame {
 
 			}
 		});
-		
+
 		btnImport.setBounds(255, 496, 81, 29);
 		panel.add(btnImport);
 

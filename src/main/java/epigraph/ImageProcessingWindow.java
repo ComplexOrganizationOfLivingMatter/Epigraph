@@ -652,6 +652,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public class Task extends SwingWorker<Void, Void> {
 
 		int option;
+		private ImagePlus imageWithLabels;
 
 		/**
 		 * 
@@ -738,17 +739,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		private void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
+			imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
 			for (int i = 0; i < centroids.size(); i++){
-				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i));
+				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i+1));
 				text.setStrokeColor(Color.red);
 				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth()/2), centroids.get(i)[0][1] - (text.getFloatHeight()/2));
-				imp.getChannelProcessor().drawRoi(text);
-				
+				imageWithLabels.getChannelProcessor().drawRoi(text);
 			}
-			
+			//canvas.addOverlay(new ImageOverlay(imageWithLabels.getChannelProcessor()));
 			imp.updateAndDraw();
-			repaintAll();	
+			repaintAll();
 		}
 	}
 }
