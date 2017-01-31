@@ -85,8 +85,7 @@ public class VisualizingWindow extends JDialog {
 		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
 		
 		chart = new SwingChart();
-
-		int size_array = tableInfo.getRowCount();
+		
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
 			Reader reader = new InputStreamReader(
@@ -137,6 +136,14 @@ public class VisualizingWindow extends JDialog {
 			voronoiReferenceMean.add(newMean);
 		}
 
+		//Variable for the number of visualization items.
+		int size_array = 0;  
+		for (int i = 0; i < tableInfo.getRowCount(); i++){
+			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
+				size_array++;
+		}
+			
+		
 		Coord3d[] points = new Coord3d[size_array + voronoiReferenceMean.size()];
 		Color[] colors = new Color[size_array + voronoiReferenceMean.size()];
 		for (int i = 0; i < voronoiReferenceMean.size(); i++) {
@@ -148,18 +155,20 @@ public class VisualizingWindow extends JDialog {
 			colors[i] = new Color(0, 0, 0);
 		}
 
-		for (int i = 0; i < size_array; i++) {
-			if (tableInfo.getListOfVisualizing().get(i)) {
+		int numRow = 0;
+		for (int i = 0; i < tableInfo.getRowCount(); i++) {
+			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
 				// creating coord array
-				points[i + voronoiReference.size()] = new Coord3d(
+				points[numRow + voronoiReferenceMean.size()] = new Coord3d(
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[i + voronoiReference.size()] = new Color(
+				colors[numRow + voronoiReferenceMean.size()] = new Color(
 						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
+				numRow++;
 			}
 		}
 
