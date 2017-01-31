@@ -682,7 +682,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					break;
 				}
 			} catch (Exception e) {
-				IJ.log(e.getMessage());
+				e.printStackTrace();
 			}
 			return null;
 		}

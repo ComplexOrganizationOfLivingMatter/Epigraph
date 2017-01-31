@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
  */
 public class ExcelClass {
 
+	private String fileName;
 	private ArrayList<String> imageName;
 	private ArrayList<Float> gddh;
 	private ArrayList<Float> gddrv;
@@ -38,6 +39,7 @@ public class ExcelClass {
 	 */
 	public ExcelClass() {
 		super();
+		this.fileName = "";
 		this.imageName = new ArrayList<String>();
 		this.gddh = new ArrayList<Float>();
 		this.gddrv = new ArrayList<Float>();
@@ -64,6 +66,7 @@ public class ExcelClass {
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
 			ArrayList<String> graphletsMode) {
 		super();
+		this.fileName = filename;
 		this.imageName = imageName;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
@@ -315,10 +318,8 @@ public class ExcelClass {
 
 	/**
 	 * EXPORT DATA TO EXCEL
-	 * 
-	 * @param fname
 	 */
-	public void exportData(String fname) {
+	public void exportData() {
 
 		// Blank workbook
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -372,7 +373,8 @@ public class ExcelClass {
 		}
 		try {
 			// Write the workbook in file system
-			FileOutputStream out = new FileOutputStream(new File(fname));
+			System.out.println(this.fileName);
+			FileOutputStream out = new FileOutputStream(new File(this.fileName));
 			workbook.write(out);
 			out.close();
 		} catch (Exception e) {

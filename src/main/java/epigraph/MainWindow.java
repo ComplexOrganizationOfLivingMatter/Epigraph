@@ -51,15 +51,6 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		panel = new JPanel();
-		panel.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				table.setPreferredScrollableViewportSize(new Dimension(panel.getWidth(), table.getHeight()));
-				table.setPreferredSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
-				table.setMinimumSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
-				repaintAll();
-			}
-		});
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		getContentPane().add(panel);
 
@@ -67,12 +58,10 @@ public class MainWindow extends JFrame {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
+				//try {
 					VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
 					visualizingWindow.setVisible(true);
-				} catch (Exception e) {
-					IJ.log(e.getMessage());
-				}
+				
 			}
 		});
 		btnVisualize.setBounds(607, 496, 93, 29);
@@ -137,33 +126,30 @@ public class MainWindow extends JFrame {
 		JButton btnExport = new JButton("Export");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ExcelClass excelclass = new ExcelClass();
+				
 				ArrayList<String> arrayNames = new ArrayList<String>();
 				ArrayList<Float> arrayHexagons = new ArrayList<Float>();
 				ArrayList<Float> arrayGDDH = new ArrayList<Float>();
-				ArrayList<Float> arraGDDRV = new ArrayList<Float>();
+				ArrayList<Float> arrayGDDRV = new ArrayList<Float>();
 				ArrayList<Float> arrayR = new ArrayList<Float>();
 				ArrayList<Float> arrayG = new ArrayList<Float>();
 				ArrayList<Float> arrayB = new ArrayList<Float>();
+				ArrayList<String> arrayMode = new ArrayList<String>();
 
+				int cont = 0;
 				for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
-
+					
 					arrayNames.add(graphletImg.getLabelName());
 					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
 					arrayGDDH.add(graphletImg.getDistanceGDDH());
-					arraGDDRV.add(graphletImg.getDistanceGDDH());
+					arrayGDDRV.add(graphletImg.getDistanceGDDH());
 					arrayR.add((float) graphletImg.getColor().getRed());
 					arrayG.add((float) graphletImg.getColor().getGreen());
 					arrayB.add((float) graphletImg.getColor().getBlue());
-
+					arrayMode.add(tableInfo.getListOfModes().get(cont));
+					cont++;
 				}
-				excelclass.setR(arrayR);
-				excelclass.setG(arrayG);
-				excelclass.setB(arrayB);
-				excelclass.setImageName(arrayNames);
-				excelclass.setGddh(arrayGDDH);
-				excelclass.setGddrv(arraGDDRV);
-				excelclass.setHexagonsPercentage(arrayHexagons);
+				
 
 				JFrame parentFrame = new JFrame();
 				JFileChooser fileChooser = new JFileChooser();
@@ -174,6 +160,8 @@ public class MainWindow extends JFrame {
 				fileChooser.setSelectedFile(new File("myfile.xls"));
 				// Set an extension filter, so the user sees other XML files
 				fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
+				
+				
 
 				fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -184,8 +172,8 @@ public class MainWindow extends JFrame {
 					if (!filename.endsWith(".xls"))
 						filename += ".xls";
 
-					// DO something with filename
-					excelclass.exportData(filename);
+					ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR, arrayG, arrayB, arrayMode);
+					excelclass.exportData();
 				}
 			}
 		});
