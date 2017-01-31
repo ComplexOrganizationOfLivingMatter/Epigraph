@@ -5,7 +5,6 @@ package epigraph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.stream.IntStream;
 
 /**
  * @author Pablo Vicente-Munuera
@@ -316,5 +315,21 @@ public class EpiCell {
 			}
 		}
 		return -1;
+	}
+
+	public int[][] getCentroid() {
+		// TODO Auto-generated method stub
+		float sumX = 0;
+		float sumY = 0;
+		for (int i = 0; i < pixelsX.size(); i++) {
+			sumX += pixelsX.get(i);
+			sumY += pixelsY.get(i);
+		}
+		
+		int centroidX = (int) (sumX / pixelsX.size());
+		int centroidY = (int) (sumY / pixelsY.size());
+		
+		int[][] centroid = {{centroidX, centroidY}};
+		return centroid;
 	}
 }

@@ -89,5 +89,8 @@ public class ImageOverlay implements Overlay {
 	public void setImage(ImageProcessor imp) {
 		this.imp = imp;
 	}
-
+	
+	public ImageProcessor getImage(){
+		return imp;
+	}
 }

@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -18,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -33,13 +33,17 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
-import javax.swing.border.Border;
 
+import fiji.util.gui.OverlayedImageCanvas;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
+import ij.gui.TextRoi;
+import ij.plugin.Text;
 import ij.plugin.frame.RoiManager;
+import ij.process.ColorProcessor;
 
 /**
  * 
@@ -106,6 +110,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
+		
+		overlayResult = new ImageOverlay();
 
 		newGraphletImage = new GraphletImage(raw_img);
 		removeAll();
@@ -196,7 +202,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		genericPanelConstrainst.gridx--;
-		
+
 		progressBarPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
 		progressBarPanel.setLayout(genericPanelLayout);
@@ -483,10 +489,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		if (e.getSource() == btnTestNeighbours) {
 			disableActionButtons();
-			//Execute in background
+			// Execute in background
 			backgroundTask = new Task(1);
 			backgroundTask.execute();
-			
+
 			repaintAll();
 		}
 
@@ -509,10 +515,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (e.getSource() == btnToggleOverlay) {
-			if (imp.getOverlay() == null && overlayResult != null) {
-				canvas.addOverlay(overlayResult);
-			} else {
-				canvas.clearOverlay();
+			if(overlayResult != null){
+				if (canvas.getImageOverlay() == null) {
+					canvas.clearOverlay();
+					canvas.addOverlay(overlayResult);
+					canvas.setImageOverlay(overlayResult);
+				} else {
+					overlayResult = new ImageOverlay(overlayResult.getImage());
+					canvas.setImageOverlay(null);
+					canvas.clearOverlay();
+				}
 			}
 		}
 
@@ -571,6 +583,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		for (Component c : graphletsPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
+
+		if (newGraphletImage.getDistanceGDDH() == -1)
+			btnAddToTable.setEnabled(false);
 	}
 
 	public void disableActionButtons() {
@@ -582,7 +597,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	public void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
-		btnAddToTable.setEnabled(true);
+		if (newGraphletImage.getDistanceGDDH() != -1)
+			btnAddToTable.setEnabled(true);
 		btnTestNeighbours.setEnabled(true);
 		btnLabelImage.setEnabled(true);
 	}
@@ -651,19 +667,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 */
 		@Override
 		public Void doInBackground() {
-			setProgress(0);
-			switch (option) {
-			case 0:
-				calculateGraphlets();
-				break;
-			case 1:
-				testNeighbours();
-				break;
-			case 2:
-				labelImage();
-				break;
+			try {
+				setProgress(0);
+				switch (option) {
+				case 0:
+					calculateGraphlets();
+					break;
+				case 1:
+					testNeighbours();
+					break;
+				case 2:
+					labelImage();
+					break;
+				}
+			} catch (Exception e) {
+				IJ.log(e.getMessage());
 			}
-
 			return null;
 		}
 
@@ -718,6 +737,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		private void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
+			TextRoi text;
+			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
+			for (int i = 0; i < centroids.size(); i++){
+				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i));
+				text.setStrokeColor(Color.red);
+				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth()/2), centroids.get(i)[0][1] - (text.getFloatHeight()/2));
+				imp.getChannelProcessor().drawRoi(text);
+				
+			}
+			
+			imp.updateAndDraw();
+			repaintAll();	
 		}
 	}
 }

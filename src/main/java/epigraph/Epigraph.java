@@ -3,13 +3,10 @@
  */
 package epigraph;
 
-import java.awt.Dimension;
-
 import javax.swing.SwingUtilities;
 
 import ij.IJ;
 import ij.ImageJ;
-import ij.gui.Toolbar;
 import ij.plugin.PlugIn;
 
 /**
@@ -58,7 +55,6 @@ public class Epigraph implements PlugIn {
 			public void run() {
 				mainWindow = new MainWindow();
 				mainWindow.pack();
-				mainWindow.setMinimumSize(new Dimension(650, 350));
 				mainWindow.setVisible(true);
 			}
 		});

@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
+import ij.gui.Overlay;
 
 /**
  * @author Ignacio Arganda-Carreras (iargandacarreras@gmail.com), Verena Kaynig,
@@ -26,10 +27,11 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * default serial version UID
 	 */
 	private static final long serialVersionUID = 1L;
+	private ImageOverlay imageOverlay;
 
 	CustomCanvas(ImagePlus imp) {
 		super(imp);
-		Dimension dim = new Dimension(Math.min(512, imp.getWidth()), Math.min(512, imp.getHeight()));
+		Dimension dim = new Dimension(imp.getWidth(), imp.getHeight());
 		setMinimumSize(dim);
 		setSize(dim.width, dim.height);
 		setDstDimensions(dim.width, dim.height);
@@ -82,5 +84,13 @@ public class CustomCanvas extends OverlayedImageCanvas {
 
 	public void setImagePlus(ImagePlus imp) {
 		super.imp = imp;
+	}
+	
+	public void setImageOverlay(ImageOverlay overlay) {
+		imageOverlay = overlay;
+	}
+	
+	public ImageOverlay getImageOverlay() {
+		return imageOverlay;
 	}
 }
