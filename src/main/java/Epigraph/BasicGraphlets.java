@@ -103,6 +103,7 @@ public class BasicGraphlets {
 		int graphletIndex = 0;
 		for (int numNode = 0; numNode < this.orbit.length; numNode++) {
 			actualGraphlets = new Integer[TOTALGRAPHLETS];
+			graphletIndex = 0;
 			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
 					actualGraphlets[numOrbit] = this.orbit[numNode][numOrbit];
