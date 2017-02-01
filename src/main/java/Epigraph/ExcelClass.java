@@ -282,13 +282,28 @@ public class ExcelClass {
 								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 4:
-								this.R.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.R.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.R.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 5:
-								this.G.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.G.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.G.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 6:
-								this.B.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.B.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.B.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
