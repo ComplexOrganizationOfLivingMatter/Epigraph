@@ -42,13 +42,13 @@ public class MainWindow extends JFrame {
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
 
-	/**
-	 * 
+	/** 
+	 *  
 	 */
 	public MainWindow() {
 		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -75,8 +75,14 @@ public class MainWindow extends JFrame {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
-								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
-								imageProcessing.pack();
+								if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000){
+									ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+									imageProcessing.pack();
+								} else {
+									JOptionPane.showMessageDialog(panel.getParent(),
+											"Max. width or height is 3000px. Please, resize it.");
+								}
+									
 							} else {
 								JOptionPane.showMessageDialog(panel.getParent(),
 										"You must introduce a valid image or set of images.");
