@@ -3,6 +3,8 @@ package epigraph;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,11 +17,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.jzy3d.chart.Chart;
@@ -34,6 +39,7 @@ import org.jzy3d.plot3d.primitives.axes.layout.providers.SmartTickProvider;
 import org.jzy3d.plot3d.primitives.axes.layout.providers.StaticTickProvider;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
+import org.jzy3d.plot3d.rendering.canvas.CanvasNewtAwt;
 import org.jzy3d.plot3d.rendering.canvas.OffscreenCanvas;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
@@ -65,8 +71,14 @@ public class VisualizingWindow extends JDialog {
 	/* load X Y Z coordenates */
 
 	private Chart chart;
-
+	
 	private JSlider slSizeOfPoints;
+
+	private JButton btnExport;
+
+	private Coord3d[] points;
+
+	private Color[] colors;
 
 	/**
 	 * 
@@ -84,11 +96,53 @@ public class VisualizingWindow extends JDialog {
 				scatter.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
-		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
-		
+		getContentPane().add(slSizeOfPoints, BorderLayout.PAGE_START);
+
+		btnExport = new JButton("Export view");
+		btnExport.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				JFileChooser fileChooser = new JFileChooser();
+				// set it to be a save dialog
+				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+				// set a default filename (this is where you default extension
+				// first comes in)
+				fileChooser.setSelectedFile(new File("screenshoot.png"));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+				int userSelection = fileChooser.showSaveDialog(btnExport.getParent());
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+					String filename = fileChooser.getSelectedFile().toString();
+					
+					((CanvasNewtAwt)chart.getCanvas()).setPixelScale(new float[] { 100f, 100f });
+					Quality q = new Quality(true, false, true, true, true, true, false);
+					q.setPreserveViewportSize(false);
+					Chart exportChart = AWTChartComponentFactory.chart(q,
+							"offscreen,1024,1024");
+					//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
+					Scatter newScatter = new Scatter();
+					initChart(exportChart, points, colors, newScatter, 300);
+					
+					File f = new File(filename);
+					try {
+						TextureData p = exportChart.screenshot(f);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		getContentPane().add(btnExport, BorderLayout.PAGE_START);
+
 		chart = new SwingChart();
-			
-		//ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
+
+		// ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
 			Reader reader = new InputStreamReader(
@@ -104,17 +158,17 @@ public class VisualizingWindow extends JDialog {
 			e.printStackTrace();
 		}
 
-		//Variable for the number of visualization items.
-		int size_array = 0;  
-		for (int i = 0; i < tableInfo.getRowCount(); i++){
+		// Variable for the number of visualization items.
+		int size_array = 0;
+		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
 				size_array++;
 		}
-			
+
 		String[] row;
-		Coord3d[] points = new Coord3d[size_array + voronoiReference.size()];
-		Color[] colors = new Color[size_array + voronoiReference.size()];
-		
+		points = new Coord3d[size_array + voronoiReference.size()];
+		colors = new Color[size_array + voronoiReference.size()];
+
 		for (int i = 0; i < voronoiReference.size(); i++) {
 			// creating coord array
 			row = voronoiReference.get(i);
@@ -140,63 +194,74 @@ public class VisualizingWindow extends JDialog {
 				numRow++;
 			}
 		}
+		Quality q2 = new Quality(true, true, true, true, true, true, false);
+		q2.setPreserveViewportSize(true);
+		chart = AWTChartComponentFactory.chart(q2, "newt");
+		initChart(chart, points, colors, null, -1);
 
-		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
+		chart.addMouseCameraController();
+		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
+		((CanvasNewtAwt)chart.getCanvas()).setPixelScale(new float[] { 8f, 8f });
 		
-		IAxeLayout l = chart.getAxeLayout();
+
+		pack();
+
+		setBounds(10, 10, 800, 800);
+
+		// chart.getView().getCamera().setScreenGridDisplayed(true);
+	}
+
+	/**
+	 * @param chart2
+	 * @param points
+	 * @param colors
+	 */
+	private void initChart(Chart chart2, Coord3d[] points, Color[] colors, Scatter newScatter, float pointSize) {
+
+		IAxeLayout l = chart2.getAxeLayout();
 
 		// Labelling axes
 		l.setXAxeLabel("GDDRV");
 		l.setYAxeLabel("GDDH");
 		l.setZAxeLabel("Percentage of hexagons");
-		
+
 		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
-		
-		scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
-		
-		
-		chart.getScene().add(scatter);
-		chart.addMouseCameraController();
-		
-		chart.setScale(new Scale(0, 100));
-		
 
+		if (newScatter != null){
+			newScatter = new Scatter(points, colors, pointSize);
+		} else {
+			scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
+		}
 
+		chart2.getScene().add(scatter);
 
-		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-
-		pack();
-		
-		setBounds(10, 10, 800, 800);
-		
-		
-		// chart.getView().getCamera().setScreenGridDisplayed(true);
+		chart2.setScale(new Scale(0, 100));
 	}
-	
+
 	public File getResourceAsFile(String resourcePath) {
-	    try {
-	        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
-	        if (in == null) {
-	            return null;
-	        }
+		try {
+			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+			if (in == null) {
+				return null;
+			}
 
-	        File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
-	        tempFile.deleteOnExit();
+			File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
+			tempFile.deleteOnExit();
 
-	        try (FileOutputStream out = new FileOutputStream(tempFile)) {
-	            //copy stream
-	            byte[] buffer = new byte[1024];
-	            int bytesRead;
-	            while ((bytesRead = in.read(buffer)) != -1) {
-	                out.write(buffer, 0, bytesRead);
-	            }
-	        }
-	        return tempFile;
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+			try (FileOutputStream out = new FileOutputStream(tempFile)) {
+				// copy stream
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = in.read(buffer)) != -1) {
+					out.write(buffer, 0, bytesRead);
+				}
+			}
+			return tempFile;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
