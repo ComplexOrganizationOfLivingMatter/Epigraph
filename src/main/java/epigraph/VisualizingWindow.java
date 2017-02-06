@@ -96,7 +96,7 @@ public class VisualizingWindow extends JDialog {
 				scatter.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
-		getContentPane().add(slSizeOfPoints, BorderLayout.PAGE_START);
+		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(new ActionListener() {
@@ -118,18 +118,19 @@ public class VisualizingWindow extends JDialog {
 
 					String filename = fileChooser.getSelectedFile().toString();
 					
-					((CanvasNewtAwt)chart.getCanvas()).setPixelScale(new float[] { 100f, 100f });
-					Quality q = new Quality(true, false, true, true, true, true, false);
-					q.setPreserveViewportSize(false);
-					Chart exportChart = AWTChartComponentFactory.chart(q,
-							"offscreen,1024,1024");
-					//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
-					Scatter newScatter = new Scatter();
-					initChart(exportChart, points, colors, newScatter, 300);
+					((CanvasAWT)chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
+//					Quality q = new Quality(true, false, true, true, true, true, false);
+//					q.setPreserveViewportSize(false);
+//					Chart exportChart = AWTChartComponentFactory.chart(q,
+//							"offscreen,1024,1024");
+//					//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
+//					Scatter newScatter = new Scatter();
+//					initChart(exportChart, points, colors, newScatter, 300);
 					
 					File f = new File(filename);
 					try {
-						TextureData p = exportChart.screenshot(f);
+						//TextureData p = exportChart.screenshot(f);
+						chart.screenshot(f);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -138,7 +139,7 @@ public class VisualizingWindow extends JDialog {
 				
 			}
 		});
-		getContentPane().add(btnExport, BorderLayout.PAGE_START);
+		getContentPane().add(btnExport, BorderLayout.EAST);
 
 		chart = new SwingChart();
 
@@ -194,14 +195,13 @@ public class VisualizingWindow extends JDialog {
 				numRow++;
 			}
 		}
-		Quality q2 = new Quality(true, true, true, true, true, true, false);
-		q2.setPreserveViewportSize(true);
-		chart = AWTChartComponentFactory.chart(q2, "newt");
+		Quality q2 = new Quality(true, true, true, true, true, true, true);
+		q2.setPreserveViewportSize(false);
+		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
 		initChart(chart, points, colors, null, -1);
 
 		chart.addMouseCameraController();
 		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-		((CanvasNewtAwt)chart.getCanvas()).setPixelScale(new float[] { 8f, 8f });
 		
 
 		pack();

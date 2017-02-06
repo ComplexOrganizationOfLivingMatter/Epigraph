@@ -32,6 +32,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import fiji.util.gui.OverlayedImageCanvas;
@@ -110,7 +111,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
-		
+
 		overlayResult = new ImageOverlay();
 
 		newGraphletImage = new GraphletImage(raw_img);
@@ -741,13 +742,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			TextRoi text;
 			imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
-			for (int i = 0; i < centroids.size(); i++){
-				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i+1));
+			for (int i = 0; i < centroids.size(); i++) {
+				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i + 1));
 				text.setStrokeColor(Color.red);
-				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth()/2), centroids.get(i)[0][1] - (text.getFloatHeight()/2));
+				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth() / 2),
+						centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
 				imageWithLabels.getChannelProcessor().drawRoi(text);
 			}
-			//canvas.addOverlay(new ImageOverlay(imageWithLabels.getChannelProcessor()));
+			// canvas.addOverlay(new
+			// ImageOverlay(imageWithLabels.getChannelProcessor()));
 			imp.updateAndDraw();
 			repaintAll();
 		}
