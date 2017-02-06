@@ -74,7 +74,7 @@ public class VisualizingWindow extends JDialog {
 		scatterpanel = new JPanel(new GridLayout(1, 0));
 		add(scatterpanel);
 
-		slSizeOfPoints = new JSlider(3, 20, 6);
+		slSizeOfPoints = new JSlider(3, 20, 10);
 		slSizeOfPoints.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -85,7 +85,8 @@ public class VisualizingWindow extends JDialog {
 		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
 		
 		chart = new SwingChart();
-		
+			
+		//ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
 			Reader reader = new InputStreamReader(
@@ -100,41 +101,6 @@ public class VisualizingWindow extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
-		
-		String[] firstRow = voronoiReference.get(0);
-		String[] row;
-		String[] rowToCompare;
-		
-		String name = firstRow[0];
-		String numRealization = name.substring(13, 17);
-		
-		float meanHexagons = 0;
-		float meanGDDH = 0;
-		float meanGDDRV = 0;
-		for (int i = 0; i < voronoiReference.size(); i++){
-			row = voronoiReference.get(i);
-			if (!numRealization.equals(row[0].substring(13, 17))){
-				break;
-			}
-			meanGDDRV = 0;
-			meanGDDH = 0;
-			meanHexagons = 0;
-			
-			String numDiagram = row[0].substring(row[0].length()-3);
-			for (int j = i; j < voronoiReference.size(); j++){
-				rowToCompare = voronoiReference.get(j);
-				if (numDiagram.equals(rowToCompare[0].substring(rowToCompare[0].length()-3))){
-					meanGDDRV +=  Float.parseFloat(row[1].replace(',', '.'));
-					meanGDDH +=  Float.parseFloat(row[2].replace(',', '.'));
-					meanHexagons +=  Float.parseFloat(row[3].replace(',', '.'));
-				}
-			}
-			
-			String[] newMean = {numDiagram, Float.toString(meanGDDRV/20), Float.toString(meanGDDH/20), Float.toString(meanHexagons/20)};
-			voronoiReferenceMean.add(newMean);
-		}
 
 		//Variable for the number of visualization items.
 		int size_array = 0;  
@@ -143,28 +109,29 @@ public class VisualizingWindow extends JDialog {
 				size_array++;
 		}
 			
+		String[] row;
+		Coord3d[] points = new Coord3d[size_array + voronoiReference.size()];
+		Color[] colors = new Color[size_array + voronoiReference.size()];
 		
-		Coord3d[] points = new Coord3d[size_array + voronoiReferenceMean.size()];
-		Color[] colors = new Color[size_array + voronoiReferenceMean.size()];
-		for (int i = 0; i < voronoiReferenceMean.size(); i++) {
+		for (int i = 0; i < voronoiReference.size(); i++) {
 			// creating coord array
-			row = voronoiReferenceMean.get(i);
-			points[i] = new Coord3d(Float.parseFloat(row[1]),
-					Float.parseFloat(row[2]), Float.parseFloat(row[3]));
+			row = voronoiReference.get(i);
+			points[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
+					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
 			// creating color array
-			colors[i] = new Color(0, 0, 0);
+			colors[i] = new Color(Integer.parseInt(row[4]), Integer.parseInt(row[5]), Integer.parseInt(row[6]));
 		}
 
 		int numRow = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
 				// creating coord array
-				points[numRow + voronoiReferenceMean.size()] = new Coord3d(
+				points[numRow + voronoiReference.size()] = new Coord3d(
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[numRow + voronoiReferenceMean.size()] = new Color(
+				colors[numRow + voronoiReference.size()] = new Color(
 						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
@@ -194,8 +161,8 @@ public class VisualizingWindow extends JDialog {
 		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
 
 		pack();
-		setBounds(0, 0, 1000, 1000);
-
+		
+		
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
 	
