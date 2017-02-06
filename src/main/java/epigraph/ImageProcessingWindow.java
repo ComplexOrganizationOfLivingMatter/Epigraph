@@ -18,6 +18,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -516,7 +517,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (e.getSource() == btnToggleOverlay) {
-			if(overlayResult != null){
+			if (overlayResult != null) {
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
 					canvas.addOverlay(overlayResult);
@@ -668,7 +669,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Main task. Executed in background thread.
 		 */
 		@Override
-		public Void doInBackground() {
+		protected Void doInBackground() {
 			try {
 				setProgress(0);
 				switch (option) {
@@ -692,14 +693,24 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Executed in event dispatching thread
 		 */
 		@Override
-		public void done() {
-			progressBar.setValue(100);
-			Toolkit.getDefaultToolkit().beep();
-			repaintAll();
-			if (option == 2)
-				setEnablePanels(true);
-			else
-				enableActionButtons();
+		protected void done() {
+			try {
+				get();
+				progressBar.setValue(100);
+				Toolkit.getDefaultToolkit().beep();
+				repaintAll();
+				if (option == 2)
+					setEnablePanels(true);
+				else
+					enableActionButtons();
+			} catch (ExecutionException e) {
+				e.getCause().printStackTrace();
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 
 		private void calculateGraphlets() {
