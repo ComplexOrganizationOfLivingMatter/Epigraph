@@ -16,6 +16,7 @@ import java.util.Iterator;
 import javax.swing.JProgressBar;
 
 import fiji.util.gui.OverlayedImageCanvas;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
@@ -345,6 +346,8 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 		ArrayList<String> percentajesList = new ArrayList<String>();
+		
+		//IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " + percentageOfPentagons + " " + percentageOfHexagonsToShow + " " + percentageOfHeptagons + " " + percentageOfOctogons + " " + percentageOfNonagons + " " + percentageOfDecagons);
 
 		progressBar.setValue((int) (60 / totalPercentageToReach));
 
