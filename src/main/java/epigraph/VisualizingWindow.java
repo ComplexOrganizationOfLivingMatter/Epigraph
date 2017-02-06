@@ -30,6 +30,8 @@ import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
+import org.jzy3d.plot3d.primitives.axes.layout.providers.SmartTickProvider;
+import org.jzy3d.plot3d.primitives.axes.layout.providers.StaticTickProvider;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
 import org.jzy3d.plot3d.rendering.canvas.OffscreenCanvas;
@@ -139,28 +141,35 @@ public class VisualizingWindow extends JDialog {
 			}
 		}
 
-		scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
-		
 		chart = AWTChartComponentFactory.chart(Quality.Nicest, "newt");
-		chart.getScene().add(scatter);
-		chart.addMouseCameraController();
 		
-
 		IAxeLayout l = chart.getAxeLayout();
 
 		// Labelling axes
 		l.setXAxeLabel("GDDRV");
 		l.setYAxeLabel("GDDH");
 		l.setZAxeLabel("Percentage of hexagons");
-
-		// Presition displaying axes
+		
 		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
+		
+		scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
+		
+		
+		chart.getScene().add(scatter);
+		chart.addMouseCameraController();
+		
+		chart.setScale(new Scale(0, 100));
+		
+
+
 
 		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
 
 		pack();
+		
+		setBounds(10, 10, 800, 800);
 		
 		
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
