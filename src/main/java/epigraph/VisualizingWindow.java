@@ -2,6 +2,8 @@ package epigraph;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,7 +60,7 @@ import javax.swing.JSlider;
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
  *
  */
-public class VisualizingWindow extends JDialog {
+public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -82,64 +84,13 @@ public class VisualizingWindow extends JDialog {
 
 	/**
 	 * 
+	 * @param tableInfo
 	 */
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-		scatterpanel = new JPanel(new GridLayout(1, 0));
-		add(scatterpanel);
+		
 
-		slSizeOfPoints = new JSlider(3, 20, 10);
-		slSizeOfPoints.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				// TODO Auto-generated method stub
-				scatter.setWidth((float) slSizeOfPoints.getValue());
-			}
-		});
-		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
-
-		btnExport = new JButton("Export view");
-		btnExport.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				JFileChooser fileChooser = new JFileChooser();
-				// set it to be a save dialog
-				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-				// set a default filename (this is where you default extension
-				// first comes in)
-				fileChooser.setSelectedFile(new File("screenshoot.png"));
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-				int userSelection = fileChooser.showSaveDialog(btnExport.getParent());
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-
-					String filename = fileChooser.getSelectedFile().toString();
-					
-					((CanvasAWT)chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
-//					Quality q = new Quality(true, false, true, true, true, true, false);
-//					q.setPreserveViewportSize(false);
-//					Chart exportChart = AWTChartComponentFactory.chart(q,
-//							"offscreen,1024,1024");
-//					//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
-//					Scatter newScatter = new Scatter();
-//					initChart(exportChart, points, colors, newScatter, 300);
-					
-					File f = new File(filename);
-					try {
-						//TextureData p = exportChart.screenshot(f);
-						chart.screenshot(f);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				
-			}
-		});
-		getContentPane().add(btnExport, BorderLayout.EAST);
+		initGUIItems();
 
 		chart = new SwingChart();
 
@@ -203,7 +154,6 @@ public class VisualizingWindow extends JDialog {
 		chart.addMouseCameraController();
 		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
 		
-
 		pack();
 
 		setBounds(10, 10, 800, 800);
@@ -212,9 +162,43 @@ public class VisualizingWindow extends JDialog {
 	}
 
 	/**
+	 * 
+	 */
+	private void initGUIItems() {
+		GridBagLayout genericPanelLayout = new GridBagLayout();
+		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
+		genericPanelConstrainst.gridwidth = 1;
+		genericPanelConstrainst.gridheight = 1;
+		genericPanelConstrainst.gridx = 0;
+		genericPanelConstrainst.gridy = 0;
+		genericPanelConstrainst.weighty = 0;
+		genericPanelConstrainst.weightx = 0;
+		scatterpanel = new JPanel(genericPanelLayout);
+		
+		add(scatterpanel);
+		
+		slSizeOfPoints = new JSlider(3, 20, 10);
+		slSizeOfPoints.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				scatter.setWidth((float) slSizeOfPoints.getValue());
+			}
+		});
+		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
+
+		btnExport = new JButton("Export view");
+		btnExport.addActionListener(this);
+		getContentPane().add(btnExport, BorderLayout.EAST);
+	}
+
+	/**
+	 * 
 	 * @param chart2
 	 * @param points
 	 * @param colors
+	 * @param newScatter
+	 * @param pointSize
 	 */
 	private void initChart(Chart chart2, Coord3d[] points, Color[] colors, Scatter newScatter, float pointSize) {
 
@@ -240,6 +224,11 @@ public class VisualizingWindow extends JDialog {
 		chart2.setScale(new Scale(0, 100));
 	}
 
+	/**
+	 * 
+	 * @param resourcePath
+	 * @return
+	 */
 	public File getResourceAsFile(String resourcePath) {
 		try {
 			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
@@ -262,6 +251,46 @@ public class VisualizingWindow extends JDialog {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param e
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnExport){
+			JFileChooser fileChooser = new JFileChooser();
+			// set it to be a save dialog
+			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+			// set a default filename (this is where you default extension
+			// first comes in)
+			fileChooser.setSelectedFile(new File("screenshoot.png"));
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+			int userSelection = fileChooser.showSaveDialog(btnExport.getParent());
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+				String filename = fileChooser.getSelectedFile().toString();
+				
+				((CanvasAWT)chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
+//				Quality q = new Quality(true, false, true, true, true, true, false);
+//				q.setPreserveViewportSize(false);
+//				Chart exportChart = AWTChartComponentFactory.chart(q,
+//						"offscreen,1024,1024");
+//				//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
+//				Scatter newScatter = new Scatter();
+//				initChart(exportChart, points, colors, newScatter, 300);
+				
+				File f = new File(filename);
+				try {
+					//TextureData p = exportChart.screenshot(f);
+					chart.screenshot(f);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 }
