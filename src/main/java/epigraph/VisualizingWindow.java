@@ -1,6 +1,7 @@
 package epigraph;
 
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -96,6 +97,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	JTableModel tableInfo;
 
+	private Checkbox chbShowVoronoiReference;
+
 	/**
 	 * 
 	 * @param tableInfo
@@ -163,10 +166,15 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		}
 
 		String[] row;
-		points = new Coord3d[size_array + voronoiReference.size()];
-		colors = new Color[size_array + voronoiReference.size()];
+		int voronoiReferenceSize = 0;
 
-		for (int i = 0; i < voronoiReference.size(); i++) {
+		if (chbShowVoronoiReference.getState())
+			voronoiReferenceSize = voronoiReference.size();
+
+		points = new Coord3d[size_array + voronoiReferenceSize];
+		colors = new Color[size_array + voronoiReferenceSize];
+
+		for (int i = 0; i < voronoiReferenceSize; i++) {
 			// creating coord array
 			row = voronoiReference.get(i);
 			points[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
@@ -179,12 +187,12 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
 				// creating coord array
-				points[numRow + voronoiReference.size()] = new Coord3d(
+				points[numRow + voronoiReferenceSize] = new Coord3d(
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[numRow + voronoiReference.size()] = new Color(
+				colors[numRow + voronoiReferenceSize] = new Color(
 						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
@@ -224,16 +232,29 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				repaintAll();
 			}
 		});
+
+		chbShowVoronoiReference = new Checkbox("Show reference", true);
+		chbShowVoronoiReference.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
+				cbGraphletsReference.setEnabled(chbShowVoronoiReference.getState());
+				repaintAll();
+			}
+		});
 	}
 
 	private void repaintAll() {
-		this.chart.getScene().remove(scatter);
-		
+		Scatter oldScatter = scatter;
+
 		initChart(null, -1);
-		
-		canvasPanel.repaint();
-		scatterpanel.repaint();
+
+		this.chart.getScene().remove(oldScatter);
+
 		getContentPane().repaint();
+
+		this.chart.setScale(new Scale(0, 100));
 	}
 
 	/**
@@ -258,6 +279,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
 
+		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
