@@ -91,7 +91,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		createScatterPlot(cbGraphletsReference.getSelectedIndex());
 		createScatterData();
-		
+
 		initChart();
 
 		initPanels();
@@ -154,37 +154,35 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			// creating color array
 			colors[i] = new Color(Integer.parseInt(row[4]), Integer.parseInt(row[5]), Integer.parseInt(row[6]));
 		}
-		
+
 		scatterReference = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 	}
-	
-	private void createScatterData(){
+
+	private void createScatterData() {
 		int size_array = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
 				size_array++;
 		}
-		
+
 		Coord3d[] points = new Coord3d[size_array];
 		Color[] colors = new Color[size_array];
-		
+
 		int numRow = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
 				// creating coord array
-				points[numRow] = new Coord3d(
-						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+				points[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[numRow] = new Color(
-						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
+				colors[numRow] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
 				numRow++;
 			}
 		}
-		
+
 		scatterData = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 	}
 
@@ -216,7 +214,13 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		cbGraphletsReference.setSelectedIndex(0);
 		cbGraphletsReference.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
+				Scatter oldScatter = scatterReference;
+
 				createScatterPlot(cbGraphletsReference.getSelectedIndex());
+
+				chart.getScene().add(scatterReference);
+
+				chart.getScene().remove(oldScatter);
 				repaintAll();
 			}
 		});
@@ -229,17 +233,11 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			public void itemStateChanged(ItemEvent e) {
 				scatterReference.setDisplayed(chbShowVoronoiReference.getState());
 				cbGraphletsReference.setEnabled(chbShowVoronoiReference.getState());
-				repaintAll();
 			}
 		});
 	}
 
 	private void repaintAll() {
-		Scatter oldScatter = scatterReference;
-
-		initChart();
-
-		this.chart.getScene().remove(oldScatter);
 
 		getContentPane().repaint();
 
