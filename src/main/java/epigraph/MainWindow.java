@@ -3,6 +3,7 @@ package epigraph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -41,11 +42,13 @@ public class MainWindow extends JFrame {
 	private JPanel panel;
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
+	private JFrame fatherWindow;
 
 	/** 
 	 *  
 	 */
 	public MainWindow() {
+		fatherWindow = this;
 		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,7 +62,7 @@ public class MainWindow extends JFrame {
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//try {
-					VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
+					VisualizingWindow visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
 					visualizingWindow.setVisible(true);
 				
 			}

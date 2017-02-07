@@ -2,6 +2,7 @@ package epigraph;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -91,8 +92,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * 
 	 * @param tableInfo
 	 */
-	public VisualizingWindow(JTableModel tableInfo) {
-		super();
+	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
+		super(parent);
 
 		initGUIItems();
 
@@ -104,7 +105,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		pack();
 
-		setBounds(10, 10, 800, 800);
+		setBounds(10, 10, 1200, 800);
 
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
@@ -195,7 +196,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		GridBagLayout genericPanelLayout = new GridBagLayout();
 		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
 		genericPanelConstrainst.anchor = GridBagConstraints.CENTER;
-		genericPanelConstrainst.fill = GridBagConstraints.VERTICAL;
+		genericPanelConstrainst.fill = GridBagConstraints.BOTH;
 		resetConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
@@ -220,8 +221,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		scatterpanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
 
-		genericPanelConstrainst.weightx = 1;
-		genericPanelConstrainst.weighty = 1;
+		genericPanelConstrainst.weightx = 2;
+		genericPanelConstrainst.weighty = 2;
 		scatterpanel.add(canvasPanel, genericPanelConstrainst);
 		resetConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.gridx++;
