@@ -150,6 +150,20 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
+	 * @return the listOfModes
+	 */
+	public ArrayList<String> getListOfModes() {
+		return listOfModes;
+	}
+
+	/**
+	 * @param listOfModes the listOfModes to set
+	 */
+	public void setListOfModes(ArrayList<String> listOfModes) {
+		this.listOfModes = listOfModes;
+	}
+
+	/**
 	 * 
 	 * @param newImages
 	 */

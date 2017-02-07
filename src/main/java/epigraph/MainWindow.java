@@ -3,6 +3,7 @@ package epigraph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -41,25 +42,18 @@ public class MainWindow extends JFrame {
 	private JPanel panel;
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
+	private JFrame fatherWindow;
 
-	/**
-	 * 
+	/** 
+	 *  
 	 */
 	public MainWindow() {
+		fatherWindow = this;
 		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		panel = new JPanel();
-		panel.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				table.setPreferredScrollableViewportSize(new Dimension(panel.getWidth(), table.getHeight()));
-				table.setPreferredSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
-				table.setMinimumSize(new Dimension(panel.getWidth() - 10, table.getHeight()));
-				repaintAll();
-			}
-		});
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		getContentPane().add(panel);
 
@@ -67,8 +61,10 @@ public class MainWindow extends JFrame {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VisualizingWindow visualizingWindow = new VisualizingWindow(tableInfo);
-				visualizingWindow.setVisible(true);
+				//try {
+					VisualizingWindow visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
+					visualizingWindow.setVisible(true);
+				
 			}
 		});
 		btnVisualize.setBounds(607, 496, 93, 29);
@@ -82,8 +78,14 @@ public class MainWindow extends JFrame {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
-								ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
-								imageProcessing.pack();
+								if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000){
+									ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+									imageProcessing.pack();
+								} else {
+									JOptionPane.showMessageDialog(panel.getParent(),
+											"Max. width or height is 3000px. Please, resize it.");
+								}
+									
 							} else {
 								JOptionPane.showMessageDialog(panel.getParent(),
 										"You must introduce a valid image or set of images.");
@@ -96,7 +98,7 @@ public class MainWindow extends JFrame {
 				});
 			}
 		});
-		
+
 		panel.setLayout(null);
 
 		// Create table and scroll pane
@@ -119,8 +121,7 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(5).setMinWidth(150);
 		table.getColumnModel().getColumn(6).setMaxWidth(70);
 		table.getColumnModel().getColumn(6).setMinWidth(70);
-		
-		
+
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -134,33 +135,30 @@ public class MainWindow extends JFrame {
 		JButton btnExport = new JButton("Export");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ExcelClass excelclass = new ExcelClass();
+				
 				ArrayList<String> arrayNames = new ArrayList<String>();
 				ArrayList<Float> arrayHexagons = new ArrayList<Float>();
 				ArrayList<Float> arrayGDDH = new ArrayList<Float>();
-				ArrayList<Float> arraGDDRV = new ArrayList<Float>();
+				ArrayList<Float> arrayGDDRV = new ArrayList<Float>();
 				ArrayList<Float> arrayR = new ArrayList<Float>();
 				ArrayList<Float> arrayG = new ArrayList<Float>();
 				ArrayList<Float> arrayB = new ArrayList<Float>();
+				ArrayList<String> arrayMode = new ArrayList<String>();
 
+				int cont = 0;
 				for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
-
+					
 					arrayNames.add(graphletImg.getLabelName());
 					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
 					arrayGDDH.add(graphletImg.getDistanceGDDH());
-					arraGDDRV.add(graphletImg.getDistanceGDDH());
+					arrayGDDRV.add(graphletImg.getDistanceGDDRV());
 					arrayR.add((float) graphletImg.getColor().getRed());
 					arrayG.add((float) graphletImg.getColor().getGreen());
 					arrayB.add((float) graphletImg.getColor().getBlue());
-
+					arrayMode.add(tableInfo.getListOfModes().get(cont));
+					cont++;
 				}
-				excelclass.setR(arrayR);
-				excelclass.setG(arrayG);
-				excelclass.setB(arrayB);
-				excelclass.setImageName(arrayNames);
-				excelclass.setGddh(arrayGDDH);
-				excelclass.setGddrv(arraGDDRV);
-				excelclass.setHexagonsPercentage(arrayHexagons);
+				
 
 				JFrame parentFrame = new JFrame();
 				JFileChooser fileChooser = new JFileChooser();
@@ -171,6 +169,8 @@ public class MainWindow extends JFrame {
 				fileChooser.setSelectedFile(new File("myfile.xls"));
 				// Set an extension filter, so the user sees other XML files
 				fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
+				
+				
 
 				fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -181,8 +181,8 @@ public class MainWindow extends JFrame {
 					if (!filename.endsWith(".xls"))
 						filename += ".xls";
 
-					// DO something with filename
-					excelclass.exportData(filename);
+					ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR, arrayG, arrayB, arrayMode);
+					excelclass.exportData();
 				}
 			}
 		});
@@ -281,7 +281,7 @@ public class MainWindow extends JFrame {
 
 			}
 		});
-		
+
 		btnImport.setBounds(255, 496, 81, 29);
 		panel.add(btnImport);
 

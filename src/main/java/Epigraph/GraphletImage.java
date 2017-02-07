@@ -16,6 +16,7 @@ import java.util.Iterator;
 import javax.swing.JProgressBar;
 
 import fiji.util.gui.OverlayedImageCanvas;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
@@ -227,11 +228,14 @@ public class GraphletImage extends BasicGraphletImage {
 
 		progressBar.setValue((int) (55 / totalPercentageToReach));
 
+		float percentageOfTriangles = 0;
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
 		float percentageOfHeptagons = 0;
 		float percentageOfOctogons = 0;
+		float percentageOfNonagons = 0;
+		float percentageOfDecagons = 0;
 		int validCells = 0;
 		// int percentageOfHexagonsOriginal = 0;
 		int[][] actualPixels;
@@ -244,6 +248,9 @@ public class GraphletImage extends BasicGraphletImage {
 			if (this.cells.get(i).isValid_cell()) {
 				if (!selectionMode || this.cells.get(i).isSelected()) {
 					switch (this.cells.get(i).getNeighbours().size()) {
+					case 3:
+						percentageOfTriangles++;
+						break;
 					case 4:
 						percentageOfSquares++;
 						colorOfCell = new Color((int) 255, (int) 101, (int) 6);
@@ -264,6 +271,12 @@ public class GraphletImage extends BasicGraphletImage {
 						percentageOfOctogons++;
 						colorOfCell = new Color(18, (int) 107, (int) 121);
 						break;
+					case 9:
+						percentageOfNonagons++;
+						break;
+					case 10:
+						percentageOfDecagons++;
+						break;
 					}
 
 					validCells++;
@@ -279,6 +292,9 @@ public class GraphletImage extends BasicGraphletImage {
 						validCells++;
 
 						switch (this.cells.get(i).getNeighbours().size()) {
+						case 3:
+							percentageOfTriangles++;
+							break;
 						case 4:
 							percentageOfSquares++;
 							break;
@@ -293,6 +309,12 @@ public class GraphletImage extends BasicGraphletImage {
 							break;
 						case 8:
 							percentageOfOctogons++;
+							break;
+						case 9:
+							percentageOfNonagons++;
+							break;
+						case 10:
+							percentageOfDecagons++;
 							break;
 						}
 					} else {
@@ -311,16 +333,21 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
+		percentageOfTriangles /= validCells;
 		percentageOfSquares /= validCells;
 		percentageOfPentagons /= validCells;
 		this.percentageOfHexagons /= validCells;
 		percentageOfHeptagons /= validCells;
 		percentageOfOctogons /= validCells;
+		percentageOfNonagons /= validCells;
+		percentageOfDecagons /= validCells;
 
 		float percentageOfHexagonsToShow = this.percentageOfHexagons;
 		this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 		ArrayList<String> percentajesList = new ArrayList<String>();
+		
+		//IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " + percentageOfPentagons + " " + percentageOfHexagonsToShow + " " + percentageOfHeptagons + " " + percentageOfOctogons + " " + percentageOfNonagons + " " + percentageOfDecagons);
 
 		progressBar.setValue((int) (60 / totalPercentageToReach));
 
@@ -668,7 +695,7 @@ public class GraphletImage extends BasicGraphletImage {
 	public ArrayList<int[][]> getCentroids() {
 		// TODO Auto-generated method stub
 		ArrayList<int[][]> centroids = new ArrayList<int[][]>();
-		for (int i = 0; i < this.cells.size(); i++){
+		for (int i = 0; i < this.cells.size(); i++) {
 			centroids.add(this.cells.get(i).getCentroid());
 		}
 		return centroids;

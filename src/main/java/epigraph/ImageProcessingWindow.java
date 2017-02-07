@@ -18,6 +18,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -32,6 +33,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import fiji.util.gui.OverlayedImageCanvas;
@@ -110,7 +112,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
-		
+
 		overlayResult = new ImageOverlay();
 
 		newGraphletImage = new GraphletImage(raw_img);
@@ -515,7 +517,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (e.getSource() == btnToggleOverlay) {
-			if(overlayResult != null){
+			if (overlayResult != null) {
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
 					canvas.addOverlay(overlayResult);
@@ -652,6 +654,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public class Task extends SwingWorker<Void, Void> {
 
 		int option;
+		private ImagePlus imageWithLabels;
 
 		/**
 		 * 
@@ -666,7 +669,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Main task. Executed in background thread.
 		 */
 		@Override
-		public Void doInBackground() {
+		protected Void doInBackground() {
 			try {
 				setProgress(0);
 				switch (option) {
@@ -681,7 +684,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					break;
 				}
 			} catch (Exception e) {
-				IJ.log(e.getMessage());
+				e.printStackTrace();
 			}
 			return null;
 		}
@@ -690,14 +693,24 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Executed in event dispatching thread
 		 */
 		@Override
-		public void done() {
-			progressBar.setValue(100);
-			Toolkit.getDefaultToolkit().beep();
-			repaintAll();
-			if (option == 2)
-				setEnablePanels(true);
-			else
-				enableActionButtons();
+		protected void done() {
+			try {
+				get();
+				progressBar.setValue(100);
+				Toolkit.getDefaultToolkit().beep();
+				repaintAll();
+				if (option == 2)
+					setEnablePanels(true);
+				else
+					enableActionButtons();
+			} catch (ExecutionException e) {
+				e.getCause().printStackTrace();
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (InterruptedException e) {
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 
 		private void calculateGraphlets() {
@@ -738,17 +751,19 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		private void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
+			imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
-			for (int i = 0; i < centroids.size(); i++){
-				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i));
+			for (int i = 0; i < centroids.size(); i++) {
+				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i + 1));
 				text.setStrokeColor(Color.red);
-				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth()/2), centroids.get(i)[0][1] - (text.getFloatHeight()/2));
-				imp.getChannelProcessor().drawRoi(text);
-				
+				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth() / 2),
+						centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
+				imageWithLabels.getChannelProcessor().drawRoi(text);
 			}
-			
+			// canvas.addOverlay(new
+			// ImageOverlay(imageWithLabels.getChannelProcessor()));
 			imp.updateAndDraw();
-			repaintAll();	
+			repaintAll();
 		}
 	}
 }

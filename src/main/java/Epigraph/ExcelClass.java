@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
  */
 public class ExcelClass {
 
+	private String fileName;
 	private ArrayList<String> imageName;
 	private ArrayList<Float> gddh;
 	private ArrayList<Float> gddrv;
@@ -38,6 +39,7 @@ public class ExcelClass {
 	 */
 	public ExcelClass() {
 		super();
+		this.fileName = "";
 		this.imageName = new ArrayList<String>();
 		this.gddh = new ArrayList<Float>();
 		this.gddrv = new ArrayList<Float>();
@@ -64,6 +66,7 @@ public class ExcelClass {
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
 			ArrayList<String> graphletsMode) {
 		super();
+		this.fileName = filename;
 		this.imageName = imageName;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
@@ -279,13 +282,28 @@ public class ExcelClass {
 								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 4:
-								this.R.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.R.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.R.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 5:
-								this.G.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.G.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.G.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 6:
-								this.B.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								try{
+									this.B.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.B.add((float) cell.getNumericCellValue());
+								}
 								break;
 							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
@@ -315,10 +333,8 @@ public class ExcelClass {
 
 	/**
 	 * EXPORT DATA TO EXCEL
-	 * 
-	 * @param fname
 	 */
-	public void exportData(String fname) {
+	public void exportData() {
 
 		// Blank workbook
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -372,7 +388,8 @@ public class ExcelClass {
 		}
 		try {
 			// Write the workbook in file system
-			FileOutputStream out = new FileOutputStream(new File(fname));
+			System.out.println(this.fileName);
+			FileOutputStream out = new FileOutputStream(new File(this.fileName));
 			workbook.write(out);
 			out.close();
 		} catch (Exception e) {
