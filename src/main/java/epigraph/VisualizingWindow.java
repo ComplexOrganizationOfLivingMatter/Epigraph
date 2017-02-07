@@ -83,6 +83,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	private Color[] colors;
 
+	private JPanel canvasPanel;
+
+	private JPanel buttonsPanel;
+
 	/**
 	 * 
 	 * @param tableInfo
@@ -97,7 +101,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		insertPointsToChart(null, -1);
 
 		initPanels();
-		
+
 		pack();
 
 		setBounds(10, 10, 800, 800);
@@ -171,7 +175,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
 		chart.addMouseCameraController();
 
-		slSizeOfPoints = new JSlider(3, 20, 10);
+		slSizeOfPoints = new JSlider(3, 30, 10);
 		slSizeOfPoints.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -190,25 +194,53 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private void initPanels() {
 		GridBagLayout genericPanelLayout = new GridBagLayout();
 		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
+		genericPanelConstrainst.anchor = GridBagConstraints.CENTER;
+		genericPanelConstrainst.fill = GridBagConstraints.VERTICAL;
+		resetConstrainst(genericPanelConstrainst);
+		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+
+		//LEFT PANEL
+		canvasPanel = new JPanel(new GridLayout(1, 0));
+		resetConstrainst(genericPanelConstrainst);
+		
+		canvasPanel.add((Component) chart.getCanvas());
+
+		//RIGHT PANEL
+		buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(genericPanelLayout);
+		resetConstrainst(genericPanelConstrainst);
+		
+		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(btnExport, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+
+		//GENERAL PANEL
+		scatterpanel = new JPanel();
+		scatterpanel.setLayout(genericPanelLayout);
+		resetConstrainst(genericPanelConstrainst);
+
+		genericPanelConstrainst.weightx = 1;
+		genericPanelConstrainst.weighty = 1;
+		scatterpanel.add(canvasPanel, genericPanelConstrainst);
+		resetConstrainst(genericPanelConstrainst);
+		genericPanelConstrainst.gridx++;
+		scatterpanel.add(buttonsPanel, genericPanelConstrainst);
+		genericPanelConstrainst.gridx++;
+
+		add(scatterpanel);
+	}
+
+	/**
+	 * @param genericPanelConstrainst
+	 */
+	private void resetConstrainst(GridBagConstraints genericPanelConstrainst) {
 		genericPanelConstrainst.gridwidth = 1;
 		genericPanelConstrainst.gridheight = 1;
 		genericPanelConstrainst.gridx = 0;
 		genericPanelConstrainst.gridy = 0;
 		genericPanelConstrainst.weighty = 0;
 		genericPanelConstrainst.weightx = 0;
-		genericPanelConstrainst.anchor = GridBagConstraints.NORTHWEST;
-		genericPanelConstrainst.fill = GridBagConstraints.NONE;
-		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
-		scatterpanel = new JPanel();
-		scatterpanel.setLayout(genericPanelLayout);
-		
-		scatterpanel.add((Component) chart.getCanvas(), genericPanelConstrainst);
-		//genericPanelConstrainst.gridx++;
-		//scatterpanel.add(slSizeOfPoints, genericPanelConstrainst);
-		//genericPanelConstrainst.gridy++;
-		//scatterpanel.add(btnExport, genericPanelConstrainst);
-		
-		add(scatterpanel);
 	}
 
 	/**
@@ -219,8 +251,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * @param newScatter
 	 * @param pointSize
 	 */
-	private void insertPointsToChart(Scatter newScatter,
-			float pointSize) {
+	private void insertPointsToChart(Scatter newScatter, float pointSize) {
 
 		IAxeLayout l = this.chart.getAxeLayout();
 
