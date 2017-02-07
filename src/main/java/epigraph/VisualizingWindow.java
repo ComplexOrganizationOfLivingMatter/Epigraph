@@ -91,9 +91,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JPanel canvasPanel;
 
 	private JPanel buttonsPanel;
-	
+
 	JComboBox<String> cbGraphletsReference;
-	
+
 	JTableModel tableInfo;
 
 	/**
@@ -102,7 +102,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
 		super(parent);
-		
+
 		this.tableInfo = tableInfo;
 
 		initGUIItems();
@@ -126,8 +126,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private void createScatterPlot(JTableModel tableInfo, int referenceGraphlets) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
-		
-		switch (referenceGraphlets){
+
+		switch (referenceGraphlets) {
 		case 0:
 			fileName = "/epigraph/voronoiNoiseReference/Total.txt";
 			break;
@@ -141,10 +141,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			fileName = "/epigraph/voronoiNoiseReference/BasicPartial.txt";
 			break;
 		}
-		
+
 		try {
-			Reader reader = new InputStreamReader(
-					Epigraph.class.getResourceAsStream(fileName));
+			Reader reader = new InputStreamReader(Epigraph.class.getResourceAsStream(fileName));
 			CSVReader csvReader = new CSVReader(reader, '\t');
 			voronoiReference = csvReader.readAll();
 
@@ -214,18 +213,27 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
-		
+
 		cbGraphletsReference = new JComboBox<String>();
 		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (25 graphlets)",
 				"Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
 		cbGraphletsReference.setSelectedIndex(0);
-		cbGraphletsReference.addItemListener(new ItemListener(){
-	        public void itemStateChanged(ItemEvent e){
-	        	if(e.getStateChange() == ItemEvent.SELECTED) {
-                    createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
-                }
-	        }
-	    });
+		cbGraphletsReference.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
+				repaintAll();
+			}
+		});
+	}
+
+	private void repaintAll() {
+		this.chart.getScene().remove(scatter);
+		
+		initChart(null, -1);
+		
+		canvasPanel.repaint();
+		scatterpanel.repaint();
+		getContentPane().repaint();
 	}
 
 	/**
@@ -239,17 +247,17 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		resetConstrainst(genericPanelConstrainst);
 		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
 
-		//LEFT PANEL
+		// LEFT PANEL
 		canvasPanel = new JPanel(new GridLayout(1, 0));
 		resetConstrainst(genericPanelConstrainst);
-		
+
 		canvasPanel.add((Component) chart.getCanvas());
 
-		//RIGHT PANEL
+		// RIGHT PANEL
 		buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
-		
+
 		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
@@ -257,7 +265,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel.add(btnExport, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 
-		//GENERAL PANEL
+		// GENERAL PANEL
 		scatterpanel = new JPanel();
 		scatterpanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
