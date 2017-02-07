@@ -89,12 +89,23 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
 		
-
 		initGUIItems();
 
-		chart = new SwingChart();
+		createScatterPlot(tableInfo);
+		
+		insertPointsToChart(chart, points, colors, null, -1);
+		
+		pack();
 
-		// ArrayList<String[]> voronoiReferenceMean = new ArrayList<String[]>();
+		setBounds(10, 10, 800, 800);
+
+		// chart.getView().getCamera().setScreenGridDisplayed(true);
+	}
+
+	/**
+	 * @param tableInfo
+	 */
+	private void createScatterPlot(JTableModel tableInfo) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		try {
 			Reader reader = new InputStreamReader(
@@ -146,19 +157,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				numRow++;
 			}
 		}
-		Quality q2 = new Quality(true, true, true, true, true, true, true);
-		q2.setPreserveViewportSize(false);
-		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
-		initChart(chart, points, colors, null, -1);
-
-		chart.addMouseCameraController();
-		scatterpanel.add((Component) chart.getCanvas(), BorderLayout.CENTER);
-		
-		pack();
-
-		setBounds(10, 10, 800, 800);
-
-		// chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
 
 	/**
@@ -174,7 +172,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		genericPanelConstrainst.weighty = 0;
 		genericPanelConstrainst.weightx = 0;
 		scatterpanel = new JPanel(genericPanelLayout);
-		
 		add(scatterpanel);
 		
 		slSizeOfPoints = new JSlider(3, 20, 10);
@@ -190,6 +187,13 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
 		getContentPane().add(btnExport, BorderLayout.EAST);
+		
+
+		Quality q2 = new Quality(true, true, true, true, true, true, true);
+		q2.setPreserveViewportSize(false);
+		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
+		chart.addMouseCameraController();
+		getContentPane().add((Component) chart.getCanvas(), BorderLayout.CENTER);
 	}
 
 	/**
@@ -200,7 +204,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * @param newScatter
 	 * @param pointSize
 	 */
-	private void initChart(Chart chart2, Coord3d[] points, Color[] colors, Scatter newScatter, float pointSize) {
+	private void insertPointsToChart(Chart chart2, Coord3d[] points, Color[] colors, Scatter newScatter, float pointSize) {
 
 		IAxeLayout l = chart2.getAxeLayout();
 
