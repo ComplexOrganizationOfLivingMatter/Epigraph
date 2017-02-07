@@ -1,6 +1,5 @@
 package epigraph;
 
-import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Component;
 import java.awt.Frame;
@@ -12,11 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,37 +27,22 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.commons.io.input.ReaderInputStream;
 import org.jzy3d.chart.Chart;
-import org.jzy3d.chart.SwingChart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.axes.layout.IAxeLayout;
-import org.jzy3d.plot3d.primitives.axes.layout.providers.SmartTickProvider;
-import org.jzy3d.plot3d.primitives.axes.layout.providers.StaticTickProvider;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
-import org.jzy3d.plot3d.rendering.canvas.CanvasNewtAwt;
-import org.jzy3d.plot3d.rendering.canvas.OffscreenCanvas;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
-import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.TextureIO;
-
-import fiji.util.gui.OverlayedImageCanvas;
-import ij.gui.ImageCanvas;
-import ij.plugin.Slicer;
 import util.opencsv.CSVReader;
-import javax.swing.JSlider;
 
 /**
  * 
@@ -74,7 +56,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	Scatter scatter;
+	Scatter scatterData;
+	Scatter scatterReference;
 
 	private JPanel scatterpanel;
 	/* load X Y Z coordenates */
@@ -84,10 +67,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JSlider slSizeOfPoints;
 
 	private JButton btnExport;
-
-	private Coord3d[] points;
-
-	private Color[] colors;
 
 	private JPanel canvasPanel;
 
@@ -110,8 +89,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		initGUIItems();
 
-		createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
-
+		createScatterPlot(cbGraphletsReference.getSelectedIndex());
+		createScatterData();
+		
 		initChart(null, -1);
 
 		initPanels();
@@ -126,7 +106,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	/**
 	 * @param tableInfo
 	 */
-	private void createScatterPlot(JTableModel tableInfo, int referenceGraphlets) {
+	private void createScatterPlot(int referenceGraphlets) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
 
@@ -158,21 +138,13 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			e.printStackTrace();
 		}
 
-		// Variable for the number of visualization items.
-		int size_array = 0;
-		for (int i = 0; i < tableInfo.getRowCount(); i++) {
-			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
-				size_array++;
-		}
-
 		String[] row;
 		int voronoiReferenceSize = 0;
 
-		if (chbShowVoronoiReference.getState())
-			voronoiReferenceSize = voronoiReference.size();
+		voronoiReferenceSize = voronoiReference.size();
 
-		points = new Coord3d[size_array + voronoiReferenceSize];
-		colors = new Color[size_array + voronoiReferenceSize];
+		Coord3d[] points = new Coord3d[voronoiReferenceSize];
+		Color[] colors = new Color[voronoiReferenceSize];
 
 		for (int i = 0; i < voronoiReferenceSize; i++) {
 			// creating coord array
@@ -183,16 +155,29 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			colors[i] = new Color(Integer.parseInt(row[4]), Integer.parseInt(row[5]), Integer.parseInt(row[6]));
 		}
 
+		
+	}
+	
+	private void createScatterData(){
+		int size_array = 0;
+		for (int i = 0; i < tableInfo.getRowCount(); i++) {
+			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
+				size_array++;
+		}
+		
+		Coord3d[] points = new Coord3d[size_array];
+		Color[] colors = new Color[size_array];
+		
 		int numRow = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
 				// creating coord array
-				points[numRow + voronoiReferenceSize] = new Coord3d(
+				points[numRow] = new Coord3d(
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
-				colors[numRow + voronoiReferenceSize] = new Color(
+				colors[numRow] = new Color(
 						tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getBlue());
@@ -215,7 +200,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
-				scatter.setWidth((float) slSizeOfPoints.getValue());
+				scatterData.setWidth((float) slSizeOfPoints.getValue());
+				scatterReference.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
 
