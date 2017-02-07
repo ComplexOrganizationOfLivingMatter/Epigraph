@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -73,7 +74,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	/* load X Y Z coordenates */
 
 	private Chart chart;
-	
+
 	private JSlider slSizeOfPoints;
 
 	private JButton btnExport;
@@ -88,12 +89,14 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	public VisualizingWindow(JTableModel tableInfo) {
 		super();
-		
+
 		initGUIItems();
 
 		createScatterPlot(tableInfo);
-		
-		insertPointsToChart(chart, points, colors, null, -1);
+
+		insertPointsToChart(null, -1);
+
+		initPanels();
 		
 		pack();
 
@@ -163,17 +166,11 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * 
 	 */
 	private void initGUIItems() {
-		GridBagLayout genericPanelLayout = new GridBagLayout();
-		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
-		genericPanelConstrainst.gridwidth = 1;
-		genericPanelConstrainst.gridheight = 1;
-		genericPanelConstrainst.gridx = 0;
-		genericPanelConstrainst.gridy = 0;
-		genericPanelConstrainst.weighty = 0;
-		genericPanelConstrainst.weightx = 0;
-		scatterpanel = new JPanel(genericPanelLayout);
-		add(scatterpanel);
-		
+		Quality q2 = new Quality(true, true, true, true, true, true, true);
+		q2.setPreserveViewportSize(false);
+		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
+		chart.addMouseCameraController();
+
 		slSizeOfPoints = new JSlider(3, 20, 10);
 		slSizeOfPoints.addChangeListener(new ChangeListener() {
 			@Override
@@ -182,18 +179,36 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				scatter.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
-		getContentPane().add(slSizeOfPoints, BorderLayout.EAST);
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
-		getContentPane().add(btnExport, BorderLayout.EAST);
-		
+	}
 
-		Quality q2 = new Quality(true, true, true, true, true, true, true);
-		q2.setPreserveViewportSize(false);
-		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
-		chart.addMouseCameraController();
-		getContentPane().add((Component) chart.getCanvas(), BorderLayout.CENTER);
+	/**
+	 * 
+	 */
+	private void initPanels() {
+		GridBagLayout genericPanelLayout = new GridBagLayout();
+		GridBagConstraints genericPanelConstrainst = new GridBagConstraints();
+		genericPanelConstrainst.gridwidth = 1;
+		genericPanelConstrainst.gridheight = 1;
+		genericPanelConstrainst.gridx = 0;
+		genericPanelConstrainst.gridy = 0;
+		genericPanelConstrainst.weighty = 0;
+		genericPanelConstrainst.weightx = 0;
+		genericPanelConstrainst.anchor = GridBagConstraints.NORTHWEST;
+		genericPanelConstrainst.fill = GridBagConstraints.NONE;
+		genericPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		scatterpanel = new JPanel();
+		scatterpanel.setLayout(genericPanelLayout);
+		
+		scatterpanel.add((Component) chart.getCanvas(), genericPanelConstrainst);
+		//genericPanelConstrainst.gridx++;
+		//scatterpanel.add(slSizeOfPoints, genericPanelConstrainst);
+		//genericPanelConstrainst.gridy++;
+		//scatterpanel.add(btnExport, genericPanelConstrainst);
+		
+		add(scatterpanel);
 	}
 
 	/**
@@ -204,9 +219,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * @param newScatter
 	 * @param pointSize
 	 */
-	private void insertPointsToChart(Chart chart2, Coord3d[] points, Color[] colors, Scatter newScatter, float pointSize) {
+	private void insertPointsToChart(Scatter newScatter,
+			float pointSize) {
 
-		IAxeLayout l = chart2.getAxeLayout();
+		IAxeLayout l = this.chart.getAxeLayout();
 
 		// Labelling axes
 		l.setXAxeLabel("GDDRV");
@@ -217,15 +233,15 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
 
-		if (newScatter != null){
+		if (newScatter != null) {
 			newScatter = new Scatter(points, colors, pointSize);
 		} else {
 			scatter = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 		}
 
-		chart2.getScene().add(scatter);
+		this.chart.getScene().add(scatter);
 
-		chart2.setScale(new Scale(0, 100));
+		this.chart.setScale(new Scale(0, 100));
 	}
 
 	/**
@@ -257,13 +273,13 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param e
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnExport){
+		if (e.getSource() == btnExport) {
 			JFileChooser fileChooser = new JFileChooser();
 			// set it to be a save dialog
 			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -276,19 +292,21 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 				String filename = fileChooser.getSelectedFile().toString();
-				
-				((CanvasAWT)chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
-//				Quality q = new Quality(true, false, true, true, true, true, false);
-//				q.setPreserveViewportSize(false);
-//				Chart exportChart = AWTChartComponentFactory.chart(q,
-//						"offscreen,1024,1024");
-//				//exportChart.getCanvas().setPixelScale(new float[] { 0.1f, 0.1f });
-//				Scatter newScatter = new Scatter();
-//				initChart(exportChart, points, colors, newScatter, 300);
-				
+
+				((CanvasAWT) chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
+				// Quality q = new Quality(true, false, true, true, true, true,
+				// false);
+				// q.setPreserveViewportSize(false);
+				// Chart exportChart = AWTChartComponentFactory.chart(q,
+				// "offscreen,1024,1024");
+				// //exportChart.getCanvas().setPixelScale(new float[] { 0.1f,
+				// 0.1f });
+				// Scatter newScatter = new Scatter();
+				// initChart(exportChart, points, colors, newScatter, 300);
+
 				File f = new File(filename);
 				try {
-					//TextureData p = exportChart.screenshot(f);
+					// TextureData p = exportChart.screenshot(f);
 					chart.screenshot(f);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
