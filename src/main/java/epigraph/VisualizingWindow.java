@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +23,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -87,6 +91,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JPanel canvasPanel;
 
 	private JPanel buttonsPanel;
+	
+	JComboBox<String> cbGraphletsReference;
+	
+	JTableModel tableInfo;
 
 	/**
 	 * 
@@ -94,12 +102,14 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
 		super(parent);
+		
+		this.tableInfo = tableInfo;
 
 		initGUIItems();
 
-		createScatterPlot(tableInfo);
+		createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
 
-		insertPointsToChart(null, -1);
+		initChart(null, -1);
 
 		initPanels();
 
@@ -113,11 +123,28 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	/**
 	 * @param tableInfo
 	 */
-	private void createScatterPlot(JTableModel tableInfo) {
+	private void createScatterPlot(JTableModel tableInfo, int referenceGraphlets) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
+		String fileName = null;
+		
+		switch (referenceGraphlets){
+		case 0:
+			fileName = "/epigraph/voronoiNoiseReference/Total.txt";
+			break;
+		case 1:
+			fileName = "/epigraph/voronoiNoiseReference/TotalPartial.txt";
+			break;
+		case 2:
+			fileName = "/epigraph/voronoiNoiseReference/Basic.txt";
+			break;
+		case 3:
+			fileName = "/epigraph/voronoiNoiseReference/BasicPartial.txt";
+			break;
+		}
+		
 		try {
 			Reader reader = new InputStreamReader(
-					Epigraph.class.getResourceAsStream("/epigraph/voronoiNoiseReference/TotalPartial.txt"));
+					Epigraph.class.getResourceAsStream(fileName));
 			CSVReader csvReader = new CSVReader(reader, '\t');
 			voronoiReference = csvReader.readAll();
 
@@ -187,6 +214,18 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
+		
+		cbGraphletsReference = new JComboBox<String>();
+		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (25 graphlets)",
+				"Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
+		cbGraphletsReference.setSelectedIndex(0);
+		cbGraphletsReference.addItemListener(new ItemListener(){
+	        public void itemStateChanged(ItemEvent e){
+	        	if(e.getStateChange() == ItemEvent.SELECTED) {
+                    createScatterPlot(tableInfo, cbGraphletsReference.getSelectedIndex());
+                }
+	        }
+	    });
 	}
 
 	/**
@@ -212,6 +251,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		resetConstrainst(genericPanelConstrainst);
 		
 		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(btnExport, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
@@ -246,13 +287,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * 
-	 * @param chart2
-	 * @param points
-	 * @param colors
 	 * @param newScatter
 	 * @param pointSize
 	 */
-	private void insertPointsToChart(Scatter newScatter, float pointSize) {
+	private void initChart(Scatter newScatter, float pointSize) {
 
 		IAxeLayout l = this.chart.getAxeLayout();
 
