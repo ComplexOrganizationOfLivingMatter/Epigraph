@@ -490,7 +490,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				JOptionPane.showMessageDialog(this.getParent(), "You should insert a name for the image");
 			} else {
 				newGraphletImage.setLabelName(tfImageName.getText());
-				int result = JOptionPane.showConfirmDialog(this.getParent(), "Everything is ok?", "Confirm",
+				int result = JOptionPane.showConfirmDialog(this.getParent(), "Is everything ok?", "Confirm",
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION)
 					tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
