@@ -12,3 +12,4 @@
 
 /src/main/resources/epigraph/
 *.log
+dependency-reduced-pom.xml
