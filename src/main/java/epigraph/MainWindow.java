@@ -3,11 +3,8 @@ package epigraph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -61,10 +58,14 @@ public class MainWindow extends JFrame {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//try {
+				try {
 					VisualizingWindow visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
 					visualizingWindow.setVisible(true);
-				
+				} catch (Exception e) {
+					String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+					JOptionPane.showMessageDialog(panel.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 		btnVisualize.setBounds(607, 496, 93, 29);
@@ -78,14 +79,15 @@ public class MainWindow extends JFrame {
 						try {
 							ImagePlus raw_img = IJ.openImage();
 							if (raw_img != null) {
-								if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000){
-									ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+								if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000) {
+									ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img,
+											tableInfo);
 									imageProcessing.pack();
 								} else {
 									JOptionPane.showMessageDialog(panel.getParent(),
 											"Max. width or height is 3000px. Please, resize it.");
 								}
-									
+
 							} else {
 								JOptionPane.showMessageDialog(panel.getParent(),
 										"You must introduce a valid image or set of images.");
@@ -135,7 +137,7 @@ public class MainWindow extends JFrame {
 		JButton btnExport = new JButton("Export table");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				ArrayList<String> arrayNames = new ArrayList<String>();
 				ArrayList<Float> arrayHexagons = new ArrayList<Float>();
 				ArrayList<Float> arrayGDDH = new ArrayList<Float>();
@@ -147,7 +149,7 @@ public class MainWindow extends JFrame {
 
 				int cont = 0;
 				for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
-					
+
 					arrayNames.add(graphletImg.getLabelName());
 					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
 					arrayGDDH.add(graphletImg.getDistanceGDDH());
@@ -158,7 +160,6 @@ public class MainWindow extends JFrame {
 					arrayMode.add(tableInfo.getListOfModes().get(cont));
 					cont++;
 				}
-				
 
 				JFrame parentFrame = new JFrame();
 				JFileChooser fileChooser = new JFileChooser();
@@ -169,8 +170,6 @@ public class MainWindow extends JFrame {
 				fileChooser.setSelectedFile(new File("myfile.xls"));
 				// Set an extension filter, so the user sees other XML files
 				fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
-				
-				
 
 				fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -181,7 +180,8 @@ public class MainWindow extends JFrame {
 					if (!filename.endsWith(".xls"))
 						filename += ".xls";
 
-					ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR, arrayG, arrayB, arrayMode);
+					ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons,
+							arrayR, arrayG, arrayB, arrayMode);
 					excelclass.exportData();
 				}
 			}
@@ -276,20 +276,13 @@ public class MainWindow extends JFrame {
 					}
 
 				} else {
-					System.out.println("No Selection ");
+					System.out.println("No Selection");
 				}
-
 			}
 		});
 
 		btnImport.setBounds(240, 496, 105, 29);
 		panel.add(btnImport);
 
-	}
-
-	private void repaintAll() {
-		// TODO Auto-generated method stub
-		this.table.repaint();
-		this.repaint();
 	}
 }
