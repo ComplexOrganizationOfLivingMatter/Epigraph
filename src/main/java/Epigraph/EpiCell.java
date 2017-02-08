@@ -175,6 +175,19 @@ public class EpiCell {
 	public int[] getGraphlets() {
 		return graphlets;
 	}
+	
+	/**
+	 * @return the graphlets
+	 */
+	public String[] getGraphletsString() {
+		String[] graphletStr = new String[BasicGraphlets.TOTALGRAPHLETS];
+		
+		for (int i = 0; i < this.graphlets.length; i++) {
+			graphletStr[i] = Integer.toString(graphlets[i]);
+		}
+		
+		return graphletStr;
+	}
 
 	/**
 	 * 

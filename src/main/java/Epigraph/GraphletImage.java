@@ -734,4 +734,20 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		return centroids;
 	}
+	
+	public String[][] getGraphlets(){
+		String[][] graphlets = new String[this.cells.size()][BasicGraphlets.TOTALGRAPHLETS+1];
+		int cont = 0;
+		int numCell = 0;
+		for (EpiCell cell : this.cells){
+			graphlets[cont][0] = Integer.toString(cont + 1);
+			numCell = 1;
+			for (String graphlet : cell.getGraphletsString()){
+				graphlets[cont][numCell] = graphlet;
+				numCell++;
+			}
+			cont++;
+		}
+		return graphlets;
+	}
 }

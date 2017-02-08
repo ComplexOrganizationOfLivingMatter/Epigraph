@@ -132,7 +132,7 @@ public class MainWindow extends JFrame {
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
 
-		JButton btnExport = new JButton("Export");
+		JButton btnExport = new JButton("Export table");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -190,7 +190,7 @@ public class MainWindow extends JFrame {
 		btnExport.setBounds(428, 496, 87, 29);
 		panel.add(btnExport);
 
-		JButton btnImport = new JButton("Import");
+		JButton btnImport = new JButton("Import table");
 		btnImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
