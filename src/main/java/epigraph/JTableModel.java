@@ -18,14 +18,12 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind" ,"Visualizing" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind", "Visualizing" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfVisualizing;
 	private ArrayList<String> listOfModes;
 
-	private int[] rgbs;
-	
 	/**
 	 * 
 	 */
@@ -36,9 +34,6 @@ class JTableModel extends AbstractTableModel {
 		listOfModes = new ArrayList<String>();
 	}
 
-	/**
-	 * 
-	 */
 	public int getColumnCount() {
 		return columnNames.length;
 	}
@@ -50,8 +45,6 @@ class JTableModel extends AbstractTableModel {
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
-	
-	
 
 	public Object getValueAt(int row, int col) {
 		switch (col) {
@@ -82,16 +75,10 @@ class JTableModel extends AbstractTableModel {
 		return getValueAt(0, c).getClass();
 	}
 
-	/**
-	 * Don't need to implement this method unless your table's editable.
-	 */
 	public boolean isCellEditable(int row, int col) {
 		return true;
 	}
 
-	/**
-	 * Don't need to implement this method unless your table's data can change.
-	 */
 	public void setValueAt(Object value, int row, int col) {
 		switch (col) {
 		case 0:
@@ -116,7 +103,7 @@ class JTableModel extends AbstractTableModel {
 			listOfVisualizing.set(row, (Boolean) value);
 			break;
 		}
-		//Updating table
+		// Updating table
 		fireTableCellUpdated(row, col);
 	}
 
@@ -143,7 +130,8 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @param listOfVisualizing the listOfVisualizing to set
+	 * @param listOfVisualizing
+	 *            the listOfVisualizing to set
 	 */
 	public void setListOfVisualizing(ArrayList<Boolean> listOfVisualizing) {
 		this.listOfVisualizing = listOfVisualizing;
@@ -157,7 +145,8 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @param listOfModes the listOfModes to set
+	 * @param listOfModes
+	 *            the listOfModes to set
 	 */
 	public void setListOfModes(ArrayList<String> listOfModes) {
 		this.listOfModes = listOfModes;
@@ -169,14 +158,19 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public void addImages(ArrayList<BasicGraphletImage> newImages) {
 		allGraphletImages.addAll(newImages);
-		
-		for (int i = 0; i < newImages.size(); i++){
+
+		for (int i = 0; i < newImages.size(); i++) {
 			listOfVisualizing.add(true);
 		}
 		fireTableDataChanged();
 	}
-	
-	public void addImage(BasicGraphletImage newImage, String graphletsMode){
+
+	/**
+	 * 
+	 * @param newImage
+	 * @param graphletsMode
+	 */
+	public void addImage(BasicGraphletImage newImage, String graphletsMode) {
 		allGraphletImages.add(new BasicGraphletImage(newImage));
 		listOfVisualizing.add(true);
 		listOfModes.add(graphletsMode);

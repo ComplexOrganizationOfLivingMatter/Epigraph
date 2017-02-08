@@ -7,14 +7,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JTable;
-import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
 /**
@@ -32,6 +30,9 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 	JDialog dialog;
 	protected static final String EDIT = "edit";
 
+	/**
+	 * 
+	 */
 	public JColorEditor() {
 		button = new JButton();
 		button.setActionCommand(EDIT);
@@ -45,6 +46,9 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 				null); // no CANCEL button handler
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (EDIT.equals(e.getActionCommand())) {
@@ -61,13 +65,17 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 		}
 	}
 
-	// Implement the one CellEditor method that AbstractCellEditor doesn't.
+	/**
+	 *  Implement the one CellEditor method that AbstractCellEditor doesn't.
+	 */
 	@Override
 	public Object getCellEditorValue() {
 		return currentColor;
 	}
 
-	// Implement the one method defined by TableCellEditor.
+	/**
+	 *  Implement the one method defined by TableCellEditor.
+	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		currentColor = (Color) value;

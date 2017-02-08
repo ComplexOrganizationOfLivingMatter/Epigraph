@@ -60,8 +60,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	Scatter scatterReference;
 
 	private JPanel scatterpanel;
-	/* load X Y Z coordenates */
-
 	private Chart chart;
 
 	private JSlider slSizeOfPoints;
@@ -80,6 +78,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * 
+	 * @param parent
 	 * @param tableInfo
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
@@ -106,6 +105,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	/**
 	 * @param tableInfo
 	 */
+	@SuppressWarnings("unchecked")
 	private void createScatterPlot(int referenceGraphlets) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
@@ -158,6 +158,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		scatterReference = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 	}
 
+	/**
+	 * 
+	 */
 	private void createScatterData() {
 		int size_array = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
@@ -237,6 +240,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		});
 	}
 
+	/**
+	 * 
+	 */
 	private void repaintAll() {
 
 		getContentPane().repaint();
@@ -305,8 +311,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * 
-	 * @param newScatter
-	 * @param pointSize
 	 */
 	private void initChart() {
 

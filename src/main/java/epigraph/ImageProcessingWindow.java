@@ -22,13 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -43,23 +42,15 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.jfree.data.io.CSV;
-
-import au.com.bytecode.opencsv.CSVParser;
-import fiji.util.gui.OverlayedImageCanvas;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
-import ij.plugin.Text;
 import ij.plugin.frame.RoiManager;
-import ij.process.ColorProcessor;
 import util.opencsv.CSVWriter;
 
 /**
@@ -70,6 +61,8 @@ import util.opencsv.CSVWriter;
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	//For future stack
+	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
 
 	private ImageOverlay overlayResult;
@@ -114,6 +107,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private Task backgroundTask;
 	private JPanel progressBarPanel;
 	private JButton btnZipData;
+	private JLabel lblConnectiviy;
 
 	/**
 	 * 
@@ -161,13 +155,17 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		preProcessingPanel.setLayout(genericPanelLayout);
 
 		// Adding to the panel the items
+		preProcessingPanel.add(lblConnectiviy, genericPanelConstrainst);
+		genericPanelConstrainst.gridx++;
 		preProcessingPanel.add(cbConnectivity, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
+		genericPanelConstrainst.gridx--;
 		preProcessingPanel.add(btnLabelImage, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 
 		// Setup the config panel
 		configPanel = new JPanel();
+		configPanel.setBorder(BorderFactory.createTitledBorder("Neighborhood"));
 		resetGenericConstrainst(genericPanelConstrainst);
 		configPanel.setLayout(genericPanelLayout);
 
@@ -188,6 +186,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		// Selection ROI panel
 		roiPanel = new JPanel();
+		roiPanel.setBorder(BorderFactory.createTitledBorder("Region of interest"));
 		roiPanel.setLayout(genericPanelLayout);
 		resetGenericConstrainst(genericPanelConstrainst);
 
@@ -200,6 +199,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		// Graphlet Image properties
 		graphletsPanel = new JPanel();
+		graphletsPanel.setBorder(BorderFactory.createTitledBorder("Graphlets"));
 		resetGenericConstrainst(genericPanelConstrainst);
 		graphletsPanel.setLayout(genericPanelLayout);
 
@@ -223,6 +223,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnZipData, genericPanelConstrainst);
 
 		progressBarPanel = new JPanel();
+		progressBarPanel.setBorder(BorderFactory.createEtchedBorder());
 		resetGenericConstrainst(genericPanelConstrainst);
 		progressBarPanel.setLayout(genericPanelLayout);
 		progressBarPanel.add(progressBar, genericPanelConstrainst);
@@ -288,6 +289,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		cbConnectivity = new JComboBox<Integer>();
 		cbConnectivity.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 4, 8 }));
 		cbConnectivity.setSelectedIndex(1);
+		
+		lblConnectiviy = new JLabel("Connectivity (px):");
+		lblConnectiviy.setLabelFor(cbConnectivity);
 
 		btnLabelImage = new JButton("Label image");
 		btnLabelImage.addActionListener(this);
@@ -664,6 +668,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnAddToTable.setEnabled(false);
 		btnTestNeighbours.setEnabled(false);
 		btnLabelImage.setEnabled(false);
+		btnZipData.setEnabled(false);
 	}
 
 	public void enableActionButtons() {

@@ -16,7 +16,6 @@ import java.util.Iterator;
 import javax.swing.JProgressBar;
 
 import fiji.util.gui.OverlayedImageCanvas;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
@@ -143,6 +142,12 @@ public class GraphletImage extends BasicGraphletImage {
 		this.neighbourImage = neighbourImage;
 	}
 
+	/**
+	 * 
+	 * @param img
+	 * @param connectivity
+	 * @param progressBar
+	 */
 	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
@@ -219,6 +224,17 @@ public class GraphletImage extends BasicGraphletImage {
 		this.adjacencyMatrix = new int[maxValue - 1][maxValue - 1];
 	}
 
+	/**
+	 * 
+	 * @param selectedShape
+	 * @param radiusOfShape
+	 * @param imgToShow
+	 * @param progressBar
+	 * @param selectionMode
+	 * @param modeNumGraphlets
+	 * @param overlayResult
+	 * @return
+	 */
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
@@ -260,13 +276,16 @@ public class GraphletImage extends BasicGraphletImage {
 
 		progressBar.setValue((int) (55 / totalPercentageToReach));
 
+		@SuppressWarnings("unused")
 		float percentageOfTriangles = 0;
 		float percentageOfSquares = 0;
 		float percentageOfPentagons = 0;
 		this.percentageOfHexagons = 0;
 		float percentageOfHeptagons = 0;
 		float percentageOfOctogons = 0;
+		@SuppressWarnings("unused")
 		float percentageOfNonagons = 0;
+		@SuppressWarnings("unused")
 		float percentageOfDecagons = 0;
 		int validCells = 0;
 		// int percentageOfHexagonsOriginal = 0;
@@ -390,21 +409,29 @@ public class GraphletImage extends BasicGraphletImage {
 			((OverlayedImageCanvas) imgToShow.getCanvas()).clearOverlay();
 			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlayResult);
 			((CustomCanvas) imgToShow.getCanvas()).setImageOverlay(overlayResult);
-
-			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
-			defaultFormat.setMaximumFractionDigits(2);
-
-			percentajesList.add(defaultFormat.format(percentageOfSquares));
-			percentajesList.add(defaultFormat.format(percentageOfPentagons));
-			percentajesList.add(defaultFormat.format(percentageOfHexagonsToShow));
-			percentajesList.add(defaultFormat.format(percentageOfHeptagons));
-			percentajesList.add(defaultFormat.format(percentageOfOctogons));
-
-			return percentajesList;
 		}
-		return null;
+		
+		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+		defaultFormat.setMaximumFractionDigits(2);
+
+		percentajesList.add(defaultFormat.format(percentageOfSquares));
+		percentajesList.add(defaultFormat.format(percentageOfPentagons));
+		percentajesList.add(defaultFormat.format(percentageOfHexagonsToShow));
+		percentajesList.add(defaultFormat.format(percentageOfHeptagons));
+		percentajesList.add(defaultFormat.format(percentageOfOctogons));
+
+		return percentajesList;
 	}
 
+	/**
+	 * 
+	 * @param selectedShape
+	 * @param radiusOfShape
+	 * @param modeNumGraphlets
+	 * @param progressBar
+	 * @param selectionMode
+	 * @param overlay
+	 */
 	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
 			boolean selectionMode, ImageOverlay overlay) {
 		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
