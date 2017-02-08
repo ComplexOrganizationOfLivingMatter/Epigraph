@@ -187,7 +187,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnExport.setBounds(428, 496, 87, 29);
+		btnExport.setBounds(431, 496, 105, 29);
 		panel.add(btnExport);
 
 		JButton btnImport = new JButton("Import table");
@@ -282,7 +282,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnImport.setBounds(255, 496, 81, 29);
+		btnImport.setBounds(240, 496, 105, 29);
 		panel.add(btnImport);
 
 	}
