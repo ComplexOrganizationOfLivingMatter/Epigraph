@@ -65,6 +65,10 @@ public class GraphletImage extends BasicGraphletImage {
 	private ArrayList<EpiCell> cells;
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
+	
+	private ImagePlus imageWithLabels;
+	
+	private ImagePlus neighbourImage;
 
 	/**
 	 * @param img
@@ -109,6 +113,34 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public void setLabelledImage(ImagePlus l_img) {
 		this.l_img = l_img;
+	}
+
+	/**
+	 * @return the imageWithLabels
+	 */
+	public ImagePlus getImageWithLabels() {
+		return imageWithLabels;
+	}
+
+	/**
+	 * @param imageWithLabels the imageWithLabels to set
+	 */
+	public void setImageWithLabels(ImagePlus imageWithLabels) {
+		this.imageWithLabels = imageWithLabels;
+	}
+
+	/**
+	 * @return the neighbourImage
+	 */
+	public ImagePlus getNeighbourImage() {
+		return neighbourImage;
+	}
+
+	/**
+	 * @param neighbourImage the neighbourImage to set
+	 */
+	public void setNeighbourImage(ImagePlus neighbourImage) {
+		this.neighbourImage = neighbourImage;
 	}
 
 	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
@@ -349,6 +381,8 @@ public class GraphletImage extends BasicGraphletImage {
 		
 		//IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " + percentageOfPentagons + " " + percentageOfHexagonsToShow + " " + percentageOfHeptagons + " " + percentageOfOctogons + " " + percentageOfNonagons + " " + percentageOfDecagons);
 
+		this.neighbourImage = new ImagePlus("", colorImgToShow);
+		
 		progressBar.setValue((int) (60 / totalPercentageToReach));
 
 		if (imgToShow != null) {
