@@ -16,15 +16,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,7 +45,11 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jfree.data.io.CSV;
+
+import au.com.bytecode.opencsv.CSVParser;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.IJ;
 import ij.ImagePlus;
@@ -46,6 +60,7 @@ import ij.gui.TextRoi;
 import ij.plugin.Text;
 import ij.plugin.frame.RoiManager;
 import ij.process.ColorProcessor;
+import util.opencsv.CSVWriter;
 
 /**
  * 
@@ -98,6 +113,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JButton btnLabelImage;
 	private Task backgroundTask;
 	private JPanel progressBarPanel;
+	private JButton btnZipData;
 
 	/**
 	 * 
@@ -204,6 +220,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		genericPanelConstrainst.gridx--;
+		graphletsPanel.add(btnZipData, genericPanelConstrainst);
 
 		progressBarPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
@@ -326,6 +343,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnSelectInvalidRegion = new JButton("Add invalid regions");
 		btnSelectInvalidRegion.addActionListener(this);
 
+		btnZipData = new JButton("Export graphlet data");
+		btnZipData.addActionListener(this);
+		btnZipData.setEnabled(false);
+
 		tfImageName = new JTextField();
 
 		lblImageName = new JLabel("Image label:");
@@ -333,7 +354,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		// Labels for polygon distribution
 		lbImageLegend = new JLabel("");
-		lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
+		lbImageLegend.setIcon(new ImageIcon(this.getClass().getResource("/epigraph/legend.jpg")));
 
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
@@ -443,16 +464,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
 		if (e.getSource() == btnCalculateGraphlets) {
 			disableActionButtons();
 			backgroundTask = new Task(0);
 			backgroundTask.execute();
 			newGraphletImage.setLabelName(tfImageName.getText());
 			newGraphletImage.setColor(colorPicked.getBackground());
-		}
-
-		if (e.getSource() == btnCreateRoi) {
+		} else if (e.getSource() == btnCreateRoi) {
 			if (btnCreateRoi.getText() != "Done") {
 				Epigraph.callToolbarRectangle();
 				openRoiManager();
@@ -467,9 +485,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnSelectCells.setEnabled(true);
 				btnSelectInvalidRegion.setEnabled(true);
 			}
-		}
-
-		if (e.getSource() == btnAddToTable) {
+		} else if (e.getSource() == btnAddToTable) {
 			if (tfImageName.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(this.getParent(), "You should insert a name for the image");
 			} else {
@@ -479,8 +495,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				if (result == JOptionPane.OK_OPTION)
 					tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
 			}
-		}
-		if (e.getSource() == btnPickAColor) {
+		} else if (e.getSource() == btnPickAColor) {
 			Color c = JColorChooser.showDialog(this.getParent(), "Choose a Color", colorPicked.getBackground());
 			if (c != null) {
 				colorPicked.setBackground(c);
@@ -488,17 +503,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					newGraphletImage.setColor(c);
 				}
 			}
-		}
-		if (e.getSource() == btnTestNeighbours) {
+		} else if (e.getSource() == btnTestNeighbours) {
 			disableActionButtons();
 			// Execute in background
 			backgroundTask = new Task(1);
 			backgroundTask.execute();
 
 			repaintAll();
-		}
-
-		if (e.getSource() == btnSelectCells) {
+		} else if (e.getSource() == btnSelectCells) {
 			if (btnSelectCells.getText() != "Done") {
 				openRoiManager();
 				Epigraph.callToolbarMultiPoint();
@@ -514,9 +526,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnCreateRoi.setEnabled(true);
 				btnSelectInvalidRegion.setEnabled(true);
 			}
-		}
-
-		if (e.getSource() == btnToggleOverlay) {
+		} else if (e.getSource() == btnToggleOverlay) {
 			if (overlayResult != null) {
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
@@ -528,9 +538,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					canvas.clearOverlay();
 				}
 			}
-		}
-
-		if (e.getSource() == btnSelectInvalidRegion) {
+		} else if (e.getSource() == btnSelectInvalidRegion) {
 			if (btnSelectInvalidRegion.getText() != "Done") {
 				if (invalidRegionRoi != null) {
 					int result = JOptionPane.showConfirmDialog(this.getParent(),
@@ -559,18 +567,77 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnCreateRoi.setEnabled(true);
 				btnSelectCells.setEnabled(true);
 			}
-		}
-
-		if (e.getSource() == btnLabelImage) {
+		} else if (e.getSource() == btnLabelImage) {
 			disableActionButtons();
 			backgroundTask = new Task(2);
 			backgroundTask.execute();
+		} else if (e.getSource() == btnZipData) {
+			exportDataIntoZip();
 		}
 
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
+	}
+
+	private void exportDataIntoZip() {
+		JFileChooser fileChooser = new JFileChooser();
+		// set it to be a save dialog
+		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		// set a default filename (this is where you default extension
+		// first comes in)
+		fileChooser.setSelectedFile(new File("data.zip"));
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+		int userSelection = fileChooser.showSaveDialog(btnZipData.getParent());
+
+		// Set an extension filter, so the user sees other XML files
+		fileChooser.setFileFilter(new FileNameExtensionFilter("ZIP files", "zip"));
+
+		fileChooser.setAcceptAllFileFilterUsed(false);
+
+		
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+			String filename = fileChooser.getSelectedFile().toString();
+
+			if (!filename.endsWith(".zip"))
+				filename += ".zip";
+			
+			ZipOutputStream out;
+			try {
+				out = new ZipOutputStream(new FileOutputStream(filename));
+				
+				ZipEntry e = new ZipEntry("neighbours.jpg");
+				out.putNextEntry(e);
+				ImageIO.write(newGraphletImage.getNeighbourImage().getBufferedImage(), "jpg", out);
+				out.closeEntry();
+				
+				e = new ZipEntry("labelledImage.jpg");
+				out.putNextEntry(e);
+				ImageIO.write(newGraphletImage.getImageWithLabels().getBufferedImage(), "jpg", out);
+				out.closeEntry();
+				
+				e = new ZipEntry("graphletsPerNode.csv");
+				out.putNextEntry(e);
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));  // There is no need for staging the CSV on filesystem or reading bytes into memory. Directly write bytes to the output stream.
+				String[] header = {"numLabel","orbit 0","orbit 1","orbit 2","orbit 3","orbit 4","orbit 5","orbit 6","orbit 7","orbit 8","orbit 9","orbit 10","orbit 11","orbit 12","orbit 13","orbit 14","orbit 15","orbit 16","orbit 17","orbit 18","orbit 19","orbit 20","orbit 21","orbit 22","orbit 23","orbit 24","orbit 25","orbit 26","orbit 27","orbit 28","orbit 29","orbit 30","orbit 31","orbit 32","orbit 33","orbit 34","orbit 35","orbit 36","orbit 37","orbit 38","orbit 39","orbit 40","orbit 41","orbit 42","orbit 43","orbit 44","orbit 45","orbit 46","orbit 47","orbit 48","orbit 49","orbit 50","orbit 51","orbit 52","orbit 53","orbit 54","orbit 55","orbit 56","orbit 57","orbit 58","orbit 59","orbit 60","orbit 61","orbit 62","orbit 63","orbit 64","orbit 65","orbit 66","orbit 67","orbit 68","orbit 69","orbit 70","orbit 71","orbit 72"};
+				writer.writeNext(header);
+				for (String[] row : newGraphletImage.getGraphlets())
+					writer.writeNext(row);  // write the contents
+		        writer.flush(); // flush the writer. Very important!
+				out.closeEntry();
+
+				out.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 
 	private void setEnablePanels(boolean enabled) {
@@ -586,8 +653,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			c.setEnabled(enabled);
 		}
 
-		if (newGraphletImage.getDistanceGDDH() == -1)
+		if (newGraphletImage.getDistanceGDDH() == -1) {
 			btnAddToTable.setEnabled(false);
+			btnZipData.setEnabled(false);
+		}
 	}
 
 	public void disableActionButtons() {
@@ -599,8 +668,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	public void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
-		if (newGraphletImage.getDistanceGDDH() != -1)
+		if (newGraphletImage.getDistanceGDDH() != -1) {
 			btnAddToTable.setEnabled(true);
+			btnZipData.setEnabled(true);
+		}
 		btnTestNeighbours.setEnabled(true);
 		btnLabelImage.setEnabled(true);
 	}
@@ -654,7 +725,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public class Task extends SwingWorker<Void, Void> {
 
 		int option;
-		private ImagePlus imageWithLabels;
 
 		/**
 		 * 
@@ -751,7 +821,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		private void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
-			imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
+			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
 			for (int i = 0; i < centroids.size(); i++) {
 				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i + 1));
@@ -760,6 +830,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 						centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
 				imageWithLabels.getChannelProcessor().drawRoi(text);
 			}
+			newGraphletImage.setImageWithLabels(imageWithLabels);
 			// canvas.addOverlay(new
 			// ImageOverlay(imageWithLabels.getChannelProcessor()));
 			imp.updateAndDraw();

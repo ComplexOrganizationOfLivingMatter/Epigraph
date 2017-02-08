@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>org.jzy3d</groupId>
 			<artifactId>jzy3d-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 			<!--<exclusions> <exclusion> <groupId>net.sf.opencsv</groupId> <artifactId>opencsv</artifactId> 
 				</exclusion> </exclusions> -->
 		</dependency>
@@ -100,14 +100,22 @@
 			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
 			<version>4.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
-			<version>1.3.1</version>
+			<version>1.3.2</version>
 		</dependency>
-
 	</dependencies>
+
+	<!--<scm> <connection>scm:git:git://github.com/Pablo1990/Epigraph</connection> 
+		<developerConnection>scm:git:git@github.com:Pablo1990/Epigraph</developerConnection> 
+		<tag>HEAD</tag> <url>https://github.com/Pablo1990/Epigraph</url> </scm> -->
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/Pablo1990/Epigraph/issues</url>
+	</issueManagement>
+
 
 	<build>
 		<plugins>
@@ -134,8 +142,23 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.0.0</version>
 				<configuration>
+					<artifactSet>
+						<excludes>
+							<exclude>sc.fiji:Fiji_Plugins</exclude>
+							<exclude>sc.fiji:VIB-lib</exclude>
+							<exclude>sc.fiji:pal-optimization</exclude>
+							<exclude>sc.fiji:fiji-lib</exclude>
+							<exclude>sc.fiji:legacy-imglib1</exclude>
+							<exclude>net.imagej:*</exclude>
+							<exclude>net.imglib2:*</exclude>
+							<!-- <exclude>fr.inra.ijpb:*</exclude> -->
+							<exclude>org.jogamp.*:*</exclude>
+						</excludes>
+					</artifactSet>
 					<archive>
 						<manifest>
 							<mainClass>${main-class}</mainClass>
@@ -143,6 +166,14 @@
 					</archive>
 					<configFile>${basedir}/config/eclipse-code-formatter-profile.xml</configFile>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
