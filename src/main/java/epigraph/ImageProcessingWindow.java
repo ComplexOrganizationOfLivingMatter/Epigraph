@@ -354,7 +354,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		// Labels for polygon distribution
 		lbImageLegend = new JLabel("");
-		lbImageLegend.setIcon(new ImageIcon(new ImageIcon(this.getClass().getResource("/legend.jpg")).getImage()));
+		lbImageLegend.setIcon(new ImageIcon(this.getClass().getResource("/epigraph/legend.jpg")));
 
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
