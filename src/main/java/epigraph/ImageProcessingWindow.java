@@ -801,7 +801,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
-			lbPentagons.setVisible(true);
 			lbHexagons.setText(polDistri.get(2));
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
