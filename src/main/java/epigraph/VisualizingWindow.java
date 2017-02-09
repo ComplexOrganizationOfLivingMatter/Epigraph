@@ -26,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -75,6 +76,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	JTableModel tableInfo;
 
 	private Checkbox chbShowVoronoiReference;
+
+	private JLabel lbSizeOfPoints;
 
 	/**
 	 * 
@@ -207,6 +210,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				scatterReference.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
+		
+		lbSizeOfPoints = new JLabel("Size of dots: ");
+		lbSizeOfPoints.setLabelFor(slSizeOfPoints);
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
@@ -274,7 +280,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
+		genericPanelConstrainst.gridx++;
 		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridx--;
+		buttonsPanel.add(lbSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
