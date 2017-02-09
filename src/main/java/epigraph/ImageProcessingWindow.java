@@ -789,14 +789,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		private void calculateGraphlets() {
+			ArrayList<String> polDistri;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
 						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length > 0, overlayResult);
 			} else {
-				newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
 						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
 			}
+			
+			lbSquares.setText(polDistri.get(0));
+			lbPentagons.setText(polDistri.get(1));
+			lbPentagons.setVisible(true);
+			lbHexagons.setText(polDistri.get(2));
+			lbHeptagons.setText(polDistri.get(3));
+			lbOctogons.setText(polDistri.get(4));
 		}
 
 		private void testNeighbours() {

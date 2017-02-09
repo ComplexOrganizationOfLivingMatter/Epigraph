@@ -432,9 +432,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param selectionMode
 	 * @param overlay
 	 */
-	public void runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
+	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
 			boolean selectionMode, ImageOverlay overlay) {
-		testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
+		ArrayList<String> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
 
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
@@ -517,6 +517,8 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// Percentage 100
 		progressBar.setValue(100);
+		
+		return polDist;
 	}
 
 	/**
