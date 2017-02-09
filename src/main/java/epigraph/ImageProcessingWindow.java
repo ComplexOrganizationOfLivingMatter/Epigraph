@@ -170,8 +170,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		configPanel.setLayout(genericPanelLayout);
 
 		// Adding to the panel all the buttons
-		configPanel.add(btnToggleOverlay, genericPanelConstrainst);
-		genericPanelConstrainst.gridy++;
 		configPanel.add(lblRadius, genericPanelConstrainst);
 		genericPanelConstrainst.gridx++;
 		configPanel.add(inputRadiusNeigh, genericPanelConstrainst);
@@ -180,8 +178,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		configPanel.add(lblShape, genericPanelConstrainst);
 		genericPanelConstrainst.gridx++;
 		configPanel.add(cbSelectedShape, genericPanelConstrainst);
-		genericPanelConstrainst.gridx--;
 		genericPanelConstrainst.gridy++;
+		configPanel.add(btnToggleOverlay, genericPanelConstrainst);
+		genericPanelConstrainst.gridx--;
 		configPanel.add(btnTestNeighbours, genericPanelConstrainst);
 
 		// Selection ROI panel
@@ -400,9 +399,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(buttonsConstraints);
 		buttonsPanel.add(preProcessingPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
-		buttonsPanel.add(configPanel, buttonsConstraints);
-		buttonsConstraints.gridy++;
 		buttonsPanel.add(roiPanel, buttonsConstraints);
+		buttonsConstraints.gridy++;
+		buttonsPanel.add(configPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
 		buttonsPanel.add(graphletsPanel, buttonsConstraints);
 		buttonsConstraints.gridy++;
