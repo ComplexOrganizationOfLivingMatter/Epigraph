@@ -13,9 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -46,6 +44,8 @@ import org.jzy3d.plot3d.rendering.canvas.Quality;
 import util.opencsv.CSVReader;
 
 /**
+ * Visualizing window. Here you can visualize the points in the table and the
+ * voronoi noise reference
  * 
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
  *
@@ -80,6 +80,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JLabel lbSizeOfPoints;
 
 	/**
+	 * Constructor. Initialize the chart with the info from the main table. Also
+	 * it add a reference in case you'd want to view it and compare the points
+	 * with something reliable.
 	 * 
 	 * @param parent
 	 * @param tableInfo
@@ -100,12 +103,13 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		pack();
 
-		setBounds(10, 10, 1200, 800);
+		setBounds(10, 10, 1000, 700);
 
 		// chart.getView().getCamera().setScreenGridDisplayed(true);
 	}
 
 	/**
+	 * Create the scatter with the reference voronoi noise
 	 * @param tableInfo
 	 */
 	@SuppressWarnings("unchecked")
@@ -162,9 +166,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * 
+	 * Create a scatter plot with the data from the table of the main window
 	 */
 	private void createScatterData() {
+		// Firstly, we look for the number of items, we want to show
 		int size_array = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
@@ -174,6 +179,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		Coord3d[] points = new Coord3d[size_array];
 		Color[] colors = new Color[size_array];
 
+		// Show only the points that we want to visualized, whose are ticked in
+		// the visualizing table
 		int numRow = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
@@ -189,28 +196,36 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			}
 		}
 
+		// Insert into the scatter data, the points, the color of the points and
+		// the size of the points
 		scatterData = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 	}
 
 	/**
-	 * 
+	 * Initialize gui items
 	 */
 	private void initGUIItems() {
+		// The quality of the chart
 		Quality q2 = new Quality(true, true, true, true, true, true, true);
+		// A property to change dpi //TODO: not working
 		q2.setPreserveViewportSize(false);
+		// Create a chart from a quality and an awt chart
 		chart = AWTChartComponentFactory.chart(q2, org.jzy3d.chart.factories.IChartComponentFactory.Toolkit.awt);
+		// Add mouse and keyboard handlers, such as move the camera with the
+		// mouse.
 		chart.addMouseCameraController();
 
+		// Init slider of point size
 		slSizeOfPoints = new JSlider(3, 30, 10);
 		slSizeOfPoints.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				// TODO Auto-generated method stub
+				// We change the size of the points with the input of the slider
 				scatterData.setWidth((float) slSizeOfPoints.getValue());
 				scatterReference.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
-		
+
 		lbSizeOfPoints = new JLabel("Size of dots: ");
 		lbSizeOfPoints.setLabelFor(slSizeOfPoints);
 
@@ -247,7 +262,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * 
+	 * Repaint all the window
 	 */
 	private void repaintAll() {
 
@@ -257,7 +272,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * 
+	 * Initialize all the panels in the window
 	 */
 	private void initPanels() {
 		GridBagLayout genericPanelLayout = new GridBagLayout();
@@ -307,6 +322,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
+	 * Reset constraints of the panel
+	 * 
 	 * @param genericPanelConstrainst
 	 */
 	private void resetConstrainst(GridBagConstraints genericPanelConstrainst) {
@@ -319,7 +336,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * 
+	 * Init the chart with the different options: - Proper axes. - Scale from 0
+	 * to 100 (axe Y) - Add the data to the the scene - Add the reference data
+	 * to the scene
 	 */
 	private void initChart() {
 
@@ -341,36 +360,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * 
-	 * @param resourcePath
-	 * @return
-	 */
-	public File getResourceAsFile(String resourcePath) {
-		try {
-			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
-			if (in == null) {
-				return null;
-			}
-
-			File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
-			tempFile.deleteOnExit();
-
-			try (FileOutputStream out = new FileOutputStream(tempFile)) {
-				// copy stream
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				while ((bytesRead = in.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-				}
-			}
-			return tempFile;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
+	 * Group all the actions, we'd want to perform with the buttons. Right there
+	 * is only 1 button, "Export view".
 	 * 
 	 * @param e
 	 */
