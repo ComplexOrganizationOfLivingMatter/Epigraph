@@ -28,6 +28,12 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	private static final long serialVersionUID = 1L;
 	private ImageOverlay imageOverlay;
 
+	/**
+	 * Constructor by default
+	 * 
+	 * @param imp
+	 *            the image will be shown
+	 */
 	CustomCanvas(ImagePlus imp) {
 		super(imp);
 		Dimension dim = new Dimension(imp.getWidth(), imp.getHeight());
@@ -41,10 +47,20 @@ public class CustomCanvas extends OverlayedImageCanvas {
 		});
 	}
 
-	// @Override
+	/**
+	 * override
+	 */
 	public void setDrawingSize(int w, int h) {
 	}
 
+	/**
+	 * Set the dimensions of the canvas and paint it properly
+	 * 
+	 * @param width
+	 *            width of the canvas
+	 * @param height
+	 *            height of the canvas
+	 */
 	public void setDstDimensions(int width, int height) {
 		super.dstWidth = width;
 		super.dstHeight = height;
@@ -61,7 +77,9 @@ public class CustomCanvas extends OverlayedImageCanvas {
 		repaint();
 	}
 
-	// @Override
+	/**
+	 * Override
+	 */
 	public void paint(Graphics g) {
 		Rectangle srcRect = getSrcRect();
 		double mag = getMagnification();
@@ -81,14 +99,29 @@ public class CustomCanvas extends OverlayedImageCanvas {
 		g.fillRect(0, dh, w, h - dh);
 	}
 
+	/**
+	 * Set the current image
+	 * 
+	 * @param imp
+	 */
 	public void setImagePlus(ImagePlus imp) {
 		super.imp = imp;
 	}
-	
+
+	/**
+	 * Set overlay image
+	 * 
+	 * @param overlay
+	 */
 	public void setImageOverlay(ImageOverlay overlay) {
 		imageOverlay = overlay;
 	}
-	
+
+	/**
+	 * Get overlay image
+	 * 
+	 * @return overlay image
+	 */
 	public ImageOverlay getImageOverlay() {
 		return imageOverlay;
 	}

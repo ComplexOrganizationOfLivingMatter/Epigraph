@@ -64,9 +64,9 @@ public class GraphletImage extends BasicGraphletImage {
 	private ArrayList<EpiCell> cells;
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
-	
+
 	private ImagePlus imageWithLabels;
-	
+
 	private ImagePlus neighbourImage;
 
 	/**
@@ -122,7 +122,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * @param imageWithLabels the imageWithLabels to set
+	 * @param imageWithLabels
+	 *            the imageWithLabels to set
 	 */
 	public void setImageWithLabels(ImagePlus imageWithLabels) {
 		this.imageWithLabels = imageWithLabels;
@@ -136,7 +137,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * @param neighbourImage the neighbourImage to set
+	 * @param neighbourImage
+	 *            the neighbourImage to set
 	 */
 	public void setNeighbourImage(ImagePlus neighbourImage) {
 		this.neighbourImage = neighbourImage;
@@ -397,11 +399,14 @@ public class GraphletImage extends BasicGraphletImage {
 		this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 		ArrayList<String> percentajesList = new ArrayList<String>();
-		
-		//IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " + percentageOfPentagons + " " + percentageOfHexagonsToShow + " " + percentageOfHeptagons + " " + percentageOfOctogons + " " + percentageOfNonagons + " " + percentageOfDecagons);
+
+		// IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " +
+		// percentageOfPentagons + " " + percentageOfHexagonsToShow + " " +
+		// percentageOfHeptagons + " " + percentageOfOctogons + " " +
+		// percentageOfNonagons + " " + percentageOfDecagons);
 
 		this.neighbourImage = new ImagePlus("", colorImgToShow);
-		
+
 		progressBar.setValue((int) (60 / totalPercentageToReach));
 
 		if (imgToShow != null) {
@@ -410,7 +415,7 @@ public class GraphletImage extends BasicGraphletImage {
 			((OverlayedImageCanvas) imgToShow.getCanvas()).addOverlay(overlayResult);
 			((CustomCanvas) imgToShow.getCanvas()).setImageOverlay(overlayResult);
 		}
-		
+
 		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 		defaultFormat.setMaximumFractionDigits(2);
 
@@ -432,9 +437,10 @@ public class GraphletImage extends BasicGraphletImage {
 	 * @param selectionMode
 	 * @param overlay
 	 */
-	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets, JProgressBar progressBar,
-			boolean selectionMode, ImageOverlay overlay) {
-		ArrayList<String> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode, modeNumGraphlets, overlay);
+	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
+			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
+		ArrayList<String> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
+				modeNumGraphlets, overlay);
 
 		this.orcaProgram = new Orca(this.adjacencyMatrix);
 
@@ -517,7 +523,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// Percentage 100
 		progressBar.setValue(100);
-		
+
 		return polDist;
 	}
 
@@ -763,15 +769,15 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		return centroids;
 	}
-	
-	public String[][] getGraphlets(){
-		String[][] graphlets = new String[this.cells.size()][BasicGraphlets.TOTALGRAPHLETS+1];
+
+	public String[][] getGraphlets() {
+		String[][] graphlets = new String[this.cells.size()][BasicGraphlets.TOTALGRAPHLETS + 1];
 		int cont = 0;
 		int numCell = 0;
-		for (EpiCell cell : this.cells){
+		for (EpiCell cell : this.cells) {
 			graphlets[cont][0] = Integer.toString(cont + 1);
 			numCell = 1;
-			for (String graphlet : cell.getGraphletsString()){
+			for (String graphlet : cell.getGraphletsString()) {
 				graphlets[cont][numCell] = graphlet;
 				numCell++;
 			}
