@@ -317,8 +317,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnCalculateGraphlets.addActionListener(this);
 
 		cbGraphletsMode = new JComboBox<String>();
-		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (25 graphlets)",
-				"Total Partial (16 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
+		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] { "Total (26 graphlets)",
+				"Total Partial (17 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
 		cbGraphletsMode.setSelectedIndex(0);
 
 		btnAddToTable = new JButton("add to table");
