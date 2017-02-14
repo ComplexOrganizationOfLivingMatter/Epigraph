@@ -639,6 +639,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Adapted from Yaveroglu et. al. Supplementary Information for: "Revealing
+	 * the Hidden Language of Complex Networks"
 	 * 
 	 * @param graphletsFinal
 	 *            graphlets of the image
@@ -692,6 +694,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Adapted from Yaveroglu et. al. Supplementary Information for:
+	 * "Revealing the Hidden Language of Complex Networks"
 	 * 
 	 * @param signatures
 	 *            matrix with the graphlets
@@ -752,18 +756,18 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public void resetInvalidRegion() {
-		for (int i = 0; i < this.cells.size(); i++){
+		for (int i = 0; i < this.cells.size(); i++) {
 			this.cells.get(i).setInvalidRegion(false);
 			this.cells.get(i).setValid_cell(true);
 		}
-		
+
 		resetValidCells();
 	}
 
 	private void resetValidCells() {
 		int W = this.raw_img.getWidth();
 		int H = this.raw_img.getHeight();
-		int [][] matrixImg = this.l_img.getChannelProcessor().getIntArray();
+		int[][] matrixImg = this.l_img.getChannelProcessor().getIntArray();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
 			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
