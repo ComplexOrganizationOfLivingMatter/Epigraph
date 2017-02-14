@@ -16,8 +16,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 /**
+ * From java tutorial, it allow a table to create the pick color dialog
+ * 
  * @author Pedro Gomez-Galvez
- *
  */
 public class JColorEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 	/**
@@ -66,7 +67,7 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 	}
 
 	/**
-	 *  Implement the one CellEditor method that AbstractCellEditor doesn't.
+	 * Implement the one CellEditor method that AbstractCellEditor doesn't.
 	 */
 	@Override
 	public Object getCellEditorValue() {
@@ -74,7 +75,7 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 	}
 
 	/**
-	 *  Implement the one method defined by TableCellEditor.
+	 * Implement the one method defined by TableCellEditor.
 	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {

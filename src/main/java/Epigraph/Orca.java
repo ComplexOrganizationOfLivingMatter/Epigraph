@@ -13,7 +13,7 @@ import net.imglib2.util.ValuePair;
  * 
  * @author Pablo Vicente-Munuera
  */
-public class Orca extends BasicGraphlets {
+public class Orca extends BasicGraphlet {
 
 	private int[][] adjacencyMatrix;
 	/** inherited from BasicGraphlets **/

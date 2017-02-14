@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Define all cell properties. Each cell image will be an Epicell
+ * Define all cell properties, each cell image will be an Epicell
  * 
  * @author Pablo Vicente-Munuera
  */
@@ -185,7 +185,7 @@ public class EpiCell {
 	 * @return graphlets int values
 	 */
 	public String[] getGraphletsString() {
-		String[] graphletStr = new String[BasicGraphlets.TOTALGRAPHLETS];
+		String[] graphletStr = new String[BasicGraphlet.TOTALGRAPHLETS];
 
 		for (int i = 0; i < this.graphlets.length; i++) {
 			graphletStr[i] = Integer.toString(graphlets[i]);

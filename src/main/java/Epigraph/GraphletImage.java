@@ -33,18 +33,27 @@ import inra.ijpb.morphology.strel.SquareStrel;
  */
 public class GraphletImage extends BasicGraphletImage {
 
+	/**
+	 * Circle shape of the mask
+	 */
 	public static int CIRCLE_SHAPE = 0;
+	/**
+	 * Square shape of the mask
+	 */
 	public static int SQUARE_SHAPE = 1;
 
+	/**
+	 * Number of random voronoi
+	 */
 	public static final int NUMRANDOMVORONOI = 20;
 
 	// Hexagonal reference
-	private BasicGraphlets hexagonRefInt;
+	private BasicGraphlet hexagonRefInt;
 
 	// Random voronoi references
 	// TODO: Get out from this class the random voronoi references
-	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
-	private BasicGraphlets[] randomVoronoiValidCells_5Ref;
+	private BasicGraphlet[] randomVoronoiValidCells_4Ref;
+	private BasicGraphlet[] randomVoronoiValidCells_5Ref;
 
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = { 8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
@@ -80,19 +89,19 @@ public class GraphletImage extends BasicGraphletImage {
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-		this.hexagonRefInt = new BasicGraphlets(hexagonGraphlets);
+		this.hexagonRefInt = new BasicGraphlet(hexagonGraphlets);
 
-		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[NUMRANDOMVORONOI];
-		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			URL fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
+			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
 
 			fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlets(fileUrl);
+			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
 
 		// END TODO
@@ -653,7 +662,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
 
-		for (int i = 0; i < BasicGraphlets.TOTALGRAPHLETS; i++) {
+		for (int i = 0; i < BasicGraphlet.TOTALGRAPHLETS; i++) {
 			HashMap<Integer, Float> values1 = graphletFreqRef.get(i);
 			HashMap<Integer, Float> values2 = graphletFreqImage.get(i);
 
@@ -705,7 +714,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		HashMap<Integer, Float> graphletsValues;
 		Float actualValue;
-		for (int numGraphlet = 0; numGraphlet < BasicGraphlets.TOTALGRAPHLETS; numGraphlet++) {
+		for (int numGraphlet = 0; numGraphlet < BasicGraphlet.TOTALGRAPHLETS; numGraphlet++) {
 			graphletsValues = new HashMap<Integer, Float>();
 
 			for (int numNode = 0; numNode < signatures.size(); numNode++) {
@@ -795,7 +804,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public String[][] getGraphlets() {
-		String[][] graphlets = new String[this.cells.size()][BasicGraphlets.TOTALGRAPHLETS + 1];
+		String[][] graphlets = new String[this.cells.size()][BasicGraphlet.TOTALGRAPHLETS + 1];
 		int cont = 0;
 		int numCell = 0;
 		for (EpiCell cell : this.cells) {

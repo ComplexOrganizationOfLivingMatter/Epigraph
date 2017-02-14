@@ -15,7 +15,7 @@ import java.util.Scanner;
  * 
  * @author Pablo Vicente-Munuera
  */
-public class BasicGraphlets {
+public class BasicGraphlet {
 
 	/**
 	 * Max number of graphlets
@@ -33,7 +33,7 @@ public class BasicGraphlets {
 	/**
 	 * Basic constructor
 	 */
-	public BasicGraphlets() {
+	public BasicGraphlet() {
 		this.orbit = null;
 	}
 
@@ -43,7 +43,7 @@ public class BasicGraphlets {
 	 * @param orbit
 	 *            the graphlets themselves
 	 */
-	public BasicGraphlets(int[][] orbit) {
+	public BasicGraphlet(int[][] orbit) {
 		this.orbit = orbit;
 	}
 
@@ -53,7 +53,7 @@ public class BasicGraphlets {
 	 * @param fileName
 	 *            where we'll get the graphlets
 	 */
-	public BasicGraphlets(URL fileName) {
+	public BasicGraphlet(URL fileName) {
 		// File class needed to turn stringName to actual file
 		try {
 			// count lines
