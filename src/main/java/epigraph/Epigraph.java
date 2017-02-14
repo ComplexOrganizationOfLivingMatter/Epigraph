@@ -47,8 +47,9 @@ public class Epigraph implements PlugIn {
 		IJ.runPlugIn(clazz.getName(), "");
 	}
 
-	/**
-	 * Plugin run method
+	/*
+	 * Plugin run method (non-Javadoc)
+	 * @see ij.plugin.PlugIn#run(java.lang.String)
 	 */
 	public void run(String arg) {
 		// Build GUI

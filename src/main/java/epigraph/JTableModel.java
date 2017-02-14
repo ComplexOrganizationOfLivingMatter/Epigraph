@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * Model of the table on the main window
  * @author Pedro Gomez-Galvez
- *
  */
 class JTableModel extends AbstractTableModel {
 	/**
@@ -25,7 +25,7 @@ class JTableModel extends AbstractTableModel {
 	private ArrayList<String> listOfModes;
 
 	/**
-	 * 
+	 * Construct by default
 	 */
 	public JTableModel() {
 		super();
@@ -34,18 +34,34 @@ class JTableModel extends AbstractTableModel {
 		listOfModes = new ArrayList<String>();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getColumnCount()
+	 */
 	public int getColumnCount() {
 		return columnNames.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getRowCount()
+	 */
 	public int getRowCount() {
 		return allGraphletImages.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+	 */
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
 	public Object getValueAt(int row, int col) {
 		switch (col) {
 		case 0:
@@ -66,19 +82,29 @@ class JTableModel extends AbstractTableModel {
 		return null;
 	}
 
-	/**
+	/*
 	 * JTable uses this method to determine the default renderer/ editor for
 	 * each cell. If we didn't implement this method, then the last column would
 	 * contain text ("true"/"false"), rather than a check box.
+	 * (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+	 */
 	public boolean isCellEditable(int row, int col) {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 */
 	public void setValueAt(Object value, int row, int col) {
 		switch (col) {
 		case 0:

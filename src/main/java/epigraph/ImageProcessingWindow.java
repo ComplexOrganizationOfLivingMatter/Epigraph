@@ -475,8 +475,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		add(all, winc);
 	}
 
-	/**
-	 * Group all the actions
+	/*
+	 * Group all the actions(non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		roiManager = RoiManager.getInstance();

@@ -46,8 +46,9 @@ public class CustomCanvas extends OverlayedImageCanvas {
 		});
 	}
 
-	/**
-	 * override
+	/*
+	 * (non-Javadoc)
+	 * @see ij.gui.ImageCanvas#setDrawingSize(int, int)
 	 */
 	public void setDrawingSize(int w, int h) {
 	}
@@ -76,8 +77,9 @@ public class CustomCanvas extends OverlayedImageCanvas {
 		repaint();
 	}
 
-	/**
-	 * Override
+	/*
+	 * (non-Javadoc)
+	 * @see fiji.util.gui.OverlayedImageCanvas#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
 		Rectangle srcRect = getSrcRect();
@@ -99,8 +101,6 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @param imp
 	 *            Set the current image
 	 */
@@ -109,8 +109,6 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @param overlay
 	 *            Set overlay image
 	 */

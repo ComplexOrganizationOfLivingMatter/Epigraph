@@ -40,14 +40,28 @@ public class ImageOverlay implements Overlay {
 	private ImageProcessor imp = null;
 	private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
 
+	/**
+	 * Constructor by default
+	 */
 	public ImageOverlay() {
+		super();
 	}
 
+	/**
+	 * 
+	 * @param imp
+	 *            image overlay to set
+	 */
 	public ImageOverlay(ImageProcessor imp) {
 		this.imp = imp;
 	}
 
-	// @Override
+	/*
+	 * @Override(non-Javadoc)
+	 * 
+	 * @see fiji.util.gui.OverlayedImageCanvas.Overlay#paint(java.awt.Graphics,
+	 * int, int, double)
+	 */
 	public void paint(Graphics g, int x, int y, double magnification) {
 		if (null == this.imp)
 			return;
@@ -89,8 +103,12 @@ public class ImageOverlay implements Overlay {
 	public void setImage(ImageProcessor imp) {
 		this.imp = imp;
 	}
-	
-	public ImageProcessor getImage(){
+
+	/**
+	 * 
+	 * @return image processor to be painted in the overlay
+	 */
+	public ImageProcessor getImage() {
 		return imp;
 	}
 }
