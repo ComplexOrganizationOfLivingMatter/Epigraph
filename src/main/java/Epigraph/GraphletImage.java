@@ -28,6 +28,7 @@ import inra.ijpb.label.LabelImages;
 import inra.ijpb.morphology.strel.SquareStrel;
 
 /**
+ * Calculate polygon distribution, graphlets and other useful information.
  * 
  * @author Pablo Vicente-Munuera
  */
@@ -78,6 +79,8 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus neighbourImage;
 
 	/**
+	 * Constructor
+	 * 
 	 * @param img
 	 *            image
 	 */
@@ -86,6 +89,7 @@ public class GraphletImage extends BasicGraphletImage {
 		this.labelName = img.getFileInfo().url;
 		this.raw_img = img;
 
+		// Initialize the reference Hexagons and Random Voronoi
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
@@ -108,7 +112,7 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * @return the l_img
+	 * @return the label image
 	 */
 	public ImagePlus getLabelledImage() {
 		return l_img;
@@ -116,7 +120,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	/**
 	 * @param l_img
-	 *            the l_img to set
+	 *            the label image to set
 	 */
 	public void setLabelledImage(ImagePlus l_img) {
 		this.l_img = l_img;
@@ -153,10 +157,17 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Preprocess image involving binarizing an image, inverting if is the case
+	 * and label the image. Furthermore, it add several no valid cells
+	 * correspondent to the borders and initialize the adjacency matrix
 	 * 
 	 * @param img
+	 *            image to preprocess
 	 * @param connectivity
+	 *            kind of connectiviy (4 or 8)
 	 * @param progressBar
+	 *            to update the progress bar
+	 * 
 	 */
 	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
 		/* Preprocessing */
@@ -165,7 +176,7 @@ public class GraphletImage extends BasicGraphletImage {
 		img = img.flatten();
 		img.setProcessor(img.getChannelProcessor().convertToByteProcessor());
 		if (!img.getChannelProcessor().isBinary()) {
-			System.out.println("No binary image, improving...");
+			// System.out.println("No binary image, improving...");
 			img.getChannelProcessor().autoThreshold();
 		}
 
@@ -235,20 +246,31 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Calculate the polygon distribution of the image given a radius and shape.
+	 * Displays it and the neighbours image.
 	 * 
 	 * @param selectedShape
+	 *            the selected shape of the mask
 	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param imgToShow
+	 *            if you want to show the neighbour image
 	 * @param progressBar
+	 *            to update the progress bar
+	 * 
 	 * @param selectionMode
+	 *            are there any ROIs?
+	 * 
 	 * @param modeNumGraphlets
+	 *            number of graphlets used (total, total partial, ...)
+	 * 
 	 * @param overlayResult
-	 * @return
+	 *            overlay of the image that we will paint the neighbour image
+	 * @return the polygon distribution
 	 */
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
-		// TODO: Check when something is changed to rerun all these info
 		if (imgToShow != null)
 			totalPercentageToReach = 0.6;
 		else
@@ -256,6 +278,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		RoiManager roiManager = RoiManager.getInstance();
 		resetSelection();
+		// Check if there is any ROI
 		if (roiManager != null && selectionMode) {
 			for (Roi r : roiManager.getRoisAsArray()) {
 				for (Point point : r) {
@@ -265,11 +288,13 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
+		// Neighbours
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
 
+		// Adjacency matrix
 		HashSet<Integer> neighbours;
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
 			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
@@ -301,6 +326,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// int percentageOfHexagonsOriginal = 0;
 		int[][] actualPixels;
 
+		// Color the image depending the side of the cell
 		ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
 		int color;
@@ -437,13 +463,20 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Calculate graphlets with the given configuration
 	 * 
 	 * @param selectedShape
+	 *            the selected shape of the mask
 	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param modeNumGraphlets
+	 *            number of graphlets used (total, total partial, ...)
 	 * @param progressBar
+	 *            to update the progress bar
 	 * @param selectionMode
+	 *            are there any ROIs?
 	 * @param overlay
+	 *            of the image that we will paint the neighbour image
 	 */
 	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
 			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
@@ -536,25 +569,31 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Generate a mask expanding the pixels with a selected shape and radius
 	 * 
-	 * @param shape
-	 * @param dimensionOfShape
+	 * @param selectedShape
+	 *            the selected shape of the mask
+	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param perimeterPixelX
+	 *            pixels in X of the perimeter
 	 * @param perimeterPixelY
+	 *            pixels in Y of the perimeter
 	 * @return
 	 */
-	private ImageProcessor generateMask(int shape, int dimensionOfShape, int[] perimeterPixelX, int[] perimeterPixelY) {
+	private ImageProcessor generateMask(int selectedShape, int radiusOfShape, int[] perimeterPixelX,
+			int[] perimeterPixelY) {
 		// Create the perimeter of the cell
 		ImageProcessor img = new ByteProcessor(this.raw_img.getWidth(), this.raw_img.getHeight());
 		for (int numPixel = 0; numPixel < perimeterPixelX.length; numPixel++)
 			img.set(perimeterPixelX[numPixel], perimeterPixelY[numPixel], 255);
 
-		switch (shape) {
+		switch (selectedShape) {
 		case 0:// CIRCLE_SHAPE
-			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
+			new RankFilters().rank(img, radiusOfShape, RankFilters.MAX);
 			break;
 		case 1: // SQUARE_SHAPE
-			SquareStrel sq = SquareStrel.fromRadius(dimensionOfShape);
+			SquareStrel sq = SquareStrel.fromRadius(radiusOfShape);
 			img = sq.dilation(img);
 			break;
 		}
@@ -563,15 +602,19 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Calculate the neighbours of the cell
 	 * 
 	 * @param idEpiCell
-	 * @param shape
-	 * @param dimensionOfShape
+	 *            id of the cell
+	 * @param selectedShape
+	 *            the selected shape of the mask
+	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 */
-	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
+	private void createNeighbourhood(int idEpiCell, int selectedShape, int radiusOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
 
-		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
+		ImageProcessor imgProc = generateMask(selectedShape, radiusOfShape, cell.getPixelsX(), cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
@@ -596,10 +639,13 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Find if there is any no valid cells with a given length.
 	 * 
 	 * @param indexEpiCell
+	 *            id of the cell
 	 * @param length
-	 * @return
+	 *            actual length
+	 * @return If is any no valid cells it will return false, otherwise true
 	 */
 	private boolean allValidCellsWithinAGivenLength(int indexEpiCell, int length) {
 		if (this.cells.get(indexEpiCell).isValid_cell()) {
@@ -620,10 +666,14 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Search selected cells from the actual cell
 	 * 
 	 * @param indexEpiCell
+	 *            id of the cell
 	 * @param length
-	 * @return
+	 *            actual length
+	 * @return true if find any selected cells and all valid cells, false
+	 *         otherwise.
 	 */
 	private boolean selectedCellWithinAGivenLength(int indexEpiCell, int length) {
 		if (this.cells.get(indexEpiCell).isValid_cell() == false)
@@ -688,10 +738,11 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Mean of an array of floats
 	 * 
 	 * @param m
 	 *            array with the numbers
-	 * @return
+	 * @return the mean of the array of floats
 	 */
 	private float mean(float[] m) {
 		float sum = 0;
@@ -707,7 +758,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 * 
 	 * @param signatures
 	 *            matrix with the graphlets
-	 * @return
+	 * @return the distributions of the graphlets
 	 */
 	private ArrayList<HashMap<Integer, Float>> scaleGraphletDists(ArrayList<Integer[]> signatures) {
 		ArrayList<HashMap<Integer, Float>> distributions = new ArrayList<HashMap<Integer, Float>>();
@@ -746,6 +797,13 @@ public class GraphletImage extends BasicGraphletImage {
 		return distributions;
 	}
 
+	/**
+	 * Add cell to selected cells
+	 * 
+	 * @param labelPixel
+	 *            number of the label in the image
+	 * @return if the label pixel was correct (i.e no border)
+	 */
 	public int addCellToSelected(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setSelected(true);
@@ -754,6 +812,13 @@ public class GraphletImage extends BasicGraphletImage {
 		return -1;
 	}
 
+	/**
+	 * Add cell to invalid region
+	 * 
+	 * @param labelPixel
+	 *            number of the label in the image
+	 * @return if the label pixel was correct (i.e no border)
+	 */
 	public int addCellToInvalidRegion(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setInvalidRegion(true);
@@ -763,6 +828,9 @@ public class GraphletImage extends BasicGraphletImage {
 		return -1;
 	}
 
+	/**
+	 * All cells are now valid and the no valid cells are set as default.
+	 */
 	public void resetInvalidRegion() {
 		for (int i = 0; i < this.cells.size(); i++) {
 			this.cells.get(i).setInvalidRegion(false);
@@ -772,6 +840,9 @@ public class GraphletImage extends BasicGraphletImage {
 		resetValidCells();
 	}
 
+	/**
+	 * No valid cells are found in the boundaries
+	 */
 	private void resetValidCells() {
 		int W = this.raw_img.getWidth();
 		int H = this.raw_img.getHeight();
@@ -789,11 +860,19 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 	}
 
+	/**
+	 * Reset selected cells
+	 */
 	public void resetSelection() {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setSelected(false);
 	}
 
+	/**
+	 * Get all the pixels of every cell and return the centroid
+	 * 
+	 * @return the centroids
+	 */
 	public ArrayList<int[][]> getCentroids() {
 		// TODO Auto-generated method stub
 		ArrayList<int[][]> centroids = new ArrayList<int[][]>();
@@ -803,6 +882,9 @@ public class GraphletImage extends BasicGraphletImage {
 		return centroids;
 	}
 
+	/**
+	 * @return graphlets in an array of string
+	 */
 	public String[][] getGraphlets() {
 		String[][] graphlets = new String[this.cells.size()][BasicGraphlet.TOTALGRAPHLETS + 1];
 		int cont = 0;
