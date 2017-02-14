@@ -38,7 +38,7 @@ public class BasicGraphletImage {
 	protected String labelName;
 
 	/**
-	 * 
+	 * Default constructor. Distances as -1, white color and "Wrong name"
 	 */
 	public BasicGraphletImage() {
 		// TODO Auto-generated constructor stub
@@ -48,8 +48,14 @@ public class BasicGraphletImage {
 		this.labelName = "Wrong name";
 		this.percentageOfHexagons = -1;
 	}
-	
-	public BasicGraphletImage(BasicGraphletImage bci){
+
+	/**
+	 * Constructor of copy
+	 * 
+	 * @param bci
+	 *            new copy of basic graphlet image
+	 */
+	public BasicGraphletImage(BasicGraphletImage bci) {
 		this.color = bci.color;
 		this.distanceGDDH = bci.distanceGDDH;
 		this.distanceGDDRV = bci.distanceGDDRV;
@@ -58,6 +64,8 @@ public class BasicGraphletImage {
 	}
 
 	/**
+	 * Constructing the reference
+	 * 
 	 * @param distanceGDDRV
 	 *            distance against random voronoi
 	 * @param distanceGDDH
@@ -73,6 +81,8 @@ public class BasicGraphletImage {
 	}
 
 	/**
+	 * Constructing from parameters
+	 * 
 	 * @param distanceGDDRV
 	 * @param distanceGDDH
 	 * @param percentageOfHexagons

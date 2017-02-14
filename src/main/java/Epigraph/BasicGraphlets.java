@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class BasicGraphlets {
 
 	/**
-	 * 
+	 * Max number of graphlets 
 	 */
 	public static final int TOTALGRAPHLETS = 73;
 
@@ -29,14 +29,14 @@ public class BasicGraphlets {
 	protected int[][] orbit;
 
 	/**
-	 * 
+	 * Basic constructor
 	 */
 	public BasicGraphlets() {
 		this.orbit = null;
 	}
 
 	/**
-	 * 
+	 * Constructor from graphlets
 	 * @param orbit
 	 *            the graphlets themselves
 	 */
@@ -45,7 +45,7 @@ public class BasicGraphlets {
 	}
 
 	/**
-	 * 
+	 * Constructing from text file
 	 * @param fileName
 	 *            where we'll get the graphlets
 	 */
@@ -92,22 +92,25 @@ public class BasicGraphlets {
 	}
 
 	/**
-	 * 
+	 * Get an array of graphlets as Integer 
 	 * @param graphletsWeDontWant
 	 *            the graphlets we don't want will appear as 0s
-	 * @return
+	 * @return int[] the graphlets we'll use
 	 */
 	public ArrayList<Integer[]> getGraphletsInteger(int[] graphletsWeDontWant) {
 		ArrayList<Integer[]> graph = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		int graphletIndex = 0;
+		//Go through all the nodes
 		for (int numNode = 0; numNode < this.orbit.length; numNode++) {
 			actualGraphlets = new Integer[TOTALGRAPHLETS];
 			graphletIndex = 0;
+			//Go through the orbits of the node
 			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
+				//If we want the orbit of the node, we write it
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
 					actualGraphlets[numOrbit] = this.orbit[numNode][numOrbit];
-				} else {
+				} else { //We don't want this orbit
 					actualGraphlets[numOrbit] = 0;
 					graphletIndex++;
 				}

@@ -25,12 +25,19 @@ class ColorRenderer extends JLabel implements TableCellRenderer {
 	Border selectedBorder = null;
 	boolean isBordered = true;
 
+	/**
+	 * 
+	 * @param isBordered
+	 */
 	public ColorRenderer(boolean isBordered) {
 		this.isBordered = isBordered;
 		setOpaque(true); // MUST do this for background to show up.
 	}
 
 	@Override
+	/**
+	 * 
+	 */
 	public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus,
 			int row, int column) {
 		Color newColor = (Color) color;

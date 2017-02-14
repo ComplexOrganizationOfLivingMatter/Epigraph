@@ -27,7 +27,7 @@ public class EpiCell {
 	private boolean withinTheRange;
 
 	/**
-	 * 
+	 * Constructor by default
 	 */
 	public EpiCell() {
 		super();
@@ -46,6 +46,8 @@ public class EpiCell {
 	}
 
 	/**
+	 * Constructor from an id, the rest by just initialize
+	 * 
 	 * @param id
 	 *            identifier
 	 */
@@ -66,6 +68,8 @@ public class EpiCell {
 	}
 
 	/**
+	 * Constructor with a given parameters
+	 * 
 	 * @param id
 	 *            identifier
 	 * @param neighbours
@@ -175,17 +179,17 @@ public class EpiCell {
 	public int[] getGraphlets() {
 		return graphlets;
 	}
-	
+
 	/**
 	 * @return the graphlets
 	 */
 	public String[] getGraphletsString() {
 		String[] graphletStr = new String[BasicGraphlets.TOTALGRAPHLETS];
-		
+
 		for (int i = 0; i < this.graphlets.length; i++) {
 			graphletStr[i] = Integer.toString(graphlets[i]);
 		}
-		
+
 		return graphletStr;
 	}
 
@@ -218,7 +222,6 @@ public class EpiCell {
 		this.graphlets = graphlets2;
 	}
 
-	
 	public int[] getPixelsY() {
 		int[] pixels = new int[pixelsY.size()];
 		for (int i = 0; i < pixels.length; i++) {
@@ -228,7 +231,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param pixelsY the pixelsY to set
+	 * @param pixelsY
+	 *            the pixelsY to set
 	 */
 	public void setPixelsY(ArrayList<Integer> pixelsY) {
 		this.pixelsY = pixelsY;
@@ -246,7 +250,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param pixelsX the pixelsX to set
+	 * @param pixelsX
+	 *            the pixelsX to set
 	 */
 	public void setPixelsX(ArrayList<Integer> pixelsX) {
 		this.pixelsX = pixelsX;
@@ -260,7 +265,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param selected the selected to set
+	 * @param selected
+	 *            the selected to set
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
@@ -274,7 +280,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param withinTheRange if the cell is within the range of a selected cell
+	 * @param withinTheRange
+	 *            if the cell is within the range of a selected cell
 	 */
 	public void setWithinTheRange(boolean withinTheRange) {
 		this.withinTheRange = withinTheRange;
@@ -288,7 +295,8 @@ public class EpiCell {
 	}
 
 	/**
-	 * @param invalidRegion the invalidRegion to set
+	 * @param invalidRegion
+	 *            the invalidRegion to set
 	 */
 	public void setInvalidRegion(boolean invalidRegion) {
 		this.invalidRegion = invalidRegion;
@@ -317,11 +325,20 @@ public class EpiCell {
 		this.pixelsX.add(newPixelX);
 		this.pixelsY.add(newPixelY);
 	}
-	
+
+	/**
+	 * If the pixels from the parameters, belongs to this cell
+	 * 
+	 * @param x1
+	 *            pixel X
+	 * @param y1
+	 *            pixel Y
+	 * @return if the pixels are on this cell
+	 */
 	public int searchSelectedPixel(int x1, int y1) {
-		for (int x = 0; x < this.pixelsX.size(); x++){
-			if (this.pixelsX.get(x) == x1){
-				if (this.pixelsY.get(x) == y1){
+		for (int x = 0; x < this.pixelsX.size(); x++) {
+			if (this.pixelsX.get(x) == x1) {
+				if (this.pixelsY.get(x) == y1) {
 					this.setSelected(true);
 					return 1;
 				}
@@ -330,19 +347,23 @@ public class EpiCell {
 		return -1;
 	}
 
+	/**
+	 * Get the centroid of the cell
+	 * 
+	 * @return pixel representing the centroid of the cell
+	 */
 	public int[][] getCentroid() {
-		// TODO Auto-generated method stub
 		float sumX = 0;
 		float sumY = 0;
 		for (int i = 0; i < pixelsX.size(); i++) {
 			sumX += pixelsX.get(i);
 			sumY += pixelsY.get(i);
 		}
-		
+
 		int centroidX = (int) (sumX / pixelsX.size());
 		int centroidY = (int) (sumY / pixelsY.size());
-		
-		int[][] centroid = {{centroidX, centroidY}};
+
+		int[][] centroid = { { centroidX, centroidY } };
 		return centroid;
 	}
 }
