@@ -467,6 +467,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		roiManager = RoiManager.getInstance();
 		if (e.getSource() == btnCalculateGraphlets) {
 			disableActionButtons();
 			backgroundTask = new Task(0);
@@ -715,10 +716,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	private void openRoiManager() {
-		if (roiManager == null)
-			roiManager = RoiManager.getRoiManager();
-		else
-			roiManager.toFront();
+		roiManager = RoiManager.getRoiManager();
+		roiManager.toFront();
 	}
 
 	/**
