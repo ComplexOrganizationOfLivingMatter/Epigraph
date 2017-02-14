@@ -752,8 +752,29 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	public void resetInvalidRegion() {
-		for (int i = 0; i < this.cells.size(); i++)
+		for (int i = 0; i < this.cells.size(); i++){
 			this.cells.get(i).setInvalidRegion(false);
+			this.cells.get(i).setValid_cell(true);
+		}
+		
+		resetValidCells();
+	}
+
+	private void resetValidCells() {
+		int W = this.raw_img.getWidth();
+		int H = this.raw_img.getHeight();
+		int [][] matrixImg = this.l_img.getChannelProcessor().getIntArray();
+		int valuePxl;
+		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
+			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
+				if (indexImgX == 0 || indexImgX == W - 1 || indexImgY == 0 || indexImgY == H - 1) {
+					valuePxl = matrixImg[indexImgX][indexImgY];
+					if (valuePxl != 0) {
+						this.cells.get(valuePxl - 1).setValid_cell(false);
+					}
+				}
+			}
+		}
 	}
 
 	public void resetSelection() {

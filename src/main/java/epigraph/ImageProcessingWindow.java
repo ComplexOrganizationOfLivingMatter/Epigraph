@@ -682,9 +682,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	private void addInvalidRegion() {
+		this.newGraphletImage.resetInvalidRegion();
+		invalidRegionRoi = null;
 		Roi r = this.getImagePlus().getRoi();
 		if (r != null) {
-			this.newGraphletImage.resetInvalidRegion();
 			for (Point point : r) {
 				int[] pixelInfo = newGraphletImage.getLabelledImage().getPixel(point.x, point.y);
 				this.newGraphletImage.addCellToInvalidRegion(pixelInfo[0]);
