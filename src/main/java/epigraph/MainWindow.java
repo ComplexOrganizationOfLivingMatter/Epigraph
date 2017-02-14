@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
 	 * Default serial. Useless
 	 */
 	private static final long serialVersionUID = 1L;
-	JTableModel tableInfo;
+	public JTableModel tableInfo;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JPanel panel;

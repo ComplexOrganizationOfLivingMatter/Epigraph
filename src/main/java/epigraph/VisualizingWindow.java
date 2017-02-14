@@ -44,16 +44,13 @@ import org.jzy3d.plot3d.rendering.canvas.Quality;
 import util.opencsv.CSVReader;
 
 /**
- * Visualizing window. Here you can visualize the points in the table and the
+ * Visualizing window, here you can visualize the points in the table and the
  * voronoi noise reference
  * 
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
  */
 public class VisualizingWindow extends JDialog implements ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	Scatter scatterData;
@@ -359,11 +356,12 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		this.chart.setScale(new Scale(0, 100));
 	}
 
-	/**
+	/*
 	 * Group all the actions, we'd want to perform with the buttons. Right there
-	 * is only 1 button, "Export view".
+	 * is only 1 button, "Export view". (non-Javadoc)
 	 * 
-	 * @param e
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnExport) {
