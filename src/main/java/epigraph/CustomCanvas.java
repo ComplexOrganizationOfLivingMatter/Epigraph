@@ -32,7 +32,7 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * Constructor by default
 	 * 
 	 * @param imp
-	 *            the image will be shown
+	 *            image to show
 	 */
 	CustomCanvas(ImagePlus imp) {
 		super(imp);
@@ -57,9 +57,9 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * Set the dimensions of the canvas and paint it properly
 	 * 
 	 * @param width
-	 *            width of the canvas
+	 *            width of canvas
 	 * @param height
-	 *            height of the canvas
+	 *            height of canvas
 	 */
 	public void setDstDimensions(int width, int height) {
 		super.dstWidth = width;
@@ -100,18 +100,20 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	}
 
 	/**
-	 * Set the current image
+	 * 
 	 * 
 	 * @param imp
+	 * Set the current image
 	 */
 	public void setImagePlus(ImagePlus imp) {
 		super.imp = imp;
 	}
 
 	/**
-	 * Set overlay image
+	 * 
 	 * 
 	 * @param overlay
+	 * Set overlay image
 	 */
 	public void setImageOverlay(ImageOverlay overlay) {
 		imageOverlay = overlay;

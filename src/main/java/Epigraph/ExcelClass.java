@@ -20,6 +20,8 @@ import org.apache.poi.ss.usermodel.Row;
 /**
  * 
  * @author Pedro Gomez-Galvez
+ * 
+ * This class is used to import and export a xls file with all registered graphlets information
  *
  */
 public class ExcelClass {
@@ -35,7 +37,7 @@ public class ExcelClass {
 	private ArrayList<String> graphletsMode;
 
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public ExcelClass() {
 		super();
@@ -51,16 +53,27 @@ public class ExcelClass {
 	}
 
 	/**
+	 * Constructor from parameters
 	 * 
 	 * @param filename
+	 *            Name of excel file to import or export
 	 * @param imageName
+	 *            List of labels of images
 	 * @param gddh
+	 *            List of graphlet degree distance to hexagons tesselletion
 	 * @param gddrv
+	 *            List of graphlet degree distance to random voronoi
+	 *            tesselletion
 	 * @param hexagonsPercentage
+	 *            List of percentajes of hexagons for each image
 	 * @param r
+	 *            List of red channel value from RGB for each image
 	 * @param g
+	 *            List of green channel value from RGB for each image
 	 * @param b
+	 *            List of blue channel value from RGB for each image
 	 * @param graphletsMode
+	 *            List of chosen mode to calculate graphlets for each image
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
@@ -77,41 +90,42 @@ public class ExcelClass {
 		this.graphletsMode = graphletsMode;
 	}
 
+
 	/**
 	 * 
 	 * @return
+	 * Get list of images names
 	 */
 	public ArrayList<String> getImageName() {
 		return imageName;
 	}
-
 	/**
-	 * 
 	 * @param imageName
+	 *Set list of image name
 	 */
 	public void setImageName(ArrayList<String> imageName) {
 		this.imageName = imageName;
 	}
-
 	/**
 	 * 
 	 * @return
+	 * Get list of gddh
 	 */
 	public ArrayList<Float> getGddh() {
 		return gddh;
 	}
-
 	/**
-	 * 
+	 *
 	 * @param gddh
+	 * Set list of gddh
 	 */
 	public void setGddh(ArrayList<Float> gddh) {
 		this.gddh = gddh;
 	}
-
 	/**
 	 * 
 	 * @return
+	 * Get list of gddrv
 	 */
 	public ArrayList<Float> getGddrv() {
 		return gddrv;
@@ -120,97 +134,98 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param gddrv
+	 * Set list of gddrv
 	 */
 	public void setGddrv(ArrayList<Float> gddrv) {
 		this.gddrv = gddrv;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
+	 *  Get list of hexagons percentajes
 	 */
 	public ArrayList<Float> getHexagonsPercentage() {
 		return hexagonsPercentage;
 	}
-
 	/**
 	 * 
 	 * @param hexagonsPercentage
+	 * Set list of hexagons percentajes
 	 */
 	public void setHexagonsPercentage(ArrayList<Float> hexagonsPercentage) {
 		this.hexagonsPercentage = hexagonsPercentage;
 	}
-
 	/**
 	 * 
 	 * @return
+	 * Get list of channels R (RGB)
 	 */
 	public ArrayList<Float> getR() {
 		return R;
 	}
-
 	/**
 	 * 
 	 * @param r
+	 * Set list of channels R (RGB)
 	 */
 	public void setR(ArrayList<Float> r) {
 		R = r;
 	}
-
 	/**
 	 * 
 	 * @return
+	 * Get list of channels G (RGB)
 	 */
 	public ArrayList<Float> getG() {
 		return G;
 	}
-
 	/**
 	 * 
 	 * @param g
+	 * Set list of channels G (RGB)
 	 */
 	public void setG(ArrayList<Float> g) {
 		G = g;
 	}
-
 	/**
 	 * 
 	 * @return
+	 * Get list of channels B (RGB)
 	 */
 	public ArrayList<Float> getB() {
 		return B;
 	}
-
 	/**
 	 * 
 	 * @param b
+	 * Set list of channels B (RGB)
 	 */
 	public void setB(ArrayList<Float> b) {
 		B = b;
 	}
-
 	/**
 	 * 
-	 */
-	/**
-	 * @return the graphletsMode
+	 * @return
+	 * Get list of graphlets modes used for each image
 	 */
 	public ArrayList<String> getGraphletsMode() {
 		return graphletsMode;
 	}
-
 	/**
+	 * 
 	 * @param graphletsMode
-	 *            the graphletsMode to set
+	 * Set list of graphlets modes
 	 */
 	public void setGraphletsMode(ArrayList<String> graphletsMode) {
 		this.graphletsMode = graphletsMode;
 	}
-
 	/**
 	 * 
 	 * @param row
+	 * number of excel class row
 	 * @return
+	 * excel class row with all values 
 	 */
 	public ArrayList<Object> getRow(int row) {
 		ArrayList<Object> rowExcel = new ArrayList<Object>();
@@ -226,9 +241,11 @@ public class ExcelClass {
 		return rowExcel;
 	}
 
+	
 	/**
-	 * 
+	 * load a xls file previously exported
 	 * @param filename
+	 * Name of file in directory
 	 */
 	public void importData(String filename) {
 
@@ -282,7 +299,7 @@ public class ExcelClass {
 								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 4:
-								try{
+								try {
 									this.R.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -290,7 +307,7 @@ public class ExcelClass {
 								}
 								break;
 							case 5:
-								try{
+								try {
 									this.G.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -298,7 +315,7 @@ public class ExcelClass {
 								}
 								break;
 							case 6:
-								try{
+								try {
 									this.B.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -332,7 +349,7 @@ public class ExcelClass {
 	}
 
 	/**
-	 * EXPORT DATA TO EXCEL
+	 * Export excelClass to a xls file
 	 */
 	public void exportData() {
 
@@ -370,7 +387,7 @@ public class ExcelClass {
 			// create a row of excelsheet
 			Row row = sheet.createRow(rownum++);
 
-			// get object array of prerticuler key
+			// get object array from key
 			Object[] objArr = data.get(keyint.toString());
 
 			int cellnum = 0;

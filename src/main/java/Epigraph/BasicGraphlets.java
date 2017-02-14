@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 /**
  * @author Pablo Vicente-Munuera
+ * 
+ * This class read referenced graphlets information and is heritage of a more complex class: GraphletImage
  *
  */
 public class BasicGraphlets {
@@ -45,9 +47,9 @@ public class BasicGraphlets {
 	}
 
 	/**
-	 * Constructing from text file
+	 * Constructing reference Voronoi Noise Scale from text file
 	 * @param fileName
-	 *            where we'll get the graphlets
+	 * where we'll get the graphlets
 	 */
 	public BasicGraphlets(URL fileName) {
 		// File class needed to turn stringName to actual file
@@ -94,8 +96,9 @@ public class BasicGraphlets {
 	/**
 	 * Get an array of graphlets as Integer 
 	 * @param graphletsWeDontWant
-	 *            the graphlets we don't want will appear as 0s
-	 * @return int[] the graphlets we'll use
+	 * the graphlets we don't want will appear as 0s
+	 * @return  
+	 * the graphlets we'll use
 	 */
 	public ArrayList<Integer[]> getGraphletsInteger(int[] graphletsWeDontWant) {
 		ArrayList<Integer[]> graph = new ArrayList<Integer[]>();

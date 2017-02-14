@@ -9,6 +9,8 @@ import java.util.HashSet;
 /**
  * @author Pablo Vicente-Munuera
  *
+ *Define all cell properties. Each cell image will be an Epicell
+ *
  */
 public class EpiCell {
 	private int id;
@@ -49,7 +51,7 @@ public class EpiCell {
 	 * Constructor from an id, the rest by just initialize
 	 * 
 	 * @param id
-	 *            identifier
+	 *  identifier (label)
 	 */
 	public EpiCell(int id) {
 		super();
@@ -68,7 +70,7 @@ public class EpiCell {
 	}
 
 	/**
-	 * Constructor with a given parameters
+	 * Constructor with parameters
 	 * 
 	 * @param id
 	 *            identifier
@@ -107,14 +109,15 @@ public class EpiCell {
 
 	/**
 	 * @param id
-	 *            the id to set
+	 *  set id
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the neighbours
+	 * @return 
+	 * set of neighbours
 	 */
 	public HashSet<Integer> getNeighbours() {
 		return neighbours;
@@ -122,14 +125,15 @@ public class EpiCell {
 
 	/**
 	 * @param neighbours
-	 *            the neighbours to set
+	 * neighbours to set
 	 */
 	public void setNeighbours(HashSet<Integer> neighbours) {
 		this.neighbours = neighbours;
 	}
 
 	/**
-	 * @return the valid_cell
+	 * @return 
+	 * if cell is valid
 	 */
 	public boolean isValid_cell() {
 		return valid_cell && !invalidRegion;
@@ -137,14 +141,14 @@ public class EpiCell {
 
 	/**
 	 * @param valid_cell
-	 *            the valid_cell to set
+	 * set valid cell property
 	 */
 	public void setValid_cell(boolean valid_cell) {
 		this.valid_cell = valid_cell;
 	}
 
 	/**
-	 * @return the valid_cell_4
+	 * @return if a cell is a valid cell 4'
 	 */
 	public boolean isValid_cell_4() {
 		return valid_cell_4;
@@ -152,14 +156,14 @@ public class EpiCell {
 
 	/**
 	 * @param valid_cell_4
-	 *            the valid_cell_4 to set
+	 * set the property valid cell 4' in an cell
 	 */
 	public void setValid_cell_4(boolean valid_cell_4) {
 		this.valid_cell_4 = valid_cell_4;
 	}
 
 	/**
-	 * @return the valid_cell_5
+	 * @return if a cell is a valid cell 5'
 	 */
 	public boolean isValid_cell_5() {
 		return valid_cell_5;
@@ -167,21 +171,21 @@ public class EpiCell {
 
 	/**
 	 * @param valid_cell_5
-	 *            the valid_cell_5 to set
+	 * set the property valid cell 5' in an cell	 
 	 */
 	public void setValid_cell_5(boolean valid_cell_5) {
 		this.valid_cell_5 = valid_cell_5;
 	}
 
 	/**
-	 * @return the graphlets
+	 * @return graphlets int values
 	 */
 	public int[] getGraphlets() {
 		return graphlets;
 	}
 
 	/**
-	 * @return the graphlets
+	 * @return graphlets int values
 	 */
 	public String[] getGraphletsString() {
 		String[] graphletStr = new String[BasicGraphlets.TOTALGRAPHLETS];
@@ -197,7 +201,7 @@ public class EpiCell {
 	 * 
 	 * @param graphletsWeDontWant
 	 *            the graphlets we dont want, will be zeros
-	 * @return the graphlets
+	 * @return filtered graphlets
 	 */
 	public Integer[] getGraphletsInteger(int[] graphletsWeDontWant) {
 		Integer[] graph = new Integer[graphlets.length];
@@ -216,12 +220,17 @@ public class EpiCell {
 
 	/**
 	 * @param graphlets2
-	 *            the graphlets to set
+	 *            set the graphlets values 
 	 */
 	public void setGraphlets(int[] graphlets2) {
 		this.graphlets = graphlets2;
 	}
 
+	/**
+	 * 
+	 * @return
+	 * coordinates Y from all cell pixels
+	 */
 	public int[] getPixelsY() {
 		int[] pixels = new int[pixelsY.size()];
 		for (int i = 0; i < pixels.length; i++) {
@@ -232,14 +241,16 @@ public class EpiCell {
 
 	/**
 	 * @param pixelsY
-	 *            the pixelsY to set
+	 *   set coordinates Y of all pixels in cell
 	 */
 	public void setPixelsY(ArrayList<Integer> pixelsY) {
 		this.pixelsY = pixelsY;
 	}
 
 	/**
-	 * @return the pixelsX
+	 * 
+	 * @return
+	 * coordinates X from all cell pixels
 	 */
 	public int[] getPixelsX() {
 		int[] pixels = new int[pixelsX.size()];
@@ -251,14 +262,14 @@ public class EpiCell {
 
 	/**
 	 * @param pixelsX
-	 *            the pixelsX to set
+	 *   set coordinates X of all pixels in cell
 	 */
 	public void setPixelsX(ArrayList<Integer> pixelsX) {
 		this.pixelsX = pixelsX;
 	}
 
 	/**
-	 * @return the selected
+	 * @return if cell is selected or not
 	 */
 	public boolean isSelected() {
 		return selected && valid_cell;
@@ -266,7 +277,7 @@ public class EpiCell {
 
 	/**
 	 * @param selected
-	 *            the selected to set
+	 * set selected property of cell
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
@@ -281,14 +292,16 @@ public class EpiCell {
 
 	/**
 	 * @param withinTheRange
-	 *            if the cell is within the range of a selected cell
+	 *    set withinTheRange property
 	 */
 	public void setWithinTheRange(boolean withinTheRange) {
 		this.withinTheRange = withinTheRange;
 	}
 
 	/**
-	 * @return the invalidRegion
+	 * @return 
+	 * if cell is into invalid region
+	 * 
 	 */
 	public boolean isInvalidRegion() {
 		return invalidRegion;
@@ -296,14 +309,14 @@ public class EpiCell {
 
 	/**
 	 * @param invalidRegion
-	 *            the invalidRegion to set
+	 * set property invalid region
 	 */
 	public void setInvalidRegion(boolean invalidRegion) {
 		this.invalidRegion = invalidRegion;
 	}
 
 	/**
-	 * @return the pixels
+	 * @return all pixels into the cell
 	 */
 	public int[][] getPixels() {
 		int[][] pixels = new int[pixelsX.size()][2];
