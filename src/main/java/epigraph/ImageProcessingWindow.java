@@ -54,14 +54,14 @@ import ij.plugin.frame.RoiManager;
 import util.opencsv.CSVWriter;
 
 /**
+ * Window that process the image and calculate its graphlets.
  * 
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
- *
  */
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	//For future stack
+	// For future stack
 	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
 
@@ -110,9 +110,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lblConnectiviy;
 
 	/**
+	 * Constructor
 	 * 
 	 * @param raw_img
+	 *            img to process
 	 * @param tableInfo
+	 *            information of the table
 	 */
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
 		super(raw_img, new CustomCanvas(raw_img));
@@ -134,9 +137,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	/**
-	 * 
+	 * initialize GUI and configure panels
 	 */
-	void initGUI() {
+	private void initGUI() {
 
 		initializeGUIItems();
 
@@ -274,7 +277,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	/**
-	 * 
+	 * Initialize gui items
 	 */
 	private void initializeGUIItems() {
 		canvas.addComponentListener(new ComponentAdapter() {
@@ -288,7 +291,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		cbConnectivity = new JComboBox<Integer>();
 		cbConnectivity.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 4, 8 }));
 		cbConnectivity.setSelectedIndex(1);
-		
+
 		lblConnectiviy = new JLabel("Connectivity (px):");
 		lblConnectiviy.setLabelFor(cbConnectivity);
 
@@ -378,9 +381,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	/**
+	 * Reset the constraints. All to 0s and width and height to 1.
+	 * 
 	 * @param genericPanelConstrainst
+	 *            the panel constraints to modify
 	 */
-	private void resetGenericConstrainst(GridBagConstraints genericPanelConstrainst) {
+	protected void resetGenericConstrainst(GridBagConstraints genericPanelConstrainst) {
 		genericPanelConstrainst.gridwidth = 1;
 		genericPanelConstrainst.gridheight = 1;
 		genericPanelConstrainst.gridx = 0;
@@ -389,6 +395,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		genericPanelConstrainst.weightx = 0;
 	}
 
+	/**
+	 * Setup panels
+	 */
 	private void setupPanels() {
 		/* DEFINITION OF RIGHT SIDE PANEL */
 		GridBagLayout buttonsLayout = new GridBagLayout();
@@ -466,8 +475,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		add(all, winc);
 	}
 
+	/**
+	 * Group all the actions
+	 */
 	public void actionPerformed(ActionEvent e) {
 		roiManager = RoiManager.getInstance();
+		
 		if (e.getSource() == btnCalculateGraphlets) {
 			disableActionButtons();
 			backgroundTask = new Task(0);
@@ -579,13 +592,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			exportDataIntoZip();
 		}
 
+		// Update the image and canvas
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
 	}
 
-	private void exportDataIntoZip() {
+	/**
+	 * Export data into a .zip file. It will export a file with graphlets, an
+	 * image of neighbours and a labelled image with the number of cell
+	 */
+	public void exportDataIntoZip() {
 		JFileChooser fileChooser = new JFileChooser();
 		// set it to be a save dialog
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -601,36 +619,46 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		fileChooser.setAcceptAllFileFilterUsed(false);
 
-		
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 			String filename = fileChooser.getSelectedFile().toString();
 
 			if (!filename.endsWith(".zip"))
 				filename += ".zip";
-			
+
 			ZipOutputStream out;
 			try {
 				out = new ZipOutputStream(new FileOutputStream(filename));
-				
+
 				ZipEntry e = new ZipEntry("neighbours.jpg");
 				out.putNextEntry(e);
 				ImageIO.write(newGraphletImage.getNeighbourImage().getBufferedImage(), "jpg", out);
 				out.closeEntry();
-				
+
 				e = new ZipEntry("labelledImage.jpg");
 				out.putNextEntry(e);
 				ImageIO.write(newGraphletImage.getImageWithLabels().getBufferedImage(), "jpg", out);
 				out.closeEntry();
-				
+
 				e = new ZipEntry("graphletsPerNode.csv");
 				out.putNextEntry(e);
-				CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));  // There is no need for staging the CSV on filesystem or reading bytes into memory. Directly write bytes to the output stream.
-				String[] header = {"numLabel","orbit 0","orbit 1","orbit 2","orbit 3","orbit 4","orbit 5","orbit 6","orbit 7","orbit 8","orbit 9","orbit 10","orbit 11","orbit 12","orbit 13","orbit 14","orbit 15","orbit 16","orbit 17","orbit 18","orbit 19","orbit 20","orbit 21","orbit 22","orbit 23","orbit 24","orbit 25","orbit 26","orbit 27","orbit 28","orbit 29","orbit 30","orbit 31","orbit 32","orbit 33","orbit 34","orbit 35","orbit 36","orbit 37","orbit 38","orbit 39","orbit 40","orbit 41","orbit 42","orbit 43","orbit 44","orbit 45","orbit 46","orbit 47","orbit 48","orbit 49","orbit 50","orbit 51","orbit 52","orbit 53","orbit 54","orbit 55","orbit 56","orbit 57","orbit 58","orbit 59","orbit 60","orbit 61","orbit 62","orbit 63","orbit 64","orbit 65","orbit 66","orbit 67","orbit 68","orbit 69","orbit 70","orbit 71","orbit 72"};
+				// There is no need for staging the CSV on filesystem or reading
+				// bytes into memory. Directly write bytes to the output stream.
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));
+				String[] header = { "numLabel", "orbit 0", "orbit 1", "orbit 2", "orbit 3", "orbit 4", "orbit 5",
+						"orbit 6", "orbit 7", "orbit 8", "orbit 9", "orbit 10", "orbit 11", "orbit 12", "orbit 13",
+						"orbit 14", "orbit 15", "orbit 16", "orbit 17", "orbit 18", "orbit 19", "orbit 20", "orbit 21",
+						"orbit 22", "orbit 23", "orbit 24", "orbit 25", "orbit 26", "orbit 27", "orbit 28", "orbit 29",
+						"orbit 30", "orbit 31", "orbit 32", "orbit 33", "orbit 34", "orbit 35", "orbit 36", "orbit 37",
+						"orbit 38", "orbit 39", "orbit 40", "orbit 41", "orbit 42", "orbit 43", "orbit 44", "orbit 45",
+						"orbit 46", "orbit 47", "orbit 48", "orbit 49", "orbit 50", "orbit 51", "orbit 52", "orbit 53",
+						"orbit 54", "orbit 55", "orbit 56", "orbit 57", "orbit 58", "orbit 59", "orbit 60", "orbit 61",
+						"orbit 62", "orbit 63", "orbit 64", "orbit 65", "orbit 66", "orbit 67", "orbit 68", "orbit 69",
+						"orbit 70", "orbit 71", "orbit 72" };
 				writer.writeNext(header);
 				for (String[] row : newGraphletImage.getGraphlets())
-					writer.writeNext(row);  // write the contents
-		        writer.flush(); // flush the writer. Very important!
+					writer.writeNext(row); // write the contents
+				writer.flush(); // flush the writer. Very important!
 				out.closeEntry();
 
 				out.close();
@@ -644,7 +672,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 	}
 
-	private void setEnablePanels(boolean enabled) {
+	/**
+	 * Enable/disable all the panels in the window
+	 * 
+	 * @param enabled true it will enable panels, false disable all panels
+	 */
+	protected void setEnablePanels(boolean enabled) {
 		for (Component c : roiPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
@@ -663,7 +696,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 	}
 
-	public void disableActionButtons() {
+	/**
+	 * Disable all the action buttons
+	 */
+	protected void disableActionButtons() {
 		btnCalculateGraphlets.setEnabled(false);
 		btnAddToTable.setEnabled(false);
 		btnTestNeighbours.setEnabled(false);
@@ -671,7 +707,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnZipData.setEnabled(false);
 	}
 
-	public void enableActionButtons() {
+	/**
+	 * Enable all the action buttons
+	 */
+	protected void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
 		if (newGraphletImage.getDistanceGDDH() != -1) {
 			btnAddToTable.setEnabled(true);
@@ -681,7 +720,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnLabelImage.setEnabled(true);
 	}
 
-	private void addInvalidRegion() {
+	/**
+	 * Transform the ROI to an invalid region that will be surrounded by no
+	 * valid cells
+	 */
+	public void addInvalidRegion() {
 		this.newGraphletImage.resetInvalidRegion();
 		invalidRegionRoi = null;
 		Roi r = this.getImagePlus().getRoi();
@@ -696,9 +739,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	}
 
 	/**
-	 * 
+	 * Add the painted Roi to the roiManager
 	 */
-	private void addROI() {
+	public void addROI() {
 		Roi r = this.getImagePlus().getRoi();
 		if (r != null) {
 			roiManager.addRoi(r);
@@ -709,22 +752,40 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	/**
 	 * Repaint all panels
 	 */
-	private void repaintAll() {
+	protected void repaintAll() {
 		getCanvas().repaint();
 		this.labelsJPanel.repaint();
 		this.buttonsPanel.repaint();
 		this.all.repaint();
 	}
 
-	private void openRoiManager() {
+	/**
+	 * Open roi manager and get the reference
+	 */
+	public void openRoiManager() {
 		roiManager = RoiManager.getRoiManager();
 		roiManager.toFront();
 	}
 
 	/**
+	 * @return the roiManager
+	 */
+	public RoiManager getRoiManager() {
+		return roiManager;
+	}
+
+	/**
+	 * @param roiManager
+	 *            the roiManager to set
+	 */
+	public void setRoiManager(RoiManager roiManager) {
+		this.roiManager = roiManager;
+	}
+
+	/**
+	 * Task to be computed in background without blocking the user interface
 	 * 
 	 * @author Pablo Vicente-Munuera
-	 *
 	 */
 	public class Task extends SwingWorker<Void, Void> {
 
@@ -787,17 +848,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		}
 
-		private void calculateGraphlets() {
+		/**
+		 * Calculate graphlets in background
+		 */
+		public void calculateGraphlets() {
 			ArrayList<String> polDistri;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, roiArray.length > 0, overlayResult);
+				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
+						roiArray.length > 0, overlayResult);
 			} else {
-				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
-						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false, overlayResult);
+				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
+						overlayResult);
 			}
-			
+
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
 			lbHexagons.setText(polDistri.get(2));
@@ -805,7 +871,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbOctogons.setText(polDistri.get(4));
 		}
 
-		private void testNeighbours() {
+		/**
+		 * Calculate polygon distribution in background
+		 */
+		public void testNeighbours() {
 			ArrayList<String> polDistri;
 			if (roiManager != null) {
 				if (roiManager.getSelectedRoisAsArray().length > 0) {
@@ -829,7 +898,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbOctogons.setText(polDistri.get(4));
 		}
 
-		private void labelImage() {
+		/**
+		 * Label image and return an image with all the labels. In background
+		 */
+		public void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
 			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());

@@ -48,7 +48,6 @@ import util.opencsv.CSVReader;
  * voronoi noise reference
  * 
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
- *
  */
 public class VisualizingWindow extends JDialog implements ActionListener {
 
@@ -110,6 +109,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * Create the scatter with the reference voronoi noise
+	 * 
 	 * @param tableInfo
 	 */
 	@SuppressWarnings("unchecked")

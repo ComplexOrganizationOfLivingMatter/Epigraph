@@ -10,25 +10,26 @@ import ij.ImageJ;
 import ij.plugin.PlugIn;
 
 /**
+ * Class that will be called by Fiji/ImageJ and start Epigraph's main window
+ * 
  * @author Pablo Vicente-Munuera
- *
  */
 public class Epigraph implements PlugIn {
 
-	/** image to be used in the training */
+	// Window
 	MainWindow mainWindow;
 
 	/**
-	 * 
+	 * Constructor by default
 	 */
 	public Epigraph() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
+	 * Debug mode
 	 * 
-	 * @param args
+	 * @param args default arguments
 	 */
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins
@@ -53,24 +54,27 @@ public class Epigraph implements PlugIn {
 		// Build GUI
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				// Create the main window
 				mainWindow = new MainWindow();
 				mainWindow.pack();
 				mainWindow.setVisible(true);
 			}
 		});
 	}
-	
+
 	/**
-	 * 
+	 * Static method to enable multipoint selection It is mainly used to create
+	 * ROIs
 	 */
-	public static void callToolbarMultiPoint(){
+	public static void callToolbarMultiPoint() {
 		ij.gui.Toolbar.getInstance().setTool("multi");
 	}
-	
+
 	/**
-	 * 
+	 * Static method to enable rectangle selection It is mainly used to create
+	 * ROIs
 	 */
-	public static void callToolbarRectangle(){
+	public static void callToolbarRectangle() {
 		ij.gui.Toolbar.getInstance().setTool(ij.gui.Toolbar.RECTANGLE);
 	}
 }

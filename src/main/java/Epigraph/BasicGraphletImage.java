@@ -4,13 +4,13 @@ package epigraph;
 import java.awt.Color;
 
 /**
- * @author Pablo Vicente-Munuera
+ * On this class we represent the basic information we aim to have through the
+ * graphlet process.
  * 
- *         On this class we represent the basic information we aim to have
- *         through the graphlet process.
+ * @author Pablo Vicente-Munuera
  */
 public class BasicGraphletImage {
-	
+
 	protected float distanceGDDRV;
 	protected float distanceGDDH;
 	protected float percentageOfHexagons;
@@ -51,7 +51,7 @@ public class BasicGraphletImage {
 	 * @param distanceGDDH
 	 *            distance against a hexagonal grid
 	 * @param percentageOfHexagons
-	 * 			  proportion of hexagons
+	 *            proportion of hexagons
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons) {
 		this.distanceGDDRV = distanceGDDRV;
@@ -69,11 +69,11 @@ public class BasicGraphletImage {
 	 * @param distanceGDDH
 	 *            distance against a hexagonal grid
 	 * @param percentageOfHexagons
-	 * 			  proportion of hexagons
+	 *            proportion of hexagons
 	 * @param color
-	 * 			  assigned color
+	 *            assigned color
 	 * @param labelName
-	 * 			  label of image
+	 *            label of image
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons, Color color,
 			String labelName) {
@@ -86,8 +86,7 @@ public class BasicGraphletImage {
 	}
 
 	/**
-	 * @return distanceGDDRV
-	 * distance against random voronoi
+	 * @return distanceGDDRV distance against random voronoi
 	 */
 	public float getDistanceGDDRV() {
 		return distanceGDDRV;
@@ -95,15 +94,14 @@ public class BasicGraphletImage {
 
 	/**
 	 * @param distanceGDDRV
-	 * set distance against random voronoi
+	 *            set distance against random voronoi
 	 */
 	public void setDistanceGDDRV(float distanceGDDRV) {
 		this.distanceGDDRV = distanceGDDRV;
 	}
 
 	/**
-	 * @return
-	 * distance against a hexagonal grid
+	 * @return distance against a hexagonal grid
 	 */
 	public float getDistanceGDDH() {
 		return distanceGDDH;
@@ -111,15 +109,14 @@ public class BasicGraphletImage {
 
 	/**
 	 * @param distanceGDDH
-	 * set distance against a hexagonal grid
+	 *            set distance against a hexagonal grid
 	 */
 	public void setDistanceGDDH(float distanceGDDH) {
 		this.distanceGDDH = distanceGDDH;
 	}
 
 	/**
-	 * @return 
-	 * proportion of hexagons
+	 * @return proportion of hexagons
 	 */
 	public float getPercentageOfHexagons() {
 		return percentageOfHexagons;
@@ -127,15 +124,14 @@ public class BasicGraphletImage {
 
 	/**
 	 * @param percentageOfHexagons
-	 * set proportion of hexagons
+	 *            set proportion of hexagons
 	 */
 	public void setPercentageOfHexagons(float percentageOfHexagons) {
 		this.percentageOfHexagons = percentageOfHexagons;
 	}
 
 	/**
-	 * @return 
-	 * color
+	 * @return color
 	 */
 	public Color getColor() {
 		return color;
@@ -143,15 +139,14 @@ public class BasicGraphletImage {
 
 	/**
 	 * @param color
-	 * set color
+	 *            set color
 	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
 
 	/**
-	 * @return 
-	 * label of image
+	 * @return label of image
 	 */
 	public String getLabelName() {
 		return labelName;
@@ -159,7 +154,7 @@ public class BasicGraphletImage {
 
 	/**
 	 * @param labelName
-	 *  set label image
+	 *            set label image
 	 */
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;

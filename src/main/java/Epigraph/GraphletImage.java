@@ -30,7 +30,6 @@ import inra.ijpb.morphology.strel.SquareStrel;
 /**
  * 
  * @author Pablo Vicente-Munuera
- *
  */
 public class GraphletImage extends BasicGraphletImage {
 
@@ -694,8 +693,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * Adapted from Yaveroglu et. al. Supplementary Information for:
-	 * "Revealing the Hidden Language of Complex Networks"
+	 * Adapted from Yaveroglu et. al. Supplementary Information for: "Revealing
+	 * the Hidden Language of Complex Networks"
 	 * 
 	 * @param signatures
 	 *            matrix with the graphlets

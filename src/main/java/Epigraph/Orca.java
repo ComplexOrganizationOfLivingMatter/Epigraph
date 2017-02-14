@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import net.imglib2.util.ValuePair;
 
 /**
- * @author Pablo Vicente-Munuera
+ * Adaptation of Orca (Orbit Counting Algorithm): A combinatorial approach to
+ * graphlet counting - by Tomaz Hocevar.
  * 
- *         Adaptation of Orca (Orbit Counting Algorithm): A combinatorial
- *         approach to graphlet counting - by Tomaz Hocevar.
- *
+ * @author Pablo Vicente-Munuera
  */
 public class Orca extends BasicGraphlets {
 

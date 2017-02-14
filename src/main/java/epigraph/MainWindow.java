@@ -23,14 +23,16 @@ import ij.IJ;
 import ij.ImagePlus;
 
 /**
- * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
+ * The main window with all its functionality. It will have a table for all of
+ * the processed images and 4 buttons: Open: Open image processing window;
+ * Import: XLS to the table; Export: Table to XLS; Visualize: Open the
+ * visualization window
  * 
- *         TableDemo is just like SimpleTableDemo, except that it uses a custom
- *         TableModel.
+ * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
  */
 public class MainWindow extends JFrame {
 	/**
-	 * 
+	 * Default serial. Useless
 	 */
 	private static final long serialVersionUID = 1L;
 	JTableModel tableInfo;
@@ -40,21 +42,35 @@ public class MainWindow extends JFrame {
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
 	private JFrame fatherWindow;
+	private JButton btnExport;
+	private JButton btnImport;
 
-	/** 
-	 *  
+	/**
+	 * Constructor by default. Setup all the windows and creates the panel. It
+	 * initialize all the GUI items as well.
 	 */
 	public MainWindow() {
 		fatherWindow = this;
 		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
+		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+		// Main panel
 		panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setLayout(null);
+		// Associate this panel to the window
 		getContentPane().add(panel);
 
-		// Create buttons
+		initGUIItems();
+
+	}
+
+	/**
+	 * Initialize the gui items and set up properly within the window
+	 */
+	private void initGUIItems() {
 		btnVisualize = new JButton("Visualize");
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -68,40 +84,17 @@ public class MainWindow extends JFrame {
 
 			}
 		});
-		btnVisualize.setBounds(607, 496, 93, 29);
 
 		btnOpenButton = new JButton("Open");
-		btnOpenButton.setBounds(92, 496, 71, 29);
 		btnOpenButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						try {
-							ImagePlus raw_img = IJ.openImage();
-							if (raw_img != null) {
-								if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000) {
-									ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img,
-											tableInfo);
-									imageProcessing.pack();
-								} else {
-									JOptionPane.showMessageDialog(panel.getParent(),
-											"Max. width or height is 3000px. Please, resize it.");
-								}
-
-							} else {
-								JOptionPane.showMessageDialog(panel.getParent(),
-										"You must introduce a valid image or set of images.");
-							}
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						initImageProcessingWindow();
 					}
 				});
 			}
 		});
-
-		panel.setLayout(null);
 
 		// Create table and scroll pane
 		this.tableInfo = new JTableModel();
@@ -127,91 +120,137 @@ public class MainWindow extends JFrame {
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+		btnExport = new JButton("Export table");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exportTableToXLS();
+			}
+		});
+
+		btnImport = new JButton("Import table");
+		btnImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				importXLSToTable();
+			}
+		});
+
+		btnImport.setBounds(240, 496, 105, 29);
+		btnExport.setBounds(431, 496, 105, 29);
+		btnVisualize.setBounds(607, 496, 93, 29);
 		scrollPane.setBounds(15, 27, 765, 425);
-		// scrollPane.setPreferredSize(new Dimension(400, 200));
+		btnOpenButton.setBounds(92, 496, 71, 29);
 
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
-
-		JButton btnExport = new JButton("Export table");
-		btnExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				ArrayList<String> arrayNames = new ArrayList<String>();
-				ArrayList<Float> arrayHexagons = new ArrayList<Float>();
-				ArrayList<Float> arrayGDDH = new ArrayList<Float>();
-				ArrayList<Float> arrayGDDRV = new ArrayList<Float>();
-				ArrayList<Float> arrayR = new ArrayList<Float>();
-				ArrayList<Float> arrayG = new ArrayList<Float>();
-				ArrayList<Float> arrayB = new ArrayList<Float>();
-				ArrayList<String> arrayMode = new ArrayList<String>();
-
-				int cont = 0;
-				for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
-
-					arrayNames.add(graphletImg.getLabelName());
-					arrayHexagons.add(graphletImg.getPercentageOfHexagons());
-					arrayGDDH.add(graphletImg.getDistanceGDDH());
-					arrayGDDRV.add(graphletImg.getDistanceGDDRV());
-					arrayR.add((float) graphletImg.getColor().getRed());
-					arrayG.add((float) graphletImg.getColor().getGreen());
-					arrayB.add((float) graphletImg.getColor().getBlue());
-					arrayMode.add(tableInfo.getListOfModes().get(cont));
-					cont++;
-				}
-
-				JFrame parentFrame = new JFrame();
-				JFileChooser fileChooser = new JFileChooser();
-				// set it to be a save dialog
-				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-				// set a default filename (this is where you default extension
-				// first comes in)
-				fileChooser.setSelectedFile(new File("myfile.xls"));
-				// Set an extension filter, so the user sees other XML files
-				fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
-
-				fileChooser.setAcceptAllFileFilterUsed(false);
-
-				int userSelection = fileChooser.showSaveDialog(parentFrame);
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-
-					String filename = fileChooser.getSelectedFile().toString();
-					if (!filename.endsWith(".xls"))
-						filename += ".xls";
-
-					ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons,
-							arrayR, arrayG, arrayB, arrayMode);
-					excelclass.exportData();
-				}
-			}
-		});
-
-		btnExport.setBounds(431, 496, 105, 29);
+		panel.add(btnImport);
 		panel.add(btnExport);
+	}
 
-		JButton btnImport = new JButton("Import table");
-		btnImport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+	/**
+	 * Create the image processing window. However, restrictions are applied
+	 * with the selected image. It cannot exceed 3000 neither in width nor
+	 * height.
+	 */
+	public void initImageProcessingWindow() {
+		try {
+			ImagePlus raw_img = IJ.openImage();
+			if (raw_img != null) {
+				if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000) {
+					ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+					imageProcessing.pack();
+				} else {
+					JOptionPane.showMessageDialog(panel.getParent(),
+							"Max. width or height is 3000px. Please, resize it.");
+				}
 
-				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File("."));
-				chooser.setDialogTitle("Import");
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
-				chooser.setFileFilter(filter);
-				chooser.setAcceptAllFileFilterUsed(false);
+			} else {
+				JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
+			}
 
-				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
-					System.out.println("getSelectedFile() : " + chooser.getSelectedFile().getPath());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-					ExcelClass excelclass = new ExcelClass();
-					excelclass.importData(chooser.getSelectedFile().getPath());
-					int flat = 0;
-					for (int row = 0; row < excelclass.getImageName().size(); row++) {
+	/**
+	 * Export all the information inside the table to a .xls file
+	 */
+	public void exportTableToXLS() {
+		ArrayList<String> arrayNames = new ArrayList<String>();
+		ArrayList<Float> arrayHexagons = new ArrayList<Float>();
+		ArrayList<Float> arrayGDDH = new ArrayList<Float>();
+		ArrayList<Float> arrayGDDRV = new ArrayList<Float>();
+		ArrayList<Float> arrayR = new ArrayList<Float>();
+		ArrayList<Float> arrayG = new ArrayList<Float>();
+		ArrayList<Float> arrayB = new ArrayList<Float>();
+		ArrayList<String> arrayMode = new ArrayList<String>();
 
-						if (flat == 1) {
-							tableInfo.addImage(
+		int cont = 0;
+		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
+
+			arrayNames.add(graphletImg.getLabelName());
+			arrayHexagons.add(graphletImg.getPercentageOfHexagons());
+			arrayGDDH.add(graphletImg.getDistanceGDDH());
+			arrayGDDRV.add(graphletImg.getDistanceGDDRV());
+			arrayR.add((float) graphletImg.getColor().getRed());
+			arrayG.add((float) graphletImg.getColor().getGreen());
+			arrayB.add((float) graphletImg.getColor().getBlue());
+			arrayMode.add(tableInfo.getListOfModes().get(cont));
+			cont++;
+		}
+
+		JFrame parentFrame = new JFrame();
+		JFileChooser fileChooser = new JFileChooser();
+		// set it to be a save dialog
+		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		// set a default filename (this is where you default extension
+		// first comes in)
+		fileChooser.setSelectedFile(new File("myfile.xls"));
+		// Set an extension filter, so the user sees other XML files
+		fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
+
+		fileChooser.setAcceptAllFileFilterUsed(false);
+
+		int userSelection = fileChooser.showSaveDialog(parentFrame);
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+			String filename = fileChooser.getSelectedFile().toString();
+			if (!filename.endsWith(".xls"))
+				filename += ".xls";
+
+			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
+					arrayG, arrayB, arrayMode);
+			excelclass.exportData();
+		} else {
+			JOptionPane.showMessageDialog(fatherWindow, "No file selected", "", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	/**
+	 * Import information from an .XLS file to the table
+	 */
+	public void importXLSToTable() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Import");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
+		chooser.setFileFilter(filter);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+			System.out.println("getSelectedFile() : " + chooser.getSelectedFile().getPath());
+
+			ExcelClass excelclass = new ExcelClass();
+			excelclass.importData(chooser.getSelectedFile().getPath());
+			int flat = 0;
+			for (int row = 0; row < excelclass.getImageName().size(); row++) {
+
+				if (flat == 1) {
+					tableInfo
+							.addImage(
 									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
 											(float) excelclass.getRow(row).get(1),
 											(float) excelclass.getRow(row).get(3),
@@ -220,8 +259,10 @@ public class MainWindow extends JFrame {
 															.round((float) excelclass.getRow(row).get(6))),
 											(String) excelclass.getRow(row).get(0)),
 									(String) excelclass.getRow(row).get(7));
-						} else if (flat == 2) {
-							tableInfo.addImage(
+
+				} else if (flat == 2) {
+					tableInfo
+							.addImage(
 									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
 											(float) excelclass.getRow(row).get(1),
 											(float) excelclass.getRow(row).get(3),
@@ -230,59 +271,52 @@ public class MainWindow extends JFrame {
 															.getRow(row).get(6)),
 											(String) excelclass.getRow(row).get(0)),
 									(String) excelclass.getRow(row).get(7));
-						} else {
-							if ((float) excelclass.getRow(row).get(4) > 1.0
-									|| (float) excelclass.getRow(row).get(5) > 1.0
-									|| (float) excelclass.getRow(row).get(6) > 1.0) {
-								flat = 1;
-								tableInfo.addImage(
-										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-												(float) excelclass.getRow(row).get(1),
-												(float) excelclass.getRow(row).get(3),
-												new Color(Math.round((float) excelclass.getRow(row).get(4)),
-														Math.round((float) excelclass.getRow(row).get(5)), Math
-																.round((float) excelclass.getRow(row).get(6))),
-												(String) excelclass.getRow(row).get(0)),
-										(String) excelclass.getRow(row).get(7));
-							} else if (((float) excelclass.getRow(row).get(4) < 1.0
-									& (float) excelclass.getRow(row).get(4) > 1.0)
-									|| ((float) excelclass.getRow(row).get(5) < 1.0
-											& (float) excelclass.getRow(row).get(5) > 0.0)
-									|| ((float) excelclass.getRow(row).get(6) < 1.0
-											& (float) excelclass.getRow(row).get(6) > 0.0)) {
-								tableInfo.addImage(
-										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-												(float) excelclass.getRow(row).get(1),
-												(float) excelclass.getRow(row).get(3),
-												new Color((float) excelclass.getRow(row).get(4),
-														(float) excelclass.getRow(row).get(5), (float) excelclass
-																.getRow(row).get(6)),
-												(String) excelclass.getRow(row).get(0)),
-										(String) excelclass.getRow(row).get(7));
-								flat = 2;
-							} else {
-								tableInfo.addImage(
-										new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-												(float) excelclass.getRow(row).get(1),
-												(float) excelclass.getRow(row).get(3),
-												new Color((float) excelclass.getRow(row).get(4),
-														(float) excelclass.getRow(row).get(5), (float) excelclass
-																.getRow(row).get(6)),
-												(String) excelclass.getRow(row).get(0)),
-										(String) excelclass.getRow(row).get(7));
-							}
-						}
+				} else {
+					if ((float) excelclass.getRow(row).get(4) > 1.0 || (float) excelclass.getRow(row).get(5) > 1.0
+							|| (float) excelclass.getRow(row).get(6) > 1.0) {
+						flat = 1;
+						tableInfo.addImage(
+								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
+										new Color(Math.round((float) excelclass.getRow(row).get(4)),
+												Math.round((float) excelclass.getRow(row).get(5)), Math
+														.round((float) excelclass.getRow(row).get(6))),
+										(String) excelclass.getRow(row).get(0)),
+								(String) excelclass.getRow(row).get(7));
+					} else if (((float) excelclass.getRow(row).get(4) < 1.0
+							& (float) excelclass.getRow(row).get(4) > 1.0)
+							|| ((float) excelclass.getRow(row).get(5) < 1.0
+									& (float) excelclass.getRow(row).get(5) > 0.0)
+							|| ((float) excelclass.getRow(row).get(6) < 1.0
+									& (float) excelclass.getRow(row).get(6) > 0.0)) {
+
+						tableInfo.addImage(
+								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
+										new Color((float) excelclass.getRow(row).get(4),
+												(float) excelclass.getRow(row).get(5),
+												(float) excelclass.getRow(row).get(6)),
+										(String) excelclass.getRow(row).get(0)),
+								(String) excelclass.getRow(row).get(7));
+						flat = 2;
+					} else {
+
+						tableInfo.addImage(
+								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
+										new Color((float) excelclass.getRow(row).get(4),
+												(float) excelclass.getRow(row).get(5),
+												(float) excelclass.getRow(row).get(6)),
+										(String) excelclass.getRow(row).get(0)),
+								(String) excelclass.getRow(row).get(7));
 
 					}
-
-				} else {
-					System.out.println("No Selection");
 				}
+
 			}
-		});
 
-		btnImport.setBounds(240, 496, 105, 29);
-		panel.add(btnImport);
-
+		} else {
+			JOptionPane.showMessageDialog(fatherWindow, "No selection", "", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

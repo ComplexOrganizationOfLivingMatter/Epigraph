@@ -13,13 +13,12 @@ import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 
 /**
+ * Custom canvas to deal with zooming an panning
+ * 
  * @author Ignacio Arganda-Carreras (iargandacarreras@gmail.com), Verena Kaynig,
  *         Albert Cardona
  * 
  *         Modified by Pablo Vicente-Munuera
- *
- *
- *         Custom canvas to deal with zooming an panning
  */
 public class CustomCanvas extends OverlayedImageCanvas {
 	/**
@@ -103,7 +102,7 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * 
 	 * 
 	 * @param imp
-	 * Set the current image
+	 *            Set the current image
 	 */
 	public void setImagePlus(ImagePlus imp) {
 		super.imp = imp;
@@ -113,7 +112,7 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * 
 	 * 
 	 * @param overlay
-	 * Set overlay image
+	 *            Set overlay image
 	 */
 	public void setImageOverlay(ImageOverlay overlay) {
 		imageOverlay = overlay;
