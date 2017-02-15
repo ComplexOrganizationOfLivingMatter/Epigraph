@@ -80,8 +80,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * it add a reference in case you'd want to view it and compare the points
 	 * with something reliable.
 	 * 
-	 * @param parent
-	 * @param tableInfo
+	 * @param parent parent window
+	 * @param tableInfo information of the points we're visualizing
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
 		super(parent);

@@ -39,7 +39,7 @@ public class Orca extends BasicGraphlet {
 	/**
 	 * Constructor by default
 	 * 
-	 * @param adjacencyMatrix
+	 * @param adjacencyMatrix adjacency matrix
 	 */
 	public Orca(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;

@@ -477,6 +477,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            are there any ROIs?
 	 * @param overlay
 	 *            of the image that we will paint the neighbour image
+	 * @return the polygon distribution
 	 */
 	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
 			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {

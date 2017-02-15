@@ -793,8 +793,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		int option;
 
 		/**
-		 * 
-		 * @param option
+		 * Constructor
+		 * @param option the operation to calculate
 		 */
 		public Task(int option) {
 			super();
