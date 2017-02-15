@@ -226,8 +226,6 @@ public class MainWindow extends JFrame {
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
 					arrayG, arrayB, arrayMode);
 			excelclass.exportData();
-		} else {
-			JOptionPane.showMessageDialog(fatherWindow, "No file selected", "", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
@@ -318,8 +316,6 @@ public class MainWindow extends JFrame {
 
 			}
 
-		} else {
-			JOptionPane.showMessageDialog(fatherWindow, "No selection", "", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }
