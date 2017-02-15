@@ -377,6 +377,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 				String filename = fileChooser.getSelectedFile().toString();
+				
+				if (!filename.endsWith(".png"))
+					filename += ".png";
 
 				((CanvasAWT) chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
 				// Quality q = new Quality(true, false, true, true, true, true,
