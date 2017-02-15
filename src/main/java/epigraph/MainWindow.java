@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -50,6 +51,8 @@ public class MainWindow extends JFrame {
 	 * initialize all the GUI items as well.
 	 */
 	public MainWindow() {
+		UIManager.put("Panel.background", Color.WHITE);
+		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
 		setMinimumSize(new Dimension(800, 600));
 		setTitle("Epigraph");
