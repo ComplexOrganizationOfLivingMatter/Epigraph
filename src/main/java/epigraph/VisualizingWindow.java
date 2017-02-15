@@ -292,10 +292,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		genericPanelConstrainst.gridx++;
-		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
-		genericPanelConstrainst.gridx--;
 		buttonsPanel.add(lbSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;

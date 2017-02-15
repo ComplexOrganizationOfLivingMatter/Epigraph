@@ -13,10 +13,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -51,6 +53,15 @@ public class MainWindow extends JFrame {
 	 * initialize all the GUI items as well.
 	 */
 	public MainWindow() {
+		//3 and 1
+		String name = UIManager.getInstalledLookAndFeels()[3].getClassName();
+        try {
+			UIManager.setLookAndFeel(name);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UIManager.put("Panel.background", Color.WHITE);
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
