@@ -367,7 +367,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		lbPentagons = new JLabel("");
 		lbPentagons.setHorizontalAlignment(SwingConstants.CENTER);
-		lbPentagons.setVisible(false);
 
 		lbHexagons = new JLabel("");
 		lbHexagons.setHorizontalAlignment(SwingConstants.CENTER);
