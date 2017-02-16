@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -47,6 +49,8 @@ public class MainWindow extends JFrame {
 	private JFrame fatherWindow;
 	private JButton btnExport;
 	private JButton btnImport;
+	protected VisualizingWindow visualizingWindow;
+	private ImageProcessingWindow imageProcessing;
 
 	/**
 	 * Constructor by default. Setup all the windows and creates the panel. It
@@ -69,6 +73,51 @@ public class MainWindow extends JFrame {
 		setTitle("Epigraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				imageProcessing.close();
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		// Main panel
 		panel = new JPanel();
@@ -89,7 +138,7 @@ public class MainWindow extends JFrame {
 		btnVisualize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					VisualizingWindow visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
+					visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
 					visualizingWindow.setVisible(true);
 				} catch (Exception e) {
 					String msg = String.format("Unexpected problem: %s", e.getCause().toString());
@@ -172,7 +221,7 @@ public class MainWindow extends JFrame {
 			ImagePlus raw_img = IJ.openImage();
 			if (raw_img != null) {
 				if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000) {
-					ImageProcessingWindow imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
 					imageProcessing.pack();
 				} else {
 					JOptionPane.showMessageDialog(panel.getParent(),
