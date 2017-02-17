@@ -25,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -379,6 +380,19 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				
 				if (!filename.endsWith(".png"))
 					filename += ".png";
+				
+				if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
+			        int response = JOptionPane.showConfirmDialog(this,
+			          "The file " + fileChooser.getSelectedFile().getName() + 
+			          " already exists. Do you want to replace the existing file?",
+			          "Ovewrite file", JOptionPane.YES_NO_OPTION,
+			          JOptionPane.WARNING_MESSAGE);
+			        if (response != JOptionPane.YES_OPTION)
+			          return;
+			     }
+				
+				
+				
 
 				((CanvasAWT) chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
 				// Quality q = new Quality(true, false, true, true, true, true,

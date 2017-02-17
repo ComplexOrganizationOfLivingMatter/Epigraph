@@ -278,10 +278,22 @@ public class MainWindow extends JFrame {
 
 		int userSelection = fileChooser.showSaveDialog(parentFrame);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
-
+			
 			String filename = fileChooser.getSelectedFile().toString();
 			if (!filename.endsWith(".xls"))
 				filename += ".xls";
+			
+			if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
+		        int response = JOptionPane.showConfirmDialog(this,
+		          "The file " + fileChooser.getSelectedFile().getName() + 
+		          " already exists. Do you want to replace the existing file?",
+		          "Ovewrite file", JOptionPane.YES_NO_OPTION,
+		          JOptionPane.WARNING_MESSAGE);
+		        if (response != JOptionPane.YES_OPTION)
+		          return;
+		     }
+			
+			
 
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
 					arrayG, arrayB, arrayMode);
