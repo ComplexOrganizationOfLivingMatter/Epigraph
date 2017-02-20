@@ -405,11 +405,15 @@ public class GraphletImage extends BasicGraphletImage {
 							break;
 						}
 					} else {
-						colorOfCell = Color.black;
+						colorOfCell = new Color(45,45,45);
 					}
 				}
-			} else {
+			} else if (this.cells.get(i).isInvalidRegion()) {
 				colorOfCell = Color.BLACK;
+				
+				
+			} else{
+				colorOfCell = new Color(45,45,45);
 			}
 
 			actualPixels = this.cells.get(i).getPixels();

@@ -38,7 +38,7 @@ import java.awt.geom.AffineTransform;
 public class ImageOverlay implements Overlay {
 
 	private ImageProcessor imp = null;
-	private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
+	private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f);
 
 	/**
 	 * Constructor by default
