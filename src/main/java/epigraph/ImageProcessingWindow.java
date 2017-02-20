@@ -476,11 +476,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	/*
 	 * Group all the actions(non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * 
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		roiManager = RoiManager.getInstance();
-		
+
 		if (e.getSource() == btnCalculateGraphlets) {
 			disableActionButtons();
 			backgroundTask = new Task(0);
@@ -621,28 +623,19 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 
-			
 			String filename = fileChooser.getSelectedFile().toString();
-			
+
 			if (!filename.endsWith(".zip"))
 				filename += ".zip";
-			
+
 			if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
-		        int response = JOptionPane.showConfirmDialog(this,
-		          "The file " + fileChooser.getSelectedFile().getName() + 
-		          " already exists. Do you want to replace the existing file?",
-		          "Ovewrite file", JOptionPane.YES_NO_OPTION,
-		          JOptionPane.WARNING_MESSAGE);
-		        if (response != JOptionPane.YES_OPTION)
-		          return;
-		     }
-			
-			
-			
-			
-			
-			
-			
+				int response = JOptionPane.showConfirmDialog(this,
+						"The file " + fileChooser.getSelectedFile().getName()
+								+ " already exists. Do you want to replace the existing file?",
+						"Ovewrite file", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (response != JOptionPane.YES_OPTION)
+					return;
+			}
 
 			ZipOutputStream out;
 			try {
@@ -693,9 +686,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	/**
 	 * Enable/disable all the panels in the window
 	 * 
-	 * @param enabled true it will enable panels, false disable all panels
+	 * @param enabled
+	 *            true it will enable panels, false disable all panels
 	 */
 	protected void setEnablePanels(boolean enabled) {
+		btnLabelImage.setEnabled(true);
+		
 		for (Component c : roiPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
@@ -811,7 +807,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		/**
 		 * Constructor
-		 * @param option the operation to calculate
+		 * 
+		 * @param option
+		 *            the operation to calculate
 		 */
 		public Task(int option) {
 			super();
@@ -848,7 +846,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		@Override
 		protected void done() {
 			try {
-				get();
+				get(); //get exceptions
 				progressBar.setValue(100);
 				Toolkit.getDefaultToolkit().beep();
 				repaintAll();
@@ -884,7 +882,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
-			lbPentagons.setVisible(true);
 			lbHexagons.setText(polDistri.get(2));
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
@@ -911,7 +908,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			lbSquares.setText(polDistri.get(0));
 			lbPentagons.setText(polDistri.get(1));
-			lbPentagons.setVisible(true);
 			lbHexagons.setText(polDistri.get(2));
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
