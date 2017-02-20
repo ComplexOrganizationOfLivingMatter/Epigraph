@@ -836,7 +836,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					break;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.getCause().printStackTrace();
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			return null;
 		}
@@ -916,8 +918,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		/**
 		 * Label image and return an image with all the labels. In background
+		 * @throws Exception Min cells exception
 		 */
-		public void labelImage() {
+		public void labelImage() throws Exception {
+			
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
 			

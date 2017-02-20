@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JProgressBar;
 
@@ -67,6 +68,8 @@ public class GraphletImage extends BasicGraphletImage {
 			30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
 			57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72 };
 
+	public static int MINCELLS = 20;
+	
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
 
@@ -77,6 +80,7 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus imageWithLabels;
 
 	private ImagePlus neighbourImage;
+	
 
 	/**
 	 * Constructor
@@ -167,9 +171,10 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            kind of connectiviy (4 or 8)
 	 * @param progressBar
 	 *            to update the progress bar
-	 * 
+	 * @throws Exception 
+	 * 			min cells exception
 	 */
-	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
+	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) throws Exception {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
@@ -213,6 +218,11 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// get unique labels from labelled imageplus
 		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
+		if  (maxValue <= MINCELLS){
+			throw new ExecutionException(new Throwable("Your image could be not accepted. Very few recognized cells"));
+		}
+		
+		
 		progressBar.setValue(60);
 
 		// get image in a matrix of labels
