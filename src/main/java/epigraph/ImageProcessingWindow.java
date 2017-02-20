@@ -51,6 +51,7 @@ import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
 import ij.plugin.frame.RoiManager;
+import ij.process.ImageProcessor;
 import util.opencsv.CSVWriter;
 
 /**
@@ -919,7 +920,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		public void labelImage() {
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
-			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB());
+			
+			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB().duplicate());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
 			for (int i = 0; i < centroids.size(); i++) {
 				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i + 1));
