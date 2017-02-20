@@ -79,7 +79,8 @@ public class MainWindow extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
-				imageProcessing.close();
+				if (imageProcessing != null)
+					imageProcessing.close();
 			}
 
 			@Override
