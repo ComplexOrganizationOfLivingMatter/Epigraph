@@ -80,7 +80,8 @@ public class MainWindow extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
 				if (imageProcessing != null)
-					imageProcessing.close();
+					if (!imageProcessing.isClosed())
+						imageProcessing.close();
 			}
 
 			@Override
