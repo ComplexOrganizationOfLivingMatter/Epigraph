@@ -69,7 +69,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private ImageOverlay overlayResult;
 	private GraphletImage newGraphletImage;
 	private JTextField tfImageName;
-	private JButton btnCreateRoi, btnCalculateGraphlets, btnTestNeighbours, btnPickAColor, btnAddToTable;
+	private JButton btnCreateRoi, btnCalculateGraphlets, btnTestNeighbours, btnPickAColor;
 	private JComboBox<String> cbSelectedShape, cbGraphletsMode;
 	private JLabel lblRadius, lblImageName;
 	private JSpinner inputRadiusNeigh;
@@ -132,7 +132,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		newGraphletImage = new GraphletImage(raw_img);
 		removeAll();
 
-		initGUI();
+		initGUI(raw_img);
 
 		setEnablePanels(false);
 	}
@@ -140,9 +140,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	/**
 	 * initialize GUI and configure panels
 	 */
-	private void initGUI() {
+	private void initGUI(ImagePlus raw_img) {
 
-		initializeGUIItems();
+		initializeGUIItems(raw_img);
 
 		/* Generic panel layout */
 		GridBagLayout genericPanelLayout = new GridBagLayout();
@@ -219,10 +219,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		graphletsPanel.add(cbGraphletsMode, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		graphletsPanel.add(btnCalculateGraphlets, genericPanelConstrainst);
-		genericPanelConstrainst.gridx++;
-		graphletsPanel.add(btnAddToTable, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		genericPanelConstrainst.gridx--;
 		graphletsPanel.add(btnZipData, genericPanelConstrainst);
 
 		progressBarPanel = new JPanel();
@@ -279,8 +276,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	/**
 	 * Initialize gui items
+	 * @param raw_img 
 	 */
-	private void initializeGUIItems() {
+	private void initializeGUIItems(ImagePlus raw_img) {
 		canvas.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent ce) {
 				Rectangle r = canvas.getBounds();
@@ -325,10 +323,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				"Total Partial (17 graphlets)", "Basic (9 graphlets)", "Basic Partial (7 graphlets) " }));
 		cbGraphletsMode.setSelectedIndex(0);
 
-		btnAddToTable = new JButton("add to table");
-		btnAddToTable.setEnabled(false);
-		btnAddToTable.addActionListener(this);
-
 		btnCreateRoi = new JButton("Create RoI");
 		btnCreateRoi.addActionListener(this);
 
@@ -339,7 +333,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnPickAColor.addActionListener(this);
 
 		colorPicked = new JPanel();
-		colorPicked.setBackground(Color.BLACK);
+		colorPicked.setBackground(Color.RED);
 
 		btnTestNeighbours = new JButton("Test Neighbours");
 		btnTestNeighbours.addActionListener(this);
@@ -355,6 +349,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnZipData.setEnabled(false);
 
 		tfImageName = new JTextField();
+		tfImageName.setText(raw_img.getTitle());
 
 		lblImageName = new JLabel("Image label:");
 		lblImageName.setLabelFor(tfImageName);
@@ -485,11 +480,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		roiManager = RoiManager.getInstance();
 
 		if (e.getSource() == btnCalculateGraphlets) {
-			disableActionButtons();
-			backgroundTask = new Task(0);
-			backgroundTask.execute();
-			newGraphletImage.setLabelName(tfImageName.getText());
-			newGraphletImage.setColor(colorPicked.getBackground());
+			if (tfImageName.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(this.getParent(), "You should insert a name for the image");
+			} else {
+				newGraphletImage.setLabelName(tfImageName.getText());
+				newGraphletImage.setColor(colorPicked.getBackground());
+				disableActionButtons();
+				backgroundTask = new Task(0);
+				backgroundTask.execute();
+			}
 		} else if (e.getSource() == btnCreateRoi) {
 			if (btnCreateRoi.getText() != "Done") {
 				Epigraph.callToolbarRectangle();
@@ -505,16 +504,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnSelectCells.setEnabled(true);
 				btnSelectInvalidRegion.setEnabled(true);
 			}
-		} else if (e.getSource() == btnAddToTable) {
-			if (tfImageName.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(this.getParent(), "You should insert a name for the image");
-			} else {
-				newGraphletImage.setLabelName(tfImageName.getText());
-				int result = JOptionPane.showConfirmDialog(this.getParent(), "Is everything ok?", "Confirm",
-						JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION)
-					tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
-			}
+
 		} else if (e.getSource() == btnPickAColor) {
 			Color c = JColorChooser.showDialog(this.getParent(), "Choose a Color", colorPicked.getBackground());
 			if (c != null) {
@@ -692,7 +682,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 */
 	protected void setEnablePanels(boolean enabled) {
 		btnLabelImage.setEnabled(true);
-		
+
 		for (Component c : roiPanel.getComponents()) {
 			c.setEnabled(enabled);
 		}
@@ -706,7 +696,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 
 		if (newGraphletImage.getDistanceGDDH() == -1) {
-			btnAddToTable.setEnabled(false);
 			btnZipData.setEnabled(false);
 		}
 	}
@@ -716,10 +705,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 */
 	protected void disableActionButtons() {
 		btnCalculateGraphlets.setEnabled(false);
-		btnAddToTable.setEnabled(false);
 		btnTestNeighbours.setEnabled(false);
 		btnLabelImage.setEnabled(false);
 		btnZipData.setEnabled(false);
+		cbGraphletsMode.setEnabled(false);
 	}
 
 	/**
@@ -728,11 +717,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	protected void enableActionButtons() {
 		btnCalculateGraphlets.setEnabled(true);
 		if (newGraphletImage.getDistanceGDDH() != -1) {
-			btnAddToTable.setEnabled(true);
 			btnZipData.setEnabled(true);
 		}
 		btnTestNeighbours.setEnabled(true);
 		btnLabelImage.setEnabled(true);
+		cbGraphletsMode.setEnabled(true);
 	}
 
 	/**
@@ -849,7 +838,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		@Override
 		protected void done() {
 			try {
-				get(); //get exceptions
+				get(); // get exceptions
 				progressBar.setValue(100);
 				Toolkit.getDefaultToolkit().beep();
 				repaintAll();
@@ -888,6 +877,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHexagons.setText(polDistri.get(2));
 			lbHeptagons.setText(polDistri.get(3));
 			lbOctogons.setText(polDistri.get(4));
+
+			tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
 		}
 
 		/**
@@ -918,13 +909,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		/**
 		 * Label image and return an image with all the labels. In background
-		 * @throws Exception Min cells exception
+		 * 
+		 * @throws Exception
+		 *             Min cells exception
 		 */
 		public void labelImage() throws Exception {
-			
+
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
-			
+
 			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB().duplicate());
 			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
 			for (int i = 0; i < centroids.size(); i++) {
