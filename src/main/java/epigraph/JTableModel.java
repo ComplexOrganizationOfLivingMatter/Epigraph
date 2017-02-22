@@ -19,7 +19,7 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind", "Selected" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Radius", "Shape", "Kind", "Selected" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
@@ -79,10 +79,18 @@ class JTableModel extends AbstractTableModel {
 			return allGraphletImages.get(row).getDistanceGDDRV();
 		case 4:
 			return allGraphletImages.get(row).getPercentageOfHexagons();
-		case 5:
+		case 7:
 			return listOfModes.get(row);
-		case 6:
+		case 8:
 			return listOfSelected.get(row);
+		case 5:
+			return allGraphletImages.get(row).getRadiusOfMask();
+		case 6:
+			if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.CIRCLE_SHAPE){
+				return "Circle";
+			} else if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.SQUARE_SHAPE){
+				return "Square";
+			}
 		}
 		return null;
 	}
@@ -104,7 +112,10 @@ class JTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int row, int col) {
-		return true;
+		if (col != 5 && col != 6)
+			return true;
+		
+		return false;
 	}
 
 	/*
@@ -130,10 +141,10 @@ class JTableModel extends AbstractTableModel {
 		case 4:
 			allGraphletImages.get(row).setPercentageOfHexagons((float) value);
 			break;
-		case 5:
+		case 7:
 			listOfModes.set(row, (String) value);
 			break;
-		case 6:
+		case 8:
 			listOfSelected.set(row, (Boolean) value);
 			break;
 		}

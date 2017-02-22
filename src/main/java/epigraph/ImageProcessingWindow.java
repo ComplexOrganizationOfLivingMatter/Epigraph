@@ -51,7 +51,6 @@ import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
 import ij.plugin.frame.RoiManager;
-import ij.process.ImageProcessor;
 import util.opencsv.CSVWriter;
 
 /**

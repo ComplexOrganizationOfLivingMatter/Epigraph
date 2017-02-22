@@ -3,9 +3,6 @@ package epigraph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -18,7 +15,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -47,7 +43,6 @@ public class MainWindow extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JPanel panel;
-	private JPanel rightPanel;
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
 	private JFrame fatherWindow;
@@ -180,12 +175,16 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(2).setMinWidth(47);
 		table.getColumnModel().getColumn(3).setMaxWidth(55);
 		table.getColumnModel().getColumn(3).setMinWidth(55);
-		table.getColumnModel().getColumn(4).setMinWidth(80);
-		table.getColumnModel().getColumn(4).setMaxWidth(80);
-		table.getColumnModel().getColumn(5).setMaxWidth(150);
-		table.getColumnModel().getColumn(5).setMinWidth(150);
-		table.getColumnModel().getColumn(6).setMaxWidth(70);
-		table.getColumnModel().getColumn(6).setMinWidth(70);
+		table.getColumnModel().getColumn(4).setMinWidth(85);
+		table.getColumnModel().getColumn(4).setMaxWidth(85);
+		table.getColumnModel().getColumn(5).setMinWidth(50);
+		table.getColumnModel().getColumn(5).setMaxWidth(50);
+		table.getColumnModel().getColumn(6).setMinWidth(55);
+		table.getColumnModel().getColumn(6).setMaxWidth(55);
+		table.getColumnModel().getColumn(7).setMaxWidth(150);
+		table.getColumnModel().getColumn(7).setMinWidth(150);
+		table.getColumnModel().getColumn(8).setMaxWidth(70);
+		table.getColumnModel().getColumn(8).setMinWidth(70);
 
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
@@ -205,7 +204,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnDeleteRow = new JButton("Delete row");
+		btnDeleteRow = new JButton("Delete rows");
 		btnDeleteRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tableInfo.deleteRow();
@@ -215,9 +214,9 @@ public class MainWindow extends JFrame {
 		btnImport.setBounds(240, 496, 105, 29);
 		btnExport.setBounds(431, 496, 105, 29);
 		btnVisualize.setBounds(607, 496, 93, 29);
-		scrollPane.setBounds(15, 27, 765, 425);
+		scrollPane.setBounds(15, 27, 850, 425);
 		btnOpenButton.setBounds(92, 496, 71, 29);
-		btnDeleteRow.setBounds(792, 75, 97, 25);
+		btnDeleteRow.setBounds(877, 66, 97, 25);
 
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
@@ -266,7 +265,9 @@ public class MainWindow extends JFrame {
 		ArrayList<Float> arrayG = new ArrayList<Float>();
 		ArrayList<Float> arrayB = new ArrayList<Float>();
 		ArrayList<String> arrayMode = new ArrayList<String>();
-
+		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
+		ArrayList<Integer> arrayShapeOfMask = new ArrayList<Integer>();
+		
 		int cont = 0;
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
@@ -278,6 +279,8 @@ public class MainWindow extends JFrame {
 			arrayG.add((float) graphletImg.getColor().getGreen());
 			arrayB.add((float) graphletImg.getColor().getBlue());
 			arrayMode.add(tableInfo.getListOfModes().get(cont));
+			arrayShapeOfMask.add(graphletImg.getShapeOfMask());
+			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
 			cont++;
 		}
 
@@ -310,7 +313,7 @@ public class MainWindow extends JFrame {
 			}
 
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
-					arrayG, arrayB, arrayMode);
+					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask);
 			excelclass.exportData();
 		}
 	}

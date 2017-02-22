@@ -34,6 +34,8 @@ public class ExcelClass {
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
 	private ArrayList<String> graphletsMode;
+	private ArrayList<Integer> radiusOfMask;
+	private ArrayList<Integer> shapeOfMask; 
 
 	/**
 	 * Default constructor
@@ -49,6 +51,8 @@ public class ExcelClass {
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
 		this.graphletsMode = new ArrayList<String>();
+		this.shapeOfMask = new ArrayList<Integer>();
+		this.radiusOfMask = new ArrayList<Integer>();
 	}
 
 	/**
@@ -76,7 +80,7 @@ public class ExcelClass {
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
-			ArrayList<String> graphletsMode) {
+			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<Integer> shapeOfMask) {
 		super();
 		this.fileName = filename;
 		this.imageName = imageName;
@@ -87,6 +91,8 @@ public class ExcelClass {
 		this.G = g;
 		this.B = b;
 		this.graphletsMode = graphletsMode;
+		this.radiusOfMask = radiusOfMask;
+		this.shapeOfMask = shapeOfMask;
 	}
 
 	/**
@@ -225,6 +231,34 @@ public class ExcelClass {
 	}
 
 	/**
+	 * @return the radiusOfMask
+	 */
+	public ArrayList<Integer> getRadiusOfMask() {
+		return radiusOfMask;
+	}
+
+	/**
+	 * @param radiusOfMask the radiusOfMask to set
+	 */
+	public void setRadiusOfMask(ArrayList<Integer> radiusOfMask) {
+		this.radiusOfMask = radiusOfMask;
+	}
+
+	/**
+	 * @return the shapeOfMask
+	 */
+	public ArrayList<Integer> getShapeOfMask() {
+		return shapeOfMask;
+	}
+
+	/**
+	 * @param shapeOfMask the shapeOfMask to set
+	 */
+	public void setShapeOfMask(ArrayList<Integer> shapeOfMask) {
+		this.shapeOfMask = shapeOfMask;
+	}
+
+	/**
 	 * 
 	 * @param row
 	 *            number of excel class row
@@ -240,6 +274,8 @@ public class ExcelClass {
 		rowExcel.add(this.G.get(row));
 		rowExcel.add(this.B.get(row));
 		rowExcel.add(this.graphletsMode.get(row));
+		rowExcel.add(this.radiusOfMask.get(row));
+		rowExcel.add(this.shapeOfMask.get(row));
 
 		return rowExcel;
 	}
@@ -328,6 +364,12 @@ public class ExcelClass {
 							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
 								break;
+							case 8:
+								this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								break;
+							case 9:
+								this.shapeOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								break;
 							}
 
 						}
@@ -365,7 +407,7 @@ public class ExcelClass {
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		data.put("1",
-				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode" });
+				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask" });
 
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
 		otherSymbols.setDecimalSeparator(',');
@@ -380,7 +422,7 @@ public class ExcelClass {
 			data.put(j.toString(),
 					new Object[] { imageName.get(i), df1.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
 							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)), df3.format(B.get(i)),
-							this.graphletsMode.get(i) });
+							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
 
 		}
 
