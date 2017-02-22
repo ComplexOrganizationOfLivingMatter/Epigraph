@@ -3,6 +3,9 @@ package epigraph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -44,6 +47,7 @@ public class MainWindow extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JPanel panel;
+	private JPanel rightPanel;
 	private JButton btnVisualize;
 	private JButton btnOpenButton;
 	private JFrame fatherWindow;
@@ -51,6 +55,7 @@ public class MainWindow extends JFrame {
 	private JButton btnImport;
 	protected VisualizingWindow visualizingWindow;
 	private ImageProcessingWindow imageProcessing;
+	private JButton btnDeleteRow;
 
 	/**
 	 * Constructor by default. Setup all the windows and creates the panel. It
@@ -69,7 +74,7 @@ public class MainWindow extends JFrame {
 		UIManager.put("Panel.background", Color.WHITE);
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
-		setMinimumSize(new Dimension(800, 600));
+		setMinimumSize(new Dimension(950, 600));
 		setTitle("Epigraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -199,18 +204,28 @@ public class MainWindow extends JFrame {
 				importXLSToTable();
 			}
 		});
+		
+		btnDeleteRow = new JButton("Delete row");
+		btnDeleteRow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableInfo.deleteRow();
+			}
+		});
 
 		btnImport.setBounds(240, 496, 105, 29);
 		btnExport.setBounds(431, 496, 105, 29);
 		btnVisualize.setBounds(607, 496, 93, 29);
 		scrollPane.setBounds(15, 27, 765, 425);
 		btnOpenButton.setBounds(92, 496, 71, 29);
-
+		btnDeleteRow.setBounds(792, 75, 97, 25);
+		
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
 		panel.add(btnImport);
 		panel.add(btnExport);
+		panel.add(btnDeleteRow);
+		
 	}
 
 	/**

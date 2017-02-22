@@ -10,6 +10,7 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * Model of the table on the main window
+ * 
  * @author Pedro Gomez-Galvez
  */
 class JTableModel extends AbstractTableModel {
@@ -18,10 +19,10 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind", "Visualizing" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind", "Selected" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
-	private ArrayList<Boolean> listOfVisualizing;
+	private ArrayList<Boolean> listOfSelected;
 	private ArrayList<String> listOfModes;
 
 	/**
@@ -30,12 +31,13 @@ class JTableModel extends AbstractTableModel {
 	public JTableModel() {
 		super();
 		allGraphletImages = new ArrayList<BasicGraphletImage>();
-		listOfVisualizing = new ArrayList<Boolean>();
+		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.TableModel#getColumnCount()
 	 */
 	public int getColumnCount() {
@@ -44,6 +46,7 @@ class JTableModel extends AbstractTableModel {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
 	public int getRowCount() {
@@ -52,6 +55,7 @@ class JTableModel extends AbstractTableModel {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 	 */
 	public String getColumnName(int col) {
@@ -60,6 +64,7 @@ class JTableModel extends AbstractTableModel {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int row, int col) {
@@ -77,7 +82,7 @@ class JTableModel extends AbstractTableModel {
 		case 5:
 			return listOfModes.get(row);
 		case 6:
-			return listOfVisualizing.get(row);
+			return listOfSelected.get(row);
 		}
 		return null;
 	}
@@ -85,8 +90,8 @@ class JTableModel extends AbstractTableModel {
 	/*
 	 * JTable uses this method to determine the default renderer/ editor for
 	 * each cell. If we didn't implement this method, then the last column would
-	 * contain text ("true"/"false"), rather than a check box.
-	 * (non-Javadoc)
+	 * contain text ("true"/"false"), rather than a check box. (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
 	public Class getColumnClass(int c) {
@@ -95,6 +100,7 @@ class JTableModel extends AbstractTableModel {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int row, int col) {
@@ -103,7 +109,9 @@ class JTableModel extends AbstractTableModel {
 
 	/*
 	 * (non-Javadoc)
-	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 * 
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
+	 * int, int)
 	 */
 	public void setValueAt(Object value, int row, int col) {
 		switch (col) {
@@ -126,7 +134,7 @@ class JTableModel extends AbstractTableModel {
 			listOfModes.set(row, (String) value);
 			break;
 		case 6:
-			listOfVisualizing.set(row, (Boolean) value);
+			listOfSelected.set(row, (Boolean) value);
 			break;
 		}
 		// Updating table
@@ -152,7 +160,7 @@ class JTableModel extends AbstractTableModel {
 	 * @return the listOfVisualizing
 	 */
 	public ArrayList<Boolean> getListOfVisualizing() {
-		return listOfVisualizing;
+		return listOfSelected;
 	}
 
 	/**
@@ -160,7 +168,7 @@ class JTableModel extends AbstractTableModel {
 	 *            the listOfVisualizing to set
 	 */
 	public void setListOfVisualizing(ArrayList<Boolean> listOfVisualizing) {
-		this.listOfVisualizing = listOfVisualizing;
+		this.listOfSelected = listOfVisualizing;
 	}
 
 	/**
@@ -186,7 +194,7 @@ class JTableModel extends AbstractTableModel {
 		allGraphletImages.addAll(newImages);
 
 		for (int i = 0; i < newImages.size(); i++) {
-			listOfVisualizing.add(true);
+			listOfSelected.add(true);
 		}
 		fireTableDataChanged();
 	}
@@ -198,10 +206,28 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public void addImage(BasicGraphletImage newImage, String graphletsMode) {
 		allGraphletImages.add(new BasicGraphletImage(newImage));
-		listOfVisualizing.add(true);
+		listOfSelected.add(true);
 		listOfModes.add(graphletsMode);
 
 		fireTableDataChanged();
+	}
+
+	/**
+	 * Remove row when selected
+	 */
+	public void deleteRow() {
+		int cont = 0;
+		while (cont < listOfSelected.size()) {
+			if (listOfSelected.get(cont)) {
+				allGraphletImages.remove(cont);
+				listOfSelected.remove(cont);
+				listOfModes.remove(cont);
+				fireTableRowsDeleted(cont, cont);
+			} else {
+				cont++;
+			}
+
+		}
 	}
 
 }
