@@ -289,6 +289,8 @@ public class GraphletImage extends BasicGraphletImage {
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape || this.isSelectedCells() != selectionMode) {
 			reDoTheComputation = true;
 		} else if (selectionMode) {
+			ArrayList<Integer> previousSelectedCells = this.getAllSelectedCells();
+			
 			RoiManager roiManager = RoiManager.getInstance();
 			resetSelection();
 			// Check if there is any ROI
@@ -300,9 +302,10 @@ public class GraphletImage extends BasicGraphletImage {
 					}
 				}
 			}
-
-			// TODO: comprobar células que son las mismas
-			reDoTheComputation = true;
+			ArrayList<Integer> actualSelectedCells = this.getAllSelectedCells();
+			
+			if (!previousSelectedCells.equals(actualSelectedCells))
+				reDoTheComputation = true;
 			
 			this.selectedCells = true;
 		}
@@ -544,6 +547,7 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
+		//TODO: reduced adjacency matrix
 		// int[][] adjacencyMatrixReduced = new
 		// int[idsROI.size()][idsROI.size()];
 		//
@@ -941,5 +945,17 @@ public class GraphletImage extends BasicGraphletImage {
 			cont++;
 		}
 		return graphlets;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private ArrayList<Integer> getAllSelectedCells() {
+		ArrayList<Integer> selectedCells = new ArrayList<Integer>();
+		for (EpiCell cell : this.cells)
+			selectedCells.add(cell.getId());
+		
+		return selectedCells;
 	}
 }
