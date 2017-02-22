@@ -62,9 +62,9 @@ public class MainWindow extends JFrame {
 	 * initialize all the GUI items as well.
 	 */
 	public MainWindow() {
-		//3 and 1
+		// 3 and 1
 		String name = UIManager.getInstalledLookAndFeels()[3].getClassName();
-        try {
+		try {
 			UIManager.setLookAndFeel(name);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
@@ -78,9 +78,9 @@ public class MainWindow extends JFrame {
 		setTitle("Epigraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 		this.addWindowListener(new WindowListener() {
-			
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
@@ -92,37 +92,37 @@ public class MainWindow extends JFrame {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowIconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowOpened(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 
@@ -204,7 +204,7 @@ public class MainWindow extends JFrame {
 				importXLSToTable();
 			}
 		});
-		
+
 		btnDeleteRow = new JButton("Delete row");
 		btnDeleteRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -218,14 +218,14 @@ public class MainWindow extends JFrame {
 		scrollPane.setBounds(15, 27, 765, 425);
 		btnOpenButton.setBounds(92, 496, 71, 29);
 		btnDeleteRow.setBounds(792, 75, 97, 25);
-		
+
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
 		panel.add(btnImport);
 		panel.add(btnExport);
 		panel.add(btnDeleteRow);
-		
+
 	}
 
 	/**
@@ -295,22 +295,19 @@ public class MainWindow extends JFrame {
 
 		int userSelection = fileChooser.showSaveDialog(parentFrame);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
-			
+
 			String filename = fileChooser.getSelectedFile().toString();
 			if (!filename.endsWith(".xls"))
 				filename += ".xls";
-			
+
 			if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
-		        int response = JOptionPane.showConfirmDialog(this,
-		          "The file " + fileChooser.getSelectedFile().getName() + 
-		          " already exists. Do you want to replace the existing file?",
-		          "Ovewrite file", JOptionPane.YES_NO_OPTION,
-		          JOptionPane.WARNING_MESSAGE);
-		        if (response != JOptionPane.YES_OPTION)
-		          return;
-		     }
-			
-			
+				int response = JOptionPane.showConfirmDialog(this,
+						"The file " + fileChooser.getSelectedFile().getName()
+								+ " already exists. Do you want to replace the existing file?",
+						"Ovewrite file", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (response != JOptionPane.YES_OPTION)
+					return;
+			}
 
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
 					arrayG, arrayB, arrayMode);
@@ -336,71 +333,44 @@ public class MainWindow extends JFrame {
 			ExcelClass excelclass = new ExcelClass();
 			excelclass.importData(chooser.getSelectedFile().getPath());
 			int flat = 0;
+			BasicGraphletImage newRow;
+			Color newColor;
 			for (int row = 0; row < excelclass.getImageName().size(); row++) {
-
 				if (flat == 1) {
-					tableInfo
-							.addImage(
-									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-											(float) excelclass.getRow(row).get(1),
-											(float) excelclass.getRow(row).get(3),
-											new Color(Math.round((float) excelclass.getRow(row).get(4)),
-													Math.round((float) excelclass.getRow(row).get(5)), Math
-															.round((float) excelclass.getRow(row).get(6))),
-											(String) excelclass.getRow(row).get(0)),
-									(String) excelclass.getRow(row).get(7));
-
+					newColor = new Color(Math.round((float) excelclass.getRow(row).get(4)),
+							Math.round((float) excelclass.getRow(row).get(5)),
+							Math.round((float) excelclass.getRow(row).get(6)));
 				} else if (flat == 2) {
-					tableInfo
-							.addImage(
-									new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-											(float) excelclass.getRow(row).get(1),
-											(float) excelclass.getRow(row).get(3),
-											new Color((float) excelclass.getRow(row).get(4),
-													(float) excelclass.getRow(row).get(5), (float) excelclass
-															.getRow(row).get(6)),
-											(String) excelclass.getRow(row).get(0)),
-									(String) excelclass.getRow(row).get(7));
+					newColor = new Color((float) excelclass.getRow(row).get(4), (float) excelclass.getRow(row).get(5),
+							(float) excelclass.getRow(row).get(6));
 				} else {
 					if ((float) excelclass.getRow(row).get(4) > 1.0 || (float) excelclass.getRow(row).get(5) > 1.0
 							|| (float) excelclass.getRow(row).get(6) > 1.0) {
 						flat = 1;
-						tableInfo.addImage(
-								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color(Math.round((float) excelclass.getRow(row).get(4)),
-												Math.round((float) excelclass.getRow(row).get(5)), Math
-														.round((float) excelclass.getRow(row).get(6))),
-										(String) excelclass.getRow(row).get(0)),
-								(String) excelclass.getRow(row).get(7));
+						newColor = new Color(Math.round((float) excelclass.getRow(row).get(4)),
+								Math.round((float) excelclass.getRow(row).get(5)),
+								Math.round((float) excelclass.getRow(row).get(6)));
 					} else if (((float) excelclass.getRow(row).get(4) < 1.0
 							& (float) excelclass.getRow(row).get(4) > 1.0)
 							|| ((float) excelclass.getRow(row).get(5) < 1.0
 									& (float) excelclass.getRow(row).get(5) > 0.0)
 							|| ((float) excelclass.getRow(row).get(6) < 1.0
 									& (float) excelclass.getRow(row).get(6) > 0.0)) {
-
-						tableInfo.addImage(
-								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color((float) excelclass.getRow(row).get(4),
-												(float) excelclass.getRow(row).get(5),
-												(float) excelclass.getRow(row).get(6)),
-										(String) excelclass.getRow(row).get(0)),
-								(String) excelclass.getRow(row).get(7));
+						newColor = new Color((float) excelclass.getRow(row).get(4),
+								(float) excelclass.getRow(row).get(5), (float) excelclass.getRow(row).get(6));
 						flat = 2;
 					} else {
-
-						tableInfo.addImage(
-								new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-										(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3),
-										new Color((float) excelclass.getRow(row).get(4),
-												(float) excelclass.getRow(row).get(5),
-												(float) excelclass.getRow(row).get(6)),
-										(String) excelclass.getRow(row).get(0)),
-								(String) excelclass.getRow(row).get(7));
+						newColor = new Color((float) excelclass.getRow(row).get(4),
+								(float) excelclass.getRow(row).get(5), (float) excelclass.getRow(row).get(6));
 
 					}
+
+					newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+							(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
+							(String) excelclass.getRow(row).get(0), (int) excelclass.getRow(row).get(8),
+							(int) excelclass.getRow(row).get(9));
+					
+					tableInfo.addImage(newRow, (String) excelclass.getRow(row).get(7));
 				}
 
 			}
