@@ -295,26 +295,13 @@ public class GraphletImage extends BasicGraphletImage {
 				}
 			}
 		}
+		
+		//TODO: comprobar células que son las mismas
 
 		// Neighbours
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
-		}
-
-		// Adjacency matrix
-		HashSet<Integer> neighbours;
-		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
-			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
-				neighbours = this.cells.get(idEpiCell).getNeighbours();
-				for (int idNeighbour : neighbours) {
-					if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
-						// Only valid cells' relationships
-						this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
-						this.adjacencyMatrix[idNeighbour][idEpiCell] = 1;
-					}
-				}
-			}
 		}
 
 		progressBar.setValue((int) (55 / totalPercentageToReach));
@@ -495,20 +482,6 @@ public class GraphletImage extends BasicGraphletImage {
 		ArrayList<String> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
 				modeNumGraphlets, overlay);
 
-		this.orcaProgram = new Orca(this.adjacencyMatrix);
-
-		int[][] graphlets = this.orcaProgram.getOrbit();
-
-		progressBar.setValue(65);
-
-		this.orcaProgram = null;
-
-		for (int i = 0; i < graphlets.length; i++) {
-			this.cells.get(i).setGraphlets(graphlets[i]);
-		}
-
-		progressBar.setValue(70);
-
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
@@ -533,25 +506,59 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-			progressBar.setValue((70 + indexEpiCell * 5) / this.cells.size());
 			this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
 			this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
 		}
+
+		// Adjacency matrix
+		HashSet<Integer> neighbours;
+		ArrayList<Integer> idsROI = new ArrayList<Integer>();
+		EpiCell cell;
+		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
+			cell = this.cells.get(idEpiCell);
+			if (cell.isInvalidRegion() == false) {
+				if (!selectionMode || cell.isSelected() || cell.isWithinTheRange()) {
+					neighbours = cell.getNeighbours();
+					idsROI.add(idEpiCell);
+					for (int idNeighbour : neighbours) {
+						if (this.cells.get(idEpiCell).isValid_cell() || this.cells.get(idNeighbour).isValid_cell()) {
+							// Only valid cells' relationships
+							this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
+							//this.adjacencyMatrix[idNeighbour][idEpiCell] = 1;
+						}
+					}
+				}
+			}
+		}
+
+		this.orcaProgram = new Orca(this.adjacencyMatrix);
+
+		int[][] graphlets = this.orcaProgram.getOrbit();
+
+		progressBar.setValue(65);
+
+		this.orcaProgram = null;
+
+		for (int i = 0; i < graphlets.length; i++) {
+			this.cells.get(i).setGraphlets(graphlets[i]);
+		}
+
+		progressBar.setValue(70);
 
 		Arrays.sort(graphletsWeDontWant);
 
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
-		for (EpiCell cell : this.cells) {
-			progressBar.setValue((75 + cell.getId() * 5) / this.cells.size());
+		for (EpiCell cell2 : this.cells) {
+			progressBar.setValue((75 + cell2.getId() * 5) / this.cells.size());
 			if (validCells5Graphlets) {
-				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
-					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+				if (cell2.isValid_cell_5() && (!selectionMode || cell2.isSelected())) {
+					actualGraphlets = cell2.getGraphletsInteger(graphletsWeDontWant);
 					graphletsFinal.add(actualGraphlets);
 				}
 			} else {
-				if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected())) {
-					actualGraphlets = cell.getGraphletsInteger(graphletsWeDontWant);
+				if (cell2.isValid_cell_4() && (!selectionMode || cell2.isSelected())) {
+					actualGraphlets = cell2.getGraphletsInteger(graphletsWeDontWant);
 					graphletsFinal.add(actualGraphlets);
 				}
 			}
@@ -612,7 +619,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		this.shapeOfMask = selectedShape;
 		this.radiusOfMask = radiusOfShape;
-		
+
 		return img;
 	}
 
