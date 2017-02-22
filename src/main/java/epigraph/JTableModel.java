@@ -264,6 +264,11 @@ class JTableModel extends AbstractTableModel {
 		
 		fireTableDataChanged();
 	}
+	/**
+	 * 
+	 * @param listOfSelected
+	 * @return
+	 */
 	public boolean allSelectedEquals(ArrayList<Boolean> listOfSelected){
 		boolean bolVar= listOfSelected.get(0);
 		for (int i=0;i<listOfSelected.size();i++){

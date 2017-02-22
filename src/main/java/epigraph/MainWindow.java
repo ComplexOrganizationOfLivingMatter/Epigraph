@@ -284,7 +284,7 @@ public class MainWindow extends JFrame {
 		ArrayList<Float> arrayB = new ArrayList<Float>();
 		ArrayList<String> arrayMode = new ArrayList<String>();
 		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
-		ArrayList<Integer> arrayShapeOfMask = new ArrayList<Integer>();
+		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
 		
 		int cont = 0;
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
@@ -297,7 +297,12 @@ public class MainWindow extends JFrame {
 			arrayG.add((float) graphletImg.getColor().getGreen());
 			arrayB.add((float) graphletImg.getColor().getBlue());
 			arrayMode.add(tableInfo.getListOfModes().get(cont));
-			arrayShapeOfMask.add(graphletImg.getShapeOfMask());
+			if (graphletImg.getShapeOfMask()==GraphletImage.CIRCLE_SHAPE){
+				arrayShapeOfMask.add("Circle");
+			}else{
+				arrayShapeOfMask.add("Square");
+			}
+			
 			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
 			cont++;
 		}
@@ -386,6 +391,8 @@ public class MainWindow extends JFrame {
 
 					}
 
+					
+					//TODO cambiar el string por 0 o 1
 					newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
 							(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
 							(String) excelclass.getRow(row).get(0), (int) excelclass.getRow(row).get(8),

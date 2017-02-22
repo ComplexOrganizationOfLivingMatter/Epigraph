@@ -35,7 +35,7 @@ public class ExcelClass {
 	private ArrayList<Float> B;
 	private ArrayList<String> graphletsMode;
 	private ArrayList<Integer> radiusOfMask;
-	private ArrayList<Integer> shapeOfMask; 
+	private ArrayList<String> shapeOfMask; 
 
 	/**
 	 * Default constructor
@@ -51,7 +51,7 @@ public class ExcelClass {
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
 		this.graphletsMode = new ArrayList<String>();
-		this.shapeOfMask = new ArrayList<Integer>();
+		this.shapeOfMask = new ArrayList<String>();
 		this.radiusOfMask = new ArrayList<Integer>();
 	}
 
@@ -80,7 +80,7 @@ public class ExcelClass {
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
-			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<Integer> shapeOfMask) {
+			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<String> shapeOfMask) {
 		super();
 		this.fileName = filename;
 		this.imageName = imageName;
@@ -247,14 +247,14 @@ public class ExcelClass {
 	/**
 	 * @return the shapeOfMask
 	 */
-	public ArrayList<Integer> getShapeOfMask() {
+	public ArrayList<String> getShapeOfMask() {
 		return shapeOfMask;
 	}
 
 	/**
 	 * @param shapeOfMask the shapeOfMask to set
 	 */
-	public void setShapeOfMask(ArrayList<Integer> shapeOfMask) {
+	public void setShapeOfMask(ArrayList<String> shapeOfMask) {
 		this.shapeOfMask = shapeOfMask;
 	}
 
@@ -365,10 +365,16 @@ public class ExcelClass {
 								this.graphletsMode.add(cell.getStringCellValue());
 								break;
 							case 8:
-								this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								try {
+									this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.radiusOfMask.add((int) cell.getNumericCellValue());
+								}
 								break;
+								
 							case 9:
-								this.shapeOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								this.shapeOfMask.add(cell.getStringCellValue());
 								break;
 							}
 
@@ -442,7 +448,9 @@ public class ExcelClass {
 
 				if (obj instanceof Float) {
 					cell.setCellValue((Float) obj);
-				} else if (obj instanceof String) {
+				}else if(obj instanceof Integer){
+					cell.setCellValue((Integer) obj);
+				}else if(obj instanceof String) {		
 					cell.setCellValue((String) obj);
 				}
 
