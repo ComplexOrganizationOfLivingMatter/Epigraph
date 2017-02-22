@@ -69,7 +69,7 @@ public class GraphletImage extends BasicGraphletImage {
 			57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72 };
 
 	public static int MINCELLS = 15;
-	
+
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
 
@@ -80,7 +80,6 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus imageWithLabels;
 
 	private ImagePlus neighbourImage;
-	
 
 	/**
 	 * Constructor
@@ -171,8 +170,8 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            kind of connectiviy (4 or 8)
 	 * @param progressBar
 	 *            to update the progress bar
-	 * @throws Exception 
-	 * 			min cells exception
+	 * @throws Exception
+	 *             min cells exception
 	 */
 	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) throws Exception {
 		/* Preprocessing */
@@ -218,11 +217,10 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// get unique labels from labelled imageplus
 		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
-		if  (maxValue <= MINCELLS){
+		if (maxValue <= MINCELLS) {
 			throw new ExecutionException(new Throwable("Your image could be not accepted. Very few recognized cells"));
 		}
-		
-		
+
 		progressBar.setValue(60);
 
 		// get image in a matrix of labels
@@ -415,15 +413,14 @@ public class GraphletImage extends BasicGraphletImage {
 							break;
 						}
 					} else {
-						colorOfCell = new Color(45,45,45);
+						colorOfCell = new Color(45, 45, 45);
 					}
 				}
 			} else if (this.cells.get(i).isInvalidRegion()) {
 				colorOfCell = Color.BLACK;
-				
-				
-			} else{
-				colorOfCell = new Color(45,45,45);
+
+			} else {
+				colorOfCell = new Color(45, 45, 45);
 			}
 
 			actualPixels = this.cells.get(i).getPixels();
@@ -613,6 +610,9 @@ public class GraphletImage extends BasicGraphletImage {
 			break;
 		}
 
+		this.shapeOfMask = selectedShape;
+		this.radiusOfMask = radiusOfShape;
+		
 		return img;
 	}
 
