@@ -16,6 +16,8 @@ public class BasicGraphletImage {
 	protected float percentageOfHexagons;
 	protected Color color;
 	protected String labelName;
+	protected int shapeOfMask;
+	protected int radiusOfMask;
 
 	/**
 	 * Default constructor. Distances as -1, white color and "Wrong name"
@@ -27,6 +29,8 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = -1;
 		this.labelName = "Wrong name";
 		this.percentageOfHexagons = -1;
+		this.shapeOfMask = -1;
+		this.radiusOfMask = -1;
 	}
 
 	/**
@@ -41,6 +45,8 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = bci.distanceGDDRV;
 		this.labelName = bci.labelName;
 		this.percentageOfHexagons = bci.percentageOfHexagons;
+		this.radiusOfMask = bci.radiusOfMask;
+		this.shapeOfMask = bci.shapeOfMask;
 	}
 
 	/**
@@ -59,6 +65,8 @@ public class BasicGraphletImage {
 		this.percentageOfHexagons = percentageOfHexagons;
 		this.color = Color.BLACK;
 		this.labelName = "ReferenceVoronoiNoise";
+		this.shapeOfMask = GraphletImage.CIRCLE_SHAPE;
+		this.radiusOfMask = 3;
 	}
 
 	/**
@@ -74,15 +82,19 @@ public class BasicGraphletImage {
 	 *            assigned color
 	 * @param labelName
 	 *            label of image
+	 * @param shapeOfMask
+	 * @param radiusOfMask
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons, Color color,
-			String labelName) {
+			String labelName, int shapeOfMask, int radiusOfMask) {
 		super();
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
 		this.percentageOfHexagons = percentageOfHexagons;
 		this.color = color;
 		this.labelName = labelName;
+		this.shapeOfMask = shapeOfMask;
+		this.radiusOfMask = radiusOfMask;
 	}
 
 	/**
@@ -158,5 +170,33 @@ public class BasicGraphletImage {
 	 */
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
+	}
+
+	/**
+	 * @return the shapeOfMask
+	 */
+	public int getShapeOfMask() {
+		return shapeOfMask;
+	}
+
+	/**
+	 * @param shapeOfMask the shapeOfMask to set
+	 */
+	public void setShapeOfMask(int shapeOfMask) {
+		this.shapeOfMask = shapeOfMask;
+	}
+
+	/**
+	 * @return the radiusOfMask
+	 */
+	public int getRadiusOfMask() {
+		return radiusOfMask;
+	}
+
+	/**
+	 * @param radiusOfMask the radiusOfMask to set
+	 */
+	public void setRadiusOfMask(int radiusOfMask) {
+		this.radiusOfMask = radiusOfMask;
 	}
 }
