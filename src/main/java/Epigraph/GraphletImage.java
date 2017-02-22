@@ -954,7 +954,8 @@ public class GraphletImage extends BasicGraphletImage {
 	private ArrayList<Integer> getAllSelectedCells() {
 		ArrayList<Integer> selectedCells = new ArrayList<Integer>();
 		for (EpiCell cell : this.cells)
-			selectedCells.add(cell.getId());
+			if (cell.isSelected())
+				selectedCells.add(cell.getId());
 		
 		return selectedCells;
 	}
