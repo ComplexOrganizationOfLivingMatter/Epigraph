@@ -19,7 +19,7 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Radius", "Shape", "Kind", "Selected" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
@@ -168,18 +168,18 @@ class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @return the listOfVisualizing
+	 * @return the listof selected columns
 	 */
-	public ArrayList<Boolean> getListOfVisualizing() {
+	public ArrayList<Boolean> getListOfSelected() {
 		return listOfSelected;
 	}
 
 	/**
 	 * @param listOfVisualizing
-	 *            the listOfVisualizing to set
+	 *            the list of selected cells
 	 */
-	public void setListOfVisualizing(ArrayList<Boolean> listOfVisualizing) {
-		this.listOfSelected = listOfVisualizing;
+	public void setListOfVisualizing(ArrayList<Boolean> listOfSelected) {
+		this.listOfSelected = listOfSelected;
 	}
 
 	/**
@@ -240,5 +240,39 @@ class JTableModel extends AbstractTableModel {
 
 		}
 	}
+	
+	/**
+	 * Select or deselect columns to be deleted or visualized
+	 * @param listOfSelected
+	 */
+	public void selectAll(){
+		if (allSelectedEquals(listOfSelected)==true){
+			if (listOfSelected.get(0)==true){
+				for (int i=0;i<listOfSelected.size();i++){	
+					listOfSelected.set(i, false);
+				}
+			}else{
+				for (int i=0;i<listOfSelected.size();i++){	
+					listOfSelected.set(i, true);
+				}
+			}
+		}else{
+			for (int i=0;i<listOfSelected.size();i++){	
+				listOfSelected.set(i, true);
+			}
+		}
+		
+		fireTableDataChanged();
+	}
+	public boolean allSelectedEquals(ArrayList<Boolean> listOfSelected){
+		boolean bolVar= listOfSelected.get(0);
+		for (int i=0;i<listOfSelected.size();i++){
+			if (listOfSelected.get(i) != bolVar){
+				return false;
+			}		
+		}
+		return true;
+	}
+
 
 }

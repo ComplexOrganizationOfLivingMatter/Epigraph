@@ -170,7 +170,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		// Firstly, we look for the number of items, we want to show
 		int size_array = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
-			if (tableInfo.getListOfVisualizing().get(i).booleanValue())
+			if (tableInfo.getListOfSelected().get(i).booleanValue())
 				size_array++;
 		}
 
@@ -181,7 +181,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		// the visualizing table
 		int numRow = 0;
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
-			if (tableInfo.getListOfVisualizing().get(i).booleanValue()) {
+			if (tableInfo.getListOfSelected().get(i).booleanValue()) {
 				// creating coord array
 				points[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
