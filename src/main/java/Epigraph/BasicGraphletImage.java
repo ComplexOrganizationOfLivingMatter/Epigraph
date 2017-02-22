@@ -18,6 +18,7 @@ public class BasicGraphletImage {
 	protected String labelName;
 	protected int shapeOfMask;
 	protected int radiusOfMask;
+	protected boolean selectedCells;
 
 	/**
 	 * Default constructor. Distances as -1, white color and "Wrong name"
@@ -31,6 +32,7 @@ public class BasicGraphletImage {
 		this.percentageOfHexagons = -1;
 		this.shapeOfMask = -1;
 		this.radiusOfMask = -1;
+		this.selectedCells = false;
 	}
 
 	/**
@@ -47,6 +49,7 @@ public class BasicGraphletImage {
 		this.percentageOfHexagons = bci.percentageOfHexagons;
 		this.radiusOfMask = bci.radiusOfMask;
 		this.shapeOfMask = bci.shapeOfMask;
+		this.selectedCells = bci.selectedCells;
 	}
 
 	/**
@@ -67,6 +70,7 @@ public class BasicGraphletImage {
 		this.labelName = "ReferenceVoronoiNoise";
 		this.shapeOfMask = GraphletImage.CIRCLE_SHAPE;
 		this.radiusOfMask = 3;
+		this.selectedCells = false;
 	}
 
 	/**
@@ -95,6 +99,7 @@ public class BasicGraphletImage {
 		this.labelName = labelName;
 		this.shapeOfMask = shapeOfMask;
 		this.radiusOfMask = radiusOfMask;
+		this.selectedCells = false;
 	}
 
 	/**
@@ -198,5 +203,19 @@ public class BasicGraphletImage {
 	 */
 	public void setRadiusOfMask(int radiusOfMask) {
 		this.radiusOfMask = radiusOfMask;
+	}
+	
+	/**
+	 * @return the selectedCells
+	 */
+	public boolean isSelectedCells() {
+		return selectedCells;
+	}
+
+	/**
+	 * @param selectedCells the selectedCells to set
+	 */
+	public void setSelectedCells(boolean selectedCells) {
+		this.selectedCells = selectedCells;
 	}
 }
