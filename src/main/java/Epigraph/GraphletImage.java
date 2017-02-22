@@ -218,7 +218,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// get unique labels from labelled imageplus
 		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
 		if (maxValue <= MINCELLS) {
-			throw new ExecutionException(new Throwable("Your image could be not accepted. Very few recognized cells"));
+			throw new ExecutionException(new Throwable("Your image may be not right. Very few recognized cells"));
 		}
 
 		progressBar.setValue(60);

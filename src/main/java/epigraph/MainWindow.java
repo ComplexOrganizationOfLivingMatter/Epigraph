@@ -57,7 +57,6 @@ public class MainWindow extends JFrame {
 	 * initialize all the GUI items as well.
 	 */
 	public MainWindow() {
-		// 3 and 1
 		String name = UIManager.getInstalledLookAndFeels()[3].getClassName();
 		try {
 			UIManager.setLookAndFeel(name);
