@@ -288,7 +288,9 @@ public class GraphletImage extends BasicGraphletImage {
 		boolean reDoTheComputation = false;
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape || this.isSelectedCells() != selectionMode) {
 			reDoTheComputation = true;
-		} else if (selectionMode) {
+		}
+		
+		if (selectionMode) {
 			ArrayList<Integer> previousSelectedCells = this.getAllSelectedCells();
 			
 			RoiManager roiManager = RoiManager.getInstance();
@@ -306,8 +308,6 @@ public class GraphletImage extends BasicGraphletImage {
 			
 			if (!previousSelectedCells.equals(actualSelectedCells))
 				reDoTheComputation = true;
-			
-			this.selectedCells = true;
 		}
 		
 		this.selectedCells = selectionMode;
