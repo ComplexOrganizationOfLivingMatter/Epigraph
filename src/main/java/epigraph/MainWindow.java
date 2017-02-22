@@ -69,7 +69,7 @@ public class MainWindow extends JFrame {
 		UIManager.put("Panel.background", Color.WHITE);
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
-		setMinimumSize(new Dimension(950, 600));
+		setMinimumSize(new Dimension(1000, 600));
 		setTitle("Epigraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -214,9 +214,9 @@ public class MainWindow extends JFrame {
 		btnImport.setBounds(240, 496, 105, 29);
 		btnExport.setBounds(431, 496, 105, 29);
 		btnVisualize.setBounds(607, 496, 93, 29);
-		scrollPane.setBounds(15, 27, 850, 425);
+		scrollPane.setBounds(15, 27, 820, 425);
 		btnOpenButton.setBounds(92, 496, 71, 29);
-		btnDeleteRow.setBounds(877, 66, 97, 25);
+		btnDeleteRow.setBounds(847, 66, 115, 25);
 
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
