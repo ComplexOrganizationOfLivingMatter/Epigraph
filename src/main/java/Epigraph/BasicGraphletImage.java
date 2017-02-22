@@ -86,8 +86,8 @@ public class BasicGraphletImage {
 	 *            assigned color
 	 * @param labelName
 	 *            label of image
-	 * @param shapeOfMask
-	 * @param radiusOfMask
+	 * @param shapeOfMask CIRCLE or SQUARE
+	 * @param radiusOfMask radius of shape of mask
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagons, Color color,
 			String labelName, int shapeOfMask, int radiusOfMask) {

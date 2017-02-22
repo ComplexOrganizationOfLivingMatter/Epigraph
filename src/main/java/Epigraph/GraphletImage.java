@@ -932,10 +932,10 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Get all selected cells
+	 * @return all the ids of the selected cells
 	 */
-	private ArrayList<Integer> getAllSelectedCells() {
+	public ArrayList<Integer> getAllSelectedCells() {
 		ArrayList<Integer> selectedCells = new ArrayList<Integer>();
 		for (EpiCell cell : this.cells)
 			if (cell.isSelected())
@@ -945,10 +945,11 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
-	 * @param selectedShape
-	 * @param radiusOfShape
-	 * @param selectionMode
-	 * @return
+	 * Check if we have to redo the computation of neighbours
+	 * @param selectedShape shape of mask
+	 * @param radiusOfShape radius of shape of mask
+	 * @param selectionMode if exists any roi
+	 * @return if we have to redo the computation of neighbours
 	 */
 	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode) {
 		boolean reDoTheComputation = false;
