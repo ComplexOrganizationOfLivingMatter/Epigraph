@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JProgressBar;
 
@@ -28,24 +29,33 @@ import inra.ijpb.label.LabelImages;
 import inra.ijpb.morphology.strel.SquareStrel;
 
 /**
+ * Calculate polygon distribution, graphlets and other useful information.
  * 
  * @author Pablo Vicente-Munuera
- *
  */
 public class GraphletImage extends BasicGraphletImage {
 
+	/**
+	 * Circle shape of the mask
+	 */
 	public static int CIRCLE_SHAPE = 0;
+	/**
+	 * Square shape of the mask
+	 */
 	public static int SQUARE_SHAPE = 1;
 
+	/**
+	 * Number of random voronoi
+	 */
 	public static final int NUMRANDOMVORONOI = 20;
 
 	// Hexagonal reference
-	private BasicGraphlets hexagonRefInt;
+	private BasicGraphlet hexagonRefInt;
 
 	// Random voronoi references
 	// TODO: Get out from this class the random voronoi references
-	private BasicGraphlets[] randomVoronoiValidCells_4Ref;
-	private BasicGraphlets[] randomVoronoiValidCells_5Ref;
+	private BasicGraphlet[] randomVoronoiValidCells_4Ref;
+	private BasicGraphlet[] randomVoronoiValidCells_5Ref;
 
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = { 8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
@@ -57,6 +67,8 @@ public class GraphletImage extends BasicGraphletImage {
 	private static int[] basicParcialGraphlets = { 8, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
 			30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
 			57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72 };
+
+	public static int MINCELLS = 15;
 
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
@@ -70,6 +82,8 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus neighbourImage;
 
 	/**
+	 * Constructor
+	 * 
 	 * @param img
 	 *            image
 	 */
@@ -78,29 +92,30 @@ public class GraphletImage extends BasicGraphletImage {
 		this.labelName = img.getFileInfo().url;
 		this.raw_img = img;
 
+		// Initialize the reference Hexagons and Random Voronoi
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-		this.hexagonRefInt = new BasicGraphlets(hexagonGraphlets);
+		this.hexagonRefInt = new BasicGraphlet(hexagonGraphlets);
 
-		this.randomVoronoiValidCells_4Ref = new BasicGraphlets[NUMRANDOMVORONOI];
-		this.randomVoronoiValidCells_5Ref = new BasicGraphlets[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			URL fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlets(fileUrl);
+			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
 
 			fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
-			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlets(fileUrl);
+			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
 
 		// END TODO
 	}
 
 	/**
-	 * @return the l_img
+	 * @return the label image
 	 */
 	public ImagePlus getLabelledImage() {
 		return l_img;
@@ -108,7 +123,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 	/**
 	 * @param l_img
-	 *            the l_img to set
+	 *            the label image to set
 	 */
 	public void setLabelledImage(ImagePlus l_img) {
 		this.l_img = l_img;
@@ -145,19 +160,27 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Preprocess image involving binarizing an image, inverting if is the case
+	 * and label the image. Furthermore, it add several no valid cells
+	 * correspondent to the borders and initialize the adjacency matrix
 	 * 
 	 * @param img
+	 *            image to preprocess
 	 * @param connectivity
+	 *            kind of connectiviy (4 or 8)
 	 * @param progressBar
+	 *            to update the progress bar
+	 * @throws Exception
+	 *             min cells exception
 	 */
-	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) {
+	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) throws Exception {
 		/* Preprocessing */
 		this.cells = new ArrayList<EpiCell>();
 
 		img = img.flatten();
 		img.setProcessor(img.getChannelProcessor().convertToByteProcessor());
 		if (!img.getChannelProcessor().isBinary()) {
-			System.out.println("No binary image, improving...");
+			// System.out.println("No binary image, improving...");
 			img.getChannelProcessor().autoThreshold();
 		}
 
@@ -194,6 +217,10 @@ public class GraphletImage extends BasicGraphletImage {
 
 		// get unique labels from labelled imageplus
 		int maxValue = (int) imgTemp.getChannelProcessor().getMax() + 1;
+		if (maxValue <= MINCELLS) {
+			throw new ExecutionException(new Throwable("Your image may be not right. Very few recognized cells"));
+		}
+
 		progressBar.setValue(60);
 
 		// get image in a matrix of labels
@@ -227,20 +254,31 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Calculate the polygon distribution of the image given a radius and shape.
+	 * Displays it and the neighbours image.
 	 * 
 	 * @param selectedShape
+	 *            the selected shape of the mask
 	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param imgToShow
+	 *            if you want to show the neighbour image
 	 * @param progressBar
+	 *            to update the progress bar
+	 * 
 	 * @param selectionMode
+	 *            are there any ROIs?
+	 * 
 	 * @param modeNumGraphlets
+	 *            number of graphlets used (total, total partial, ...)
+	 * 
 	 * @param overlayResult
-	 * @return
+	 *            overlay of the image that we will paint the neighbour image
+	 * @return the polygon distribution
 	 */
 	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
-		// TODO: Check when something is changed to rerun all these info
 		if (imgToShow != null)
 			totalPercentageToReach = 0.6;
 		else
@@ -248,6 +286,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		RoiManager roiManager = RoiManager.getInstance();
 		resetSelection();
+		// Check if there is any ROI
 		if (roiManager != null && selectionMode) {
 			for (Roi r : roiManager.getRoisAsArray()) {
 				for (Point point : r) {
@@ -257,11 +296,13 @@ public class GraphletImage extends BasicGraphletImage {
 			}
 		}
 
+		// Neighbours
 		for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 			progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
 			createNeighbourhood(indexEpiCell, selectedShape, radiusOfShape);
 		}
 
+		// Adjacency matrix
 		HashSet<Integer> neighbours;
 		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
 			if (this.cells.get(idEpiCell).isInvalidRegion() == false) {
@@ -293,6 +334,7 @@ public class GraphletImage extends BasicGraphletImage {
 		// int percentageOfHexagonsOriginal = 0;
 		int[][] actualPixels;
 
+		// Color the image depending the side of the cell
 		ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 		Color colorOfCell;
 		int color;
@@ -371,11 +413,14 @@ public class GraphletImage extends BasicGraphletImage {
 							break;
 						}
 					} else {
-						colorOfCell = Color.black;
+						colorOfCell = new Color(45, 45, 45);
 					}
 				}
-			} else {
+			} else if (this.cells.get(i).isInvalidRegion()) {
 				colorOfCell = Color.BLACK;
+
+			} else {
+				colorOfCell = new Color(45, 45, 45);
 			}
 
 			actualPixels = this.cells.get(i).getPixels();
@@ -429,13 +474,21 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Calculate graphlets with the given configuration
 	 * 
 	 * @param selectedShape
+	 *            the selected shape of the mask
 	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param modeNumGraphlets
+	 *            number of graphlets used (total, total partial, ...)
 	 * @param progressBar
+	 *            to update the progress bar
 	 * @param selectionMode
+	 *            are there any ROIs?
 	 * @param overlay
+	 *            of the image that we will paint the neighbour image
+	 * @return the polygon distribution
 	 */
 	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
 			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
@@ -528,42 +581,55 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Generate a mask expanding the pixels with a selected shape and radius
 	 * 
-	 * @param shape
-	 * @param dimensionOfShape
+	 * @param selectedShape
+	 *            the selected shape of the mask
+	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 * @param perimeterPixelX
+	 *            pixels in X of the perimeter
 	 * @param perimeterPixelY
+	 *            pixels in Y of the perimeter
 	 * @return
 	 */
-	private ImageProcessor generateMask(int shape, int dimensionOfShape, int[] perimeterPixelX, int[] perimeterPixelY) {
+	private ImageProcessor generateMask(int selectedShape, int radiusOfShape, int[] perimeterPixelX,
+			int[] perimeterPixelY) {
 		// Create the perimeter of the cell
 		ImageProcessor img = new ByteProcessor(this.raw_img.getWidth(), this.raw_img.getHeight());
 		for (int numPixel = 0; numPixel < perimeterPixelX.length; numPixel++)
 			img.set(perimeterPixelX[numPixel], perimeterPixelY[numPixel], 255);
 
-		switch (shape) {
+		switch (selectedShape) {
 		case 0:// CIRCLE_SHAPE
-			new RankFilters().rank(img, dimensionOfShape, RankFilters.MAX);
+			new RankFilters().rank(img, radiusOfShape, RankFilters.MAX);
 			break;
 		case 1: // SQUARE_SHAPE
-			SquareStrel sq = SquareStrel.fromRadius(dimensionOfShape);
+			SquareStrel sq = SquareStrel.fromRadius(radiusOfShape);
 			img = sq.dilation(img);
 			break;
 		}
 
+		this.shapeOfMask = selectedShape;
+		this.radiusOfMask = radiusOfShape;
+		
 		return img;
 	}
 
 	/**
+	 * Calculate the neighbours of the cell
 	 * 
 	 * @param idEpiCell
-	 * @param shape
-	 * @param dimensionOfShape
+	 *            id of the cell
+	 * @param selectedShape
+	 *            the selected shape of the mask
+	 * @param radiusOfShape
+	 *            the size radius of the mask
 	 */
-	private void createNeighbourhood(int idEpiCell, int shape, int dimensionOfShape) {
+	private void createNeighbourhood(int idEpiCell, int selectedShape, int radiusOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
 
-		ImageProcessor imgProc = generateMask(shape, dimensionOfShape, cell.getPixelsX(), cell.getPixelsY());
+		ImageProcessor imgProc = generateMask(selectedShape, radiusOfShape, cell.getPixelsX(), cell.getPixelsY());
 
 		HashSet<Integer> neighbours = new HashSet<Integer>();
 		int labelNeigh;
@@ -588,10 +654,13 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Find if there is any no valid cells with a given length.
 	 * 
 	 * @param indexEpiCell
+	 *            id of the cell
 	 * @param length
-	 * @return
+	 *            actual length
+	 * @return If is any no valid cells it will return false, otherwise true
 	 */
 	private boolean allValidCellsWithinAGivenLength(int indexEpiCell, int length) {
 		if (this.cells.get(indexEpiCell).isValid_cell()) {
@@ -612,10 +681,14 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Search selected cells from the actual cell
 	 * 
 	 * @param indexEpiCell
+	 *            id of the cell
 	 * @param length
-	 * @return
+	 *            actual length
+	 * @return true if find any selected cells and all valid cells, false
+	 *         otherwise.
 	 */
 	private boolean selectedCellWithinAGivenLength(int indexEpiCell, int length) {
 		if (this.cells.get(indexEpiCell).isValid_cell() == false)
@@ -639,6 +712,8 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Adapted from Yaveroglu et. al. Supplementary Information for: "Revealing
+	 * the Hidden Language of Complex Networks"
 	 * 
 	 * @param graphletsFinal
 	 *            graphlets of the image
@@ -652,7 +727,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
 
-		for (int i = 0; i < BasicGraphlets.TOTALGRAPHLETS; i++) {
+		for (int i = 0; i < BasicGraphlet.TOTALGRAPHLETS; i++) {
 			HashMap<Integer, Float> values1 = graphletFreqRef.get(i);
 			HashMap<Integer, Float> values2 = graphletFreqImage.get(i);
 
@@ -678,10 +753,11 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Mean of an array of floats
 	 * 
 	 * @param m
 	 *            array with the numbers
-	 * @return
+	 * @return the mean of the array of floats
 	 */
 	private float mean(float[] m) {
 		float sum = 0;
@@ -692,17 +768,19 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * Adapted from Yaveroglu et. al. Supplementary Information for: "Revealing
+	 * the Hidden Language of Complex Networks"
 	 * 
 	 * @param signatures
 	 *            matrix with the graphlets
-	 * @return
+	 * @return the distributions of the graphlets
 	 */
 	private ArrayList<HashMap<Integer, Float>> scaleGraphletDists(ArrayList<Integer[]> signatures) {
 		ArrayList<HashMap<Integer, Float>> distributions = new ArrayList<HashMap<Integer, Float>>();
 
 		HashMap<Integer, Float> graphletsValues;
 		Float actualValue;
-		for (int numGraphlet = 0; numGraphlet < BasicGraphlets.TOTALGRAPHLETS; numGraphlet++) {
+		for (int numGraphlet = 0; numGraphlet < BasicGraphlet.TOTALGRAPHLETS; numGraphlet++) {
 			graphletsValues = new HashMap<Integer, Float>();
 
 			for (int numNode = 0; numNode < signatures.size(); numNode++) {
@@ -734,6 +812,13 @@ public class GraphletImage extends BasicGraphletImage {
 		return distributions;
 	}
 
+	/**
+	 * Add cell to selected cells
+	 * 
+	 * @param labelPixel
+	 *            number of the label in the image
+	 * @return if the label pixel was correct (i.e no border)
+	 */
 	public int addCellToSelected(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setSelected(true);
@@ -742,6 +827,13 @@ public class GraphletImage extends BasicGraphletImage {
 		return -1;
 	}
 
+	/**
+	 * Add cell to invalid region
+	 * 
+	 * @param labelPixel
+	 *            number of the label in the image
+	 * @return if the label pixel was correct (i.e no border)
+	 */
 	public int addCellToInvalidRegion(int labelPixel) {
 		if (labelPixel != 0) {
 			this.cells.get(labelPixel - 1).setInvalidRegion(true);
@@ -751,19 +843,25 @@ public class GraphletImage extends BasicGraphletImage {
 		return -1;
 	}
 
+	/**
+	 * All cells are now valid and the no valid cells are set as default.
+	 */
 	public void resetInvalidRegion() {
-		for (int i = 0; i < this.cells.size(); i++){
+		for (int i = 0; i < this.cells.size(); i++) {
 			this.cells.get(i).setInvalidRegion(false);
 			this.cells.get(i).setValid_cell(true);
 		}
-		
+
 		resetValidCells();
 	}
 
+	/**
+	 * No valid cells are found in the boundaries
+	 */
 	private void resetValidCells() {
 		int W = this.raw_img.getWidth();
 		int H = this.raw_img.getHeight();
-		int [][] matrixImg = this.l_img.getChannelProcessor().getIntArray();
+		int[][] matrixImg = this.l_img.getChannelProcessor().getIntArray();
 		int valuePxl;
 		for (int indexImgX = 0; indexImgX < W; indexImgX++) {
 			for (int indexImgY = 0; indexImgY < H; indexImgY++) {
@@ -777,11 +875,19 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 	}
 
+	/**
+	 * Reset selected cells
+	 */
 	public void resetSelection() {
 		for (int i = 0; i < this.cells.size(); i++)
 			this.cells.get(i).setSelected(false);
 	}
 
+	/**
+	 * Get all the pixels of every cell and return the centroid
+	 * 
+	 * @return the centroids
+	 */
 	public ArrayList<int[][]> getCentroids() {
 		// TODO Auto-generated method stub
 		ArrayList<int[][]> centroids = new ArrayList<int[][]>();
@@ -791,8 +897,11 @@ public class GraphletImage extends BasicGraphletImage {
 		return centroids;
 	}
 
+	/**
+	 * @return graphlets in an array of string
+	 */
 	public String[][] getGraphlets() {
-		String[][] graphlets = new String[this.cells.size()][BasicGraphlets.TOTALGRAPHLETS + 1];
+		String[][] graphlets = new String[this.cells.size()][BasicGraphlet.TOTALGRAPHLETS + 1];
 		int cont = 0;
 		int numCell = 0;
 		for (EpiCell cell : this.cells) {

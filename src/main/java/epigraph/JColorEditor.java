@@ -16,13 +16,12 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 /**
+ * From java tutorial, it allow a table to create the pick color dialog
+ * 
  * @author Pedro Gomez-Galvez
- *
  */
 public class JColorEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	Color currentColor;
 	JButton button;
@@ -31,7 +30,7 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 	protected static final String EDIT = "edit";
 
 	/**
-	 * 
+	 * Constructor by default
 	 */
 	public JColorEditor() {
 		button = new JButton();
@@ -46,8 +45,9 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 				null); // no CANCEL button handler
 	}
 
-	/**
-	 * 
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -65,16 +65,18 @@ public class JColorEditor extends AbstractCellEditor implements TableCellEditor,
 		}
 	}
 
-	/**
-	 *  Implement the one CellEditor method that AbstractCellEditor doesn't.
+	/*
+	 * Implement the one CellEditor method that AbstractCellEditor doesn't.(non-Javadoc)
+	 * @see javax.swing.CellEditor#getCellEditorValue()
 	 */
 	@Override
 	public Object getCellEditorValue() {
 		return currentColor;
 	}
 
-	/**
-	 *  Implement the one method defined by TableCellEditor.
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {

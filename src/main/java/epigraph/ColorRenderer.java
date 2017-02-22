@@ -13,8 +13,10 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
 /**
+ * This class is needed in color picker action to display a color in in cell
+ * color into main window table
+ * 
  * @author Pedro Gomez-Galvez
- *
  */
 class ColorRenderer extends JLabel implements TableCellRenderer {
 	/**
@@ -28,6 +30,7 @@ class ColorRenderer extends JLabel implements TableCellRenderer {
 	/**
 	 * 
 	 * @param isBordered
+	 *            Set bordered election
 	 */
 	public ColorRenderer(boolean isBordered) {
 		this.isBordered = isBordered;
@@ -35,8 +38,9 @@ class ColorRenderer extends JLabel implements TableCellRenderer {
 	}
 
 	@Override
-	/**
-	 * 
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 	 */
 	public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus,
 			int row, int column) {

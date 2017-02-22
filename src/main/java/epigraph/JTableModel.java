@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * Model of the table on the main window
+ * 
  * @author Pedro Gomez-Galvez
- *
  */
 class JTableModel extends AbstractTableModel {
 	/**
@@ -18,34 +19,54 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Kind", "Visualizing" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Radius", "Shape", "Kind", "Selected" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
-	private ArrayList<Boolean> listOfVisualizing;
+	private ArrayList<Boolean> listOfSelected;
 	private ArrayList<String> listOfModes;
 
 	/**
-	 * 
+	 * Construct by default
 	 */
 	public JTableModel() {
 		super();
 		allGraphletImages = new ArrayList<BasicGraphletImage>();
-		listOfVisualizing = new ArrayList<Boolean>();
+		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.TableModel#getColumnCount()
+	 */
 	public int getColumnCount() {
 		return columnNames.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.TableModel#getRowCount()
+	 */
 	public int getRowCount() {
 		return allGraphletImages.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+	 */
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
 	public Object getValueAt(int row, int col) {
 		switch (col) {
 		case 0:
@@ -58,27 +79,51 @@ class JTableModel extends AbstractTableModel {
 			return allGraphletImages.get(row).getDistanceGDDRV();
 		case 4:
 			return allGraphletImages.get(row).getPercentageOfHexagons();
-		case 5:
+		case 7:
 			return listOfModes.get(row);
+		case 8:
+			return listOfSelected.get(row);
+		case 5:
+			return allGraphletImages.get(row).getRadiusOfMask();
 		case 6:
-			return listOfVisualizing.get(row);
+			if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.CIRCLE_SHAPE){
+				return "Circle";
+			} else if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.SQUARE_SHAPE){
+				return "Square";
+			}
 		}
 		return null;
 	}
 
-	/**
+	/*
 	 * JTable uses this method to determine the default renderer/ editor for
 	 * each cell. If we didn't implement this method, then the last column would
-	 * contain text ("true"/"false"), rather than a check box.
+	 * contain text ("true"/"false"), rather than a check box. (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+	 */
 	public boolean isCellEditable(int row, int col) {
-		return true;
+		if (col != 5 && col != 6)
+			return true;
+		
+		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object,
+	 * int, int)
+	 */
 	public void setValueAt(Object value, int row, int col) {
 		switch (col) {
 		case 0:
@@ -96,11 +141,11 @@ class JTableModel extends AbstractTableModel {
 		case 4:
 			allGraphletImages.get(row).setPercentageOfHexagons((float) value);
 			break;
-		case 5:
+		case 7:
 			listOfModes.set(row, (String) value);
 			break;
-		case 6:
-			listOfVisualizing.set(row, (Boolean) value);
+		case 8:
+			listOfSelected.set(row, (Boolean) value);
 			break;
 		}
 		// Updating table
@@ -126,7 +171,7 @@ class JTableModel extends AbstractTableModel {
 	 * @return the listOfVisualizing
 	 */
 	public ArrayList<Boolean> getListOfVisualizing() {
-		return listOfVisualizing;
+		return listOfSelected;
 	}
 
 	/**
@@ -134,7 +179,7 @@ class JTableModel extends AbstractTableModel {
 	 *            the listOfVisualizing to set
 	 */
 	public void setListOfVisualizing(ArrayList<Boolean> listOfVisualizing) {
-		this.listOfVisualizing = listOfVisualizing;
+		this.listOfSelected = listOfVisualizing;
 	}
 
 	/**
@@ -160,7 +205,7 @@ class JTableModel extends AbstractTableModel {
 		allGraphletImages.addAll(newImages);
 
 		for (int i = 0; i < newImages.size(); i++) {
-			listOfVisualizing.add(true);
+			listOfSelected.add(true);
 		}
 		fireTableDataChanged();
 	}
@@ -172,10 +217,28 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public void addImage(BasicGraphletImage newImage, String graphletsMode) {
 		allGraphletImages.add(new BasicGraphletImage(newImage));
-		listOfVisualizing.add(true);
+		listOfSelected.add(true);
 		listOfModes.add(graphletsMode);
 
 		fireTableDataChanged();
+	}
+
+	/**
+	 * Remove row when selected
+	 */
+	public void deleteRow() {
+		int cont = 0;
+		while (cont < listOfSelected.size()) {
+			if (listOfSelected.get(cont)) {
+				allGraphletImages.remove(cont);
+				listOfSelected.remove(cont);
+				listOfModes.remove(cont);
+				fireTableRowsDeleted(cont, cont);
+			} else {
+				cont++;
+			}
+
+		}
 	}
 
 }

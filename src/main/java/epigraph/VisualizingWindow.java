@@ -25,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -44,17 +45,13 @@ import org.jzy3d.plot3d.rendering.canvas.Quality;
 import util.opencsv.CSVReader;
 
 /**
- * Visualizing window. Here you can visualize the points in the table and the
+ * Visualizing window, here you can visualize the points in the table and the
  * voronoi noise reference
  * 
  * @author Pedro Gomez-Galvez, Pablo Vicente-Munuera
- *
  */
 public class VisualizingWindow extends JDialog implements ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	Scatter scatterData;
@@ -84,8 +81,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * it add a reference in case you'd want to view it and compare the points
 	 * with something reliable.
 	 * 
-	 * @param parent
-	 * @param tableInfo
+	 * @param parent parent window
+	 * @param tableInfo information of the points we're visualizing
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
 		super(parent);
@@ -110,6 +107,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	/**
 	 * Create the scatter with the reference voronoi noise
+	 * 
 	 * @param tableInfo
 	 */
 	@SuppressWarnings("unchecked")
@@ -295,10 +293,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		genericPanelConstrainst.gridx++;
-		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
-		genericPanelConstrainst.gridx--;
 		buttonsPanel.add(lbSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
@@ -359,11 +356,12 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		this.chart.setScale(new Scale(0, 100));
 	}
 
-	/**
+	/*
 	 * Group all the actions, we'd want to perform with the buttons. Right there
-	 * is only 1 button, "Export view".
+	 * is only 1 button, "Export view". (non-Javadoc)
 	 * 
-	 * @param e
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnExport) {
@@ -379,6 +377,22 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 				String filename = fileChooser.getSelectedFile().toString();
+				
+				if (!filename.endsWith(".png"))
+					filename += ".png";
+				
+				if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
+			        int response = JOptionPane.showConfirmDialog(this,
+			          "The file " + fileChooser.getSelectedFile().getName() + 
+			          " already exists. Do you want to replace the existing file?",
+			          "Ovewrite file", JOptionPane.YES_NO_OPTION,
+			          JOptionPane.WARNING_MESSAGE);
+			        if (response != JOptionPane.YES_OPTION)
+			          return;
+			     }
+				
+				
+				
 
 				((CanvasAWT) chart.getCanvas()).setPixelScale(new float[] { 0.1f, 0.1f });
 				// Quality q = new Quality(true, false, true, true, true, true,

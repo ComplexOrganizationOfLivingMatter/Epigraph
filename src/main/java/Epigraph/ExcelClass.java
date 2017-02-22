@@ -18,9 +18,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 /**
+ * This class is used to import and export a xls file with all registered
+ * graphlets information
  * 
  * @author Pedro Gomez-Galvez
- *
  */
 public class ExcelClass {
 
@@ -33,9 +34,11 @@ public class ExcelClass {
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
 	private ArrayList<String> graphletsMode;
+	private ArrayList<Integer> radiusOfMask;
+	private ArrayList<Integer> shapeOfMask; 
 
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public ExcelClass() {
 		super();
@@ -48,23 +51,36 @@ public class ExcelClass {
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
 		this.graphletsMode = new ArrayList<String>();
+		this.shapeOfMask = new ArrayList<Integer>();
+		this.radiusOfMask = new ArrayList<Integer>();
 	}
 
 	/**
+	 * Constructor from parameters
 	 * 
 	 * @param filename
+	 *            Name of excel file to import or export
 	 * @param imageName
+	 *            List of labels of images
 	 * @param gddh
+	 *            List of graphlet degree distance to hexagons tesselletion
 	 * @param gddrv
+	 *            List of graphlet degree distance to random voronoi
+	 *            tesselletion
 	 * @param hexagonsPercentage
+	 *            List of percentajes of hexagons for each image
 	 * @param r
+	 *            List of red channel value from RGB for each image
 	 * @param g
+	 *            List of green channel value from RGB for each image
 	 * @param b
+	 *            List of blue channel value from RGB for each image
 	 * @param graphletsMode
+	 *            List of chosen mode to calculate graphlets for each image
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
-			ArrayList<String> graphletsMode) {
+			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<Integer> shapeOfMask) {
 		super();
 		this.fileName = filename;
 		this.imageName = imageName;
@@ -75,19 +91,21 @@ public class ExcelClass {
 		this.G = g;
 		this.B = b;
 		this.graphletsMode = graphletsMode;
+		this.radiusOfMask = radiusOfMask;
+		this.shapeOfMask = shapeOfMask;
 	}
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of images names
 	 */
 	public ArrayList<String> getImageName() {
 		return imageName;
 	}
 
 	/**
-	 * 
 	 * @param imageName
+	 *            Set list of image name
 	 */
 	public void setImageName(ArrayList<String> imageName) {
 		this.imageName = imageName;
@@ -95,15 +113,16 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of gddh
 	 */
 	public ArrayList<Float> getGddh() {
 		return gddh;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param gddh
+	 *            Set list of gddh
 	 */
 	public void setGddh(ArrayList<Float> gddh) {
 		this.gddh = gddh;
@@ -111,7 +130,7 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of gddrv
 	 */
 	public ArrayList<Float> getGddrv() {
 		return gddrv;
@@ -120,14 +139,15 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param gddrv
+	 *            Set list of gddrv
 	 */
 	public void setGddrv(ArrayList<Float> gddrv) {
 		this.gddrv = gddrv;
 	}
 
 	/**
-	 * 
-	 * @return
+	 *
+	 * @return Get list of hexagons percentajes
 	 */
 	public ArrayList<Float> getHexagonsPercentage() {
 		return hexagonsPercentage;
@@ -136,6 +156,7 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param hexagonsPercentage
+	 *            Set list of hexagons percentajes
 	 */
 	public void setHexagonsPercentage(ArrayList<Float> hexagonsPercentage) {
 		this.hexagonsPercentage = hexagonsPercentage;
@@ -143,7 +164,7 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of channels R (RGB)
 	 */
 	public ArrayList<Float> getR() {
 		return R;
@@ -152,6 +173,7 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param r
+	 *            Set list of channels R (RGB)
 	 */
 	public void setR(ArrayList<Float> r) {
 		R = r;
@@ -159,7 +181,7 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of channels G (RGB)
 	 */
 	public ArrayList<Float> getG() {
 		return G;
@@ -168,6 +190,7 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param g
+	 *            Set list of channels G (RGB)
 	 */
 	public void setG(ArrayList<Float> g) {
 		G = g;
@@ -175,7 +198,7 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @return
+	 * @return Get list of channels B (RGB)
 	 */
 	public ArrayList<Float> getB() {
 		return B;
@@ -184,6 +207,7 @@ public class ExcelClass {
 	/**
 	 * 
 	 * @param b
+	 *            Set list of channels B (RGB)
 	 */
 	public void setB(ArrayList<Float> b) {
 		B = b;
@@ -191,26 +215,54 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 */
-	/**
-	 * @return the graphletsMode
+	 * @return Get list of graphlets modes used for each image
 	 */
 	public ArrayList<String> getGraphletsMode() {
 		return graphletsMode;
 	}
 
 	/**
+	 * 
 	 * @param graphletsMode
-	 *            the graphletsMode to set
+	 *            Set list of graphlets modes
 	 */
 	public void setGraphletsMode(ArrayList<String> graphletsMode) {
 		this.graphletsMode = graphletsMode;
 	}
 
 	/**
+	 * @return the radiusOfMask
+	 */
+	public ArrayList<Integer> getRadiusOfMask() {
+		return radiusOfMask;
+	}
+
+	/**
+	 * @param radiusOfMask the radiusOfMask to set
+	 */
+	public void setRadiusOfMask(ArrayList<Integer> radiusOfMask) {
+		this.radiusOfMask = radiusOfMask;
+	}
+
+	/**
+	 * @return the shapeOfMask
+	 */
+	public ArrayList<Integer> getShapeOfMask() {
+		return shapeOfMask;
+	}
+
+	/**
+	 * @param shapeOfMask the shapeOfMask to set
+	 */
+	public void setShapeOfMask(ArrayList<Integer> shapeOfMask) {
+		this.shapeOfMask = shapeOfMask;
+	}
+
+	/**
 	 * 
 	 * @param row
-	 * @return
+	 *            number of excel class row
+	 * @return excel class row with all values
 	 */
 	public ArrayList<Object> getRow(int row) {
 		ArrayList<Object> rowExcel = new ArrayList<Object>();
@@ -222,13 +274,17 @@ public class ExcelClass {
 		rowExcel.add(this.G.get(row));
 		rowExcel.add(this.B.get(row));
 		rowExcel.add(this.graphletsMode.get(row));
+		rowExcel.add(this.radiusOfMask.get(row));
+		rowExcel.add(this.shapeOfMask.get(row));
 
 		return rowExcel;
 	}
 
 	/**
+	 * load a xls file previously exported
 	 * 
 	 * @param filename
+	 *            Name of file in directory
 	 */
 	public void importData(String filename) {
 
@@ -282,7 +338,7 @@ public class ExcelClass {
 								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
 								break;
 							case 4:
-								try{
+								try {
 									this.R.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -290,7 +346,7 @@ public class ExcelClass {
 								}
 								break;
 							case 5:
-								try{
+								try {
 									this.G.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -298,7 +354,7 @@ public class ExcelClass {
 								}
 								break;
 							case 6:
-								try{
+								try {
 									this.B.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -307,6 +363,12 @@ public class ExcelClass {
 								break;
 							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
+								break;
+							case 8:
+								this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
+								break;
+							case 9:
+								this.shapeOfMask.add(Integer.parseInt(cell.getStringCellValue()));
 								break;
 							}
 
@@ -332,7 +394,7 @@ public class ExcelClass {
 	}
 
 	/**
-	 * EXPORT DATA TO EXCEL
+	 * Export excelClass to a xls file
 	 */
 	public void exportData() {
 
@@ -345,7 +407,7 @@ public class ExcelClass {
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		data.put("1",
-				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode" });
+				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask" });
 
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
 		otherSymbols.setDecimalSeparator(',');
@@ -360,7 +422,7 @@ public class ExcelClass {
 			data.put(j.toString(),
 					new Object[] { imageName.get(i), df1.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
 							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)), df3.format(B.get(i)),
-							this.graphletsMode.get(i) });
+							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
 
 		}
 
@@ -370,7 +432,7 @@ public class ExcelClass {
 			// create a row of excelsheet
 			Row row = sheet.createRow(rownum++);
 
-			// get object array of prerticuler key
+			// get object array from key
 			Object[] objArr = data.get(keyint.toString());
 
 			int cellnum = 0;

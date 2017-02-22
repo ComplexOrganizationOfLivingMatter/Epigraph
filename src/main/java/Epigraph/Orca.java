@@ -8,20 +8,25 @@ import java.util.ArrayList;
 import net.imglib2.util.ValuePair;
 
 /**
- * @author Pablo Vicente-Munuera
+ * Adaptation of Orca (Orbit Counting Algorithm): A combinatorial approach to
+ * graphlet counting - by Tomaz Hocevar.
  * 
- *         Adaptation of Orca (Orbit Counting Algorithm): A combinatorial
- *         approach to graphlet counting - by Tomaz Hocevar.
- *
+ * The algorithm builds a system of equations that connect counts of orbits from
+ * graphlets with up to 5 nodes, which allows to compute all orbit counts by
+ * enumerating just a single one. This reduces the time complexity in sparse
+ * graphs by an order of magnitude as compared to the existing, pure enumeration
+ * based algorithms.
+ * 
+ * http://www.biolab.si/supp/orca/orca.html
+ * 
+ * @author Pablo Vicente-Munuera
  */
-public class Orca extends BasicGraphlets {
+public class Orca extends BasicGraphlet {
 
 	private int[][] adjacencyMatrix;
 	/** inherited from BasicGraphlets **/
 	// private int[][] orbit; // orbit[x][o] - how many times does node x
 
-	// participate in
-	// orbit o
 	private int[][] adj;
 	private int[] deg;
 	private ArrayList<ValuePair<Integer, Integer>> edges; // list of edges
@@ -32,8 +37,9 @@ public class Orca extends BasicGraphlets {
 	private int[] C5;
 
 	/**
+	 * Constructor by default
 	 * 
-	 * @param adjacencyMatrix
+	 * @param adjacencyMatrix adjacency matrix
 	 */
 	public Orca(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
@@ -77,10 +83,9 @@ public class Orca extends BasicGraphlets {
 	}
 
 	/**
-	 * 
+	 * Constructor empty
 	 */
 	public Orca() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -92,6 +97,7 @@ public class Orca extends BasicGraphlets {
 
 	/**
 	 * Precompute common nodes and precompute triangles that span over edges
+	 * Step 1 of the algoritm.
 	 */
 	public void computingCommonNodes() {
 
@@ -139,17 +145,16 @@ public class Orca extends BasicGraphlets {
 	}
 
 	/**
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
+	 * @param a a node
+	 * @param b a node
+	 * @return if a is adjacent to b
 	 */
 	private int isAdjacent(int a, int b) {
 		return this.adjacencyMatrix[a][b];
 	}
 
 	/**
-	 * 
+	 * Step 2 of the algorithm
 	 */
 	private void countingFullGraphlets() {
 		this.C5 = new int[this.adjacencyMatrix[0].length];
@@ -200,7 +205,7 @@ public class Orca extends BasicGraphlets {
 	}
 
 	/**
-	 * 
+	 * Step 3 of the algorithm
 	 */
 	private void buildingEquationSystems() {
 		int[] common_x = new int[this.adjacencyMatrix[0].length];

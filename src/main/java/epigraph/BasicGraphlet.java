@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
+ * This class read referenced graphlets information and is heritage of a more
+ * complex class: GraphletImage
+ * 
  * @author Pablo Vicente-Munuera
- *
  */
-public class BasicGraphlets {
+public class BasicGraphlet {
 
 	/**
-	 * Max number of graphlets 
+	 * Max number of graphlets
 	 */
 	public static final int TOTALGRAPHLETS = 73;
 
@@ -31,25 +33,27 @@ public class BasicGraphlets {
 	/**
 	 * Basic constructor
 	 */
-	public BasicGraphlets() {
+	public BasicGraphlet() {
 		this.orbit = null;
 	}
 
 	/**
 	 * Constructor from graphlets
+	 * 
 	 * @param orbit
 	 *            the graphlets themselves
 	 */
-	public BasicGraphlets(int[][] orbit) {
+	public BasicGraphlet(int[][] orbit) {
 		this.orbit = orbit;
 	}
 
 	/**
-	 * Constructing from text file
+	 * Constructing reference Voronoi Noise Scale from text file
+	 * 
 	 * @param fileName
 	 *            where we'll get the graphlets
 	 */
-	public BasicGraphlets(URL fileName) {
+	public BasicGraphlet(URL fileName) {
 		// File class needed to turn stringName to actual file
 		try {
 			// count lines
@@ -65,7 +69,7 @@ public class BasicGraphlets {
 			this.orbit = new int[numNodes][TOTALGRAPHLETS];
 
 			// read from filePooped with Scanner class
-			Scanner inputStream =  new Scanner(fileName.openStream());
+			Scanner inputStream = new Scanner(fileName.openStream());
 
 			int row = 0;
 			int col = 0;
@@ -92,25 +96,26 @@ public class BasicGraphlets {
 	}
 
 	/**
-	 * Get an array of graphlets as Integer 
+	 * Get an array of graphlets as Integer
+	 * 
 	 * @param graphletsWeDontWant
 	 *            the graphlets we don't want will appear as 0s
-	 * @return int[] the graphlets we'll use
+	 * @return the graphlets we'll use
 	 */
 	public ArrayList<Integer[]> getGraphletsInteger(int[] graphletsWeDontWant) {
 		ArrayList<Integer[]> graph = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		int graphletIndex = 0;
-		//Go through all the nodes
+		// Go through all the nodes
 		for (int numNode = 0; numNode < this.orbit.length; numNode++) {
 			actualGraphlets = new Integer[TOTALGRAPHLETS];
 			graphletIndex = 0;
-			//Go through the orbits of the node
+			// Go through the orbits of the node
 			for (int numOrbit = 0; numOrbit < TOTALGRAPHLETS; numOrbit++) {
-				//If we want the orbit of the node, we write it
+				// If we want the orbit of the node, we write it
 				if (graphletIndex >= graphletsWeDontWant.length || numOrbit != graphletsWeDontWant[graphletIndex]) {
 					actualGraphlets[numOrbit] = this.orbit[numNode][numOrbit];
-				} else { //We don't want this orbit
+				} else { // We don't want this orbit
 					actualGraphlets[numOrbit] = 0;
 					graphletIndex++;
 				}
