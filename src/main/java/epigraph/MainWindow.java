@@ -194,7 +194,7 @@ public class MainWindow extends JFrame {
 		    public void mouseClicked(MouseEvent e) {
 		    	if (table.getRowCount()!=0){
 					int col = table.columnAtPoint(e.getPoint());
-					Class classColumn = table.getColumnClass(col);
+					Class<?> classColumn = table.getColumnClass(col);
 					String nameClass = classColumn.getName();
 					if ("java.lang.Boolean" == nameClass) {
 						tableInfo.selectAll();

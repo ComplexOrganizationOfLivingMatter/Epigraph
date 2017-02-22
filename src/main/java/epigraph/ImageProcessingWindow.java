@@ -489,9 +489,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				backgroundTask.execute();
 			}
 		} else if (e.getSource() == btnCreateRoi) {
+			openRoiManager();
 			if (btnCreateRoi.getText() != "Done") {
 				Epigraph.callToolbarRectangle();
-				openRoiManager();
 				btnCreateRoi.setText("Done");
 				disableActionButtons();
 				btnSelectCells.setEnabled(false);
@@ -520,8 +520,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			repaintAll();
 		} else if (e.getSource() == btnSelectCells) {
+			openRoiManager();
 			if (btnSelectCells.getText() != "Done") {
-				openRoiManager();
 				Epigraph.callToolbarMultiPoint();
 				btnSelectCells.setText("Done");
 				disableActionButtons();
