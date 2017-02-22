@@ -52,8 +52,6 @@ public class GraphletImage extends BasicGraphletImage {
 	// Hexagonal reference
 	private BasicGraphlet hexagonRefInt;
 
-	private Boolean modeNumGraphletsPrevious;
-
 	// Random voronoi references
 	// TODO: Get out from this class the random voronoi references
 	private BasicGraphlet[] randomVoronoiValidCells_4Ref;
@@ -84,6 +82,7 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus neighbourImage;
 	private ArrayList<String> percentagesList;
 	private boolean reDoTheComputation;
+	private boolean invalidRegionChanged;
 
 	/**
 	 * Constructor
@@ -114,6 +113,8 @@ public class GraphletImage extends BasicGraphletImage {
 					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
+		
+		this.invalidRegionChanged = false;
 
 		// END TODO
 	}
@@ -550,7 +551,7 @@ public class GraphletImage extends BasicGraphletImage {
 
 			progressBar.setValue(70);
 		}
-		
+
 		Arrays.sort(graphletsWeDontWant);
 
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
@@ -860,6 +861,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 * All cells are now valid and the no valid cells are set as default.
 	 */
 	public void resetInvalidRegion() {
+		this.invalidRegionChanged = true;
 		for (int i = 0; i < this.cells.size(); i++) {
 			this.cells.get(i).setInvalidRegion(false);
 			this.cells.get(i).setValid_cell(true);
@@ -951,9 +953,11 @@ public class GraphletImage extends BasicGraphletImage {
 	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode) {
 		boolean reDoTheComputation = false;
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape
-				|| this.isSelectedCells() != selectionMode) {
+				|| this.isSelectedCells() != selectionMode || this.invalidRegionChanged) {
 			reDoTheComputation = true;
 		}
+		
+		this.invalidRegionChanged = false;
 
 		if (selectionMode) {
 			ArrayList<Integer> previousSelectedCells = this.getAllSelectedCells();
