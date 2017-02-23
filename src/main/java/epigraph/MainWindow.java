@@ -186,24 +186,22 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(7).setMinWidth(150);
 		table.getColumnModel().getColumn(8).setMaxWidth(70);
 		table.getColumnModel().getColumn(8).setMinWidth(70);
-		
-		
+
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	if (table.getRowCount()!=0){
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (table.getRowCount() != 0) {
 					int col = table.columnAtPoint(e.getPoint());
 					Class<?> classColumn = table.getColumnClass(col);
 					String nameClass = classColumn.getName();
 					if ("java.lang.Boolean" == nameClass) {
 						tableInfo.selectAll();
 					}
-		    	}
-		    }
+				}
+			}
 		});
-		
-		
+
 		// Create the scroll pane and add the table to it.
 		scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -227,13 +225,14 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				boolean anySelectedRow = false;
 				for (Boolean selected : tableInfo.getListOfSelected())
-					if (selected){
+					if (selected) {
 						anySelectedRow = true;
 						break;
 					}
-						
-				if (anySelectedRow){
-					int response = JOptionPane.showConfirmDialog(panel,"Are you sure?","Remove",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+				if (anySelectedRow) {
+					int response = JOptionPane.showConfirmDialog(panel, "Are you sure?", "Remove",
+							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if (response == JOptionPane.YES_OPTION)
 						tableInfo.deleteRow();
 				}
