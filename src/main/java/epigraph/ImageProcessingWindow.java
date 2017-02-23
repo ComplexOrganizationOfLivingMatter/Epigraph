@@ -913,7 +913,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 *             Min cells exception
 		 */
 		public void labelImage() throws Exception {
-
+			getImagePlus().deleteRoi();
 			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
 			TextRoi text;
 
