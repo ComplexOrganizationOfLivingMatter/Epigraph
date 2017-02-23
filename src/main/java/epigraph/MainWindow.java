@@ -225,7 +225,11 @@ public class MainWindow extends JFrame {
 		btnDeleteRow = new JButton("Delete rows");
 		btnDeleteRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableInfo.deleteRow();
+				if (tableInfo.getRowCount()!=0){
+					int response = JOptionPane.showConfirmDialog(panel,"Are you sure?","Remove",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					if (response == JOptionPane.YES_OPTION)
+						tableInfo.deleteRow();
+				}
 			}
 		});
 
