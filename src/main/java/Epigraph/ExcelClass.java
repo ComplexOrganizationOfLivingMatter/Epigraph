@@ -426,7 +426,7 @@ public class ExcelClass {
 			Integer j = i + 2;
 
 			data.put(j.toString(),
-					new Object[] { imageName.get(i), df1.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
+					new Object[] { imageName.get(i), df2.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
 							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)), df3.format(B.get(i)),
 							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
 

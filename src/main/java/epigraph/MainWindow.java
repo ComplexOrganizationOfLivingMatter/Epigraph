@@ -392,14 +392,20 @@ public class MainWindow extends JFrame {
 					}
 
 					
-					//TODO cambiar el string por 0 o 1
-					newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-							(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
-							(String) excelclass.getRow(row).get(0), (int) excelclass.getRow(row).get(8),
-							(int) excelclass.getRow(row).get(9));
-					
-					tableInfo.addImage(newRow, (String) excelclass.getRow(row).get(7));
 				}
+				
+				int shapeColumn;
+				String shapeString=(String) excelclass.getRow(row).get(9);
+				if (shapeString.equals("Circle")){
+					shapeColumn=GraphletImage.CIRCLE_SHAPE;
+				}else{
+					shapeColumn=GraphletImage.SQUARE_SHAPE;
+				}
+				newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
+						(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
+						(String) excelclass.getRow(row).get(0),shapeColumn, (int) excelclass.getRow(row).get(8));//(int) excelclass.getRow(row).get(9));
+				
+				tableInfo.addImage(newRow, (String) excelclass.getRow(row).get(7));
 
 			}
 
