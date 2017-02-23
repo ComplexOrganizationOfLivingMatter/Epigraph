@@ -225,7 +225,14 @@ public class MainWindow extends JFrame {
 		btnDeleteRow = new JButton("Delete rows");
 		btnDeleteRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (tableInfo.getRowCount()!=0){
+				boolean anySelectedRow = false;
+				for (Boolean selected : tableInfo.getListOfSelected())
+					if (selected){
+						anySelectedRow = true;
+						break;
+					}
+						
+				if (anySelectedRow){
 					int response = JOptionPane.showConfirmDialog(panel,"Are you sure?","Remove",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if (response == JOptionPane.YES_OPTION)
 						tableInfo.deleteRow();
@@ -289,7 +296,7 @@ public class MainWindow extends JFrame {
 		ArrayList<String> arrayMode = new ArrayList<String>();
 		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
 		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
-		
+
 		int cont = 0;
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
@@ -301,12 +308,12 @@ public class MainWindow extends JFrame {
 			arrayG.add((float) graphletImg.getColor().getGreen());
 			arrayB.add((float) graphletImg.getColor().getBlue());
 			arrayMode.add(tableInfo.getListOfModes().get(cont));
-			if (graphletImg.getShapeOfMask()==GraphletImage.CIRCLE_SHAPE){
+			if (graphletImg.getShapeOfMask() == GraphletImage.CIRCLE_SHAPE) {
 				arrayShapeOfMask.add("Circle");
-			}else{
+			} else {
 				arrayShapeOfMask.add("Square");
 			}
-			
+
 			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
 			cont++;
 		}
@@ -395,20 +402,20 @@ public class MainWindow extends JFrame {
 
 					}
 
-					
 				}
-				
+
 				int shapeColumn;
-				String shapeString=(String) excelclass.getRow(row).get(9);
-				if (shapeString.equals("Circle")){
-					shapeColumn=GraphletImage.CIRCLE_SHAPE;
-				}else{
-					shapeColumn=GraphletImage.SQUARE_SHAPE;
+				String shapeString = (String) excelclass.getRow(row).get(9);
+				if (shapeString.equals("Circle")) {
+					shapeColumn = GraphletImage.CIRCLE_SHAPE;
+				} else {
+					shapeColumn = GraphletImage.SQUARE_SHAPE;
 				}
 				newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
 						(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
-						(String) excelclass.getRow(row).get(0),shapeColumn, (int) excelclass.getRow(row).get(8));//(int) excelclass.getRow(row).get(9));
-				
+						(String) excelclass.getRow(row).get(0), shapeColumn, (int) excelclass.getRow(row).get(8));// (int)
+																													// excelclass.getRow(row).get(9));
+
 				tableInfo.addImage(newRow, (String) excelclass.getRow(row).get(7));
 
 			}
