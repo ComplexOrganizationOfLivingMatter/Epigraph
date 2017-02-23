@@ -180,6 +180,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public void preprocessImage(ImagePlus img, int connectivity, JProgressBar progressBar) throws Exception {
 		/* Preprocessing */
+
+		this.shapeOfMask = -1;
+		this.radiusOfMask = -1;
 		this.cells = new ArrayList<EpiCell>();
 
 		img = img.flatten();
