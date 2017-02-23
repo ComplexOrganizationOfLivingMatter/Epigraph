@@ -155,7 +155,6 @@
 							<exclude>sc.fiji:legacy-imglib1</exclude>
 							<exclude>net.imagej:*</exclude>
 							<exclude>net.imglib2:*</exclude>
-							<!-- <exclude>fr.inra.ijpb:*</exclude> -->
 							<exclude>org.jogamp.*:*</exclude>
 						</excludes>
 					</artifactSet>
