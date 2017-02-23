@@ -209,7 +209,10 @@ public class MainWindow extends JFrame {
 		btnExport = new JButton("Export table");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				exportTableToXLS();
+				if(tableInfo.getRowCount()!=0){
+					exportTableToXLS();
+				}
+				
 			}
 		});
 
