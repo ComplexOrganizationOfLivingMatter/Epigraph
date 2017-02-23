@@ -77,6 +77,8 @@ public class ExcelClass {
 	 *            List of blue channel value from RGB for each image
 	 * @param graphletsMode
 	 *            List of chosen mode to calculate graphlets for each image
+	 * @param radiusOfMask List of radius of the shapes.
+	 * @param shapeOfMask List of chosen shapes.
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
