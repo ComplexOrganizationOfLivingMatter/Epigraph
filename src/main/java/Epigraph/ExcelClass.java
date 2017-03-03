@@ -323,23 +323,45 @@ public class ExcelClass {
 						cell = row.getCell(c);
 						if (cell != null) {
 							// Your code here
-
+							
 							switch (c) {
 
 							case 0:
 								this.imageName.add(cell.getStringCellValue());
 								break;
 							case 1:
-								this.hexagonsPercentage
-										.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.hexagonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.hexagonsPercentage.add((float) cell.getNumericCellValue());
+								}
 								break;
+								
 							case 2:
-								this.gddrv.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.gddrv.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.gddrv.add((float) cell.getNumericCellValue());
+								}
 								break;
+								
 							case 3:
-								this.gddh.add(Float.parseFloat(cell.getStringCellValue().replace(',', '.')));
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.gddh.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.gddh.add((float) cell.getNumericCellValue());
+								}
 								break;
+								
+								
 							case 4:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.R.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
@@ -348,6 +370,7 @@ public class ExcelClass {
 								}
 								break;
 							case 5:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.G.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
@@ -356,6 +379,7 @@ public class ExcelClass {
 								}
 								break;
 							case 6:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.B.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
@@ -367,6 +391,7 @@ public class ExcelClass {
 								this.graphletsMode.add(cell.getStringCellValue());
 								break;
 							case 8:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
@@ -418,7 +443,6 @@ public class ExcelClass {
 				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask" });
 
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
-		otherSymbols.setDecimalSeparator(',');
 		DecimalFormat df1 = new DecimalFormat("#0.00", otherSymbols);
 		DecimalFormat df2 = new DecimalFormat("#0.000", otherSymbols);
 		DecimalFormat df3 = new DecimalFormat("#0", otherSymbols);
@@ -428,8 +452,8 @@ public class ExcelClass {
 			Integer j = i + 2;
 
 			data.put(j.toString(),
-					new Object[] { imageName.get(i), df2.format(hexagonsPercentage.get(i)), df2.format(gddrv.get(i)),
-							df2.format(gddh.get(i)), df3.format(R.get(i)), df3.format(G.get(i)), df3.format(B.get(i)),
+					new Object[] { imageName.get(i), Float.parseFloat(df2.format(hexagonsPercentage.get(i))), Float.parseFloat(df2.format(gddrv.get(i))),
+							Float.parseFloat(df2.format(gddh.get(i))), Integer.parseInt(df3.format(R.get(i))), Integer.parseInt(df3.format(G.get(i))), Integer.parseInt(df3.format(B.get(i))),
 							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
 
 		}
@@ -449,10 +473,13 @@ public class ExcelClass {
 				Cell cell = row.createCell(cellnum++);
 
 				if (obj instanceof Float) {
+					cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 					cell.setCellValue((Float) obj);
 				}else if(obj instanceof Integer){
+					cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 					cell.setCellValue((Integer) obj);
-				}else if(obj instanceof String) {		
+				}else if(obj instanceof String) {	
+					cell.setCellType(Cell.CELL_TYPE_STRING);
 					cell.setCellValue((String) obj);
 				}
 
