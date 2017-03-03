@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -442,18 +443,18 @@ public class ExcelClass {
 		data.put("1",
 				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask" });
 
-		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
-		DecimalFormat df1 = new DecimalFormat("#0.00", otherSymbols);
-		DecimalFormat df2 = new DecimalFormat("#0.000", otherSymbols);
-		DecimalFormat df3 = new DecimalFormat("#0", otherSymbols);
+		NumberFormat df2 = NumberFormat.getInstance();
+		df2.setMaximumFractionDigits(3);
+		NumberFormat df3 = NumberFormat.getInstance();
+		df3.setMaximumFractionDigits(0);
 
 		for (int i = 0; i < gddh.size(); i++) {
 
 			Integer j = i + 2;
 
 			data.put(j.toString(),
-					new Object[] { imageName.get(i), Float.parseFloat(df2.format(hexagonsPercentage.get(i))), Float.parseFloat(df2.format(gddrv.get(i))),
-							Float.parseFloat(df2.format(gddh.get(i))), Integer.parseInt(df3.format(R.get(i))), Integer.parseInt(df3.format(G.get(i))), Integer.parseInt(df3.format(B.get(i))),
+					new Object[] { imageName.get(i), hexagonsPercentage.get(i), gddrv.get(i),
+							gddh.get(i), R.get(i), G.get(i), B.get(i),
 							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
 
 		}
