@@ -182,10 +182,10 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(5).setMaxWidth(50);
 		table.getColumnModel().getColumn(6).setMinWidth(55);
 		table.getColumnModel().getColumn(6).setMaxWidth(55);
-		table.getColumnModel().getColumn(7).setMaxWidth(150);
-		table.getColumnModel().getColumn(7).setMinWidth(150);
-		table.getColumnModel().getColumn(8).setMaxWidth(70);
-		table.getColumnModel().getColumn(8).setMinWidth(70);
+		table.getColumnModel().getColumn(7).setMaxWidth(70);
+		table.getColumnModel().getColumn(7).setMinWidth(70);
+		table.getColumnModel().getColumn(8).setMaxWidth(80);
+		table.getColumnModel().getColumn(8).setMinWidth(80);
 
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
