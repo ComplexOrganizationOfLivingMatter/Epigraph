@@ -318,8 +318,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		btnCalculateGraphlets.addActionListener(this);
 
 		cbGraphletsMode = new JComboBox<String>();
-		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(new String[] { "26 Motifs",
-				"17 Motifs", "9 Motifs", "7 Motifs" }));
+		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
 		cbGraphletsMode.setSelectedIndex(0);
 
 		btnCreateRoi = new JButton("Create RoI");

@@ -36,6 +36,10 @@ import inra.ijpb.morphology.strel.SquareStrel;
 public class GraphletImage extends BasicGraphletImage {
 
 	/**
+	 * Nomenclature of the graphlets we'll be using
+	 */
+	public static String[] KIND_OF_GRAPHLETS = { "26 Motifs","17 Motifs", "9 Motifs", "7 Motifs" };
+	/**
 	 * Circle shape of the mask
 	 */
 	public static int CIRCLE_SHAPE = 0;

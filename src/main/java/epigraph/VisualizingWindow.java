@@ -231,8 +231,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		btnExport.addActionListener(this);
 
 		cbGraphletsReference = new JComboBox<String>();
-		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(new String[] { "26 Motifs",
-				"16 Motifs", "9 Motifs", "7 Motifs" }));
+		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
 		cbGraphletsReference.setSelectedIndex(0);
 		cbGraphletsReference.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
