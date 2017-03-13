@@ -371,7 +371,6 @@ public class GraphletImage extends BasicGraphletImage {
 						}
 
 						if (this.cells.get(i).isWithinTheRange()) {
-							colorOfCell = Color.GRAY;
 							validCells++;
 
 							switch (this.cells.get(i).getNeighbours().size()) {
@@ -380,18 +379,23 @@ public class GraphletImage extends BasicGraphletImage {
 								break;
 							case 4:
 								percentageOfSquares++;
+								colorOfCell = new Color((int) 255, (int) 101, (int) 6);
 								break;
 							case 5:
 								percentageOfPentagons++;
+								colorOfCell = new Color((int) 17, (int) 157, (int) 24);
 								break;
 							case 6:
 								percentageOfHexagons++;
+								colorOfCell = new Color(52, (int) 102, (int) 249);
 								break;
 							case 7:
 								percentageOfHeptagons++;
+								colorOfCell = new Color((int) 119, 5, 116);
 								break;
 							case 8:
 								percentageOfOctogons++;
+								colorOfCell = new Color(18, (int) 107, (int) 121);
 								break;
 							case 9:
 								percentageOfNonagons++;
