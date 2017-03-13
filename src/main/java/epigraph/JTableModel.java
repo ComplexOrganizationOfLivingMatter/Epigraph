@@ -78,7 +78,7 @@ class JTableModel extends AbstractTableModel {
 		case 3:
 			return allGraphletImages.get(row).getDistanceGDDRV();
 		case 4:
-			return allGraphletImages.get(row).getPercentageOfHexagons();
+			return allGraphletImages.get(row).getPercentageOfHexagonsGraphlets();
 		case 7:
 			return listOfModes.get(row);
 		case 8:
@@ -139,7 +139,7 @@ class JTableModel extends AbstractTableModel {
 			allGraphletImages.get(row).setDistanceGDDRV((float) value);
 			break;
 		case 4:
-			allGraphletImages.get(row).setPercentageOfHexagons((float) value);
+			allGraphletImages.get(row).setPercentageOfHexagonsGraphlets((float) value);
 			break;
 		case 7:
 			listOfModes.set(row, (String) value);

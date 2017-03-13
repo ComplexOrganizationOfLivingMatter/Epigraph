@@ -185,7 +185,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				// creating coord array
 				points[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
-						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
 				// creating color array
 				colors[numRow] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),

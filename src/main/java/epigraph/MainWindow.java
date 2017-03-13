@@ -303,7 +303,7 @@ public class MainWindow extends JFrame {
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
 			arrayNames.add(graphletImg.getLabelName());
-			arrayHexagons.add(graphletImg.getPercentageOfHexagons());
+			arrayHexagons.add(graphletImg.getPercentageOfHexagonsGraphlets());
 			arrayGDDH.add(graphletImg.getDistanceGDDH());
 			arrayGDDRV.add(graphletImg.getDistanceGDDRV());
 			arrayR.add((float) graphletImg.getColor().getRed());

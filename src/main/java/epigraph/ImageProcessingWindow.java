@@ -87,11 +87,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lbHexagons;
 	private JLabel lbHeptagons;
 	private JLabel lbOctogons;
+	private JLabel lbRoiSquares;
+	private JLabel lbRoiPentagons;
+	private JLabel lbRoiHexagons;
+	private JLabel lbRoiHeptagons;
+	private JLabel lbRoiOctogons;
 	private JLabel lblShape;
+	
 
 	private Panel all = new Panel();
 	private JPanel graphletsPanel;
 	private JPanel polDistPanel;
+	private JPanel polDistRoiPanel;
 	private JPanel imgPolDistPanel;
 	private RoiManager roiManager;
 	private JButton btnSelectCells;
@@ -260,7 +267,32 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
+		
+		// labels of polygon distribution ROI
+		polDistRoiPanel = new JPanel();
+		GridBagLayout polDistRoiPanelLayout = new GridBagLayout();
+		GridBagConstraints polDistRoiPanelConstrainst = new GridBagConstraints();
+		polDistRoiPanelConstrainst.anchor = GridBagConstraints.NORTHWEST;
+		polDistRoiPanelConstrainst.fill = GridBagConstraints.BOTH;
+		resetGenericConstrainst(polDistRoiPanelConstrainst);
+		polDistRoiPanel.setLayout(polDistRoiPanelLayout);
+		polDistRoiPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
+		polDistRoiPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		polDistRoiPanelConstrainst.weighty = 1;
+		// Minimum size of the labels
+		polDistRoiPanelLayout.columnWidths = widths;
 
+		polDistRoiPanel.add(lbRoiSquares, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
+		polDistRoiPanel.add(lbRoiPentagons, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
+		polDistRoiPanel.add(lbRoiHexagons, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
+		polDistRoiPanel.add(lbRoiHeptagons, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
+		polDistRoiPanel.add(lbRoiOctogons, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
+		
 		setupPanels();
 
 		pack();
@@ -371,6 +403,20 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		lbOctogons = new JLabel("");
 		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
 
+		lbRoiSquares = new JLabel("");
+		lbRoiSquares.setHorizontalAlignment(SwingConstants.CENTER);
+
+		lbRoiPentagons = new JLabel("");
+		lbRoiPentagons.setHorizontalAlignment(SwingConstants.CENTER);
+
+		lbRoiHexagons = new JLabel("");
+		lbRoiHexagons.setHorizontalAlignment(SwingConstants.CENTER);
+
+		lbRoiHeptagons = new JLabel("");
+		lbRoiHeptagons.setHorizontalAlignment(SwingConstants.CENTER);
+
+		lbRoiOctogons = new JLabel("");
+		lbRoiOctogons.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
 	/**
@@ -421,6 +467,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		labelsJPanel.add(imgPolDistPanel, labelsConstraints);
 		labelsConstraints.gridx++;
 		labelsJPanel.add(polDistPanel, labelsConstraints);
+		labelsConstraints.gridx++;
+		labelsJPanel.add(polDistRoiPanel, labelsConstraints);
 
 		/* MAIN DEFINITION OF THE GUI */
 		GridBagLayout layout = new GridBagLayout();
@@ -858,23 +906,36 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Calculate graphlets in background
 		 */
 		public void calculateGraphlets() {
-			ArrayList<String> polDistri;
+			ArrayList<ArrayList<String>> ListPolDistri;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
+				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
 						roiArray.length > 0, overlayResult);
 			} else {
-				polDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
+				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
 						overlayResult);
-			}
+			}	
+			
+			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 
-			lbSquares.setText(polDistri.get(0));
-			lbPentagons.setText(polDistri.get(1));
-			lbHexagons.setText(polDistri.get(2));
-			lbHeptagons.setText(polDistri.get(3));
-			lbOctogons.setText(polDistri.get(4));
+			lbSquares.setText(polDistriGraphlets.get(0));
+			lbPentagons.setText(polDistriGraphlets.get(1));
+			lbHexagons.setText(polDistriGraphlets.get(2));
+			lbHeptagons.setText(polDistriGraphlets.get(3));
+			lbOctogons.setText(polDistriGraphlets.get(4));
+			
+			if (!ListPolDistri.get(1).isEmpty()){
+				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				lbRoiSquares.setText(polDistriRoi.get(0));
+				lbRoiPentagons.setText(polDistriRoi.get(1));
+				lbRoiHexagons.setText(polDistriRoi.get(2));
+				lbRoiHeptagons.setText(polDistriRoi.get(3));
+				lbRoiOctogons.setText(polDistriRoi.get(4));
+			}
+			
+			
 
 			tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
 		}
@@ -883,7 +944,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Calculate polygon distribution in background
 		 */
 		public void testNeighbours() {
-			ArrayList<String> polDistri;
 			if (roiManager != null) {
 				if (roiManager.getSelectedRoisAsArray().length > 0) {
 					selectionMode = true;
@@ -894,15 +954,27 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				selectionMode = false;
 			}
 
-			polDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
+			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
 					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
 					cbGraphletsMode.getSelectedIndex(), overlayResult);
+			
+			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 
-			lbSquares.setText(polDistri.get(0));
-			lbPentagons.setText(polDistri.get(1));
-			lbHexagons.setText(polDistri.get(2));
-			lbHeptagons.setText(polDistri.get(3));
-			lbOctogons.setText(polDistri.get(4));
+			lbSquares.setText(polDistriGraphlets.get(0));
+			lbPentagons.setText(polDistriGraphlets.get(1));
+			lbHexagons.setText(polDistriGraphlets.get(2));
+			lbHeptagons.setText(polDistriGraphlets.get(3));
+			lbOctogons.setText(polDistriGraphlets.get(4));
+			
+			if (!ListPolDistri.get(1).isEmpty()){
+				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				lbRoiSquares.setText(polDistriRoi.get(0));
+				lbRoiPentagons.setText(polDistriRoi.get(1));
+				lbRoiHexagons.setText(polDistriRoi.get(2));
+				lbRoiHeptagons.setText(polDistriRoi.get(3));
+				lbRoiOctogons.setText(polDistriRoi.get(4));
+			}
+			
 		}
 
 		/**
