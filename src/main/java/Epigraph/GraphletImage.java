@@ -84,7 +84,6 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus imageWithLabels;
 
 	private ImagePlus neighbourImage;
-	private ArrayList<ArrayList<String>> percentagesList;
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
 
@@ -288,10 +287,11 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            overlay of the image that we will paint the neighbour image
 	 * @return the polygon distribution
 	 */
+	ArrayList<ArrayList<String>> percentagesList; 
 	public ArrayList<ArrayList<String>> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
-		percentagesList = new ArrayList<ArrayList<String>>();
+		
 		if (imgToShow != null)
 			totalPercentageToReach = 0.6;
 		else
@@ -299,7 +299,11 @@ public class GraphletImage extends BasicGraphletImage {
 
 		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode);
 
+		System.out.println(this.reDoTheComputation);
+		
 		if (this.reDoTheComputation) {
+			
+			percentagesList = new ArrayList<ArrayList<String>>();
 			// Neighbours
 			for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 				progressBar.setValue((int) (indexEpiCell * 50 / this.cells.size() / totalPercentageToReach));
@@ -560,9 +564,10 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public ArrayList<ArrayList<String>> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
 			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
+		
+		
 		ArrayList<ArrayList<String>> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
 				modeNumGraphlets, overlay);
-
 		int[] graphletsWeDontWant;
 		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
@@ -586,6 +591,7 @@ public class GraphletImage extends BasicGraphletImage {
 			break;
 		}
 
+		
 		if (this.reDoTheComputation || this.distanceGDDH == -1) {
 			for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
 				this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
@@ -614,7 +620,6 @@ public class GraphletImage extends BasicGraphletImage {
 					}
 				}
 			}
-
 			// TODO: reduced adjacency matrix
 			// int[][] adjacencyMatrixReduced = new
 			// int[idsROI.size()][idsROI.size()];

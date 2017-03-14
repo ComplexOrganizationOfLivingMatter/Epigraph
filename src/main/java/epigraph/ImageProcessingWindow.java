@@ -927,7 +927,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHeptagons.setText(polDistriGraphlets.get(3));
 			lbOctogons.setText(polDistriGraphlets.get(4));
 			
-			if (!ListPolDistri.get(1).isEmpty()){
+			if (ListPolDistri.size() > 1){
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
 				lbRoiSquares.setText(polDistriRoi.get(0));
 				lbRoiPentagons.setText(polDistriRoi.get(1));
@@ -936,8 +936,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
 			
-			
-
 			tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
 		}
 
