@@ -84,7 +84,7 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus imageWithLabels;
 
 	private ImagePlus neighbourImage;
-	private ArrayList<String> percentagesList;
+	private ArrayList<ArrayList<String>> percentagesList;
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
 
@@ -288,7 +288,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            overlay of the image that we will paint the neighbour image
 	 * @return the polygon distribution
 	 */
-	public ArrayList<String> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
+	public ArrayList<ArrayList<String>> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
 		if (imgToShow != null)
@@ -308,18 +308,32 @@ public class GraphletImage extends BasicGraphletImage {
 			progressBar.setValue((int) (55 / totalPercentageToReach));
 
 			@SuppressWarnings("unused")
-			float percentageOfTriangles = 0;
-			float percentageOfSquares = 0;
-			float percentageOfPentagons = 0;
-			this.percentageOfHexagons = 0;
-			float percentageOfHeptagons = 0;
-			float percentageOfOctogons = 0;
+			float percentageOfTrianglesGraphlets = 0;
+			float percentageOfSquaresGraphlets = 0;
+			float percentageOfPentagonsGraphlets = 0;
+			this.percentageOfHexagonsGraphlets = 0;
+			float percentageOfHeptagonsGraphlets = 0;
+			float percentageOfOctogonsGraphlets = 0;
 			@SuppressWarnings("unused")
-			float percentageOfNonagons = 0;
+			float percentageOfNonagonsGraphlets = 0;
 			@SuppressWarnings("unused")
-			float percentageOfDecagons = 0;
+			float percentageOfDecagonsGraphlets = 0;
+			
+			@SuppressWarnings("unused")
+			float percentageOfTrianglesRoi = 0;
+			float percentageOfSquaresRoi = 0;
+			float percentageOfPentagonsRoi = 0;
+			float percentageOfHexagonsRoi = 0;
+			float percentageOfHeptagonsRoi = 0;
+			float percentageOfOctogonsRoi = 0;
+			@SuppressWarnings("unused")
+			float percentageOfNonagonsRoi = 0;
+			@SuppressWarnings("unused")
+			float percentageOfDecagonsRoi = 0;
+			
 			int validCells = 0;
-			// int percentageOfHexagonsOriginal = 0;
+			int roiCells=0;
+			// int percentageOfHexagonsGraphletsOriginal = 0;
 			int[][] actualPixels;
 
 			// Color the image depending the side of the cell
@@ -332,33 +346,33 @@ public class GraphletImage extends BasicGraphletImage {
 					if (!selectionMode || this.cells.get(i).isSelected()) {
 						switch (this.cells.get(i).getNeighbours().size()) {
 						case 3:
-							percentageOfTriangles++;
+							percentageOfTrianglesGraphlets++;
 							break;
 						case 4:
-							percentageOfSquares++;
-							colorOfCell = new Color((int) 255, (int) 101, (int) 6);
+							percentageOfSquaresGraphlets++;
+							colorOfCell = new Color(255, 101, 6);
 							break;
 						case 5:
-							percentageOfPentagons++;
-							colorOfCell = new Color((int) 17, (int) 157, (int) 24);
+							percentageOfPentagonsGraphlets++;
+							colorOfCell = new Color(17, 157, 24);
 							break;
 						case 6:
-							percentageOfHexagons++;
-							colorOfCell = new Color(52, (int) 102, (int) 249);
+							percentageOfHexagonsGraphlets++;
+							colorOfCell = new Color(52, 102, 249);
 							break;
 						case 7:
-							percentageOfHeptagons++;
-							colorOfCell = new Color((int) 119, 5, 116);
+							percentageOfHeptagonsGraphlets++;
+							colorOfCell = new Color(119, 5, 116);
 							break;
 						case 8:
-							percentageOfOctogons++;
-							colorOfCell = new Color(18, (int) 107, (int) 121);
+							percentageOfOctogonsGraphlets++;
+							colorOfCell = new Color(18, 107, 121);
 							break;
 						case 9:
-							percentageOfNonagons++;
+							percentageOfNonagonsGraphlets++;
 							break;
 						case 10:
-							percentageOfDecagons++;
+							percentageOfDecagonsGraphlets++;
 							break;
 						}
 
@@ -375,38 +389,87 @@ public class GraphletImage extends BasicGraphletImage {
 
 							switch (this.cells.get(i).getNeighbours().size()) {
 							case 3:
-								percentageOfTriangles++;
+								percentageOfTrianglesGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfTrianglesRoi++;
+									roiCells++;
+								}
 								break;
 							case 4:
-								percentageOfSquares++;
-								colorOfCell = new Color((int) 255, (int) 101, (int) 6);
+								percentageOfSquaresGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfSquaresRoi++;
+									colorOfCell = new Color(255, 101, 6);
+									roiCells++;
+								}else{
+									colorOfCell = new Color(226,167,98);
+								}
+								
 								break;
 							case 5:
-								percentageOfPentagons++;
-								colorOfCell = new Color((int) 17, (int) 157, (int) 24);
+								percentageOfPentagonsGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfPentagonsRoi++;
+									colorOfCell = new Color(17, 157, 24);
+									roiCells++;
+								}else{
+									colorOfCell = new Color(143,240,161);
+								}						
+								
 								break;
 							case 6:
-								percentageOfHexagons++;
-								colorOfCell = new Color(52, (int) 102, (int) 249);
+								percentageOfHexagonsGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfHexagonsRoi++;
+									colorOfCell = new Color(52, 102, 249);
+									roiCells++;
+								}else{
+									colorOfCell = new Color(132,162,232);
+								}	
+								
 								break;
 							case 7:
-								percentageOfHeptagons++;
-								colorOfCell = new Color((int) 119, 5, 116);
+								percentageOfHeptagonsGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfHeptagonsRoi++;
+									colorOfCell = new Color(119, 5, 116);
+									roiCells++;
+								}else{
+									colorOfCell = new Color(190,149,201);
+								}
+								
 								break;
 							case 8:
-								percentageOfOctogons++;
-								colorOfCell = new Color(18, (int) 107, (int) 121);
+								percentageOfOctogonsGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfOctogonsRoi++;
+									colorOfCell = new Color(18, 107, 121);
+									roiCells++;
+								}else{
+									colorOfCell = new Color(111,168,131);
+								}
+								
 								break;
 							case 9:
-								percentageOfNonagons++;
+								percentageOfNonagonsGraphlets++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfNonagonsRoi++;
+									roiCells++;
+								}
+								
 								break;
 							case 10:
-								percentageOfDecagons++;
+								if (this.cells.get(i).isSelected()){
+									percentageOfDecagonsRoi++;
+									roiCells++;
+								}
+								percentageOfDecagonsGraphlets++;
 								break;
 							}
 						} else {
 							colorOfCell = new Color(45, 45, 45);
 						}
+						
 					}
 				} else if (this.cells.get(i).isInvalidRegion()) {
 					colorOfCell = Color.BLACK;
@@ -416,31 +479,34 @@ public class GraphletImage extends BasicGraphletImage {
 				}
 
 				actualPixels = this.cells.get(i).getPixels();
-				color = (int) ((colorOfCell.getRed() & 0xFF) << 16 | (colorOfCell.getGreen() & 0xFF) << 8
-						| (colorOfCell.getBlue() & 0xFF));
+				
 				for (int numPixel = 0; numPixel < actualPixels.length; numPixel++) {
-					colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], color);
+					colorImgToShow.set(actualPixels[numPixel][0], actualPixels[numPixel][1], getIntFromColor(colorOfCell.getRed(), colorOfCell.getGreen(), colorOfCell.getBlue(), colorOfCell.getAlpha()));
+					
 				}
 			}
 
-			percentageOfTriangles /= validCells;
-			percentageOfSquares /= validCells;
-			percentageOfPentagons /= validCells;
-			this.percentageOfHexagons /= validCells;
-			percentageOfHeptagons /= validCells;
-			percentageOfOctogons /= validCells;
-			percentageOfNonagons /= validCells;
-			percentageOfDecagons /= validCells;
+			
+			percentageOfTrianglesGraphlets /= validCells;
+			percentageOfSquaresGraphlets /= validCells;
+			percentageOfPentagonsGraphlets /= validCells;
+			this.percentageOfHexagonsGraphlets /= validCells;
+			percentageOfHeptagonsGraphlets /= validCells;
+			percentageOfOctogonsGraphlets /= validCells;
+			percentageOfNonagonsGraphlets /= validCells;
+			percentageOfDecagonsGraphlets /= validCells;
+			
+			
+			float percentageOfHexagonsGraphletsToShow = this.percentageOfHexagonsGraphlets;
+			this.percentageOfHexagonsGraphlets = this.percentageOfHexagonsGraphlets * 100;
 
-			float percentageOfHexagonsToShow = this.percentageOfHexagons;
-			this.percentageOfHexagons = this.percentageOfHexagons * 100;
-
-			percentagesList = new ArrayList<String>();
-
-			// IJ.log(percentageOfTriangles + " " + percentageOfSquares + " " +
-			// percentageOfPentagons + " " + percentageOfHexagonsToShow + " " +
-			// percentageOfHeptagons + " " + percentageOfOctogons + " " +
-			// percentageOfNonagons + " " + percentageOfDecagons);
+			ArrayList<String> percentagesListGraphlets = new ArrayList<String>();
+			ArrayList<String> percentagesListRoi = new ArrayList<String>();
+			
+			// IJ.log(percentageOfTrianglesGraphlets + " " + percentageOfSquaresGraphlets + " " +
+			// percentageOfPentagonsGraphlets + " " + percentageOfHexagonsGraphletsToShow + " " +
+			// percentageOfHeptagonsGraphlets + " " + percentageOfOctogonsGraphlets + " " +
+			// percentageOfNonagonsGraphlets + " " + percentageOfDecagonsGraphlets);
 
 			this.neighbourImage = new ImagePlus("", colorImgToShow);
 
@@ -456,14 +522,55 @@ public class GraphletImage extends BasicGraphletImage {
 			NumberFormat defaultFormat = NumberFormat.getPercentInstance();
 			defaultFormat.setMaximumFractionDigits(2);
 
-			percentagesList.add(defaultFormat.format(percentageOfSquares));
-			percentagesList.add(defaultFormat.format(percentageOfPentagons));
-			percentagesList.add(defaultFormat.format(percentageOfHexagonsToShow));
-			percentagesList.add(defaultFormat.format(percentageOfHeptagons));
-			percentagesList.add(defaultFormat.format(percentageOfOctogons));
+			percentagesListGraphlets.add(defaultFormat.format(percentageOfSquaresGraphlets));
+			percentagesListGraphlets.add(defaultFormat.format(percentageOfPentagonsGraphlets));
+			percentagesListGraphlets.add(defaultFormat.format(percentageOfHexagonsGraphletsToShow));
+			percentagesListGraphlets.add(defaultFormat.format(percentageOfHeptagonsGraphlets));
+			percentagesListGraphlets.add(defaultFormat.format(percentageOfOctogonsGraphlets));
+			
+			percentagesList.add(percentagesListGraphlets);
+			
+			if (selectionMode){
+			
+				percentageOfTrianglesRoi /= roiCells;
+				percentageOfSquaresRoi /= roiCells;
+				percentageOfPentagonsGraphlets /= roiCells;
+				percentageOfHexagonsRoi /= roiCells;
+				percentageOfHeptagonsRoi /= roiCells;
+				percentageOfOctogonsRoi /= roiCells;
+				percentageOfNonagonsRoi /= roiCells;
+				percentageOfDecagonsRoi /= roiCells;
+				
+				percentagesListRoi.add(defaultFormat.format(percentageOfSquaresRoi));
+				percentagesListRoi.add(defaultFormat.format(percentageOfPentagonsRoi));
+				percentagesListRoi.add(defaultFormat.format(percentageOfHexagonsRoi));
+				percentagesListRoi.add(defaultFormat.format(percentageOfHeptagonsRoi));
+				percentagesListRoi.add(defaultFormat.format(percentageOfOctogonsRoi));
+			
+				percentagesList.add(percentagesListRoi);
+			
+			}
 		}
 
 		return percentagesList;
+	}
+	/**
+	 * Transform RGBA to int
+	 * 
+	 * @param Red
+	 * @param Green
+	 * @param Blue
+	 * @param Alpha
+	 * @return
+	 */
+	public int getIntFromColor(int Red, int Green, int Blue, int Alpha){
+	    
+		int A = (Alpha << 24) & 0xFF000000;
+	    int R = (Red << 16) & 0x00FF0000;
+	    int G = (Green << 8) & 0x0000FF00;
+	    int B = Blue & 0x000000FF;
+	    
+	    return A | R | G | B;
 	}
 
 	/**
@@ -483,9 +590,9 @@ public class GraphletImage extends BasicGraphletImage {
 	 *            of the image that we will paint the neighbour image
 	 * @return the polygon distribution
 	 */
-	public ArrayList<String> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
+	public ArrayList<ArrayList<String>> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
 			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
-		ArrayList<String> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
+		ArrayList<ArrayList<String>> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
 				modeNumGraphlets, overlay);
 
 		int[] graphletsWeDontWant;

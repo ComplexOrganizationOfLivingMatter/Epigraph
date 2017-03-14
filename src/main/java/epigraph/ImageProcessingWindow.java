@@ -282,6 +282,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Minimum size of the labels
 		polDistRoiPanelLayout.columnWidths = widths;
 
+		polDistRoiPanelConstrainst.gridx += 1;
 		polDistRoiPanel.add(lbRoiSquares, polDistRoiPanelConstrainst);
 		polDistRoiPanelConstrainst.gridy += 1;
 		polDistRoiPanel.add(lbRoiPentagons, polDistRoiPanelConstrainst);
@@ -317,7 +318,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		});
 
-		// Connectivitiy
+		// Connectivity
 		cbConnectivity = new JComboBox<Integer>();
 		cbConnectivity.setModel(new DefaultComboBoxModel<Integer>(new Integer[] { 4, 8 }));
 		cbConnectivity.setSelectedIndex(1);
