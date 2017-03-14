@@ -291,6 +291,7 @@ public class GraphletImage extends BasicGraphletImage {
 	public ArrayList<ArrayList<String>> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
+		percentagesList = new ArrayList<ArrayList<String>>();
 		if (imgToShow != null)
 			totalPercentageToReach = 0.6;
 		else
@@ -486,7 +487,6 @@ public class GraphletImage extends BasicGraphletImage {
 				}
 			}
 
-			
 			percentageOfTrianglesGraphlets /= validCells;
 			percentageOfSquaresGraphlets /= validCells;
 			percentageOfPentagonsGraphlets /= validCells;
@@ -534,7 +534,7 @@ public class GraphletImage extends BasicGraphletImage {
 			
 				percentageOfTrianglesRoi /= roiCells;
 				percentageOfSquaresRoi /= roiCells;
-				percentageOfPentagonsGraphlets /= roiCells;
+				percentageOfPentagonsRoi /= roiCells;
 				percentageOfHexagonsRoi /= roiCells;
 				percentageOfHeptagonsRoi /= roiCells;
 				percentageOfOctogonsRoi /= roiCells;

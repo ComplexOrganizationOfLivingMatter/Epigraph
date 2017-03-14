@@ -282,7 +282,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Minimum size of the labels
 		polDistRoiPanelLayout.columnWidths = widths;
 
-		polDistRoiPanelConstrainst.gridx += 1;
+		//polDistRoiPanelConstrainst.gridx += 1;
 		polDistRoiPanel.add(lbRoiSquares, polDistRoiPanelConstrainst);
 		polDistRoiPanelConstrainst.gridy += 1;
 		polDistRoiPanel.add(lbRoiPentagons, polDistRoiPanelConstrainst);
@@ -967,7 +967,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHeptagons.setText(polDistriGraphlets.get(3));
 			lbOctogons.setText(polDistriGraphlets.get(4));
 			
-			if (!ListPolDistri.get(1).isEmpty()){
+			if (ListPolDistri.size() > 1){
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
 				lbRoiSquares.setText(polDistriRoi.get(0));
 				lbRoiPentagons.setText(polDistriRoi.get(1));
