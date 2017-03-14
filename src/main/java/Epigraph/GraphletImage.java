@@ -298,8 +298,6 @@ public class GraphletImage extends BasicGraphletImage {
 			totalPercentageToReach = 1;
 
 		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode);
-
-		System.out.println(this.reDoTheComputation);
 		
 		if (this.reDoTheComputation) {
 			
@@ -344,7 +342,6 @@ public class GraphletImage extends BasicGraphletImage {
 			// Color the image depending the side of the cell
 			ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 			Color colorOfCell;
-			int color;
 			for (int i = 0; i < this.cells.size(); i++) {
 				colorOfCell = Color.WHITE;
 				if (this.cells.get(i).isValid_cell()) {

@@ -87,11 +87,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lbHexagons;
 	private JLabel lbHeptagons;
 	private JLabel lbOctogons;
+	private JLabel lbtitlePolDistGraphlets;
 	private JLabel lbRoiSquares;
 	private JLabel lbRoiPentagons;
 	private JLabel lbRoiHexagons;
 	private JLabel lbRoiHeptagons;
 	private JLabel lbRoiOctogons;
+	private JLabel lbtitlePolDistRoi;
 	private JLabel lblShape;
 	
 
@@ -238,9 +240,20 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Image of polygon distribution
 		imgPolDistPanel = new JPanel();
 		resetGenericConstrainst(genericPanelConstrainst);
-		genericPanelConstrainst.weighty = 0.5;
+		JLabel emptyLabel = new JLabel(" ");
+		JLabel emptyLabel2 = new JLabel(" ");
+		JLabel emptyLabel3 = new JLabel(" ");
+		
 		imgPolDistPanel.setLayout(genericPanelLayout);
+		
+		imgPolDistPanel.add(emptyLabel,genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		imgPolDistPanel.add(emptyLabel2,genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		imgPolDistPanel.add(emptyLabel3,genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
 		imgPolDistPanel.add(lbImageLegend, genericPanelConstrainst);
+
 
 		// labels of polygon distribution
 		polDistPanel = new JPanel();
@@ -257,6 +270,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		int[] widths = { 60 };
 		polDistPanelLayout.columnWidths = widths;
 
+		polDistPanel.add(lbtitlePolDistGraphlets, polDistPanelConstrainst);
+		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbSquares, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbPentagons, polDistPanelConstrainst);
@@ -282,7 +297,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Minimum size of the labels
 		polDistRoiPanelLayout.columnWidths = widths;
 
-		//polDistRoiPanelConstrainst.gridx += 1;
+		polDistRoiPanel.add(lbtitlePolDistRoi, polDistRoiPanelConstrainst);
+		polDistRoiPanelConstrainst.gridy += 1;
 		polDistRoiPanel.add(lbRoiSquares, polDistRoiPanelConstrainst);
 		polDistRoiPanelConstrainst.gridy += 1;
 		polDistRoiPanel.add(lbRoiPentagons, polDistRoiPanelConstrainst);
@@ -388,7 +404,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Labels for polygon distribution
 		lbImageLegend = new JLabel("");
 		lbImageLegend.setIcon(new ImageIcon(this.getClass().getResource("/epigraph/legend.jpg")));
-
+		
+		lbtitlePolDistGraphlets = new JLabel("");
+		lbtitlePolDistGraphlets.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -403,6 +422,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		lbOctogons = new JLabel("");
 		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lbtitlePolDistRoi = new JLabel("");
+		lbtitlePolDistRoi.setHorizontalAlignment(SwingConstants.CENTER);
 
 		lbRoiSquares = new JLabel("");
 		lbRoiSquares.setHorizontalAlignment(SwingConstants.CENTER);
@@ -920,7 +942,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}	
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
-
+			lbtitlePolDistGraphlets.setText("Graphlets");
+			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
 			lbSquares.setText(polDistriGraphlets.get(0));
 			lbPentagons.setText(polDistriGraphlets.get(1));
 			lbHexagons.setText(polDistriGraphlets.get(2));
@@ -929,6 +952,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			
 			if (ListPolDistri.size() > 1){
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				lbtitlePolDistRoi.setText("Rois");
+				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
 				lbRoiSquares.setText(polDistriRoi.get(0));
 				lbRoiPentagons.setText(polDistriRoi.get(1));
 				lbRoiHexagons.setText(polDistriRoi.get(2));
@@ -958,7 +983,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					cbGraphletsMode.getSelectedIndex(), overlayResult);
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
-
+			lbtitlePolDistGraphlets.setText("Graphlets");
+			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
 			lbSquares.setText(polDistriGraphlets.get(0));
 			lbPentagons.setText(polDistriGraphlets.get(1));
 			lbHexagons.setText(polDistriGraphlets.get(2));
@@ -967,6 +993,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			
 			if (ListPolDistri.size() > 1){
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				
+				lbtitlePolDistRoi.setText("Rois");
+				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
 				lbRoiSquares.setText(polDistriRoi.get(0));
 				lbRoiPentagons.setText(polDistriRoi.get(1));
 				lbRoiHexagons.setText(polDistriRoi.get(2));
