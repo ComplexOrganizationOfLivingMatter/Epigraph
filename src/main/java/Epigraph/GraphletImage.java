@@ -406,27 +406,27 @@ public class GraphletImage extends BasicGraphletImage {
 								break;
 							case 4:
 								percentageOfSquaresGraphlets++;
-								colorOfCell = new Color(226,167,98);
+								colorOfCell = new Color(241,206,185);
 								
 								
 								break;
 							case 5:
 								percentageOfPentagonsGraphlets++;
-								colorOfCell = new Color(143,240,161);
+								colorOfCell = new Color(201,255,211);
 								break;
 							case 6:
 								percentageOfHexagonsGraphlets++;
-								colorOfCell = new Color(132,162,232);
+								colorOfCell = new Color(196,214,255);
 								
 								break;
 							case 7:
 								percentageOfHeptagonsGraphlets++;
-								colorOfCell = new Color(190,149,201);
+								colorOfCell = new Color(212,191,217);
 								
 								break;
 							case 8:
 								percentageOfOctogonsGraphlets++;
-								colorOfCell = new Color(111,168,131);
+								colorOfCell = new Color(142,176,154);
 								
 								break;
 							case 9:
