@@ -500,8 +500,6 @@ public class GraphletImage extends BasicGraphletImage {
 			percentagesList.add(percentagesListGraphlets);
 			
 			if (selectionMode){
-				System.out.println(roiCells);
-				System.out.println(percentageOfTrianglesRoi);
 				percentageOfTrianglesRoi /= roiCells;
 				percentageOfSquaresRoi /= roiCells;
 				percentageOfPentagonsRoi /= roiCells;
