@@ -344,39 +344,50 @@ public class GraphletImage extends BasicGraphletImage {
 			for (int i = 0; i < this.cells.size(); i++) {
 				colorOfCell = Color.WHITE;
 				if (this.cells.get(i).isValid_cell()) {
+					//If it is selection mode we check if the cell is selected
+					//Otherwise we enter always.
 					if (!selectionMode || this.cells.get(i).isSelected()) {
 						switch (this.cells.get(i).getNeighbours().size()) {
 						case 3:
 							percentageOfTrianglesGraphlets++;
+							percentageOfTrianglesRoi++;
 							break;
 						case 4:
 							percentageOfSquaresGraphlets++;
+							percentageOfSquaresRoi++;
 							colorOfCell = new Color(255, 101, 6);
 							break;
 						case 5:
 							percentageOfPentagonsGraphlets++;
+							percentageOfPentagonsRoi++;
 							colorOfCell = new Color(17, 157, 24);
 							break;
 						case 6:
 							percentageOfHexagonsGraphlets++;
+							percentageOfHexagonsRoi++;
 							colorOfCell = new Color(52, 102, 249);
 							break;
 						case 7:
 							percentageOfHeptagonsGraphlets++;
+							percentageOfHeptagonsRoi++;
 							colorOfCell = new Color(119, 5, 116);
 							break;
 						case 8:
 							percentageOfOctogonsGraphlets++;
+							percentageOfOctogonsRoi++;
 							colorOfCell = new Color(18, 107, 121);
 							break;
 						case 9:
 							percentageOfNonagonsGraphlets++;
+							percentageOfNonagonsRoi++;
 							break;
 						case 10:
 							percentageOfDecagonsGraphlets++;
+							percentageOfDecagonsRoi++;
 							break;
 						}
-
+						
+						roiCells++;
 						validCells++;
 					} else if (selectionMode) { // Some cells are selected
 						if (modeNumGraphlets < 2) {
@@ -391,79 +402,37 @@ public class GraphletImage extends BasicGraphletImage {
 							switch (this.cells.get(i).getNeighbours().size()) {
 							case 3:
 								percentageOfTrianglesGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfTrianglesRoi++;
-									roiCells++;
-								}
 								break;
 							case 4:
 								percentageOfSquaresGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfSquaresRoi++;
-									colorOfCell = new Color(255, 101, 6);
-									roiCells++;
-								}else{
-									colorOfCell = new Color(226,167,98);
-								}
+								colorOfCell = new Color(226,167,98);
+								
 								
 								break;
 							case 5:
 								percentageOfPentagonsGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfPentagonsRoi++;
-									colorOfCell = new Color(17, 157, 24);
-									roiCells++;
-								}else{
-									colorOfCell = new Color(143,240,161);
-								}						
-								
+								colorOfCell = new Color(143,240,161);
 								break;
 							case 6:
 								percentageOfHexagonsGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfHexagonsRoi++;
-									colorOfCell = new Color(52, 102, 249);
-									roiCells++;
-								}else{
-									colorOfCell = new Color(132,162,232);
-								}	
+								colorOfCell = new Color(132,162,232);
 								
 								break;
 							case 7:
 								percentageOfHeptagonsGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfHeptagonsRoi++;
-									colorOfCell = new Color(119, 5, 116);
-									roiCells++;
-								}else{
-									colorOfCell = new Color(190,149,201);
-								}
+								colorOfCell = new Color(190,149,201);
 								
 								break;
 							case 8:
 								percentageOfOctogonsGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfOctogonsRoi++;
-									colorOfCell = new Color(18, 107, 121);
-									roiCells++;
-								}else{
-									colorOfCell = new Color(111,168,131);
-								}
+								colorOfCell = new Color(111,168,131);
 								
 								break;
 							case 9:
 								percentageOfNonagonsGraphlets++;
-								if (this.cells.get(i).isSelected()){
-									percentageOfNonagonsRoi++;
-									roiCells++;
-								}
 								
 								break;
 							case 10:
-								if (this.cells.get(i).isSelected()){
-									percentageOfDecagonsRoi++;
-									roiCells++;
-								}
 								percentageOfDecagonsGraphlets++;
 								break;
 							}
@@ -531,7 +500,8 @@ public class GraphletImage extends BasicGraphletImage {
 			percentagesList.add(percentagesListGraphlets);
 			
 			if (selectionMode){
-			
+				System.out.println(roiCells);
+				System.out.println(percentageOfTrianglesRoi);
 				percentageOfTrianglesRoi /= roiCells;
 				percentageOfSquaresRoi /= roiCells;
 				percentageOfPentagonsRoi /= roiCells;
