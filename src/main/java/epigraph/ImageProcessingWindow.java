@@ -33,6 +33,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ij.ImagePlus;
@@ -50,6 +52,8 @@ import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
+
+
 import ij.plugin.frame.RoiManager;
 import util.opencsv.CSVWriter;
 
@@ -264,10 +268,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(polDistPanelConstrainst);
 		polDistPanel.setLayout(polDistPanelLayout);
 		polDistPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
-		polDistPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		polDistPanelConstrainst.insets = new Insets(15, 5, 0, 6);
 		polDistPanelConstrainst.weighty = 1;
 		// Minimum size of the labels
-		int[] widths = { 60 };
+		int[] widths = { 80 };
 		polDistPanelLayout.columnWidths = widths;
 
 		polDistPanel.add(lbtitlePolDistGraphlets, polDistPanelConstrainst);
@@ -292,7 +296,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		resetGenericConstrainst(polDistRoiPanelConstrainst);
 		polDistRoiPanel.setLayout(polDistRoiPanelLayout);
 		polDistRoiPanel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
-		polDistRoiPanelConstrainst.insets = new Insets(5, 5, 6, 6);
+		polDistRoiPanelConstrainst.insets = new Insets(15, 5, 0, 6);
 		polDistRoiPanelConstrainst.weighty = 1;
 		// Minimum size of the labels
 		polDistRoiPanelLayout.columnWidths = widths;
@@ -514,6 +518,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.weightx = 1;
 		allConstraints.weighty = 1;
 		allConstraints.gridheight = 1;
+		allConstraints.insets = new Insets(5,10,6,10);
 		all.add(canvas, allConstraints);
 
 		allConstraints.gridy++;
@@ -854,6 +859,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public void setRoiManager(RoiManager roiManager) {
 		this.roiManager = roiManager;
 	}
+	
+		
 
 	/**
 	 * Task to be computed in background without blocking the user interface
@@ -885,6 +892,28 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				switch (option) {
 				case 0:
 					calculateGraphlets();
+						
+					
+					JOptionPane pane = new JOptionPane("Graphlet data added to table", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+					JDialog dialog = pane.createDialog("Info message");
+
+					
+					 dialog.addWindowListener(null);
+					 
+
+					Timer timer = new Timer(1000, new ActionListener() { // 1 sec
+					            public void actionPerformed(ActionEvent e) {
+					                dialog.setVisible(false);
+					                dialog.dispose();
+					            }
+					        });
+
+			        timer.start();
+			        dialog.setVisible(true); 
+
+					
+					
+					
 					break;
 				case 1:
 					testNeighbours();
