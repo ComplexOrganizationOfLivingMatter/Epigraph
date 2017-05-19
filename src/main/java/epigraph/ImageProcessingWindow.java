@@ -53,7 +53,6 @@ import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
 
-
 import ij.plugin.frame.RoiManager;
 import util.opencsv.CSVWriter;
 
@@ -99,7 +98,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lbRoiOctogons;
 	private JLabel lbtitlePolDistRoi;
 	private JLabel lblShape;
-	
 
 	private Panel all = new Panel();
 	private JPanel graphletsPanel;
@@ -247,17 +245,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		JLabel emptyLabel = new JLabel(" ");
 		JLabel emptyLabel2 = new JLabel(" ");
 		JLabel emptyLabel3 = new JLabel(" ");
-		
+
 		imgPolDistPanel.setLayout(genericPanelLayout);
-		
-		imgPolDistPanel.add(emptyLabel,genericPanelConstrainst);
+
+		imgPolDistPanel.add(emptyLabel, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		imgPolDistPanel.add(emptyLabel2,genericPanelConstrainst);
+		imgPolDistPanel.add(emptyLabel2, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
-		imgPolDistPanel.add(emptyLabel3,genericPanelConstrainst);
+		imgPolDistPanel.add(emptyLabel3, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		imgPolDistPanel.add(lbImageLegend, genericPanelConstrainst);
-
 
 		// labels of polygon distribution
 		polDistPanel = new JPanel();
@@ -286,7 +283,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
-		
+
 		// labels of polygon distribution ROI
 		polDistRoiPanel = new JPanel();
 		GridBagLayout polDistRoiPanelLayout = new GridBagLayout();
@@ -313,7 +310,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistRoiPanelConstrainst.gridy += 1;
 		polDistRoiPanel.add(lbRoiOctogons, polDistRoiPanelConstrainst);
 		polDistRoiPanelConstrainst.gridy += 1;
-		
+
 		setupPanels();
 
 		pack();
@@ -328,7 +325,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	/**
 	 * Initialize gui items
-	 * @param raw_img 
+	 * 
+	 * @param raw_img
 	 */
 	private void initializeGUIItems(ImagePlus raw_img) {
 		canvas.addComponentListener(new ComponentAdapter() {
@@ -408,10 +406,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Labels for polygon distribution
 		lbImageLegend = new JLabel("");
 		lbImageLegend.setIcon(new ImageIcon(this.getClass().getResource("/epigraph/legend.jpg")));
-		
+
 		lbtitlePolDistGraphlets = new JLabel("");
 		lbtitlePolDistGraphlets.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbSquares = new JLabel("");
 		lbSquares.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -426,7 +424,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		lbOctogons = new JLabel("");
 		lbOctogons.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		lbtitlePolDistRoi = new JLabel("");
 		lbtitlePolDistRoi.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -518,7 +516,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.weightx = 1;
 		allConstraints.weighty = 1;
 		allConstraints.gridheight = 1;
-		allConstraints.insets = new Insets(5,10,6,10);
+		allConstraints.insets = new Insets(5, 10, 6, 10);
 		all.add(canvas, allConstraints);
 
 		allConstraints.gridy++;
@@ -859,8 +857,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	public void setRoiManager(RoiManager roiManager) {
 		this.roiManager = roiManager;
 	}
-	
-		
 
 	/**
 	 * Task to be computed in background without blocking the user interface
@@ -892,28 +888,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				switch (option) {
 				case 0:
 					calculateGraphlets();
-						
-					
-					JOptionPane pane = new JOptionPane("Graphlet data added to table", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-					JDialog dialog = pane.createDialog("Info message");
-
-					
-					 dialog.addWindowListener(null);
-					 
-
-					Timer timer = new Timer(1000, new ActionListener() { // 1 sec
-					            public void actionPerformed(ActionEvent e) {
-					                dialog.setVisible(false);
-					                dialog.dispose();
-					            }
-					        });
-
-			        timer.start();
-			        dialog.setVisible(true); 
-
-					
-					
-					
 					break;
 				case 1:
 					testNeighbours();
@@ -960,26 +934,27 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		public void calculateGraphlets() {
 			ArrayList<ArrayList<String>> ListPolDistri;
 			int maxLength = 0;
-			if (cbGraphletsMode.getSelectedIndex() >= 2){
+			if (cbGraphletsMode.getSelectedIndex() >= 2) {
 				maxLength = 4;
 			} else {
 				maxLength = 5;
 			}
-			
+
 			int numberOfValidCellsOfLength = 100;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
 						roiArray.length > 0, overlayResult);
-				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, roiArray.length > 0);
+				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength,
+						roiArray.length > 0);
 			} else {
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
 						overlayResult);
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, false);
-			}	
-			
+			}
+
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
 			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -988,8 +963,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHexagons.setText(polDistriGraphlets.get(2));
 			lbHeptagons.setText(polDistriGraphlets.get(3));
 			lbOctogons.setText(polDistriGraphlets.get(4));
-			
-			if (ListPolDistri.size() > 1){
+
+			if (ListPolDistri.size() > 1) {
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
 				lbtitlePolDistRoi.setText("Rois");
 				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -999,17 +974,36 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiHeptagons.setText(polDistriRoi.get(3));
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
-			
-			
-			if (numberOfValidCellsOfLength > 0){
-				if (numberOfValidCellsOfLength < 5){//Careful
-					JOptionPane.showMessageDialog(canvas.getParent(), "Care: Less than 5 cells selected for graphlets. You may obtain results with no warranties", "Warning", JOptionPane.WARNING_MESSAGE);
+
+			if (numberOfValidCellsOfLength > 0) {
+				if (numberOfValidCellsOfLength < 5) {// Careful
+					JOptionPane.showMessageDialog(canvas.getParent(),
+							"Care: Less than 5 cells selected for graphlets. You may obtain results with no warranties",
+							"Warning", JOptionPane.WARNING_MESSAGE);
 				}
 				tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
-			} else { //No calculations
-				JOptionPane.showMessageDialog(canvas.getParent(), "No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one", "Error", JOptionPane.ERROR_MESSAGE);
+
+				JOptionPane pane = new JOptionPane("Graphlet data added to table", JOptionPane.INFORMATION_MESSAGE,
+						JOptionPane.DEFAULT_OPTION, null, new Object[] {}, null);
+				JDialog dialog = pane.createDialog("Info message");
+
+				dialog.addWindowListener(null);
+
+				Timer timer = new Timer(1000, new ActionListener() { // 1 sec
+					public void actionPerformed(ActionEvent e) {
+						dialog.setVisible(false);
+						dialog.dispose();
+					}
+				});
+
+				timer.start();
+				dialog.setVisible(true);
+			} else { // No calculations
+				JOptionPane.showMessageDialog(canvas.getParent(),
+						"No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
-				
+
 		}
 
 		/**
@@ -1026,10 +1020,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				selectionMode = false;
 			}
 
-			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(cbSelectedShape.getSelectedIndex(),
-					(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
-					cbGraphletsMode.getSelectedIndex(), overlayResult);
-			
+			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(
+					cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), imp, progressBar,
+					selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
+
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
 			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -1038,10 +1032,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			lbHexagons.setText(polDistriGraphlets.get(2));
 			lbHeptagons.setText(polDistriGraphlets.get(3));
 			lbOctogons.setText(polDistriGraphlets.get(4));
-			
-			if (ListPolDistri.size() > 1){
+
+			if (ListPolDistri.size() > 1) {
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
-				
+
 				lbtitlePolDistRoi.setText("Rois");
 				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
 				lbRoiSquares.setText(polDistriRoi.get(0));
@@ -1050,7 +1044,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiHeptagons.setText(polDistriRoi.get(3));
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
-			
+
 		}
 
 		/**
