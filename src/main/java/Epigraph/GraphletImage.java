@@ -1031,6 +1031,28 @@ public class GraphletImage extends BasicGraphletImage {
 
 		return selectedCells;
 	}
+	
+	/**
+	 * We check how many valid cells of a given length exists
+	 * We should be careful if there is a low number or if there isn't any
+	 *  
+	 * @param length the max length of the used graphlets
+	 * @param selectionMode
+	 * @return the number of valid cells of length
+	 */
+	public int calculateNumberOfValidCellForGraphlets(int length, boolean selectionMode){
+		int numberOfValidCellsOfLength = 0;
+		for (EpiCell cell : this.cells){
+			if (length == 4){
+				if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected()))
+					numberOfValidCellsOfLength++;
+			} else {
+				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected()))
+					numberOfValidCellsOfLength++;
+			}
+		}
+		return numberOfValidCellsOfLength;
+	}
 
 	/**
 	 * Check if we have to redo the computation of neighbours

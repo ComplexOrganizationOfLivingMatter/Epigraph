@@ -959,15 +959,25 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 */
 		public void calculateGraphlets() {
 			ArrayList<ArrayList<String>> ListPolDistri;
+			int maxLength = 0;
+			if (cbGraphletsMode.getSelectedIndex() >= 2){
+				maxLength = 4;
+			} else {
+				maxLength = 5;
+			}
+			
+			int numberOfValidCellsOfLength = 100;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
 						roiArray.length > 0, overlayResult);
+				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, roiArray.length > 0);
 			} else {
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
 						overlayResult);
+				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, false);
 			}	
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
@@ -990,7 +1000,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
 			
-			tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
+			
+			if (numberOfValidCellsOfLength > 0){
+				if (numberOfValidCellsOfLength < 5){//Careful
+					JOptionPane.showMessageDialog(canvas.getParent(), "Care: Less than 5 cells selected for graphlets. You may obtain results with no warranties", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+				tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
+			} else { //No calculations
+				JOptionPane.showMessageDialog(canvas.getParent(), "No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+				
 		}
 
 		/**
