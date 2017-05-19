@@ -526,11 +526,11 @@ public class GraphletImage extends BasicGraphletImage {
 	/**
 	 * Transform RGBA to int
 	 * 
-	 * @param Red
-	 * @param Green
-	 * @param Blue
-	 * @param Alpha
-	 * @return
+	 * @param Red red channel
+	 * @param Green green channel
+	 * @param Blue blue channel
+	 * @param Alpha alpha channel
+	 * @return the integer corresponding to the rgba number
 	 */
 	public int getIntFromColor(int Red, int Green, int Blue, int Alpha){
 	    
@@ -1037,7 +1037,7 @@ public class GraphletImage extends BasicGraphletImage {
 	 * We should be careful if there is a low number or if there isn't any
 	 *  
 	 * @param length the max length of the used graphlets
-	 * @param selectionMode
+	 * @param selectionMode is any cell selected?
 	 * @return the number of valid cells of length
 	 */
 	public int calculateNumberOfValidCellForGraphlets(int length, boolean selectionMode){
