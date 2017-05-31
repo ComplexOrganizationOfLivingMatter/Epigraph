@@ -2,6 +2,7 @@
 package epigraph;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 /**
  * On this class we represent the basic information we aim to have through the
@@ -19,6 +20,9 @@ public class BasicGraphletImage {
 	protected int shapeOfMask;
 	protected int radiusOfMask;
 	protected boolean selectedCells;
+	
+	protected ArrayList<Float> polygonDistGraphletCells;
+	protected ArrayList<Float> polygonDistRoiCells;
 
 	/**
 	 * Default constructor. Distances as -1, white color and "Wrong name"
@@ -33,6 +37,8 @@ public class BasicGraphletImage {
 		this.shapeOfMask = -1;
 		this.radiusOfMask = -1;
 		this.selectedCells = false;
+		this.polygonDistGraphletCells = null;
+		this.polygonDistRoiCells = null;
 	}
 
 	/**
@@ -50,6 +56,8 @@ public class BasicGraphletImage {
 		this.radiusOfMask = bci.radiusOfMask;
 		this.shapeOfMask = bci.shapeOfMask;
 		this.selectedCells = bci.selectedCells;
+		this.polygonDistGraphletCells = bci.polygonDistGraphletCells;
+		this.polygonDistRoiCells = bci.polygonDistRoiCells;
 	}
 
 	/**
@@ -62,7 +70,7 @@ public class BasicGraphletImage {
 	 * @param percentageOfHexagonsGraphlets
 	 *            proportion of hexagons
 	 */
-	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagonsGraphlets) {
+	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagonsGraphlets, ArrayList<Float> polygonDistGraphletCells,ArrayList<Float> polygonDistRoiCells) {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
 		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
@@ -71,6 +79,8 @@ public class BasicGraphletImage {
 		this.shapeOfMask = GraphletImage.CIRCLE_SHAPE;
 		this.radiusOfMask = 3;
 		this.selectedCells = false;
+		this.polygonDistGraphletCells = polygonDistGraphletCells;
+		this.polygonDistRoiCells = polygonDistRoiCells;
 	}
 
 	/**
@@ -90,7 +100,7 @@ public class BasicGraphletImage {
 	 * @param radiusOfMask radius of shape of mask
 	 */
 	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagonsGraphlets, Color color,
-			String labelName, int shapeOfMask, int radiusOfMask) {
+			String labelName, int shapeOfMask, int radiusOfMask, ArrayList<Float> polygonDistGraphletCells,ArrayList<Float> polygonDistRoiCells) {
 		super();
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
@@ -100,6 +110,8 @@ public class BasicGraphletImage {
 		this.shapeOfMask = shapeOfMask;
 		this.radiusOfMask = radiusOfMask;
 		this.selectedCells = false;
+		this.polygonDistGraphletCells = polygonDistGraphletCells;
+		this.polygonDistRoiCells = polygonDistRoiCells;
 	}
 
 	/**
@@ -205,6 +217,38 @@ public class BasicGraphletImage {
 		this.radiusOfMask = radiusOfMask;
 	}
 	
+	
+	
+	/**
+	 * @return the polygonDistGraphletCells
+	 */
+	public ArrayList<Float> getPolygonDistGraphletCells() {
+		return polygonDistGraphletCells;
+	}
+
+	/**
+	 * @param polygonDistGraphletCells the polygonDistGraphletCells to set
+	 */
+	public void setPolygonDistGraphletCells(ArrayList<Float> polygonDistGraphletCells) {
+		this.polygonDistGraphletCells = polygonDistGraphletCells;
+	}
+	
+	
+	/**
+	 * @return the polygonDistRoiCells
+	 */
+	public ArrayList<Float> getPolygonDistRoiCells() {
+		return polygonDistRoiCells;
+	}
+
+	/**
+	 * @param polygonDistRoiCells the polygonDistRoiCells to set
+	 */
+	public void setPolygonDistRoiCells(ArrayList<Float> polygonDistRoiCells) {
+		this.polygonDistRoiCells = polygonDistRoiCells;
+	}
+	
+		
 	/**
 	 * @return the selectedCells
 	 */
