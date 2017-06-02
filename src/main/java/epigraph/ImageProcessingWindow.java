@@ -16,9 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -714,18 +716,25 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				ImageIO.write(newGraphletImage.getImageWithLabels().getBufferedImage(), "jpg", out);
 				out.closeEntry();
 				
-				e = new ZipEntry("adjacencyMatrix.csv");
+				e = new ZipEntry("edgeList.sif");
 				out.putNextEntry(e);
-				CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));
-				String[] header2 = {"source", "target", "interaction"};
-				writer.writeNext(header2);
+				BufferedWriter textWriter = new BufferedWriter(new OutputStreamWriter(out));
+				int[][] adjacencyMatrixToExport = newGraphletImage.getAdjacencyMatrix();
+				for (int row = 0; row < adjacencyMatrixToExport.length; row++){
+					for (int col = 0; col < adjacencyMatrixToExport[0].length; col++){
+						if (adjacencyMatrixToExport[row][col] == 1){
+							textWriter.write(Integer.toString(row) + " pp " + Integer.toString(col)); // write the contents
+						}
+					}
+				}
+				textWriter.flush(); // flush the writer. Very important!
 				out.closeEntry();
 
 				e = new ZipEntry("graphletsPerNode.csv");
 				out.putNextEntry(e);
 				// There is no need for staging the CSV on filesystem or reading
 				// bytes into memory. Directly write bytes to the output stream.
-				writer = new CSVWriter(new OutputStreamWriter(out));
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(out));
 				String[] header = {"numLabel", "orbit 0", "orbit 1", "orbit 2", "orbit 3", "orbit 4", "orbit 5",
 						"orbit 6", "orbit 7", "orbit 8", "orbit 9", "orbit 10", "orbit 11", "orbit 12", "orbit 13",
 						"orbit 14", "orbit 15", "orbit 16", "orbit 17", "orbit 18", "orbit 19", "orbit 20", "orbit 21",
