@@ -1018,6 +1018,52 @@ public class GraphletImage extends BasicGraphletImage {
 		}
 		return graphlets;
 	}
+	
+	/**
+	 * 
+	 * @param modeNumGraphlets
+	 * @return
+	 */
+	public int getTotalNumberOfGraphlets(int modeNumGraphlets, boolean selectionMode, int length){
+		int[] graphletsWeDontWant;
+		switch (modeNumGraphlets) {
+		case 0:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		case 1:
+			graphletsWeDontWant = totalParcialGraphlets;
+			break;
+		case 2:
+			graphletsWeDontWant = basicGraphlets;
+			break;
+		case 3:
+			graphletsWeDontWant = basicParcialGraphlets;
+			break;
+
+		default:
+			graphletsWeDontWant = totalGraphlets;
+			break;
+		}
+
+		int totalGraphlets = 0;
+		for (EpiCell cell : this.cells) {
+			if (length == 4){
+				if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected())){
+					for (Integer graphlet : cell.getGraphletsInteger(graphletsWeDontWant)) {
+						totalGraphlets += graphlet;
+					}
+				}
+			} else {
+				if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())){
+					for (Integer graphlet : cell.getGraphletsInteger(graphletsWeDontWant)) {
+						totalGraphlets += graphlet;
+					}
+				}
+			}
+			
+		}
+		return totalGraphlets;
+	}
 
 	/**
 	 * Get all selected cells
