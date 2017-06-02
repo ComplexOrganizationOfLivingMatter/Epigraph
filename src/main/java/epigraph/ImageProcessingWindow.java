@@ -716,14 +716,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				ImageIO.write(newGraphletImage.getImageWithLabels().getBufferedImage(), "jpg", out);
 				out.closeEntry();
 				
-				e = new ZipEntry("edgeList.sif");
+				e = new ZipEntry("neighbours_newtork_cytoscape.sif");
 				out.putNextEntry(e);
 				BufferedWriter textWriter = new BufferedWriter(new OutputStreamWriter(out));
 				int[][] adjacencyMatrixToExport = newGraphletImage.getAdjacencyMatrix();
 				for (int row = 0; row < adjacencyMatrixToExport.length; row++){
-					for (int col = 0; col < adjacencyMatrixToExport[0].length; col++){
+					for (int col = row + 1; col < adjacencyMatrixToExport[0].length; col++){
 						if (adjacencyMatrixToExport[row][col] == 1){
 							textWriter.write(Integer.toString(row) + " pp " + Integer.toString(col)); // write the contents
+							textWriter.newLine();
 						}
 					}
 				}
