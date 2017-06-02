@@ -168,6 +168,20 @@ public class GraphletImage extends BasicGraphletImage {
 	}
 
 	/**
+	 * @return the adjacencyMatrix
+	 */
+	public int[][] getAdjacencyMatrix() {
+		return adjacencyMatrix;
+	}
+
+	/**
+	 * @param adjacencyMatrix the adjacencyMatrix to set
+	 */
+	public void setAdjacencyMatrix(int[][] adjacencyMatrix) {
+		this.adjacencyMatrix = adjacencyMatrix;
+	}
+
+	/**
 	 * Preprocess image involving binarizing an image, inverting if is the case
 	 * and label the image. Furthermore, it add several no valid cells
 	 * correspondent to the borders and initialize the adjacency matrix
