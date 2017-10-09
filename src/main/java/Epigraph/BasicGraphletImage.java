@@ -12,6 +12,7 @@ import java.awt.Color;
 public class BasicGraphletImage {
 
 	protected float distanceGDDRV;
+	protected float distanceGDDV5;
 	protected float distanceGDDH;
 	protected float percentageOfHexagonsGraphlets;
 	protected Color color;
