@@ -66,6 +66,7 @@ import util.opencsv.CSVWriter;
 public class ImageProcessingWindow extends ImageWindow implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	private static int MIN_GRAPHLETS_ON_IMAGE = 15;
 	// For future stack
 	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
@@ -958,6 +959,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 
 			int numberOfValidCellsOfLength = 100;
+			int totalGraphlets;
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
@@ -965,11 +967,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 						roiArray.length > 0, overlayResult);
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength,
 						roiArray.length > 0);
+				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), roiArray.length > 0, maxLength);
 			} else {
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
 						overlayResult);
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, false);
+				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), false, maxLength);
 			}
 
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
@@ -993,9 +997,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 
 			if (numberOfValidCellsOfLength > 0) {
-				if (numberOfValidCellsOfLength < 5) {// Careful
+				if (totalGraphlets < MIN_GRAPHLETS_ON_IMAGE) {// Careful
 					JOptionPane.showMessageDialog(canvas.getParent(),
-							"Care: Less than 5 cells selected for graphlets. You may obtain results with no warranties",
+							"Care: Not too many graphlets in the sample selected. You may obtain results with no warranties",
 							"Warning", JOptionPane.WARNING_MESSAGE);
 				}
 				tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
