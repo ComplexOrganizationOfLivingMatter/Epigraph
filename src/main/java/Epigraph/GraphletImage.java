@@ -109,6 +109,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		this.randomVoronoiValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			URL fileUrl = Epigraph.class.getResource(
@@ -120,11 +123,11 @@ public class GraphletImage extends BasicGraphletImage {
 			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 			
 			fileUrl = Epigraph.class.getResource(
-					"/epigraph/graphletsReferences/Basic/voronoi_" + Integer.toString(i) + ".ndump2");
+					"/epigraph/graphletsReferences/Basic/voronoi5_" + Integer.toString(i) + ".ndump2");
 			this.voronoi5ValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
 
 			fileUrl = Epigraph.class.getResource(
-					"/epigraph/graphletsReferences/Total/voronoi_" + Integer.toString(i) + ".ndump2");
+					"/epigraph/graphletsReferences/Total/voronoi5_" + Integer.toString(i) + ".ndump2");
 			this.voronoi5ValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
 		

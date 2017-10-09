@@ -19,7 +19,7 @@ class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
@@ -78,14 +78,16 @@ class JTableModel extends AbstractTableModel {
 		case 3:
 			return allGraphletImages.get(row).getDistanceGDDRV();
 		case 4:
-			return allGraphletImages.get(row).getPercentageOfHexagonsGraphlets();
-		case 7:
-			return listOfModes.get(row);
-		case 8:
-			return listOfSelected.get(row);
+			return allGraphletImages.get(row).getDistanceGDDV5();
 		case 5:
-			return allGraphletImages.get(row).getRadiusOfMask();
+			return allGraphletImages.get(row).getPercentageOfHexagonsGraphlets();
+		case 8:
+			return listOfModes.get(row);
+		case 9:
+			return listOfSelected.get(row);
 		case 6:
+			return allGraphletImages.get(row).getRadiusOfMask();
+		case 7:
 			if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.CIRCLE_SHAPE){
 				return "Circle";
 			} else if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.SQUARE_SHAPE){
@@ -112,7 +114,7 @@ class JTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int row, int col) {
-		if (col != 5 && col != 6)
+		if (col != 6 && col != 7)
 			return true;
 		
 		return false;
@@ -139,12 +141,15 @@ class JTableModel extends AbstractTableModel {
 			allGraphletImages.get(row).setDistanceGDDRV((float) value);
 			break;
 		case 4:
+			allGraphletImages.get(row).setDistanceGDDV5((float) value);
+			break;
+		case 5:
 			allGraphletImages.get(row).setPercentageOfHexagonsGraphlets((float) value);
 			break;
-		case 7:
+		case 8:
 			listOfModes.set(row, (String) value);
 			break;
-		case 8:
+		case 9:
 			listOfSelected.set(row, (Boolean) value);
 			break;
 		}

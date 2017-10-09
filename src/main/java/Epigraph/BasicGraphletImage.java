@@ -46,6 +46,7 @@ public class BasicGraphletImage {
 		this.color = bci.color;
 		this.distanceGDDH = bci.distanceGDDH;
 		this.distanceGDDRV = bci.distanceGDDRV;
+		this.distanceGDDV5 = bci.distanceGDDV5;
 		this.labelName = bci.labelName;
 		this.percentageOfHexagonsGraphlets = bci.percentageOfHexagonsGraphlets;
 		this.radiusOfMask = bci.radiusOfMask;
@@ -58,14 +59,17 @@ public class BasicGraphletImage {
 	 * 
 	 * @param distanceGDDRV
 	 *            distance against random voronoi
+	 * @param distanceGDDV5
+	 *            distance against voronoi 5
 	 * @param distanceGDDH
 	 *            distance against a hexagonal grid
 	 * @param percentageOfHexagonsGraphlets
 	 *            proportion of hexagons
 	 */
-	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagonsGraphlets) {
+	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float distanceGDDV5, float percentageOfHexagonsGraphlets) {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
+		this.distanceGDDV5 = distanceGDDV5;
 		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
 		this.color = Color.BLACK;
 		this.labelName = "ReferenceVoronoiNoise";
@@ -79,6 +83,8 @@ public class BasicGraphletImage {
 	 * 
 	 * @param distanceGDDRV
 	 *            distance against random voronoi
+	 * @param distanceGDDV5
+	 *            distance against voronoi 5
 	 * @param distanceGDDH
 	 *            distance against a hexagonal grid
 	 * @param percentageOfHexagonsGraphlets
@@ -90,11 +96,12 @@ public class BasicGraphletImage {
 	 * @param shapeOfMask CIRCLE or SQUARE
 	 * @param radiusOfMask radius of shape of mask
 	 */
-	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float percentageOfHexagonsGraphlets, Color color,
+	public BasicGraphletImage(float distanceGDDRV, float distanceGDDH, float distanceGDDV5, float percentageOfHexagonsGraphlets, Color color,
 			String labelName, int shapeOfMask, int radiusOfMask) {
 		super();
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
+		this.distanceGDDV5 = distanceGDDV5;
 		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
 		this.color = color;
 		this.labelName = labelName;
@@ -118,6 +125,22 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = distanceGDDRV;
 	}
 
+	
+	/**
+	 * @return distanceGDDV5 distance against random voronoi
+	 */
+	public float getDistanceGDDV5() {
+		return distanceGDDV5;
+	}
+
+	/**
+	 * @param distanceGDDV5
+	 *            set distance against random voronoi
+	 */
+	public void setDistanceGDDV5(float distanceGDDV5) {
+		this.distanceGDDV5 = distanceGDDV5;
+	}
+	
 	/**
 	 * @return distance against a hexagonal grid
 	 */
