@@ -60,6 +60,9 @@ public class GraphletImage extends BasicGraphletImage {
 	// TODO: Get out from this class the random voronoi references
 	private BasicGraphlet[] randomVoronoiValidCells_4Ref;
 	private BasicGraphlet[] randomVoronoiValidCells_5Ref;
+	
+	private BasicGraphlet[] voronoi5ValidCells_4Ref;
+	private BasicGraphlet[] voronoi5ValidCells_5Ref;
 
 	// These are the graphlets we won't use on these configurations
 	private static int[] totalParcialGraphlets = { 8, 14, 22, 23, 36, 37, 38, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
@@ -115,6 +118,14 @@ public class GraphletImage extends BasicGraphletImage {
 			fileUrl = Epigraph.class.getResource(
 					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
 			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
+			
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Basic/voronoi_" + Integer.toString(i) + ".ndump2");
+			this.voronoi5ValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
+
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Total/voronoi_" + Integer.toString(i) + ".ndump2");
+			this.voronoi5ValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
 		
 		this.invalidRegionChanged = false;
