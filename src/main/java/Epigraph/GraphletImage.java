@@ -691,15 +691,22 @@ public class GraphletImage extends BasicGraphletImage {
 		progressBar.setValue(90);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
+		float[] distanceGDDV5Array = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
-			if (validCells5Graphlets)
+			if (validCells5Graphlets){
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
-			else
+				distanceGDDV5Array[i] = calculateGDD(graphletsFinal,
+						this.voronoi5ValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
+			} else {
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+				distanceGDDV5Array[i] = calculateGDD(graphletsFinal,
+						this.voronoi5ValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+			}
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
+		this.distanceGDDV5 = mean(distanceGDDV5Array);
 
 		// Percentage 100
 		progressBar.setValue(100);

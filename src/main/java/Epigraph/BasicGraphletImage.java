@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class BasicGraphletImage {
 
 	protected float distanceGDDRV;
+	protected float distanceGDDV5;
 	protected float distanceGDDH;
 	protected float percentageOfHexagonsGraphlets;
 	protected Color color;
