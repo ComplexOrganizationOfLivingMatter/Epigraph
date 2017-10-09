@@ -298,8 +298,6 @@ public class MainWindow extends JFrame {
 		ArrayList<String> arrayMode = new ArrayList<String>();
 		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
 		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
-		ArrayList<ArrayList<Float>> arrayPolygonDistributionGraphletsCells = new ArrayList<ArrayList<Float>>();
-		ArrayList<ArrayList<Float>> arrayPolygonDistributionRoisCells = new ArrayList<ArrayList<Float>>();
 
 		int cont = 0;
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
@@ -319,9 +317,6 @@ public class MainWindow extends JFrame {
 			}
 
 			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
-			arrayPolygonDistributionGraphletsCells.add(graphletImg.getPolygonDistGraphletCells());
-			arrayPolygonDistributionRoisCells.add(graphletImg.getPolygonDistRoiCells());
-			
 			cont++;
 		}
 
@@ -354,10 +349,7 @@ public class MainWindow extends JFrame {
 			}
 
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
-					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask,arrayPolygonDistributionGraphletsCells);
-			
-			
-			
+					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask);
 			excelclass.exportData();
 		}
 	}
