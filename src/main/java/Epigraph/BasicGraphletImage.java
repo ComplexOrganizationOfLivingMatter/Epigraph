@@ -14,7 +14,13 @@ public class BasicGraphletImage {
 	protected float distanceGDDRV;
 	protected float distanceGDDV5;
 	protected float distanceGDDH;
+	protected float percentageOfTrianglesGraphlets;
+	protected float percentageOfSquaresGraphlets;
+	protected float percentageOfPentagonsGraphlets;
 	protected float percentageOfHexagonsGraphlets;
+	protected float percentageOfHeptagonsGraphlets;
+	protected float percentageOfOctogonsGraphlets;
+	protected float percentageOfNonagonsGraphlets;
 	protected Color color;
 	protected String labelName;
 	protected int shapeOfMask;
@@ -30,7 +36,13 @@ public class BasicGraphletImage {
 		this.distanceGDDH = -1;
 		this.distanceGDDRV = -1;
 		this.labelName = "Wrong name";
+		this.percentageOfTrianglesGraphlets = -1;
+		this.percentageOfSquaresGraphlets = -1;
+		this.percentageOfPentagonsGraphlets = -1;
 		this.percentageOfHexagonsGraphlets = -1;
+		this.percentageOfHeptagonsGraphlets = -1;
+		this.percentageOfOctogonsGraphlets = -1;
+		this.percentageOfNonagonsGraphlets = -1;
 		this.shapeOfMask = -1;
 		this.radiusOfMask = -1;
 		this.selectedCells = false;
@@ -48,7 +60,13 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = bci.distanceGDDRV;
 		this.distanceGDDV5 = bci.distanceGDDV5;
 		this.labelName = bci.labelName;
+		this.percentageOfTrianglesGraphlets = bci.percentageOfTrianglesGraphlets;
+		this.percentageOfSquaresGraphlets = bci.percentageOfSquaresGraphlets;
+		this.percentageOfPentagonsGraphlets = bci.percentageOfPentagonsGraphlets;
 		this.percentageOfHexagonsGraphlets = bci.percentageOfHexagonsGraphlets;
+		this.percentageOfHeptagonsGraphlets = bci.percentageOfHeptagonsGraphlets;
+		this.percentageOfOctogonsGraphlets = bci.percentageOfOctogonsGraphlets;
+		this.percentageOfNonagonsGraphlets = bci.percentageOfNonagonsGraphlets;
 		this.radiusOfMask = bci.radiusOfMask;
 		this.shapeOfMask = bci.shapeOfMask;
 		this.selectedCells = bci.selectedCells;
@@ -156,6 +174,7 @@ public class BasicGraphletImage {
 		this.distanceGDDH = distanceGDDH;
 	}
 
+		
 	/**
 	 * @return proportion of hexagons
 	 */
@@ -170,6 +189,7 @@ public class BasicGraphletImage {
 	public void setPercentageOfHexagonsGraphlets(float percentageOfHexagonsGraphlets) {
 		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
 	}
+
 
 	/**
 	 * @return color

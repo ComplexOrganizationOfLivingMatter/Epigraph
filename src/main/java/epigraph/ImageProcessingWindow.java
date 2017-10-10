@@ -717,7 +717,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				ImageIO.write(newGraphletImage.getImageWithLabels().getBufferedImage(), "jpg", out);
 				out.closeEntry();
 				
-				e = new ZipEntry("neighbours_newtork_cytoscape.sif");
+				e = new ZipEntry("neighbours_network_cytoscape.sif");
 				out.putNextEntry(e);
 				BufferedWriter textWriter = new BufferedWriter(new OutputStreamWriter(out));
 				int[][] adjacencyMatrixToExport = newGraphletImage.getAdjacencyMatrix();
@@ -968,13 +968,37 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength,
 						roiArray.length > 0);
 				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), roiArray.length > 0, maxLength);
+				
+				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				newGraphletImage.setPercentageOfSquares(Float.parseFloat(polDistriRoi.get(0).replace("%","")));
+				newGraphletImage.setPercentageOfPentagons(Float.parseFloat(polDistriRoi.get(1).replace("%","")));
+				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriRoi.get(2).replace("%","")));
+				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriRoi.get(3).replace("%","")));
+				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriRoi.get(4).replace("%","")));
+			
 			} else {
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
 						overlayResult);
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, false);
 				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), false, maxLength);
+				
+				
+				ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+				newGraphletImage.setPercentageOfSquares(Float.parseFloat(polDistriGraphlets.get(0).replace("%","")));
+				
+				newGraphletImage.setPercentageOfPentagons(Float.parseFloat(polDistriGraphlets.get(1).replace("%","")));
+				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriGraphlets.get(2).replace("%","")));
+				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriGraphlets.get(3).replace("%","")));
+				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriGraphlets.get(4).replace("%","")));
+				
+			
+				
+			
 			}
+			
+			
+			
 
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");

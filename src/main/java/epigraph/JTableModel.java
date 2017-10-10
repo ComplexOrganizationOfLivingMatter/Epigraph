@@ -21,7 +21,7 @@ class JTableModel extends AbstractTableModel {
 
 	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
 
-	private ArrayList<BasicGraphletImage> allGraphletImages;
+	private ArrayList<GraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
 	private ArrayList<String> listOfModes;
 
@@ -30,7 +30,7 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public JTableModel() {
 		super();
-		allGraphletImages = new ArrayList<BasicGraphletImage>();
+		allGraphletImages = new ArrayList<GraphletImage>();
 		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
@@ -160,7 +160,7 @@ class JTableModel extends AbstractTableModel {
 	/**
 	 * @return the allGraphletImages
 	 */
-	public ArrayList<BasicGraphletImage> getAllGraphletImages() {
+	public ArrayList<GraphletImage> getAllGraphletImages() {
 		return allGraphletImages;
 	}
 
@@ -168,7 +168,7 @@ class JTableModel extends AbstractTableModel {
 	 * @param allGraphletImages
 	 *            the allGraphletImages to set
 	 */
-	public void setAllGraphletImages(ArrayList<BasicGraphletImage> allGraphletImages) {
+	public void setAllGraphletImages(ArrayList<GraphletImage> allGraphletImages) {
 		this.allGraphletImages = allGraphletImages;
 	}
 
@@ -206,7 +206,7 @@ class JTableModel extends AbstractTableModel {
 	 * 
 	 * @param newImages
 	 */
-	public void addImages(ArrayList<BasicGraphletImage> newImages) {
+	public void addImages(ArrayList<GraphletImage> newImages) {
 		allGraphletImages.addAll(newImages);
 
 		for (int i = 0; i < newImages.size(); i++) {
@@ -220,8 +220,8 @@ class JTableModel extends AbstractTableModel {
 	 * @param newImage
 	 * @param graphletsMode
 	 */
-	public void addImage(BasicGraphletImage newImage, String graphletsMode) {
-		allGraphletImages.add(new BasicGraphletImage(newImage));
+	public void addImage(GraphletImage newImage, String graphletsMode) {
+		allGraphletImages.add(newImage);
 		listOfSelected.add(true);
 		listOfModes.add(graphletsMode);
 

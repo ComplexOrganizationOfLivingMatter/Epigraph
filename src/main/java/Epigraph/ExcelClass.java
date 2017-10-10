@@ -31,14 +31,23 @@ public class ExcelClass {
 	private ArrayList<Float> gddh;
 	private ArrayList<Float> gddrv;
 	private ArrayList<Float> gddv5;
-	private ArrayList<Float> hexagonsPercentage;
 	private ArrayList<Float> R;
 	private ArrayList<Float> G;
 	private ArrayList<Float> B;
 	private ArrayList<String> graphletsMode;
 	private ArrayList<Integer> radiusOfMask;
 	private ArrayList<String> shapeOfMask; 
-
+	private ArrayList<Float> squaresPercentage;
+	private ArrayList<Float> pentagonsPercentage;
+	private ArrayList<Float> hexagonsPercentage;
+	private ArrayList<Float> heptagonsPercentage;
+	private ArrayList<Float> octogonsPercentage;
+	
+	
+	
+	
+	
+	
 	/**
 	 * Default constructor
 	 */
@@ -49,13 +58,18 @@ public class ExcelClass {
 		this.gddh = new ArrayList<Float>();
 		this.gddrv = new ArrayList<Float>();
 		this.gddv5 = new ArrayList<Float>();
-		this.hexagonsPercentage = new ArrayList<Float>();
 		this.R = new ArrayList<Float>();
 		this.G = new ArrayList<Float>();
 		this.B = new ArrayList<Float>();
 		this.graphletsMode = new ArrayList<String>();
 		this.shapeOfMask = new ArrayList<String>();
 		this.radiusOfMask = new ArrayList<Integer>();
+		this.squaresPercentage = new ArrayList<Float>();
+		this.pentagonsPercentage = new ArrayList<Float>();
+		this.hexagonsPercentage = new ArrayList<Float>();
+		this.heptagonsPercentage = new ArrayList<Float>();
+		this.octogonsPercentage = new ArrayList<Float>();
+		
 	}
 
 	/**
@@ -87,21 +101,26 @@ public class ExcelClass {
 	 * @param shapeOfMask List of chosen shapes.
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv, ArrayList<Float> gddv5,
-			ArrayList<Float> hexagonsPercentage, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
-			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<String> shapeOfMask) {
+			ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, 
+			ArrayList<String> shapeOfMask,ArrayList<Float> squaresPercentage,ArrayList<Float> pentagonsPercentage,
+			ArrayList<Float> hexagonsPercentage,ArrayList<Float> heptagonsPercentage,ArrayList<Float> octogonsPercentage) {
 		super();
 		this.fileName = filename;
 		this.imageName = imageName;
 		this.gddh = gddh;
 		this.gddrv = gddrv;
 		this.gddv5 = gddv5;
-		this.hexagonsPercentage = hexagonsPercentage;
 		this.R = r;
 		this.G = g;
 		this.B = b;
 		this.graphletsMode = graphletsMode;
 		this.radiusOfMask = radiusOfMask;
 		this.shapeOfMask = shapeOfMask;
+		this.squaresPercentage = squaresPercentage;
+		this.pentagonsPercentage = pentagonsPercentage;
+		this.hexagonsPercentage = hexagonsPercentage;
+		this.heptagonsPercentage = heptagonsPercentage;
+		this.octogonsPercentage = octogonsPercentage;
 	}
 
 	/**
@@ -173,6 +192,34 @@ public class ExcelClass {
 	
 	
 	/**
+	 * @return the squaresPercentage
+	 */
+	public ArrayList<Float> getSquaresPercentage() {
+		return squaresPercentage;
+	}
+
+	/**
+	 * @param squaresPercentage the squaresPercentage to set
+	 */
+	public void setSquaresPercentage(ArrayList<Float> squaresPercentage) {
+		this.squaresPercentage = squaresPercentage;
+	}
+
+	/**
+	 * @return the pentagonsPercentage
+	 */
+	public ArrayList<Float> getPentagonsPercentage() {
+		return pentagonsPercentage;
+	}
+
+	/**
+	 * @param pentagonsPercentage the pentagonsPercentage to set
+	 */
+	public void setPentagonsPercentage(ArrayList<Float> pentagonsPercentage) {
+		this.pentagonsPercentage = pentagonsPercentage;
+	}
+	
+	/**
 	 *
 	 * @return Get list of hexagons percentajes
 	 */
@@ -187,6 +234,34 @@ public class ExcelClass {
 	 */
 	public void setHexagonsPercentage(ArrayList<Float> hexagonsPercentage) {
 		this.hexagonsPercentage = hexagonsPercentage;
+	}
+
+	/**
+	 * @return the heptagonsPercentage
+	 */
+	public ArrayList<Float> getHeptagonsPercentage() {
+		return heptagonsPercentage;
+	}
+
+	/**
+	 * @param heptagonsPercentage the heptagonsPercentage to set
+	 */
+	public void setHeptagonsPercentage(ArrayList<Float> heptagonsPercentage) {
+		this.heptagonsPercentage = heptagonsPercentage;
+	}
+
+	/**
+	 * @return the octogonsPercentage
+	 */
+	public ArrayList<Float> getOctogonsPercentage() {
+		return octogonsPercentage;
+	}
+
+	/**
+	 * @param octogonsPercentage the octogonsPercentage to set
+	 */
+	public void setOctogonsPercentage(ArrayList<Float> octogonsPercentage) {
+		this.octogonsPercentage = octogonsPercentage;
 	}
 
 	/**
@@ -297,13 +372,18 @@ public class ExcelClass {
 		rowExcel.add(this.gddh.get(row));
 		rowExcel.add(this.gddrv.get(row));
 		rowExcel.add(this.gddv5.get(row));
-		rowExcel.add(this.hexagonsPercentage.get(row));
 		rowExcel.add(this.R.get(row));
 		rowExcel.add(this.G.get(row));
 		rowExcel.add(this.B.get(row));
 		rowExcel.add(this.graphletsMode.get(row));
 		rowExcel.add(this.radiusOfMask.get(row));
 		rowExcel.add(this.shapeOfMask.get(row));
+		rowExcel.add(this.squaresPercentage.get(row));
+		rowExcel.add(this.pentagonsPercentage.get(row));
+		rowExcel.add(this.hexagonsPercentage.get(row));
+		rowExcel.add(this.heptagonsPercentage.get(row));
+		rowExcel.add(this.octogonsPercentage.get(row));
+		
 
 		return rowExcel;
 	}
@@ -355,17 +435,18 @@ public class ExcelClass {
 							case 0:
 								this.imageName.add(cell.getStringCellValue());
 								break;
+															
 							case 1:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
-									this.hexagonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+									this.gddh.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
-									this.hexagonsPercentage.add((float) cell.getNumericCellValue());
+									this.gddh.add((float) cell.getNumericCellValue());
 								}
 								break;
 								
-							case 2:
+							case 2:							
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.gddrv.add(Float.parseFloat(cell.getStringCellValue()));
@@ -378,16 +459,6 @@ public class ExcelClass {
 							case 3:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
-									this.gddh.add(Float.parseFloat(cell.getStringCellValue()));
-								} catch (java.lang.IllegalStateException e) {
-									// TODO: handle exception
-									this.gddh.add((float) cell.getNumericCellValue());
-								}
-								break;
-								
-							case 4:
-								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
-								try {
 									this.gddv5.add(Float.parseFloat(cell.getStringCellValue()));
 								} catch (java.lang.IllegalStateException e) {
 									// TODO: handle exception
@@ -396,7 +467,7 @@ public class ExcelClass {
 								break;
 								
 								
-							case 5:
+							case 4:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.R.add(Float.parseFloat(cell.getStringCellValue()));
@@ -405,7 +476,7 @@ public class ExcelClass {
 									this.R.add((float) cell.getNumericCellValue());
 								}
 								break;
-							case 6:
+							case 5:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.G.add(Float.parseFloat(cell.getStringCellValue()));
@@ -414,7 +485,7 @@ public class ExcelClass {
 									this.G.add((float) cell.getNumericCellValue());
 								}
 								break;
-							case 7:
+							case 6:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.B.add(Float.parseFloat(cell.getStringCellValue()));
@@ -423,10 +494,10 @@ public class ExcelClass {
 									this.B.add((float) cell.getNumericCellValue());
 								}
 								break;
-							case 8:
+							case 7:
 								this.graphletsMode.add(cell.getStringCellValue());
 								break;
-							case 9:
+							case 8:
 								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 								try {
 									this.radiusOfMask.add(Integer.parseInt(cell.getStringCellValue()));
@@ -436,9 +507,57 @@ public class ExcelClass {
 								}
 								break;
 								
-							case 10:
+							case 9:
 								this.shapeOfMask.add(cell.getStringCellValue());
 								break;
+
+								
+							case 10:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.squaresPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.squaresPercentage.add((float) cell.getNumericCellValue());
+								}
+								break;
+							case 11:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.pentagonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.pentagonsPercentage.add((float) cell.getNumericCellValue());
+								}
+								break;
+							case 12:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.hexagonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.hexagonsPercentage.add((float) cell.getNumericCellValue());
+								}
+								break;
+							case 13:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.heptagonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.heptagonsPercentage.add((float) cell.getNumericCellValue());
+								}
+								break;
+							case 14:
+								cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+								try {
+									this.octogonsPercentage.add(Float.parseFloat(cell.getStringCellValue()));
+								} catch (java.lang.IllegalStateException e) {
+									// TODO: handle exception
+									this.octogonsPercentage.add((float) cell.getNumericCellValue());
+								}
+								break;
+							
 							}
 
 						}
@@ -476,7 +595,8 @@ public class ExcelClass {
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		data.put("1",
-				new Object[] { "Image name", "Hexagons percentage", "GDDRV", "GDDH", "GDDV5", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask" });
+				new Object[] { "Image name", "GDDH", "GDDRV", "GDDV5", "R", "G", "B", "GraphletsMode", "RadiusOfMask", "ShapeOfMask",
+						"% squares", "% pentagons", "% hexagons", "% heptagons","% octogons"});
 
 		NumberFormat df2 = NumberFormat.getInstance();
 		df2.setMaximumFractionDigits(3);
@@ -488,10 +608,11 @@ public class ExcelClass {
 			Integer j = i + 2;
 
 			data.put(j.toString(),
-					new Object[] { imageName.get(i), hexagonsPercentage.get(i), gddrv.get(i),
-							gddh.get(i), gddv5.get(i), R.get(i), G.get(i), B.get(i),
-							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i) });
-
+					new Object[] { imageName.get(i), gddh.get(i), gddrv.get(i),
+							gddv5.get(i), R.get(i), G.get(i), B.get(i),
+							this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i),
+							squaresPercentage.get(i), pentagonsPercentage.get(i),
+							hexagonsPercentage.get(i),heptagonsPercentage.get(i),octogonsPercentage.get(i)});
 		}
 
 		// Iterate over data and write to sheet

@@ -289,23 +289,33 @@ public class MainWindow extends JFrame {
 	 */
 	public void exportTableToXLS() {
 		ArrayList<String> arrayNames = new ArrayList<String>();
+		ArrayList<Float> arraySquares = new ArrayList<Float>();
+		ArrayList<Float> arrayPentagons = new ArrayList<Float>();
 		ArrayList<Float> arrayHexagons = new ArrayList<Float>();
+		ArrayList<Float> arrayHeptagons = new ArrayList<Float>();
+		ArrayList<Float> arrayOctogons = new ArrayList<Float>();
 		ArrayList<Float> arrayGDDH = new ArrayList<Float>();
 		ArrayList<Float> arrayGDDRV = new ArrayList<Float>();
+		ArrayList<Float> arrayGDDV5 = new ArrayList<Float>();
 		ArrayList<Float> arrayR = new ArrayList<Float>();
 		ArrayList<Float> arrayG = new ArrayList<Float>();
 		ArrayList<Float> arrayB = new ArrayList<Float>();
 		ArrayList<String> arrayMode = new ArrayList<String>();
 		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
 		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
-
+		
 		int cont = 0;
-		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
+		for (GraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
 			arrayNames.add(graphletImg.getLabelName());
-			arrayHexagons.add(graphletImg.getPercentageOfHexagonsGraphlets());
+			arraySquares.add(graphletImg.getPercentageOfSquares());		
+			arrayPentagons.add(graphletImg.getPercentageOfPentagons());
+			arrayHexagons.add(graphletImg.getPercentageOfHexagons());
+			arrayHeptagons.add(graphletImg.getPercentageOfHeptagons());
+			arrayOctogons.add(graphletImg.getPercentageOfOctogons());
 			arrayGDDH.add(graphletImg.getDistanceGDDH());
 			arrayGDDRV.add(graphletImg.getDistanceGDDRV());
+			arrayGDDV5.add(graphletImg.getDistanceGDDV5());
 			arrayR.add((float) graphletImg.getColor().getRed());
 			arrayG.add((float) graphletImg.getColor().getGreen());
 			arrayB.add((float) graphletImg.getColor().getBlue());
@@ -317,6 +327,8 @@ public class MainWindow extends JFrame {
 			}
 
 			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
+			
+			
 			cont++;
 		}
 
@@ -348,8 +360,12 @@ public class MainWindow extends JFrame {
 					return;
 			}
 
-			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayHexagons, arrayR,
-					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask);
+			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayGDDV5, arrayR,
+					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask,arraySquares,arrayPentagons,
+					arrayHexagons,arrayHeptagons,arrayOctogons);
+			
+			
+			
 			excelclass.exportData();
 		}
 	}
@@ -413,12 +429,25 @@ public class MainWindow extends JFrame {
 				} else {
 					shapeColumn = GraphletImage.SQUARE_SHAPE;
 				}
-				newRow = new BasicGraphletImage((float) excelclass.getRow(row).get(2),
-						(float) excelclass.getRow(row).get(1), (float) excelclass.getRow(row).get(3), newColor,
-						(String) excelclass.getRow(row).get(0), shapeColumn, (int) excelclass.getRow(row).get(8));// (int)
-																													// excelclass.getRow(row).get(9));
-
-				tableInfo.addImage(newRow, (String) excelclass.getRow(row).get(7));
+				
+				GraphletImage newGraphletImage= new GraphletImage();
+				newGraphletImage.setDistanceGDDH((float) excelclass.getRow(row).get(1));
+				newGraphletImage.setDistanceGDDRV((float) excelclass.getRow(row).get(2));
+				newGraphletImage.setDistanceGDDV5((float) excelclass.getRow(row).get(3));
+				newGraphletImage.setColor(newColor);
+				newGraphletImage.setLabelName((String) excelclass.getRow(row).get(0));
+				newGraphletImage.setShapeOfMask(shapeColumn);
+				newGraphletImage.setRadiusOfMask((int) excelclass.getRow(row).get(8));
+				newGraphletImage.setPercentageOfSquares((float) excelclass.getRow(row).get(10));
+				newGraphletImage.setPercentageOfPentagons((float) excelclass.getRow(row).get(11));
+				newGraphletImage.setPercentageOfHexagons((float) excelclass.getRow(row).get(12));
+				newGraphletImage.setPercentageOfHexagonsGraphlets((float) excelclass.getRow(row).get(12));
+				newGraphletImage.setPercentageOfHeptagons((float) excelclass.getRow(row).get(13));
+				newGraphletImage.setPercentageOfOctogons((float) excelclass.getRow(row).get(14));
+				
+				
+				
+				tableInfo.addImage(newGraphletImage, (String) excelclass.getRow(row).get(7));
 
 			}
 
