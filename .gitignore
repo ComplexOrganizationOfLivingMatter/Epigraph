@@ -12,3 +12,4 @@
 
 *.log
 dependency-reduced-pom.xml
+src/main/resources/epigraph/voronoiNoiseReference/old/*.txt
