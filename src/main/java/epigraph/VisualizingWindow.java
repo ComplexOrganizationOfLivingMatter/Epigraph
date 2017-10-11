@@ -34,6 +34,7 @@ import javax.swing.event.ChangeListener;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.colors.Color;
+import org.jzy3d.maths.BoundingBox3d;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.primitives.Scatter;
@@ -90,11 +91,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		this.tableInfo = tableInfo;
 
 		initGUIItems();
-
+		
+		createScatterData();
 		createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
 		
-
-		initChart();
 
 		initPanels();
 
@@ -158,16 +158,15 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		for (int i = 0; i < voronoiReferenceSize; i++) {
 			// creating coord array
 			row = voronoiReference.get(i);
-			pointsAxes1[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
-					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
-			pointsAxes2[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
-					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
-			pointsAxes3[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
-					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			pointsAxes1[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')),
+					Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			pointsAxes2[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')),
+					Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[7].replace(',', '.')));
+			pointsAxes3[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')),
+					Float.parseFloat(row[7].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
 			pointsAxes4[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
-					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
-			
-			
+					Float.parseFloat(row[7].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+						
 			// creating color array
 			colors[i] = new Color(Integer.parseInt(row[4]), Integer.parseInt(row[5]), Integer.parseInt(row[6]));
 		}
@@ -175,7 +174,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		Coord3d[] points = new Coord3d[voronoiReferenceSize];
 		switch (referenceAxes) {
 		case 0:
-			points = pointsAxes1;
+			points= pointsAxes1;
 			break;
 		case 1:
 			points= pointsAxes2;
@@ -190,8 +189,14 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		
 		scatterReference = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
 		
-		createScatterData();
 		initChart();
+		
+		BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
+		if (cbAxesToRepresent.getSelectedIndex()==1){
+			boundBox.setZmax(1);
+		}
+		this.chart.getView().setBoundManual(boundBox);
+		
 	}
 
 	/**
@@ -257,6 +262,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		// Insert into the scatter data, the points, the color of the points and
 		// the size of the points
 		scatterData = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
+		
 	}
 
 	/**
@@ -303,33 +309,43 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		
 		cbGraphletsReference.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				Scatter oldScatter = scatterReference;
-
+				Scatter oldScatterReference = scatterReference;
+				Scatter oldScatterData = scatterData;
+				createScatterData();
+				chart.getScene().remove(oldScatterData);
 				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-
-				chart.getScene().add(scatterReference);
-
-				chart.getScene().remove(oldScatter);
+				chart.getScene().remove(oldScatterReference);
+				
+				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
+				if (cbAxesToRepresent.getSelectedIndex()==1){
+					boundBox.setZmax(1);
+				}
+				chart.getView().setBoundManual(boundBox);
 				repaintAll();
+				
 			}
 		});
 		
 		
 		cbAxesToRepresent.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				Scatter oldScatter = scatterReference;
-
+				Scatter oldScatterReference = scatterReference;
+				Scatter oldScatterData = scatterData;
+				createScatterData();
+				chart.getScene().remove(oldScatterData);
 				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-
-				chart.getScene().add(scatterReference);
-
-				chart.getScene().remove(oldScatter);
+				chart.getScene().remove(oldScatterReference);
+				
+				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
+				if (cbAxesToRepresent.getSelectedIndex()==1){
+					boundBox.setZmax(1);
+				}
+				
+				chart.getView().setBoundManual(boundBox);
 				repaintAll();
+				
 			}
 		});
-		
-		
-		
 
 		chbShowVoronoiReference = new Checkbox("Show reference", true);
 		chbShowVoronoiReference.setState(true);
@@ -339,6 +355,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			public void itemStateChanged(ItemEvent e) {
 				scatterReference.setDisplayed(chbShowVoronoiReference.getState());
 				cbGraphletsReference.setEnabled(chbShowVoronoiReference.getState());
+				cbAxesToRepresent.setEnabled(chbShowVoronoiReference.getState());
 			}
 		});
 	}
@@ -347,10 +364,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * Repaint all the window
 	 */
 	private void repaintAll() {
-
+		
 		getContentPane().repaint();
-
-		this.chart.setScale(new Scale(0, 100));
+		
+		
 	}
 
 	/**
@@ -424,6 +441,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * to the scene
 	 */
 	private void initChart() {
+		
 
 		IAxeLayout l = this.chart.getAxeLayout();
 
@@ -452,9 +470,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			break;
 		}
 		
-		
-		
-
 		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
@@ -462,7 +477,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		this.chart.getScene().add(scatterData);
 		this.chart.getScene().add(scatterReference);
 
-		this.chart.setScale(new Scale(0, 100));
+		
 	}
 
 	/*
