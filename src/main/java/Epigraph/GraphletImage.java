@@ -89,6 +89,11 @@ public class GraphletImage extends BasicGraphletImage {
 	private ImagePlus neighbourImage;
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
+	private float percentageOfSquares;
+	private float percentageOfPentagons;
+	private float percentageOfHexagons;
+	private float percentageOfHeptagons;
+	private float percentageOfOctogons;
 
 	/**
 	 * Constructor
@@ -109,6 +114,9 @@ public class GraphletImage extends BasicGraphletImage {
 
 		this.randomVoronoiValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
 		this.randomVoronoiValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		
 		// TODO: Get out from this class the random voronoi references
 		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
 			URL fileUrl = Epigraph.class.getResource(
@@ -120,18 +128,70 @@ public class GraphletImage extends BasicGraphletImage {
 			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 			
 			fileUrl = Epigraph.class.getResource(
-					"/epigraph/graphletsReferences/Basic/voronoi_" + Integer.toString(i) + ".ndump2");
+					"/epigraph/graphletsReferences/Basic/voronoi5_" + Integer.toString(i) + ".ndump2");
 			this.voronoi5ValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
 
 			fileUrl = Epigraph.class.getResource(
-					"/epigraph/graphletsReferences/Total/voronoi_" + Integer.toString(i) + ".ndump2");
+					"/epigraph/graphletsReferences/Total/voronoi5_" + Integer.toString(i) + ".ndump2");
 			this.voronoi5ValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
 		}
 		
 		this.invalidRegionChanged = false;
+		this.percentageOfSquares=0;
+		this.percentageOfPentagons=0;
+		this.percentageOfHexagons=0;
+		this.percentageOfHeptagons=0;
+		this.percentageOfOctogons=0;
 
 		// END TODO
 	}
+	
+	public GraphletImage() {
+		super();
+		this.labelName = null;
+		this.raw_img = null;
+
+		// Initialize the reference Hexagons and Random Voronoi
+		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
+				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 12, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+		this.hexagonRefInt = new BasicGraphlet(hexagonGraphlets);
+
+		this.randomVoronoiValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.randomVoronoiValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_4Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		this.voronoi5ValidCells_5Ref = new BasicGraphlet[NUMRANDOMVORONOI];
+		
+		// TODO: Get out from this class the random voronoi references
+		for (int i = 1; i <= NUMRANDOMVORONOI; i++) {
+			URL fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Basic/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			this.randomVoronoiValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
+
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Total/randomVoronoi_" + Integer.toString(i) + ".ndump2");
+			this.randomVoronoiValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
+			
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Basic/voronoi5_" + Integer.toString(i) + ".ndump2");
+			this.voronoi5ValidCells_4Ref[i - 1] = new BasicGraphlet(fileUrl);
+
+			fileUrl = Epigraph.class.getResource(
+					"/epigraph/graphletsReferences/Total/voronoi5_" + Integer.toString(i) + ".ndump2");
+			this.voronoi5ValidCells_5Ref[i - 1] = new BasicGraphlet(fileUrl);
+		}
+		
+		this.invalidRegionChanged = false;
+		this.percentageOfSquares=0;
+		this.percentageOfPentagons=0;
+		this.percentageOfHexagons=0;
+		this.percentageOfHeptagons=0;
+		this.percentageOfOctogons=0;
+
+		// END TODO
+	}
+	
+	
 
 	/**
 	 * @return the label image
@@ -190,6 +250,78 @@ public class GraphletImage extends BasicGraphletImage {
 	 */
 	public void setAdjacencyMatrix(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
+	}
+
+	
+	
+	/**
+	 * @return the percentageOfSquares
+	 */
+	public float getPercentageOfSquares() {
+		return percentageOfSquares;
+	}
+
+	/**
+	 * @param percentageOfSquares the percentageOfSquares to set
+	 */
+	public void setPercentageOfSquares(float percentageOfSquares) {
+		this.percentageOfSquares = percentageOfSquares;
+	}
+
+	/**
+	 * @return the percentageOfPentagons
+	 */
+	public float getPercentageOfPentagons() {
+		return percentageOfPentagons;
+	}
+
+	/**
+	 * @param percentageOfPentagons the percentageOfPentagons to set
+	 */
+	public void setPercentageOfPentagons(float percentageOfPentagons) {
+		this.percentageOfPentagons = percentageOfPentagons;
+	}
+
+	/**
+	 * @return the percentageOfHexagons
+	 */
+	public float getPercentageOfHexagons() {
+		return percentageOfHexagons;
+	}
+
+	/**
+	 * @param percentageOfHexagons the percentageOfHexagons to set
+	 */
+	public void setPercentageOfHexagons(float percentageOfHexagons) {
+		this.percentageOfHexagons = percentageOfHexagons;
+	}
+
+	/**
+	 * @return the percentageOfHeptagons
+	 */
+	public float getPercentageOfHeptagons() {
+		return percentageOfHeptagons;
+	}
+
+	/**
+	 * @param percentageOfHeptagons the percentageOfHeptagons to set
+	 */
+	public void setPercentageOfHeptagons(float percentageOfHeptagons) {
+		this.percentageOfHeptagons = percentageOfHeptagons;
+	}
+
+	/**
+	 * @return the percentageOfOctogons
+	 */
+	public float getPercentageOfOctogons() {
+		return percentageOfOctogons;
+	}
+
+	/**
+	 * @param percentageOfOctogons the percentageOfOctogons to set
+	 */
+	public void setPercentageOfOctogons(float percentageOfOctogons) {
+		this.percentageOfOctogons = percentageOfOctogons;
 	}
 
 	/**

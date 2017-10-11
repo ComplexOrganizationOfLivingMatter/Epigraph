@@ -65,10 +65,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JButton btnExport;
 
 	private JPanel canvasPanel;
-
 	private JPanel buttonsPanel;
 
 	JComboBox<String> cbGraphletsReference;
+	JComboBox<String> cbAxesToRepresent;
 
 	JTableModel tableInfo;
 
@@ -91,8 +91,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		initGUIItems();
 
-		createScatterPlot(cbGraphletsReference.getSelectedIndex());
-		createScatterData();
+		createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
+		
 
 		initChart();
 
@@ -111,7 +111,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * @param tableInfo
 	 */
 	@SuppressWarnings("unchecked")
-	private void createScatterPlot(int referenceGraphlets) {
+	private void createScatterPlot(int referenceGraphlets,int referenceAxes) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
 
@@ -148,19 +148,50 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		voronoiReferenceSize = voronoiReference.size();
 
-		Coord3d[] points = new Coord3d[voronoiReferenceSize];
+		Coord3d[] pointsAxes1 = new Coord3d[voronoiReferenceSize];
+		Coord3d[] pointsAxes2 = new Coord3d[voronoiReferenceSize];
+		Coord3d[] pointsAxes3 = new Coord3d[voronoiReferenceSize];
+		Coord3d[] pointsAxes4 = new Coord3d[voronoiReferenceSize];
+		
 		Color[] colors = new Color[voronoiReferenceSize];
 
 		for (int i = 0; i < voronoiReferenceSize; i++) {
 			// creating coord array
 			row = voronoiReference.get(i);
-			points[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
+			pointsAxes1[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
 					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			pointsAxes2[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
+					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			pointsAxes3[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
+					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			pointsAxes4[i] = new Coord3d(Float.parseFloat(row[2].replace(',', '.')),
+					Float.parseFloat(row[3].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
+			
+			
 			// creating color array
 			colors[i] = new Color(Integer.parseInt(row[4]), Integer.parseInt(row[5]), Integer.parseInt(row[6]));
 		}
 
+		Coord3d[] points = new Coord3d[voronoiReferenceSize];
+		switch (referenceAxes) {
+		case 0:
+			points = pointsAxes1;
+			break;
+		case 1:
+			points= pointsAxes2;
+			break;
+		case 2:
+			points= pointsAxes3;
+			break;
+		case 3:
+			points= pointsAxes4;
+			break;
+		}
+		
 		scatterReference = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
+		
+		createScatterData();
+		initChart();
 	}
 
 	/**
@@ -175,6 +206,11 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		}
 
 		Coord3d[] points = new Coord3d[size_array];
+		Coord3d[] pointsAxes1 = new Coord3d[size_array];
+		Coord3d[] pointsAxes2 = new Coord3d[size_array];
+		Coord3d[] pointsAxes3 = new Coord3d[size_array];
+		Coord3d[] pointsAxes4 = new Coord3d[size_array];
+
 		Color[] colors = new Color[size_array];
 
 		// Show only the points that we want to visualized, whose are ticked in
@@ -183,8 +219,17 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfSelected().get(i).booleanValue()) {
 				// creating coord array
-				points[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
-						tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+				pointsAxes1[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
+				pointsAxes2[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5());
+				pointsAxes3[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
+				pointsAxes4[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
 				// creating color array
 				colors[numRow] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
@@ -193,7 +238,22 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				numRow++;
 			}
 		}
-
+		
+		switch (cbAxesToRepresent.getSelectedIndex()) {
+		case 0:
+			points = pointsAxes1;
+			break;
+		case 1:
+			points= pointsAxes2;
+			break;
+		case 2:
+			points= pointsAxes3;
+			break;
+		case 3:
+			points= pointsAxes4;
+			break;
+		}
+		
 		// Insert into the scatter data, the points, the color of the points and
 		// the size of the points
 		scatterData = new Scatter(points, colors, (float) slSizeOfPoints.getValue());
@@ -233,11 +293,19 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		cbGraphletsReference = new JComboBox<String>();
 		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
 		cbGraphletsReference.setSelectedIndex(0);
+		cbAxesToRepresent = new JComboBox<String>();
+		cbAxesToRepresent.setModel(new DefaultComboBoxModel<String>());
+		cbAxesToRepresent.addItem("GDDH-GDDRV-% Hexagons");
+		cbAxesToRepresent.addItem("GDDH-GDDRV-GDDV5");
+		cbAxesToRepresent.addItem("GDDH-GDDV5-% Hexagons");
+		cbAxesToRepresent.addItem("GDDRV-GDDV5-% Hexagons");
+		cbAxesToRepresent.setSelectedIndex(0);
+		
 		cbGraphletsReference.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				Scatter oldScatter = scatterReference;
 
-				createScatterPlot(cbGraphletsReference.getSelectedIndex());
+				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
 
 				chart.getScene().add(scatterReference);
 
@@ -245,6 +313,23 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				repaintAll();
 			}
 		});
+		
+		
+		cbAxesToRepresent.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				Scatter oldScatter = scatterReference;
+
+				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
+
+				chart.getScene().add(scatterReference);
+
+				chart.getScene().remove(oldScatter);
+				repaintAll();
+			}
+		});
+		
+		
+		
 
 		chbShowVoronoiReference = new Checkbox("Show reference", true);
 		chbShowVoronoiReference.setState(true);
@@ -290,6 +375,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
 
+		buttonsPanel.add(cbAxesToRepresent, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(lbSizeOfPoints, genericPanelConstrainst);
@@ -341,9 +428,32 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		IAxeLayout l = this.chart.getAxeLayout();
 
 		// Labelling axes
-		l.setXAxeLabel("GDDRV");
-		l.setYAxeLabel("GDDH");
-		l.setZAxeLabel("Percentage of hexagons");
+		
+		switch (cbAxesToRepresent.getSelectedIndex()) {
+		case 0:
+			l.setXAxeLabel("GDDH");
+			l.setYAxeLabel("GDDRV");
+			l.setZAxeLabel("Percentage of hexagons");
+			break;
+		case 1:
+			l.setXAxeLabel("GDDH");
+			l.setYAxeLabel("GDDRV");
+			l.setZAxeLabel("GDDV5");
+			break;
+		case 2:
+			l.setXAxeLabel("GDDH");
+			l.setYAxeLabel("GDDV5");
+			l.setZAxeLabel("Percentage of hexagons");
+			break;
+		case 3:
+			l.setXAxeLabel("GDDRV");
+			l.setYAxeLabel("GDDV5");
+			l.setZAxeLabel("Percentage of hexagons");
+			break;
+		}
+		
+		
+		
 
 		l.setXTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
