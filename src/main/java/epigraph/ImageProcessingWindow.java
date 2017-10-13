@@ -961,6 +961,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			int numberOfValidCellsOfLength = 100;
 			int totalGraphlets;
+			
+			//close roiManager if we try calculate graphlets with a empty roiManager
+			if(roiManager != null){
+				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+				if(roiArray.length==0){
+					roiManager.close();
+					roiManager=null;
+					}
+				}
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
