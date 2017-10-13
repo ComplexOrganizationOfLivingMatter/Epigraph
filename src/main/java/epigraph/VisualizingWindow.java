@@ -76,6 +76,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private Checkbox chbShowVoronoiReference;
 
 	private JLabel lbSizeOfPoints;
+	private JLabel xyzLabel;
+	private JLabel referenceMotifs;
 
 	/**
 	 * Constructor. Initialize the chart with the info from the main table. Also
@@ -94,7 +96,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		
 		createScatterData();
 		createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-		
+		this.chart.getScene().add(scatterData);
+		this.chart.getScene().add(scatterReference);
 
 		initPanels();
 
@@ -196,7 +199,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			boundBox.setZmax(1);
 		}
 		this.chart.getView().setBoundManual(boundBox);
-		
+				
 	}
 
 	/**
@@ -292,6 +295,11 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		lbSizeOfPoints = new JLabel("Size of dots: ");
 		lbSizeOfPoints.setLabelFor(slSizeOfPoints);
+		
+		xyzLabel = new JLabel("Axes of figure:");
+		xyzLabel.setLabelFor(xyzLabel);
+		referenceMotifs = new JLabel("Motifs of CVTn reference:");
+		referenceMotifs.setLabelFor(referenceMotifs);
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
@@ -311,10 +319,14 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			public void itemStateChanged(ItemEvent e) {
 				Scatter oldScatterReference = scatterReference;
 				Scatter oldScatterData = scatterData;
+				
+				
 				createScatterData();
-				chart.getScene().remove(oldScatterData);
+				chart.getScene().add(scatterData);
 				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-				chart.getScene().remove(oldScatterReference);
+				chart.getScene().add(scatterReference);
+				chart.getScene().remove(oldScatterReference,false);
+				chart.getScene().remove(oldScatterData,false);
 				
 				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
 				if (cbAxesToRepresent.getSelectedIndex()==1){
@@ -322,6 +334,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				}
 				chart.getView().setBoundManual(boundBox);
 				repaintAll();
+				
 				
 			}
 		});
@@ -331,16 +344,19 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			public void itemStateChanged(ItemEvent e) {
 				Scatter oldScatterReference = scatterReference;
 				Scatter oldScatterData = scatterData;
+				
+				
 				createScatterData();
-				chart.getScene().remove(oldScatterData);
+				chart.getScene().add(scatterData);
 				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-				chart.getScene().remove(oldScatterReference);
+				chart.getScene().add(scatterReference);
+				chart.getScene().remove(oldScatterReference,false);
+				chart.getScene().remove(oldScatterData,false);
 				
 				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
 				if (cbAxesToRepresent.getSelectedIndex()==1){
 					boundBox.setZmax(1);
 				}
-				
 				chart.getView().setBoundManual(boundBox);
 				repaintAll();
 				
@@ -391,7 +407,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(genericPanelLayout);
 		resetConstrainst(genericPanelConstrainst);
-
+		
+		buttonsPanel.add(xyzLabel, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbAxesToRepresent, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
@@ -399,6 +417,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel.add(lbSizeOfPoints, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(slSizeOfPoints, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(referenceMotifs, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbGraphletsReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
@@ -474,8 +494,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		l.setYTickRenderer(new FixedDecimalTickRenderer(2));
 		l.setZTickRenderer(new FixedDecimalTickRenderer(2));
 
-		this.chart.getScene().add(scatterData);
-		this.chart.getScene().add(scatterReference);
+		
 
 		
 	}
