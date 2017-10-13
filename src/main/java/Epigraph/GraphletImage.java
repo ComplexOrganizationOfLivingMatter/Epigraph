@@ -33,7 +33,7 @@ import inra.ijpb.morphology.strel.SquareStrel;
  * 
  * @author Pablo Vicente-Munuera
  */
-public class GraphletImage extends BasicGraphletImage {
+public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 	/**
 	 * Nomenclature of the graphlets we'll be using
@@ -191,7 +191,10 @@ public class GraphletImage extends BasicGraphletImage {
 		// END TODO
 	}
 	
-	
+	@Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 	/**
 	 * @return the label image

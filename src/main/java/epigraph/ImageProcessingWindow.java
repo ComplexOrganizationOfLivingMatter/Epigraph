@@ -948,8 +948,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		/**
 		 * Calculate graphlets in background
+		 * @throws CloneNotSupportedException 
 		 */
-		public void calculateGraphlets() {
+		public void calculateGraphlets() throws CloneNotSupportedException {
 			ArrayList<ArrayList<String>> ListPolDistri;
 			int maxLength = 0;
 			if (cbGraphletsMode.getSelectedIndex() >= 2) {
@@ -1026,7 +1027,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 							"Care: Not too many graphlets in the sample selected. You may obtain results with no warranties",
 							"Warning", JOptionPane.WARNING_MESSAGE);
 				}
-				tableInf.addImage(newGraphletImage, cbGraphletsMode.getSelectedItem().toString());
+				
+				tableInf.addImage((GraphletImage) newGraphletImage.clone(), cbGraphletsMode.getSelectedItem().toString());
 
 				JOptionPane pane = new JOptionPane("Graphlet data added to table", JOptionPane.INFORMATION_MESSAGE,
 						JOptionPane.DEFAULT_OPTION, null, new Object[] {}, null);
