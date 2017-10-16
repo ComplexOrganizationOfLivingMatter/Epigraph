@@ -995,16 +995,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				
 				
 				ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
-				newGraphletImage.setPercentageOfSquares(Float.parseFloat(polDistriGraphlets.get(0).replace("%","")));
 				
-				newGraphletImage.setPercentageOfPentagons(Float.parseFloat(polDistriGraphlets.get(1).replace("%","")));
-				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriGraphlets.get(2).replace("%","")));
-				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriGraphlets.get(3).replace("%","")));
-				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriGraphlets.get(4).replace("%","")));
+				newGraphletImage.setPercentageOfSquares(Float.parseFloat(polDistriGraphlets.get(0).replace("%","").replace(",", ".")));
 				
-			
-				
-			
+				newGraphletImage.setPercentageOfPentagons(Float.parseFloat(polDistriGraphlets.get(1).replace("%","").replace(",", ".")));
+				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriGraphlets.get(2).replace("%","").replace(",", ".")));
+				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriGraphlets.get(3).replace("%","").replace(",", ".")));
+				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriGraphlets.get(4).replace("%","").replace(",", ".")));
 			}
 			
 			
