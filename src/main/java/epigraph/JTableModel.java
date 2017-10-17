@@ -4,9 +4,16 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 /**
  * Model of the table on the main window
@@ -34,6 +41,29 @@ class JTableModel extends AbstractTableModel {
 		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
+	
+	
+	
+	
+	public class MyRenderer extends JLabel implements TableCellRenderer { 
+		   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) { 
+		      DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(); 
+		      Component c = renderer.getTableCellRendererComponent(table,value, isSelected, hasFocus, row, col); 
+		      String s = ""; 
+		      if (col == 3) { 
+		         DecimalFormat dFormat = new DecimalFormat("#0.0000"); 
+		         Double d = (Double) value; 
+		         s = dFormat.format(d); 
+		         c = renderer.getTableCellRendererComponent(table, s,isSelected, hasFocus, row, col); 
+		         ((JLabel) c).setHorizontalAlignment(SwingConstants.LEFT); 
+		      } 
+		      return c; 
+		   } 
+		}
+	
+	
+	
+	
 
 	/*
 	 * (non-Javadoc)

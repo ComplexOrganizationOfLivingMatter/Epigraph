@@ -1,6 +1,7 @@
 package epigraph;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -10,20 +11,30 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+
+import org.jfree.ui.NumberCellRenderer;
+import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -172,21 +183,31 @@ public class MainWindow extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getColumnModel().getColumn(0).setMaxWidth(50);
 		table.getColumnModel().getColumn(0).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMaxWidth(47);
-		table.getColumnModel().getColumn(2).setMinWidth(47);
-		table.getColumnModel().getColumn(3).setMaxWidth(55);
-		table.getColumnModel().getColumn(3).setMinWidth(55);
-		table.getColumnModel().getColumn(4).setMinWidth(85);
-		table.getColumnModel().getColumn(4).setMaxWidth(85);
-		table.getColumnModel().getColumn(5).setMinWidth(50);
-		table.getColumnModel().getColumn(5).setMaxWidth(50);
-		table.getColumnModel().getColumn(6).setMinWidth(55);
-		table.getColumnModel().getColumn(6).setMaxWidth(55);
-		table.getColumnModel().getColumn(7).setMaxWidth(70);
-		table.getColumnModel().getColumn(7).setMinWidth(70);
-		table.getColumnModel().getColumn(8).setMaxWidth(80);
-		table.getColumnModel().getColumn(8).setMinWidth(80);
+		table.getColumnModel().getColumn(2).setMaxWidth(75);
+		table.getColumnModel().getColumn(2).setMinWidth(75);
+		table.getColumnModel().getColumn(3).setMaxWidth(75);
+		table.getColumnModel().getColumn(3).setMinWidth(75);
+		table.getColumnModel().getColumn(4).setMinWidth(75);
+		table.getColumnModel().getColumn(4).setMaxWidth(75);
+		table.getColumnModel().getColumn(5).setMinWidth(75);//
+		table.getColumnModel().getColumn(5).setMaxWidth(75);//
+		table.getColumnModel().getColumn(6).setMinWidth(75);
+		table.getColumnModel().getColumn(6).setMaxWidth(75);
+		table.getColumnModel().getColumn(7).setMaxWidth(50);
+		table.getColumnModel().getColumn(7).setMinWidth(50);
+		table.getColumnModel().getColumn(8).setMaxWidth(65);
+		table.getColumnModel().getColumn(8).setMinWidth(65);
+		table.getColumnModel().getColumn(9).setMaxWidth(80);
+		table.getColumnModel().getColumn(9).setMinWidth(80);
+		
+		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+        r.setHorizontalAlignment(SwingConstants.LEFT);
 
+        table.getColumnModel().getColumn(2).setCellRenderer(r);
+		table.getColumnModel().getColumn(3).setCellRenderer(r);
+		table.getColumnModel().getColumn(4).setCellRenderer(r);
+		table.getColumnModel().getColumn(5).setCellRenderer(r);
+		table.getColumnModel().getColumn(6).setCellRenderer(r);
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override

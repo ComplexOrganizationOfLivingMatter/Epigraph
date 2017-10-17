@@ -60,7 +60,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	private JPanel scatterpanel;
 	private Chart chart;
-
+	private RangeSlider rangeSliderX;
+	private RangeSlider rangeSliderY;
+	private RangeSlider rangeSliderZ;
 	private JSlider slSizeOfPoints;
 
 	private JButton btnExport;
@@ -78,6 +80,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JLabel lbSizeOfPoints;
 	private JLabel xyzLabel;
 	private JLabel referenceMotifs;
+	private JLabel axisXinterval;
+	private JLabel axisYinterval;
+	private JLabel axisZinterval;
 
 	/**
 	 * Constructor. Initialize the chart with the info from the main table. Also
@@ -98,6 +103,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
 		this.chart.getScene().add(scatterData);
 		this.chart.getScene().add(scatterReference);
+		
 
 		initPanels();
 
@@ -194,11 +200,12 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		
 		initChart();
 		
-		BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
-		if (cbAxesToRepresent.getSelectedIndex()==1){
-			boundBox.setZmax(1);
-		}
-		this.chart.getView().setBoundManual(boundBox);
+	
+		
+		BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
+		chart.getView().setBoundManual(boundBox);
+		//chart.getAxeLayout().setZTickLabelDisplayed(false);// ONLY FOR PAPER FIGURE
+		
 				
 	}
 
@@ -292,12 +299,22 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				scatterReference.setWidth((float) slSizeOfPoints.getValue());
 			}
 		});
+		
+		
 
 		lbSizeOfPoints = new JLabel("Size of dots: ");
 		lbSizeOfPoints.setLabelFor(slSizeOfPoints);
 		
 		xyzLabel = new JLabel("Axes of figure:");
 		xyzLabel.setLabelFor(xyzLabel);
+		
+		axisXinterval = new JLabel("limits of X axis:");
+		axisXinterval.setLabelFor(axisXinterval);
+		axisYinterval = new JLabel("limits of Y axis:");
+		axisYinterval.setLabelFor(axisYinterval);
+		axisZinterval = new JLabel("limits of Z axis:");
+		axisZinterval.setLabelFor(axisZinterval);
+		
 		referenceMotifs = new JLabel("Motifs of CVTn reference:");
 		referenceMotifs.setLabelFor(referenceMotifs);
 
@@ -315,6 +332,56 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		cbAxesToRepresent.addItem("GDDRV-GDDV5-% Hexagons");
 		cbAxesToRepresent.setSelectedIndex(0);
 		
+		// Init rangeSliders
+		
+		rangeSliderX = new RangeSlider(0,100);
+		rangeSliderX.setValue(0);
+		rangeSliderX.setUpperValue(100);
+		rangeSliderX.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// We change the box bounds
+				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
+				chart.getView().setBoundManual(boundBox);
+				repaintAll();
+				
+			}
+			
+		});
+		rangeSliderY = new RangeSlider(0,100);
+		rangeSliderY.setValue(0);
+		rangeSliderY.setUpperValue(100);
+		rangeSliderY.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
+				chart.getView().setBoundManual(boundBox);
+				repaintAll();
+			}
+			
+		});
+		
+		rangeSliderZ = new RangeSlider(0,10000);
+		rangeSliderZ.setValue(0);
+		rangeSliderZ.setUpperValue(10000);
+			
+		rangeSliderZ.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// We change the box bounds
+				if (cbAxesToRepresent.getSelectedIndex()==1){
+					rangeSliderZ.setMaximum(100);
+				}else{
+					rangeSliderZ.setMaximum(10000);
+				}
+				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
+				chart.getView().setBoundManual(boundBox);
+				repaintAll();
+				
+			}
+			
+		});
+		
 		cbGraphletsReference.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				Scatter oldScatterReference = scatterReference;
@@ -328,10 +395,23 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				chart.getScene().remove(oldScatterReference,false);
 				chart.getScene().remove(oldScatterData,false);
 				
-				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
+				rangeSliderX.setValue(rangeSliderX.getMinimum());
+				rangeSliderX.setUpperValue(rangeSliderX.getMaximum());
+				rangeSliderY.setValue(rangeSliderY.getMinimum());
+				rangeSliderY.setUpperValue(rangeSliderY.getMaximum());
+				
 				if (cbAxesToRepresent.getSelectedIndex()==1){
-					boundBox.setZmax(1);
-				}
+					rangeSliderZ.setMaximum(100);
+					rangeSliderZ.setValue(0);
+					rangeSliderZ.setUpperValue(100);
+					
+				}else{
+					rangeSliderZ.setMaximum(10000);
+					rangeSliderZ.setValue(0);
+					rangeSliderZ.setUpperValue(10000);
+					}
+	
+				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
 				chart.getView().setBoundManual(boundBox);
 				repaintAll();
 				
@@ -353,10 +433,22 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				chart.getScene().remove(oldScatterReference,false);
 				chart.getScene().remove(oldScatterData,false);
 				
-				BoundingBox3d boundBox = new BoundingBox3d(0,1,0,1,0,100);
+				
+				rangeSliderX.setValue(rangeSliderX.getMinimum());
+				rangeSliderX.setUpperValue(rangeSliderX.getMaximum());
+				rangeSliderY.setValue(rangeSliderY.getMinimum());
+				rangeSliderY.setUpperValue(rangeSliderY.getMaximum());
 				if (cbAxesToRepresent.getSelectedIndex()==1){
-					boundBox.setZmax(1);
-				}
+					rangeSliderZ.setMaximum(100);
+					rangeSliderZ.setValue(0);
+					rangeSliderZ.setUpperValue(100);
+				}else{
+					rangeSliderZ.setMaximum(10000);
+					rangeSliderZ.setValue(0);
+					rangeSliderZ.setUpperValue(10000);
+					}
+				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
+				
 				chart.getView().setBoundManual(boundBox);
 				repaintAll();
 				
@@ -374,6 +466,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				cbAxesToRepresent.setEnabled(chbShowVoronoiReference.getState());
 			}
 		});
+		
+		
+		
+		
 	}
 
 	/**
@@ -411,6 +507,20 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		buttonsPanel.add(xyzLabel, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(cbAxesToRepresent, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		
+		
+		buttonsPanel.add(axisXinterval, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(rangeSliderX, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(axisYinterval, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(rangeSliderY, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(axisZinterval, genericPanelConstrainst);
+		genericPanelConstrainst.gridy++;
+		buttonsPanel.add(rangeSliderZ, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(chbShowVoronoiReference, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
