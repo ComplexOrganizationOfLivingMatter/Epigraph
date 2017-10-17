@@ -145,6 +145,31 @@ public class MainWindow extends JFrame {
 	}
 
 	/**
+	 * Decimal format for table of main window
+	 */
+	private class DecimalFormatRenderer extends DefaultTableCellRenderer {
+	      private DecimalFormat formatter = new DecimalFormat( "#0.000" );
+	 
+	      public void set(DecimalFormat formatter){
+	    	  this.formatter =formatter;
+	      }
+	      public Component getTableCellRendererComponent(
+	         JTable table, Object value, boolean isSelected,
+	         boolean hasFocus, int row, int column) {
+	 
+	         // First format the cell value as required
+	 
+	         value = formatter.format((Number)value);
+	 
+	            // And pass it on to parent class
+	 
+	         return super.getTableCellRendererComponent(
+	            table, value, isSelected, hasFocus, row, column );
+	      }
+	      
+	   }
+	
+	/**
 	 * Initialize the gui items and set up properly within the window
 	 */
 	private void initGUIItems() {
@@ -200,14 +225,20 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(9).setMaxWidth(80);
 		table.getColumnModel().getColumn(9).setMinWidth(80);
 		
-		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(SwingConstants.LEFT);
+		DecimalFormatRenderer decimalFormat = new DecimalFormatRenderer();
+		decimalFormat.setHorizontalAlignment(SwingConstants.LEFT);
+		DefaultTableCellRenderer defaultformat = new DefaultTableCellRenderer();
+		defaultformat.setHorizontalAlignment(SwingConstants.LEFT);
+		
 
-        table.getColumnModel().getColumn(2).setCellRenderer(r);
-		table.getColumnModel().getColumn(3).setCellRenderer(r);
-		table.getColumnModel().getColumn(4).setCellRenderer(r);
-		table.getColumnModel().getColumn(5).setCellRenderer(r);
-		table.getColumnModel().getColumn(6).setCellRenderer(r);
+        table.getColumnModel().getColumn(2).setCellRenderer(decimalFormat);
+		table.getColumnModel().getColumn(3).setCellRenderer(decimalFormat);
+		table.getColumnModel().getColumn(4).setCellRenderer(decimalFormat);
+		DecimalFormatRenderer decimalFormat2 = new DecimalFormatRenderer();
+		decimalFormat2.set(new DecimalFormat("#0.00"));
+		table.getColumnModel().getColumn(5).setCellRenderer(decimalFormat2);
+		table.getColumnModel().getColumn(6).setCellRenderer(defaultformat);
+		
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override
@@ -278,6 +309,10 @@ public class MainWindow extends JFrame {
 		panel.add(btnDeleteRow);
 
 	}
+	
+	
+	
+	
 
 	/**
 	 * Create the image processing window. However, restrictions are applied
