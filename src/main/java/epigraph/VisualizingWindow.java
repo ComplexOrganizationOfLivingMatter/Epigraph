@@ -333,60 +333,48 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		cbAxesToRepresent.setSelectedIndex(0);
 		
 		// Init rangeSliders
-		
 		rangeSliderX = new RangeSlider(0,100);
 		rangeSliderX.setValue(0);
 		rangeSliderX.setUpperValue(100);
-		rangeSliderX.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				// We change the box bounds
-				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
-				chart.getView().setBoundManual(boundBox);
-				repaintAll();
-				
-			}
-			
-		});
 		rangeSliderY = new RangeSlider(0,100);
 		rangeSliderY.setValue(0);
 		rangeSliderY.setUpperValue(100);
-		rangeSliderY.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
-				chart.getView().setBoundManual(boundBox);
-				repaintAll();
-			}
-			
-		});
 		
 		rangeSliderZ = new RangeSlider(0,10000);
 		rangeSliderZ.setValue(0);
 		rangeSliderZ.setUpperValue(10000);
 			
-		rangeSliderZ.addChangeListener(new ChangeListener() {
-			@Override
+		ChangeListener changingZoom =new ChangeListener(){
 			public void stateChanged(ChangeEvent e) {
-				// We change the box bounds
-				if (cbAxesToRepresent.getSelectedIndex()==1){
-					rangeSliderZ.setMaximum(100);
-				}else{
-					rangeSliderZ.setMaximum(10000);
-				}
-				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
-				chart.getView().setBoundManual(boundBox);
-				repaintAll();
-				
-			}
+			// We change the box bounds
 			
-		});
+			float factorNoOverlapX;
+			float factorNoOverlapY;
+			float factorNoOverlapZ;
+			if (((float) rangeSliderX.getValue()/100) == (float) (rangeSliderX.getUpperValue())/100){
+				factorNoOverlapX = (float) 0.01;
+			}else{factorNoOverlapX = 0;}
+			if (((float) rangeSliderY.getValue()/100) == (float) (rangeSliderY.getUpperValue())/100){
+				factorNoOverlapY = (float) 0.01;
+			}else{factorNoOverlapY = 0;}
+			if (((float) rangeSliderZ.getValue()/100) == (float) (rangeSliderZ.getUpperValue())/100){
+				factorNoOverlapZ = (float) 0.01;
+			}else{factorNoOverlapZ = 0;}
+
+			BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) (rangeSliderX.getUpperValue())/100)+factorNoOverlapX ,(float) rangeSliderY.getValue()/100,((float) (rangeSliderY.getUpperValue())/100)+factorNoOverlapY,(float) rangeSliderZ.getValue()/100,((float) (rangeSliderZ.getUpperValue())/100)+factorNoOverlapZ);
+			chart.getView().setBoundManual(boundBox);
+			repaintAll();
+			
+		}};
 		
-		cbGraphletsReference.addItemListener(new ItemListener() {
+		rangeSliderX.addChangeListener(changingZoom);
+		rangeSliderY.addChangeListener(changingZoom);
+		rangeSliderZ.addChangeListener(changingZoom);
+		
+		ItemListener changeModeOrAxes = new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
 				Scatter oldScatterReference = scatterReference;
 				Scatter oldScatterData = scatterData;
-				
 				
 				createScatterData();
 				chart.getScene().add(scatterData);
@@ -402,58 +390,19 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				
 				if (cbAxesToRepresent.getSelectedIndex()==1){
 					rangeSliderZ.setMaximum(100);
-					rangeSliderZ.setValue(0);
-					rangeSliderZ.setUpperValue(100);
-					
-				}else{
-					rangeSliderZ.setMaximum(10000);
-					rangeSliderZ.setValue(0);
-					rangeSliderZ.setUpperValue(10000);
+				}else{rangeSliderZ.setMaximum(10000);
 					}
+				rangeSliderZ.setValue(rangeSliderZ.getMinimum());
+				rangeSliderZ.setUpperValue(rangeSliderZ.getMaximum());
 	
 				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
 				chart.getView().setBoundManual(boundBox);
-				repaintAll();
-				
-				
 			}
-		});
+		};
 		
+		cbGraphletsReference.addItemListener(changeModeOrAxes);
+		cbAxesToRepresent.addItemListener(changeModeOrAxes);
 		
-		cbAxesToRepresent.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				Scatter oldScatterReference = scatterReference;
-				Scatter oldScatterData = scatterData;
-				
-				
-				createScatterData();
-				chart.getScene().add(scatterData);
-				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
-				chart.getScene().add(scatterReference);
-				chart.getScene().remove(oldScatterReference,false);
-				chart.getScene().remove(oldScatterData,false);
-				
-				
-				rangeSliderX.setValue(rangeSliderX.getMinimum());
-				rangeSliderX.setUpperValue(rangeSliderX.getMaximum());
-				rangeSliderY.setValue(rangeSliderY.getMinimum());
-				rangeSliderY.setUpperValue(rangeSliderY.getMaximum());
-				if (cbAxesToRepresent.getSelectedIndex()==1){
-					rangeSliderZ.setMaximum(100);
-					rangeSliderZ.setValue(0);
-					rangeSliderZ.setUpperValue(100);
-				}else{
-					rangeSliderZ.setMaximum(10000);
-					rangeSliderZ.setValue(0);
-					rangeSliderZ.setUpperValue(10000);
-					}
-				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
-				
-				chart.getView().setBoundManual(boundBox);
-				repaintAll();
-				
-			}
-		});
 
 		chbShowVoronoiReference = new Checkbox("Show reference", true);
 		chbShowVoronoiReference.setState(true);
