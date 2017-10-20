@@ -206,22 +206,22 @@ public class MainWindow extends JFrame {
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 		table.setDefaultEditor(Color.class, new JColorEditor());
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.getColumnModel().getColumn(0).setMaxWidth(50);
-		table.getColumnModel().getColumn(0).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMaxWidth(75);
-		table.getColumnModel().getColumn(2).setMinWidth(75);
-		table.getColumnModel().getColumn(3).setMaxWidth(75);
-		table.getColumnModel().getColumn(3).setMinWidth(75);
-		table.getColumnModel().getColumn(4).setMinWidth(75);
-		table.getColumnModel().getColumn(4).setMaxWidth(75);
-		table.getColumnModel().getColumn(5).setMinWidth(75);//
-		table.getColumnModel().getColumn(5).setMaxWidth(75);//
-		table.getColumnModel().getColumn(6).setMinWidth(75);
-		table.getColumnModel().getColumn(6).setMaxWidth(75);
+		table.getColumnModel().getColumn(0).setMaxWidth(40);
+		table.getColumnModel().getColumn(0).setMinWidth(40);
+		table.getColumnModel().getColumn(2).setMaxWidth(40);
+		table.getColumnModel().getColumn(2).setMinWidth(40);
+		table.getColumnModel().getColumn(3).setMaxWidth(50);
+		table.getColumnModel().getColumn(3).setMinWidth(50);
+		table.getColumnModel().getColumn(4).setMinWidth(50);
+		table.getColumnModel().getColumn(4).setMaxWidth(50);
+		table.getColumnModel().getColumn(5).setMinWidth(85);//
+		table.getColumnModel().getColumn(5).setMaxWidth(85);//
+		table.getColumnModel().getColumn(6).setMinWidth(50);
+		table.getColumnModel().getColumn(6).setMaxWidth(50);
 		table.getColumnModel().getColumn(7).setMaxWidth(50);
 		table.getColumnModel().getColumn(7).setMinWidth(50);
-		table.getColumnModel().getColumn(8).setMaxWidth(65);
-		table.getColumnModel().getColumn(8).setMinWidth(65);
+		table.getColumnModel().getColumn(8).setMaxWidth(120);
+		table.getColumnModel().getColumn(8).setMinWidth(120);
 		table.getColumnModel().getColumn(9).setMaxWidth(80);
 		table.getColumnModel().getColumn(9).setMinWidth(80);
 		

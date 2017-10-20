@@ -323,7 +323,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		cbGraphletsReference = new JComboBox<String>();
 		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
-		cbGraphletsReference.setSelectedIndex(0);
+		cbGraphletsReference.setSelectedIndex(1);
 		cbAxesToRepresent = new JComboBox<String>();
 		cbAxesToRepresent.setModel(new DefaultComboBoxModel<String>());
 		cbAxesToRepresent.addItem("GDDH-GDDRV-% Hexagons");

@@ -48,6 +48,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
@@ -373,8 +374,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		cbGraphletsMode = new JComboBox<String>();
 		cbGraphletsMode.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
-		cbGraphletsMode.setSelectedIndex(0);
-
+		cbGraphletsMode.setSelectedIndex(1);
+		
 		btnCreateRoi = new JButton("Create RoI");
 		btnCreateRoi.addActionListener(this);
 
