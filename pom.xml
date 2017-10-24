@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>Epigraph_</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>plugins/Epigraph_.jar</name>
 	<description></description>
 
@@ -32,7 +32,7 @@
 
 		<developer>
 			<id>pgomez</id>
-			<name>Pedro Javier Gomez Galvez</name>
+			<name>Pedro Gomez-Galvez</name>
 			<email>pgomez-ibis@us.es</email>
 			<url>http://lmescudero.blogspot.com.es/</url>
 			<organization>University of Seville - IBiS</organization>

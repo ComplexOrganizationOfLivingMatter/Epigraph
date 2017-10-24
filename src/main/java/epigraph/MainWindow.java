@@ -82,7 +82,7 @@ public class MainWindow extends JFrame {
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
 		setMinimumSize(new Dimension(1000, 600));
-		setTitle("Epigraph");
+		setTitle("EpiGraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
