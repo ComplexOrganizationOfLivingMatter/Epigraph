@@ -932,19 +932,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				get(); // get exceptions
 				progressBar.setValue(100);
 				Toolkit.getDefaultToolkit().beep();
-				repaintAll();
-				if (option == 2)
-					setEnablePanels(true);
-				else
-					enableActionButtons();
 			} catch (ExecutionException e) {
 				e.getCause().printStackTrace();
 				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
 				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+				progressBar.setValue(0);
 			} catch (InterruptedException e) {
 				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
 				JOptionPane.showMessageDialog(canvas.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+				progressBar.setValue(0);
 			}
+			
+			repaintAll();
+			if (option == 2)
+				setEnablePanels(true);
+			else
+				enableActionButtons();
 		}
 
 		/**
