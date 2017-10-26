@@ -86,6 +86,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JPanel configPanel = new JPanel();
 	private Container buttonsPanel = new Container();
 	private Container labelsJPanel = new Container();
+	
+	private boolean threadFinished;
 
 	private JLabel lbImageLegend;
 
@@ -149,6 +151,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		initGUI(raw_img);
 
 		setEnablePanels(false);
+		
+		threadFinished = false;
 	}
 
 	/**
@@ -562,6 +566,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				newGraphletImage.setLabelName(tfImageName.getText());
 				newGraphletImage.setColor(colorPicked.getBackground());
 				disableActionButtons();
+				
 				backgroundTask = new Task(0);
 				backgroundTask.execute();
 			}
@@ -657,10 +662,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			disableActionButtons();
 			backgroundTask = new Task(2);
 			backgroundTask.execute();
+		} else if (this.threadFinished == true) { //Removing the finished thread 
+			backgroundTask.cancel(true);
+			backgroundTask.finalizeThread();
+			backgroundTask = null;
+			this.threadFinished = false;
 		} else if (e.getSource() == btnZipData) {
 			exportDataIntoZip();
 		}
 
+		
 		// Update the image and canvas
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
@@ -897,6 +908,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			this.option = option;
 		}
 
+		public void finalizeThread() {
+			try {
+				this.finalize();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		/**
 		 * Main task. Executed in background thread.
 		 */
@@ -950,6 +970,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				enableActionButtons();
 			
 			this.cancel(true);
+			
+			threadFinished = true;
 		}
 
 		/**
