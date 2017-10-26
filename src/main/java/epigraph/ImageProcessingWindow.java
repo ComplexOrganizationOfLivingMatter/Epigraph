@@ -948,6 +948,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				setEnablePanels(true);
 			else
 				enableActionButtons();
+			
+			this.cancel(true);
 		}
 
 		/**
