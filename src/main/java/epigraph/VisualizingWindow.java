@@ -231,19 +231,20 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		// Show only the points that we want to visualized, whose are ticked in
 		// the visualizing table
 		int numRow = 0;
-		for (int i = 0; i < tableInfo.getRowCount(); i++) {
+		for (int i = 0; i<tableInfo.getRowCount();i++){
+		//for (int i = 0; i < tableInfo.getRowCount(); i++) {
 			if (tableInfo.getListOfSelected().get(i).booleanValue()) {
 				// creating coord array
-				pointsAxes1[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+				pointsAxes1[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
-				pointsAxes2[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+				pointsAxes2[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5());
-				pointsAxes3[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
+				pointsAxes3[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
-				pointsAxes4[i] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
+				pointsAxes4[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
 						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
 				// creating color array
