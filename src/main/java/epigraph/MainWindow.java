@@ -179,12 +179,64 @@ public class MainWindow extends JFrame {
 				try {
 					visualizingWindow = new VisualizingWindow(fatherWindow, tableInfo);
 					visualizingWindow.setVisible(true);
-				} catch (Exception e) {
+					
+					
+					visualizingWindow.addWindowListener(new WindowListener(){
+
+						@Override
+						public void windowOpened(WindowEvent e) {
+							// TODO Auto-generated method stub
+							btnVisualize.setEnabled(false);
+						}
+
+						@Override
+						public void windowClosing(WindowEvent e) {
+							// TODO Auto-generated method stub
+							btnVisualize.setEnabled(true);
+						}
+
+						@Override
+						public void windowClosed(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowIconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowDeiconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowActivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowDeactivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
+					
+				}
+					
+					
+				catch (Exception e) {
 					String msg = String.format("Unexpected problem: %s", e.getCause().toString());
 					JOptionPane.showMessageDialog(panel.getParent(), msg, "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
+			
 		});
 
 		btnOpenButton = new JButton("Open");
@@ -323,9 +375,57 @@ public class MainWindow extends JFrame {
 		try {
 			ImagePlus raw_img = IJ.openImage();
 			if (raw_img != null) {
-				if (raw_img.getHeight() < 3000 || raw_img.getWidth() < 3000) {
+				if (raw_img.getHeight() < 3000 && raw_img.getWidth() < 3000) {
 					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
 					imageProcessing.pack();
+					
+					imageProcessing.addWindowListener(new WindowListener(){
+
+						@Override
+						public void windowOpened(WindowEvent e) {
+							// TODO Auto-generated method stub
+							btnOpenButton.setEnabled(false);
+						}
+
+						@Override
+						public void windowClosing(WindowEvent e) {
+							// TODO Auto-generated method stub
+							btnOpenButton.setEnabled(true);
+						}
+
+						@Override
+						public void windowClosed(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowIconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowDeiconified(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowActivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void windowDeactivated(WindowEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
+					
+					
 				} else {
 					JOptionPane.showMessageDialog(panel.getParent(),
 							"Max. width or height is 3000px. Please, resize it.");

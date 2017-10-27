@@ -135,10 +135,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 *            information of the table
 	 */
 	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
+		
 		super(raw_img, new CustomCanvas(raw_img));
+		//super(raw_img, new CustomCanvas(raw_img));
 
-		canvas = (CustomCanvas) getCanvas();
-
+		canvas = (CustomCanvas) super.getCanvas();
+		
 		newGraphletImages = new ArrayList<GraphletImage>();
 
 		tableInf = tableInfo;
