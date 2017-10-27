@@ -382,6 +382,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				createScatterData();
 				chart.getScene().add(scatterData);
 				createScatterPlot(cbGraphletsReference.getSelectedIndex(),cbAxesToRepresent.getSelectedIndex());
+				scatterReference.setDisplayed(chbShowVoronoiReference.getState());	
 				chart.getScene().add(scatterReference);
 				chart.getScene().remove(oldScatterReference,false);
 				chart.getScene().remove(oldScatterData,false);
@@ -400,6 +401,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	
 				BoundingBox3d boundBox = new BoundingBox3d(((float) rangeSliderX.getValue())/100,((float) rangeSliderX.getUpperValue())/100,((float) rangeSliderY.getValue())/100,((float) rangeSliderY.getUpperValue())/100,((float) rangeSliderZ.getValue())/100,((float) rangeSliderZ.getUpperValue())/100);
 				chart.getView().setBoundManual(boundBox);
+				
+				chbShowVoronoiReference.setState(chbShowVoronoiReference.getState());
+				cbGraphletsReference.setEnabled(chbShowVoronoiReference.getState());
 			}
 		};
 		
@@ -415,7 +419,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 			public void itemStateChanged(ItemEvent e) {
 				scatterReference.setDisplayed(chbShowVoronoiReference.getState());
 				cbGraphletsReference.setEnabled(chbShowVoronoiReference.getState());
-				cbAxesToRepresent.setEnabled(chbShowVoronoiReference.getState());
+				//cbAxesToRepresent.setEnabled(chbShowVoronoiReference.getState());
 			}
 		});
 		
