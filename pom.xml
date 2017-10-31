@@ -152,6 +152,7 @@
 							<exclude>sc.fiji:VIB-lib</exclude>
 							<exclude>sc.fiji:pal-optimization</exclude>
 							<exclude>sc.fiji:fiji-lib</exclude>
+							<exclude>ome:*</exclude>
 							<exclude>sc.fiji:legacy-imglib1</exclude>
 							<exclude>net.imagej:*</exclude>
 							<exclude>net.imglib2:*</exclude>
