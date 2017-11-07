@@ -38,7 +38,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	/**
 	 * Nomenclature of the graphlets we'll be using
 	 */
-	public static String[] KIND_OF_GRAPHLETS = { " Mo29 (27 graphlets)"," Mo17 (17 graphlets)", " Mo10 (9 graphlets)", " Mo7 (7 graphlets)" };
+	public static String[] KIND_OF_GRAPHLETS = { " Mo29 (26 graphlets)"," Mo17 (17 graphlets)", " Mo10 (9 graphlets)", " Mo7 (7 graphlets)" };
 	/**
 	 * Circle shape of the mask
 	 */

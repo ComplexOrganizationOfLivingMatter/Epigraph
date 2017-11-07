@@ -7,7 +7,9 @@
 /docs/
 /.metadata/
 */RemoteSystemsTempFiles/*
-
+*DatasetOfImages.zip*
+*/DatasetOfImages/*
+*../videos/*
 *.log
 dependency-reduced-pom.xml
 src/main/resources/epigraph/voronoiNoiseReference/old/*.txt
