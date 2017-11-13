@@ -1048,7 +1048,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			if (ListPolDistri.size() > 1) {
 				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
-				lbtitlePolDistRoi.setText("Rois");
+				lbtitlePolDistRoi.setText("ROIs");
 				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
 				lbRoiSquares.setText(polDistriRoi.get(0));
 				lbRoiPentagons.setText(polDistriRoi.get(1));
