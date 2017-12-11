@@ -29,7 +29,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
@@ -64,6 +63,7 @@ public class MainWindow extends JFrame {
 	protected VisualizingWindow visualizingWindow;
 	private ImageProcessingWindow imageProcessing;
 	private JButton btnDeleteRow;
+	private JFileChooser fileChooser;
 
 	/**
 	 * Constructor by default. Setup all the windows and creates the panel. It
@@ -141,6 +141,9 @@ public class MainWindow extends JFrame {
 		getContentPane().add(panel);
 
 		initGUIItems();
+		
+
+		fileChooser = new JFileChooser();
 
 	}
 
@@ -489,14 +492,13 @@ public class MainWindow extends JFrame {
 		}
 
 		JFrame parentFrame = new JFrame();
-		JFileChooser fileChooser = new JFileChooser();
 		// set it to be a save dialog
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		// set a default filename (this is where you default extension
 		// first comes in)
 		fileChooser.setSelectedFile(new File("myfile.xls"));
 		// Set an extension filter, so the user sees other XML files
-		fileChooser.setFileFilter(new FileNameExtensionFilter("XLS files", "xls"));
+		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls"));
 
 		fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -530,19 +532,17 @@ public class MainWindow extends JFrame {
 	 * Import information from an .XLS file to the table
 	 */
 	public void importXLSToTable() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Import");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLS files", "xls");
-		chooser.setFileFilter(filter);
-		chooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setDialogTitle("Import");
+		javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls");
+		fileChooser.setFileFilter(filter);
+		fileChooser.setAcceptAllFileFilterUsed(false);
 
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
-			System.out.println("getSelectedFile() : " + chooser.getSelectedFile().getPath());
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			System.out.println("getCurrentDirectory(): " + fileChooser.getCurrentDirectory());
+			System.out.println("getSelectedFile() : " + fileChooser.getSelectedFile().getPath());
 
 			ExcelClass excelclass = new ExcelClass();
-			excelclass.importData(chooser.getSelectedFile().getPath());
+			excelclass.importData(fileChooser.getSelectedFile().getPath());
 			int flat = 0;
 			ArrayList<Object> newRow;
 			Color newColor;

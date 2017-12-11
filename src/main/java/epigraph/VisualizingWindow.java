@@ -86,6 +86,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JLabel axisYinterval;
 	private JLabel axisZinterval;
 
+	private JFileChooser fileChooser;
+
 	/**
 	 * Constructor. Initialize the chart with the info from the main table. Also
 	 * it add a reference in case you'd want to view it and compare the points
@@ -98,6 +100,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		super(parent);
 
 		this.tableInfo = tableInfo;
+		
+
+		fileChooser = new JFileChooser();
 
 		initGUIItems();
 		
@@ -574,7 +579,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnExport) {
-			JFileChooser fileChooser = new JFileChooser();
+			
 			// set it to be a save dialog
 			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 			// set a default filename (this is where you default extension
