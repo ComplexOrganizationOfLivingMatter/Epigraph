@@ -28,7 +28,7 @@ class JTableModel extends AbstractTableModel {
 
 	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
 
-	private ArrayList<GraphletImage> allGraphletImages;
+	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
 	private ArrayList<String> listOfModes;
 
@@ -37,7 +37,7 @@ class JTableModel extends AbstractTableModel {
 	 */
 	public JTableModel() {
 		super();
-		allGraphletImages = new ArrayList<GraphletImage>();
+		allGraphletImages = new ArrayList<BasicGraphletImage>();
 		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
@@ -190,7 +190,7 @@ class JTableModel extends AbstractTableModel {
 	/**
 	 * @return the allGraphletImages
 	 */
-	public ArrayList<GraphletImage> getAllGraphletImages() {
+	public ArrayList<BasicGraphletImage> getAllGraphletImages() {
 		return allGraphletImages;
 	}
 
@@ -198,7 +198,7 @@ class JTableModel extends AbstractTableModel {
 	 * @param allGraphletImages
 	 *            the allGraphletImages to set
 	 */
-	public void setAllGraphletImages(ArrayList<GraphletImage> allGraphletImages) {
+	public void setAllGraphletImages(ArrayList<BasicGraphletImage> allGraphletImages) {
 		this.allGraphletImages = allGraphletImages;
 	}
 
@@ -247,11 +247,11 @@ class JTableModel extends AbstractTableModel {
 
 	/**
 	 * 
-	 * @param newImage
+	 * @param newGraphletImage
 	 * @param graphletsMode
 	 */
-	public void addImage(GraphletImage newImage, String graphletsMode) {
-		allGraphletImages.add(newImage);
+	public void addImage(BasicGraphletImage newGraphletImage, String graphletsMode) {
+		allGraphletImages.add(newGraphletImage);
 		listOfSelected.add(true);
 		listOfModes.add(graphletsMode);
 

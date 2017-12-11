@@ -461,14 +461,14 @@ public class MainWindow extends JFrame {
 		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
 		
 		int cont = 0;
-		for (GraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
+		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
 			arrayNames.add(graphletImg.getLabelName());
-			arraySquares.add(graphletImg.getPercentageOfSquares());		
-			arrayPentagons.add(graphletImg.getPercentageOfPentagons());
-			arrayHexagons.add(graphletImg.getPercentageOfHexagons());
-			arrayHeptagons.add(graphletImg.getPercentageOfHeptagons());
-			arrayOctogons.add(graphletImg.getPercentageOfOctogons());
+			arraySquares.add(graphletImg.getPercentageOfSquaresGraphlets());		
+			arrayPentagons.add(graphletImg.getPercentageOfPentagonsGraphlets());
+			arrayHexagons.add(graphletImg.getPercentageOfHexagonsGraphlets());
+			arrayHeptagons.add(graphletImg.getPercentageOfHeptagonsGraphlets());
+			arrayOctogons.add(graphletImg.getPercentageOfOctogonsGraphlets());
 			arrayGDDH.add(graphletImg.getDistanceGDDH());
 			arrayGDDRV.add(graphletImg.getDistanceGDDRV());
 			arrayGDDV5.add(graphletImg.getDistanceGDDV5());
@@ -544,66 +544,67 @@ public class MainWindow extends JFrame {
 			ExcelClass excelclass = new ExcelClass();
 			excelclass.importData(chooser.getSelectedFile().getPath());
 			int flat = 0;
-			BasicGraphletImage newRow;
+			ArrayList<Object> newRow;
 			Color newColor;
 			for (int row = 0; row < excelclass.getImageName().size(); row++) {
+				newRow = excelclass.getRow(row);
 				if (flat == 1) {
-					newColor = new Color(Math.round((float) excelclass.getRow(row).get(4)),
-							Math.round((float) excelclass.getRow(row).get(5)),
-							Math.round((float) excelclass.getRow(row).get(6)));
+					newColor = new Color(Math.round((float) newRow.get(4)),
+							Math.round((float) newRow.get(5)),
+							Math.round((float) newRow.get(6)));
 				} else if (flat == 2) {
-					newColor = new Color((float) excelclass.getRow(row).get(4), (float) excelclass.getRow(row).get(5),
-							(float) excelclass.getRow(row).get(6));
+					newColor = new Color((float) newRow.get(4), (float) newRow.get(5),
+							(float) newRow.get(6));
 				} else {
-					if ((float) excelclass.getRow(row).get(4) > 1.0 || (float) excelclass.getRow(row).get(5) > 1.0
-							|| (float) excelclass.getRow(row).get(6) > 1.0) {
+					if ((float) newRow.get(4) > 1.0 || (float) newRow.get(5) > 1.0
+							|| (float) newRow.get(6) > 1.0) {
 						flat = 1;
-						newColor = new Color(Math.round((float) excelclass.getRow(row).get(4)),
-								Math.round((float) excelclass.getRow(row).get(5)),
-								Math.round((float) excelclass.getRow(row).get(6)));
-					} else if (((float) excelclass.getRow(row).get(4) < 1.0
-							& (float) excelclass.getRow(row).get(4) > 1.0)
-							|| ((float) excelclass.getRow(row).get(5) < 1.0
-									& (float) excelclass.getRow(row).get(5) > 0.0)
-							|| ((float) excelclass.getRow(row).get(6) < 1.0
-									& (float) excelclass.getRow(row).get(6) > 0.0)) {
-						newColor = new Color((float) excelclass.getRow(row).get(4),
-								(float) excelclass.getRow(row).get(5), (float) excelclass.getRow(row).get(6));
+						newColor = new Color(Math.round((float) newRow.get(4)),
+								Math.round((float) newRow.get(5)),
+								Math.round((float) newRow.get(6)));
+					} else if (((float) newRow.get(4) < 1.0
+							& (float) newRow.get(4) > 1.0)
+							|| ((float) newRow.get(5) < 1.0
+									& (float) newRow.get(5) > 0.0)
+							|| ((float) newRow.get(6) < 1.0
+									& (float) newRow.get(6) > 0.0)) {
+						newColor = new Color((float) newRow.get(4),
+								(float) newRow.get(5), (float) newRow.get(6));
 						flat = 2;
 					} else {
-						newColor = new Color((float) excelclass.getRow(row).get(4),
-								(float) excelclass.getRow(row).get(5), (float) excelclass.getRow(row).get(6));
+						newColor = new Color((float) newRow.get(4),
+								(float) newRow.get(5), (float) newRow.get(6));
 
 					}
 
 				}
 
 				int shapeColumn;
-				String shapeString = (String) excelclass.getRow(row).get(9);
+				String shapeString = (String) newRow.get(9);
 				if (shapeString.equals("Circle")) {
 					shapeColumn = GraphletImage.CIRCLE_SHAPE;
 				} else {
 					shapeColumn = GraphletImage.SQUARE_SHAPE;
 				}
 				
-				GraphletImage newGraphletImage= new GraphletImage();
-				newGraphletImage.setDistanceGDDH((float) excelclass.getRow(row).get(1));
-				newGraphletImage.setDistanceGDDRV((float) excelclass.getRow(row).get(2));
-				newGraphletImage.setDistanceGDDV5((float) excelclass.getRow(row).get(3));
+				BasicGraphletImage newGraphletImage= new BasicGraphletImage();
+				newGraphletImage.setDistanceGDDH((float) newRow.get(1));
+				newGraphletImage.setDistanceGDDRV((float) newRow.get(2));
+				newGraphletImage.setDistanceGDDV5((float) newRow.get(3));
 				newGraphletImage.setColor(newColor);
-				newGraphletImage.setLabelName((String) excelclass.getRow(row).get(0));
+				newGraphletImage.setLabelName((String) newRow.get(0));
 				newGraphletImage.setShapeOfMask(shapeColumn);
-				newGraphletImage.setRadiusOfMask((int) excelclass.getRow(row).get(8));
-				newGraphletImage.setPercentageOfSquares((float) excelclass.getRow(row).get(10));
-				newGraphletImage.setPercentageOfPentagons((float) excelclass.getRow(row).get(11));
-				newGraphletImage.setPercentageOfHexagons((float) excelclass.getRow(row).get(12));
-				newGraphletImage.setPercentageOfHexagonsGraphlets((float) excelclass.getRow(row).get(12));
-				newGraphletImage.setPercentageOfHeptagons((float) excelclass.getRow(row).get(13));
-				newGraphletImage.setPercentageOfOctogons((float) excelclass.getRow(row).get(14));
+				newGraphletImage.setRadiusOfMask((int) newRow.get(8));
+				newGraphletImage.setPercentageOfSquaresGraphlets((float) newRow.get(10));
+				newGraphletImage.setPercentageOfPentagonsGraphlets((float) newRow.get(11));
+				newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
+				newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
+				newGraphletImage.setPercentageOfHeptagonsGraphlets((float) newRow.get(13));
+				newGraphletImage.setPercentageOfOctogonsGraphlets((float) newRow.get(14));
 				
 				
 				
-				tableInfo.addImage(newGraphletImage, (String) excelclass.getRow(row).get(7));
+				tableInfo.addImage(newGraphletImage, (String) newRow.get(7));
 
 			}
 

@@ -192,6 +192,90 @@ public class BasicGraphletImage {
 
 
 	/**
+	 * @return the percentageOfTrianglesGraphlets
+	 */
+	public final float getPercentageOfTrianglesGraphlets() {
+		return percentageOfTrianglesGraphlets;
+	}
+
+	/**
+	 * @param percentageOfTrianglesGraphlets the percentageOfTrianglesGraphlets to set
+	 */
+	public final void setPercentageOfTrianglesGraphlets(float percentageOfTrianglesGraphlets) {
+		this.percentageOfTrianglesGraphlets = percentageOfTrianglesGraphlets;
+	}
+
+	/**
+	 * @return the percentageOfSquaresGraphlets
+	 */
+	public final float getPercentageOfSquaresGraphlets() {
+		return percentageOfSquaresGraphlets;
+	}
+
+	/**
+	 * @param percentageOfSquaresGraphlets the percentageOfSquaresGraphlets to set
+	 */
+	public final void setPercentageOfSquaresGraphlets(float percentageOfSquaresGraphlets) {
+		this.percentageOfSquaresGraphlets = percentageOfSquaresGraphlets;
+	}
+
+	/**
+	 * @return the percentageOfPentagonsGraphlets
+	 */
+	public final float getPercentageOfPentagonsGraphlets() {
+		return percentageOfPentagonsGraphlets;
+	}
+
+	/**
+	 * @param percentageOfPentagonsGraphlets the percentageOfPentagonsGraphlets to set
+	 */
+	public final void setPercentageOfPentagonsGraphlets(float percentageOfPentagonsGraphlets) {
+		this.percentageOfPentagonsGraphlets = percentageOfPentagonsGraphlets;
+	}
+
+	/**
+	 * @return the percentageOfHeptagonsGraphlets
+	 */
+	public final float getPercentageOfHeptagonsGraphlets() {
+		return percentageOfHeptagonsGraphlets;
+	}
+
+	/**
+	 * @param percentageOfHeptagonsGraphlets the percentageOfHeptagonsGraphlets to set
+	 */
+	public final void setPercentageOfHeptagonsGraphlets(float percentageOfHeptagonsGraphlets) {
+		this.percentageOfHeptagonsGraphlets = percentageOfHeptagonsGraphlets;
+	}
+
+	/**
+	 * @return the percentageOfOctogonsGraphlets
+	 */
+	public final float getPercentageOfOctogonsGraphlets() {
+		return percentageOfOctogonsGraphlets;
+	}
+
+	/**
+	 * @param percentageOfOctogonsGraphlets the percentageOfOctogonsGraphlets to set
+	 */
+	public final void setPercentageOfOctogonsGraphlets(float percentageOfOctogonsGraphlets) {
+		this.percentageOfOctogonsGraphlets = percentageOfOctogonsGraphlets;
+	}
+
+	/**
+	 * @return the percentageOfNonagonsGraphlets
+	 */
+	public final float getPercentageOfNonagonsGraphlets() {
+		return percentageOfNonagonsGraphlets;
+	}
+
+	/**
+	 * @param percentageOfNonagonsGraphlets the percentageOfNonagonsGraphlets to set
+	 */
+	public final void setPercentageOfNonagonsGraphlets(float percentageOfNonagonsGraphlets) {
+		this.percentageOfNonagonsGraphlets = percentageOfNonagonsGraphlets;
+	}
+
+	/**
 	 * @return color
 	 */
 	public Color getColor() {
