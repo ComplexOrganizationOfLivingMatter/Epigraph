@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author Pablo Vicente-Munuera
  *
  */
-public class Utils {
+final public class Utils {
 	
 	/**
 	 * Taken from https://stackoverflow.com/questions/7988486/how-do-you-calculate-the-variance-median-and-standard-deviation-in-c-or-java
@@ -18,7 +18,7 @@ public class Utils {
 	 * @param data
 	 * @return
 	 */
-	double getMean(double[] data)
+	public static double getMean(double[] data)
     {
         double sum = 0.0;
         for(double a : data)
@@ -32,7 +32,7 @@ public class Utils {
 	 * @param data
 	 * @return
 	 */
-    double getVariance(double[] data)
+    public static double getVariance(double[] data)
     {
         double mean = getMean(data);
         double temp = 0;
@@ -47,7 +47,7 @@ public class Utils {
 	 * @param data
      * @return
      */
-    double getStdDev(double[] data)
+    public static double getStdDev(double[] data)
     {
         return Math.sqrt(getVariance(data));
     }
@@ -58,7 +58,7 @@ public class Utils {
 	 * @param data
      * @return
      */
-    public double median(double[] data) 
+    public static double median(double[] data) 
     {
        Arrays.sort(data);
 
@@ -149,6 +149,17 @@ public class Utils {
 
 		result = VectorLib.mulMatrix(result, MatrixLib.Transpose(diff));
 		return Math.sqrt(result[0][0]);
+	}
+
+	public static double[] getStdDev(double[][] data) {
+		
+		double[] stdDevs = new double[data.length];
+		
+		for (int numCol = 1; numCol < data.length; numCol++){
+			stdDevs[numCol] = getStdDev(data[numCol]);
+		}
+		
+		return stdDevs;
 	}
 
 }
