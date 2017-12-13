@@ -19,7 +19,7 @@ import epigraph.Statistics.Utils;
  * @author Pablo Vicente-Munuera, Pedro Gomez-Galvez
  *
  */
-final class StatisticalComparison {
+public final class StatisticalComparison {
 	
 	static int MAX_DIMENSIONS = 4;
 

@@ -20,7 +20,7 @@ import javax.swing.table.TableCellRenderer;
  * 
  * @author Pedro Gomez-Galvez
  */
-class JTableModel extends AbstractTableModel {
+public class JTableModel extends AbstractTableModel {
 	/**
 	 * 
 	 */
