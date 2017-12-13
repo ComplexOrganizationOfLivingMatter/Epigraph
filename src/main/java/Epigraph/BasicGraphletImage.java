@@ -26,6 +26,7 @@ public class BasicGraphletImage {
 	protected int shapeOfMask;
 	protected int radiusOfMask;
 	protected boolean selectedCells;
+	protected double[][] closestDiagrams;
 
 	/**
 	 * Default constructor. Distances as -1, white color and "Wrong name"
@@ -46,6 +47,7 @@ public class BasicGraphletImage {
 		this.shapeOfMask = -1;
 		this.radiusOfMask = -1;
 		this.selectedCells = false;
+		this.closestDiagrams = null;
 	}
 
 	/**
@@ -70,6 +72,7 @@ public class BasicGraphletImage {
 		this.radiusOfMask = bci.radiusOfMask;
 		this.shapeOfMask = bci.shapeOfMask;
 		this.selectedCells = bci.selectedCells;
+		this.closestDiagrams = bci.closestDiagrams.clone();
 	}
 
 	/**
@@ -94,6 +97,7 @@ public class BasicGraphletImage {
 		this.shapeOfMask = GraphletImage.CIRCLE_SHAPE;
 		this.radiusOfMask = 3;
 		this.selectedCells = false;
+		this.closestDiagrams = null;
 	}
 
 	/**
@@ -126,6 +130,7 @@ public class BasicGraphletImage {
 		this.shapeOfMask = shapeOfMask;
 		this.radiusOfMask = radiusOfMask;
 		this.selectedCells = false;
+		this.closestDiagrams = null;
 	}
 
 	/**
@@ -333,6 +338,20 @@ public class BasicGraphletImage {
 		this.radiusOfMask = radiusOfMask;
 	}
 	
+	/**
+	 * @return the closestDiagrams
+	 */
+	public final double[][] getClosestDiagrams() {
+		return closestDiagrams;
+	}
+
+	/**
+	 * @param closestDiagrams the closestDiagrams to set
+	 */
+	public final void setClosestDiagrams(double[][] closestDiagrams) {
+		this.closestDiagrams = closestDiagrams;
+	}
+
 	/**
 	 * @return the selectedCells
 	 */
