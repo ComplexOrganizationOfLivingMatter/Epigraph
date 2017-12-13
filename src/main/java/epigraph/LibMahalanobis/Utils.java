@@ -25,6 +25,28 @@ final public class Utils {
             sum += a;
         return sum/data.length;
     }
+	
+	/**
+	 * @param data
+	 * @return
+	 */
+	public static double[] getMin(double[] data)
+    {
+        double minValue = Integer.MAX_VALUE;
+        int position = -1;
+        int actualPosition = 0;
+        for(double a : data){
+            if (a < minValue){
+            	minValue = a;
+            	position = actualPosition;
+            }
+            actualPosition++;
+        }
+        
+        double[] minAndPosition = {minValue, position};
+        
+        return minAndPosition;
+    }
 
 	/**
 	 * Taken from https://stackoverflow.com/questions/7988486/how-do-you-calculate-the-variance-median-and-standard-deviation-in-c-or-java

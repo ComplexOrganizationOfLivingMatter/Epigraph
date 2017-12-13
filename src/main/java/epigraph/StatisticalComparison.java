@@ -4,12 +4,8 @@
 package epigraph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import epigraph.LibMahalanobis.InvMat;
-import epigraph.LibMahalanobis.MatrixLib;
 import epigraph.LibMahalanobis.Utils;
-import epigraph.LibMahalanobis.VectorLib;
 
 
 /**
@@ -39,7 +35,7 @@ final class StatisticalComparison {
 	 * @param newGroup
 	 * @return
 	 */
-	public static int compareGroupsOfImages(ArrayList<BasicGraphletImage> originalGroup, ArrayList<BasicGraphletImage> newGroup){
+	public static double compareGroupsOfImages(ArrayList<BasicGraphletImage> originalGroup, ArrayList<BasicGraphletImage> newGroup){
 		
 		//Create 4D matrix
 		double[][] originalData = create4DMatrix(originalGroup);
@@ -52,9 +48,13 @@ final class StatisticalComparison {
 		double[] stdDevs = Utils.getStdDev(originalData);
 		double[] stdDevsNewData = Utils.getStdDev(originalPlusNewData);
 		
+		double[] stdDiff = new double[stdDevs.length];
 		
+		for (int numDimension = 0; numDimension < stdDevs.length; numDimension++){
+			stdDiff[numDimension] = stdDevsNewData[numDimension] / stdDevs[numDimension];
+		}
 		
-		return 0;
+		return Utils.getMean(stdDiff);
 	}
 
 	/**

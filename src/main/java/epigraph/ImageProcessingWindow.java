@@ -51,6 +51,7 @@ import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import epigraph.LibMahalanobis.Utils;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
@@ -1040,17 +1041,21 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			String filePath = Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls").getPath();
 			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, filePath, null);
 			
-			for (int numDiagram = 1; numDiagram <= 20; numDiagram++){
+			int[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
+			double[] statisticalDifferences = new double[diagramsUsed.length];
+			
+			for (int numDiagram = 0; numDiagram < diagramsUsed.length; numDiagram++){
 				
-				ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(allData, numDiagram);
+				ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(allData, diagramsUsed[numDiagram]);
 				ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
 				newGraphletsGroup.add(newGraphletImage);
-				StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+				statisticalDifferences[numDiagram] = StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+				
 			}
 			
+			double[] minValueAndPosition = Utils.getMin(statisticalDifferences);
 			
 			
-
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
 			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -1182,7 +1187,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
 		
 		NumberFormat nf = NumberFormat.getInstance();
-		nf.setMinimumFractionDigits(3);
+		nf.setMinimumIntegerDigits(3);
 		String formattedDiagram = nf.format(numDiagram);
 		
 		for (BasicGraphletImage basicGraphletImage : allData) {
