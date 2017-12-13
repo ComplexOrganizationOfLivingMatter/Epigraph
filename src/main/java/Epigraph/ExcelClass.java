@@ -1,5 +1,6 @@
 package epigraph;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -579,6 +580,86 @@ public class ExcelClass {
 			ioe.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * @param saveIntoTable
+	 * @param excelclass
+	 * @return
+	 */
+	public ArrayList<BasicGraphletImage> importExcel(boolean saveIntoTable, String pathFile, JTableModel tableInfo) {
+		this.importData(pathFile);
+		
+		int flat = 0;
+		
+		ArrayList<BasicGraphletImage> newImages = new ArrayList<BasicGraphletImage>();
+		
+		ArrayList<Object> newRow;
+		Color newColor;
+		for (int row = 0; row < this.getImageName().size(); row++) {
+			newRow = this.getRow(row);
+			if (flat == 1) {
+				newColor = new Color(Math.round((float) newRow.get(4)),
+						Math.round((float) newRow.get(5)),
+						Math.round((float) newRow.get(6)));
+			} else if (flat == 2) {
+				newColor = new Color((float) newRow.get(4), (float) newRow.get(5),
+						(float) newRow.get(6));
+			} else {
+				if ((float) newRow.get(4) > 1.0 || (float) newRow.get(5) > 1.0
+						|| (float) newRow.get(6) > 1.0) {
+					flat = 1;
+					newColor = new Color(Math.round((float) newRow.get(4)),
+							Math.round((float) newRow.get(5)),
+							Math.round((float) newRow.get(6)));
+				} else if (((float) newRow.get(4) < 1.0
+						& (float) newRow.get(4) > 1.0)
+						|| ((float) newRow.get(5) < 1.0
+								& (float) newRow.get(5) > 0.0)
+						|| ((float) newRow.get(6) < 1.0
+								& (float) newRow.get(6) > 0.0)) {
+					newColor = new Color((float) newRow.get(4),
+							(float) newRow.get(5), (float) newRow.get(6));
+					flat = 2;
+				} else {
+					newColor = new Color((float) newRow.get(4),
+							(float) newRow.get(5), (float) newRow.get(6));
+
+				}
+
+			}
+
+			int shapeColumn;
+			String shapeString = (String) newRow.get(9);
+			if (shapeString.equals("Circle")) {
+				shapeColumn = GraphletImage.CIRCLE_SHAPE;
+			} else {
+				shapeColumn = GraphletImage.SQUARE_SHAPE;
+			}
+			
+			BasicGraphletImage newGraphletImage= new BasicGraphletImage();
+			newGraphletImage.setDistanceGDDH((float) newRow.get(1));
+			newGraphletImage.setDistanceGDDRV((float) newRow.get(2));
+			newGraphletImage.setDistanceGDDV5((float) newRow.get(3));
+			newGraphletImage.setColor(newColor);
+			newGraphletImage.setLabelName((String) newRow.get(0));
+			newGraphletImage.setShapeOfMask(shapeColumn);
+			newGraphletImage.setRadiusOfMask((int) newRow.get(8));
+			newGraphletImage.setPercentageOfSquaresGraphlets((float) newRow.get(10));
+			newGraphletImage.setPercentageOfPentagonsGraphlets((float) newRow.get(11));
+			newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
+			newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
+			newGraphletImage.setPercentageOfHeptagonsGraphlets((float) newRow.get(13));
+			newGraphletImage.setPercentageOfOctogonsGraphlets((float) newRow.get(14));
+			
+			
+			newImages.add(newGraphletImage);
+			
+			if (saveIntoTable)
+				tableInfo.addImage(newGraphletImage, (String) newRow.get(7));
+
+		}
+		return newImages;
 	}
 
 	/**

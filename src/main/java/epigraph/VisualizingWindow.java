@@ -133,16 +133,16 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		switch (referenceGraphlets) {
 		case 0:
-			fileName = "/epigraph/voronoiNoiseReference/Total.txt";
+			fileName = "/epigraph/voronoiNoiseReference/mean/Total.txt";
 			break;
 		case 1:
-			fileName = "/epigraph/voronoiNoiseReference/TotalPartial.txt";
+			fileName = "/epigraph/voronoiNoiseReference/mean/TotalPartial.txt";
 			break;
 		case 2:
-			fileName = "/epigraph/voronoiNoiseReference/Basic.txt";
+			fileName = "/epigraph/voronoiNoiseReference/mean/Basic.txt";
 			break;
 		case 3:
-			fileName = "/epigraph/voronoiNoiseReference/BasicPartial.txt";
+			fileName = "/epigraph/voronoiNoiseReference/mean/BasicPartial.txt";
 			break;
 		}
 

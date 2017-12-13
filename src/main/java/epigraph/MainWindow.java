@@ -326,7 +326,7 @@ public class MainWindow extends JFrame {
 		btnImport = new JButton("Import table");
 		btnImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				importXLSToTable();
+				importXLSToTable(true);
 			}
 		});
 
@@ -531,83 +531,29 @@ public class MainWindow extends JFrame {
 	/**
 	 * Import information from an .XLS file to the table
 	 */
-	public void importXLSToTable() {
+	public ArrayList<BasicGraphletImage> importXLSToTable(boolean saveIntoTable) {
+		
 		fileChooser.setDialogTitle("Import");
 		javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls");
 		fileChooser.setFileFilter(filter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
 
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			
 			System.out.println("getCurrentDirectory(): " + fileChooser.getCurrentDirectory());
 			System.out.println("getSelectedFile() : " + fileChooser.getSelectedFile().getPath());
 
+			
 			ExcelClass excelclass = new ExcelClass();
-			excelclass.importData(fileChooser.getSelectedFile().getPath());
-			int flat = 0;
-			ArrayList<Object> newRow;
-			Color newColor;
-			for (int row = 0; row < excelclass.getImageName().size(); row++) {
-				newRow = excelclass.getRow(row);
-				if (flat == 1) {
-					newColor = new Color(Math.round((float) newRow.get(4)),
-							Math.round((float) newRow.get(5)),
-							Math.round((float) newRow.get(6)));
-				} else if (flat == 2) {
-					newColor = new Color((float) newRow.get(4), (float) newRow.get(5),
-							(float) newRow.get(6));
-				} else {
-					if ((float) newRow.get(4) > 1.0 || (float) newRow.get(5) > 1.0
-							|| (float) newRow.get(6) > 1.0) {
-						flat = 1;
-						newColor = new Color(Math.round((float) newRow.get(4)),
-								Math.round((float) newRow.get(5)),
-								Math.round((float) newRow.get(6)));
-					} else if (((float) newRow.get(4) < 1.0
-							& (float) newRow.get(4) > 1.0)
-							|| ((float) newRow.get(5) < 1.0
-									& (float) newRow.get(5) > 0.0)
-							|| ((float) newRow.get(6) < 1.0
-									& (float) newRow.get(6) > 0.0)) {
-						newColor = new Color((float) newRow.get(4),
-								(float) newRow.get(5), (float) newRow.get(6));
-						flat = 2;
-					} else {
-						newColor = new Color((float) newRow.get(4),
-								(float) newRow.get(5), (float) newRow.get(6));
-
-					}
-
-				}
-
-				int shapeColumn;
-				String shapeString = (String) newRow.get(9);
-				if (shapeString.equals("Circle")) {
-					shapeColumn = GraphletImage.CIRCLE_SHAPE;
-				} else {
-					shapeColumn = GraphletImage.SQUARE_SHAPE;
-				}
-				
-				BasicGraphletImage newGraphletImage= new BasicGraphletImage();
-				newGraphletImage.setDistanceGDDH((float) newRow.get(1));
-				newGraphletImage.setDistanceGDDRV((float) newRow.get(2));
-				newGraphletImage.setDistanceGDDV5((float) newRow.get(3));
-				newGraphletImage.setColor(newColor);
-				newGraphletImage.setLabelName((String) newRow.get(0));
-				newGraphletImage.setShapeOfMask(shapeColumn);
-				newGraphletImage.setRadiusOfMask((int) newRow.get(8));
-				newGraphletImage.setPercentageOfSquaresGraphlets((float) newRow.get(10));
-				newGraphletImage.setPercentageOfPentagonsGraphlets((float) newRow.get(11));
-				newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
-				newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
-				newGraphletImage.setPercentageOfHeptagonsGraphlets((float) newRow.get(13));
-				newGraphletImage.setPercentageOfOctogonsGraphlets((float) newRow.get(14));
-				
-				
-				
-				tableInfo.addImage(newGraphletImage, (String) newRow.get(7));
-
-			}
-
+			
+			return excelclass.importExcel(saveIntoTable, fileChooser.getSelectedFile().getPath(), tableInfo);
 		}
+		return null;
 	}
+
+
+
+
+
+	
 }
