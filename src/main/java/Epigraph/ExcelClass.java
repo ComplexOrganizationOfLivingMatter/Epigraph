@@ -595,6 +595,8 @@ public class ExcelClass {
 	 * 
 	 * @param saveIntoTable
 	 *            check if we should save the new info into a table
+	 * @param pathFile
+	 *            the path of the excel to import
 	 * @param tableInfo
 	 *            table in which it would be save
 	 * @return collection of graphlets info from the imported excel

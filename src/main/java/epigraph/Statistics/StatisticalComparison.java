@@ -1,13 +1,13 @@
 /**
  * 
  */
-package epigraph;
+package epigraph.Statistics;
 
 import java.util.ArrayList;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.stat.descriptive.MultivariateSummaryStatistics;
 
-import epigraph.Statistics.Utils;
+import epigraph.BasicGraphletImage;
 
 /**
  * 
