@@ -284,7 +284,11 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(8).setMaxWidth(120);
 		table.getColumnModel().getColumn(8).setMinWidth(120);
 		table.getColumnModel().getColumn(9).setMaxWidth(80);
-		table.getColumnModel().getColumn(9).setMinWidth(80);
+		table.getColumnModel().getColumn(10).setMinWidth(80);
+		table.getColumnModel().getColumn(10).setMaxWidth(80);
+		table.getColumnModel().getColumn(11).setMinWidth(80);
+		table.getColumnModel().getColumn(11).setMaxWidth(80);
+		table.getColumnModel().getColumn(11).setMinWidth(80);
 		
 		DecimalFormatRenderer decimalFormat = new DecimalFormatRenderer();
 		decimalFormat.setHorizontalAlignment(SwingConstants.LEFT);
@@ -299,6 +303,7 @@ public class MainWindow extends JFrame {
 		decimalFormat2.set(new DecimalFormat("#0.00"));
 		table.getColumnModel().getColumn(5).setCellRenderer(decimalFormat2);
 		table.getColumnModel().getColumn(6).setCellRenderer(defaultformat);
+		table.getColumnModel().getColumn(10).setCellRenderer(decimalFormat2);
 		
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
