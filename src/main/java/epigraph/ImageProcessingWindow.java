@@ -1041,19 +1041,26 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			String filePath = Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls").getPath();
 			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, filePath, null);
 			
-			int[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
+			double[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
 			double[] statisticalDifferences = new double[diagramsUsed.length];
+			double[] statisticalDistances = new double[diagramsUsed.length];
+			
+			double[] newRow = new double[2];
 			
 			for (int numDiagram = 0; numDiagram < diagramsUsed.length; numDiagram++){
 				
 				ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(allData, diagramsUsed[numDiagram]);
 				ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
 				newGraphletsGroup.add(newGraphletImage);
-				statisticalDifferences[numDiagram] = StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
-				
+				newRow = StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+				statisticalDifferences[numDiagram] = newRow[0];
+				statisticalDistances[numDiagram] = newRow[1];
 			}
 			
-			double[] minValueAndPosition = Utils.getMin(statisticalDifferences);
+			double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
+			double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
+			
+			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDifferences, diagramsUsed);
 			
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
@@ -1183,7 +1190,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * @param numDiagram
 	 * @return
 	 */
-	public ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, int numDiagram) {
+	public ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, double numDiagram) {
 		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
 		
 		NumberFormat nf = NumberFormat.getInstance();
