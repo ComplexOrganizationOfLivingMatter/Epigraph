@@ -467,11 +467,11 @@ public class MainWindow extends JFrame {
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
 
 			arrayNames.add(graphletImg.getLabelName());
-			arraySquares.add(graphletImg.getPercentageOfSquaresGraphlets());		
-			arrayPentagons.add(graphletImg.getPercentageOfPentagonsGraphlets());
-			arrayHexagons.add(graphletImg.getPercentageOfHexagonsGraphlets());
-			arrayHeptagons.add(graphletImg.getPercentageOfHeptagonsGraphlets());
-			arrayOctogons.add(graphletImg.getPercentageOfOctogonsGraphlets());
+			arraySquares.add(graphletImg.getPercentageOfSquares());		
+			arrayPentagons.add(graphletImg.getPercentageOfPentagons());
+			arrayHexagons.add(graphletImg.getPercentageOfHexagons());
+			arrayHeptagons.add(graphletImg.getPercentageOfHeptagons());
+			arrayOctogons.add(graphletImg.getPercentageOfOctogons());
 			arrayGDDH.add(graphletImg.getDistanceGDDH());
 			arrayGDDRV.add(graphletImg.getDistanceGDDRV());
 			arrayGDDV5.add(graphletImg.getDistanceGDDV5());

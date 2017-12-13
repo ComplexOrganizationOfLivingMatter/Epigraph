@@ -14,13 +14,13 @@ public class BasicGraphletImage {
 	protected float distanceGDDRV;
 	protected float distanceGDDV5;
 	protected float distanceGDDH;
-	protected float percentageOfTrianglesGraphlets;
-	protected float percentageOfSquaresGraphlets;
-	protected float percentageOfPentagonsGraphlets;
-	protected float percentageOfHexagonsGraphlets;
-	protected float percentageOfHeptagonsGraphlets;
-	protected float percentageOfOctogonsGraphlets;
-	protected float percentageOfNonagonsGraphlets;
+	protected float percentageOfTriangles;
+	protected float percentageOfSquares;
+	protected float percentageOfPentagons;
+	protected float percentageOfHexagons;
+	protected float percentageOfHeptagons;
+	protected float percentageOfOctogons;
+	protected float percentageOfNonagons;
 	protected Color color;
 	protected String labelName;
 	protected int shapeOfMask;
@@ -36,13 +36,13 @@ public class BasicGraphletImage {
 		this.distanceGDDH = -1;
 		this.distanceGDDRV = -1;
 		this.labelName = "Wrong name";
-		this.percentageOfTrianglesGraphlets = -1;
-		this.percentageOfSquaresGraphlets = -1;
-		this.percentageOfPentagonsGraphlets = -1;
-		this.percentageOfHexagonsGraphlets = -1;
-		this.percentageOfHeptagonsGraphlets = -1;
-		this.percentageOfOctogonsGraphlets = -1;
-		this.percentageOfNonagonsGraphlets = -1;
+		this.percentageOfTriangles = -1;
+		this.percentageOfSquares = -1;
+		this.percentageOfPentagons = -1;
+		this.percentageOfHexagons = -1;
+		this.percentageOfHeptagons = -1;
+		this.percentageOfOctogons = -1;
+		this.percentageOfNonagons = -1;
 		this.shapeOfMask = -1;
 		this.radiusOfMask = -1;
 		this.selectedCells = false;
@@ -60,13 +60,13 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = bci.distanceGDDRV;
 		this.distanceGDDV5 = bci.distanceGDDV5;
 		this.labelName = bci.labelName;
-		this.percentageOfTrianglesGraphlets = bci.percentageOfTrianglesGraphlets;
-		this.percentageOfSquaresGraphlets = bci.percentageOfSquaresGraphlets;
-		this.percentageOfPentagonsGraphlets = bci.percentageOfPentagonsGraphlets;
-		this.percentageOfHexagonsGraphlets = bci.percentageOfHexagonsGraphlets;
-		this.percentageOfHeptagonsGraphlets = bci.percentageOfHeptagonsGraphlets;
-		this.percentageOfOctogonsGraphlets = bci.percentageOfOctogonsGraphlets;
-		this.percentageOfNonagonsGraphlets = bci.percentageOfNonagonsGraphlets;
+		this.percentageOfTriangles = bci.percentageOfTriangles;
+		this.percentageOfSquares = bci.percentageOfSquares;
+		this.percentageOfPentagons = bci.percentageOfPentagons;
+		this.percentageOfHexagons = bci.percentageOfHexagons;
+		this.percentageOfHeptagons = bci.percentageOfHeptagons;
+		this.percentageOfOctogons = bci.percentageOfOctogons;
+		this.percentageOfNonagons = bci.percentageOfNonagons;
 		this.radiusOfMask = bci.radiusOfMask;
 		this.shapeOfMask = bci.shapeOfMask;
 		this.selectedCells = bci.selectedCells;
@@ -88,7 +88,7 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
 		this.distanceGDDV5 = distanceGDDV5;
-		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
+		this.percentageOfHexagons = percentageOfHexagonsGraphlets;
 		this.color = Color.BLACK;
 		this.labelName = "ReferenceVoronoiNoise";
 		this.shapeOfMask = GraphletImage.CIRCLE_SHAPE;
@@ -120,7 +120,7 @@ public class BasicGraphletImage {
 		this.distanceGDDRV = distanceGDDRV;
 		this.distanceGDDH = distanceGDDH;
 		this.distanceGDDV5 = distanceGDDV5;
-		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
+		this.percentageOfHexagons = percentageOfHexagonsGraphlets;
 		this.color = color;
 		this.labelName = labelName;
 		this.shapeOfMask = shapeOfMask;
@@ -178,101 +178,101 @@ public class BasicGraphletImage {
 	/**
 	 * @return proportion of hexagons
 	 */
-	public float getPercentageOfHexagonsGraphlets() {
-		return percentageOfHexagonsGraphlets;
+	public float getPercentageOfHexagons() {
+		return percentageOfHexagons;
 	}
 
 	/**
 	 * @param percentageOfHexagonsGraphlets
 	 *            set proportion of hexagons
 	 */
-	public void setPercentageOfHexagonsGraphlets(float percentageOfHexagonsGraphlets) {
-		this.percentageOfHexagonsGraphlets = percentageOfHexagonsGraphlets;
+	public void setPercentageOfHexagons(float percentageOfHexagonsGraphlets) {
+		this.percentageOfHexagons = percentageOfHexagonsGraphlets;
 	}
 
 
 	/**
 	 * @return the percentageOfTrianglesGraphlets
 	 */
-	public final float getPercentageOfTrianglesGraphlets() {
-		return percentageOfTrianglesGraphlets;
+	public final float getPercentageOfTriangles() {
+		return percentageOfTriangles;
 	}
 
 	/**
 	 * @param percentageOfTrianglesGraphlets the percentageOfTrianglesGraphlets to set
 	 */
-	public final void setPercentageOfTrianglesGraphlets(float percentageOfTrianglesGraphlets) {
-		this.percentageOfTrianglesGraphlets = percentageOfTrianglesGraphlets;
+	public final void setPercentageOfTriangles(float percentageOfTrianglesGraphlets) {
+		this.percentageOfTriangles = percentageOfTrianglesGraphlets;
 	}
 
 	/**
 	 * @return the percentageOfSquaresGraphlets
 	 */
-	public final float getPercentageOfSquaresGraphlets() {
-		return percentageOfSquaresGraphlets;
+	public final float getPercentageOfSquares() {
+		return percentageOfSquares;
 	}
 
 	/**
 	 * @param percentageOfSquaresGraphlets the percentageOfSquaresGraphlets to set
 	 */
-	public final void setPercentageOfSquaresGraphlets(float percentageOfSquaresGraphlets) {
-		this.percentageOfSquaresGraphlets = percentageOfSquaresGraphlets;
+	public final void setPercentageOfSquares(float percentageOfSquaresGraphlets) {
+		this.percentageOfSquares = percentageOfSquaresGraphlets;
 	}
 
 	/**
 	 * @return the percentageOfPentagonsGraphlets
 	 */
-	public final float getPercentageOfPentagonsGraphlets() {
-		return percentageOfPentagonsGraphlets;
+	public final float getPercentageOfPentagons() {
+		return percentageOfPentagons;
 	}
 
 	/**
 	 * @param percentageOfPentagonsGraphlets the percentageOfPentagonsGraphlets to set
 	 */
-	public final void setPercentageOfPentagonsGraphlets(float percentageOfPentagonsGraphlets) {
-		this.percentageOfPentagonsGraphlets = percentageOfPentagonsGraphlets;
+	public final void setPercentageOfPentagons(float percentageOfPentagonsGraphlets) {
+		this.percentageOfPentagons = percentageOfPentagonsGraphlets;
 	}
 
 	/**
 	 * @return the percentageOfHeptagonsGraphlets
 	 */
-	public final float getPercentageOfHeptagonsGraphlets() {
-		return percentageOfHeptagonsGraphlets;
+	public final float getPercentageOfHeptagons() {
+		return percentageOfHeptagons;
 	}
 
 	/**
 	 * @param percentageOfHeptagonsGraphlets the percentageOfHeptagonsGraphlets to set
 	 */
-	public final void setPercentageOfHeptagonsGraphlets(float percentageOfHeptagonsGraphlets) {
-		this.percentageOfHeptagonsGraphlets = percentageOfHeptagonsGraphlets;
+	public final void setPercentageOfHeptagons(float percentageOfHeptagonsGraphlets) {
+		this.percentageOfHeptagons = percentageOfHeptagonsGraphlets;
 	}
 
 	/**
 	 * @return the percentageOfOctogonsGraphlets
 	 */
-	public final float getPercentageOfOctogonsGraphlets() {
-		return percentageOfOctogonsGraphlets;
+	public final float getPercentageOfOctogons() {
+		return percentageOfOctogons;
 	}
 
 	/**
 	 * @param percentageOfOctogonsGraphlets the percentageOfOctogonsGraphlets to set
 	 */
-	public final void setPercentageOfOctogonsGraphlets(float percentageOfOctogonsGraphlets) {
-		this.percentageOfOctogonsGraphlets = percentageOfOctogonsGraphlets;
+	public final void setPercentageOfOctogons(float percentageOfOctogonsGraphlets) {
+		this.percentageOfOctogons = percentageOfOctogonsGraphlets;
 	}
 
 	/**
 	 * @return the percentageOfNonagonsGraphlets
 	 */
-	public final float getPercentageOfNonagonsGraphlets() {
-		return percentageOfNonagonsGraphlets;
+	public final float getPercentageOfNonagons() {
+		return percentageOfNonagons;
 	}
 
 	/**
 	 * @param percentageOfNonagonsGraphlets the percentageOfNonagonsGraphlets to set
 	 */
-	public final void setPercentageOfNonagonsGraphlets(float percentageOfNonagonsGraphlets) {
-		this.percentageOfNonagonsGraphlets = percentageOfNonagonsGraphlets;
+	public final void setPercentageOfNonagons(float percentageOfNonagonsGraphlets) {
+		this.percentageOfNonagons = percentageOfNonagonsGraphlets;
 	}
 
 	/**

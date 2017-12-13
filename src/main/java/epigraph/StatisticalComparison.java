@@ -36,8 +36,7 @@ final class StatisticalComparison {
 	 * @return
 	 */
 	public static double compareGroupsOfImages(ArrayList<BasicGraphletImage> originalGroup, ArrayList<BasicGraphletImage> newGroup){
-		
-		//Create 4D matrix
+	
 		double[][] originalData = create4DMatrix(originalGroup);
 		ArrayList<BasicGraphletImage> originalPlusNewGroup = new ArrayList<BasicGraphletImage>();
 		
@@ -69,7 +68,7 @@ final class StatisticalComparison {
 			originalData[0][numRow] = groupOfImages.get(numRow).getDistanceGDDH();
 			originalData[1][numRow] = groupOfImages.get(numRow).getDistanceGDDRV();
 			originalData[2][numRow] = groupOfImages.get(numRow).getDistanceGDDV5();
-			originalData[3][numRow] = groupOfImages.get(numRow).getPercentageOfHexagonsGraphlets();
+			originalData[3][numRow] = groupOfImages.get(numRow).getPercentageOfHexagons();
 		}
 		
 		return originalData;

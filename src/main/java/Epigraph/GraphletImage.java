@@ -89,11 +89,6 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	private ImagePlus neighbourImage;
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
-	private float percentageOfSquares;
-	private float percentageOfPentagons;
-	private float percentageOfHexagons;
-	private float percentageOfHeptagons;
-	private float percentageOfOctogons;
 
 	/**
 	 * Constructor
@@ -254,79 +249,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	public void setAdjacencyMatrix(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
 	}
-
 	
-	
-	/**
-	 * @return the percentageOfSquares
-	 */
-	public float getPercentageOfSquares() {
-		return percentageOfSquares;
-	}
-
-	/**
-	 * @param percentageOfSquares the percentageOfSquares to set
-	 */
-	public void setPercentageOfSquares(float percentageOfSquares) {
-		this.percentageOfSquares = percentageOfSquares;
-	}
-
-	/**
-	 * @return the percentageOfPentagons
-	 */
-	public float getPercentageOfPentagons() {
-		return percentageOfPentagons;
-	}
-
-	/**
-	 * @param percentageOfPentagons the percentageOfPentagons to set
-	 */
-	public void setPercentageOfPentagons(float percentageOfPentagons) {
-		this.percentageOfPentagons = percentageOfPentagons;
-	}
-
-	/**
-	 * @return the percentageOfHexagons
-	 */
-	public float getPercentageOfHexagons() {
-		return percentageOfHexagons;
-	}
-
-	/**
-	 * @param percentageOfHexagons the percentageOfHexagons to set
-	 */
-	public void setPercentageOfHexagons(float percentageOfHexagons) {
-		this.percentageOfHexagons = percentageOfHexagons;
-	}
-
-	/**
-	 * @return the percentageOfHeptagons
-	 */
-	public float getPercentageOfHeptagons() {
-		return percentageOfHeptagons;
-	}
-
-	/**
-	 * @param percentageOfHeptagons the percentageOfHeptagons to set
-	 */
-	public void setPercentageOfHeptagons(float percentageOfHeptagons) {
-		this.percentageOfHeptagons = percentageOfHeptagons;
-	}
-
-	/**
-	 * @return the percentageOfOctogons
-	 */
-	public float getPercentageOfOctogons() {
-		return percentageOfOctogons;
-	}
-
-	/**
-	 * @param percentageOfOctogons the percentageOfOctogons to set
-	 */
-	public void setPercentageOfOctogons(float percentageOfOctogons) {
-		this.percentageOfOctogons = percentageOfOctogons;
-	}
-
 	/**
 	 * Preprocess image involving binarizing an image, inverting if is the case
 	 * and label the image. Furthermore, it add several no valid cells
@@ -474,7 +397,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			float percentageOfTrianglesGraphlets = 0;
 			float percentageOfSquaresGraphlets = 0;
 			float percentageOfPentagonsGraphlets = 0;
-			this.percentageOfHexagonsGraphlets = 0;
+			this.percentageOfHexagons = 0;
 			float percentageOfHeptagonsGraphlets = 0;
 			float percentageOfOctogonsGraphlets = 0;
 			@SuppressWarnings("unused")
@@ -524,7 +447,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 							colorOfCell = new Color(17, 157, 24);
 							break;
 						case 6:
-							percentageOfHexagonsGraphlets++;
+							percentageOfHexagons++;
 							percentageOfHexagonsRoi++;
 							colorOfCell = new Color(52, 102, 249);
 							break;
@@ -575,7 +498,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 								colorOfCell = new Color(201,255,211);
 								break;
 							case 6:
-								percentageOfHexagonsGraphlets++;
+								percentageOfHexagons++;
 								colorOfCell = new Color(196,214,255);
 								
 								break;
@@ -620,15 +543,15 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			percentageOfTrianglesGraphlets /= validCells;
 			percentageOfSquaresGraphlets /= validCells;
 			percentageOfPentagonsGraphlets /= validCells;
-			this.percentageOfHexagonsGraphlets /= validCells;
+			this.percentageOfHexagons /= validCells;
 			percentageOfHeptagonsGraphlets /= validCells;
 			percentageOfOctogonsGraphlets /= validCells;
 			percentageOfNonagonsGraphlets /= validCells;
 			percentageOfDecagonsGraphlets /= validCells;
 			
 			
-			float percentageOfHexagonsGraphletsToShow = this.percentageOfHexagonsGraphlets;
-			this.percentageOfHexagonsGraphlets = this.percentageOfHexagonsGraphlets * 100;
+			float percentageOfHexagonsGraphletsToShow = this.percentageOfHexagons;
+			this.percentageOfHexagons = this.percentageOfHexagons * 100;
 
 			ArrayList<String> percentagesListGraphlets = new ArrayList<String>();
 			ArrayList<String> percentagesListRoi = new ArrayList<String>();

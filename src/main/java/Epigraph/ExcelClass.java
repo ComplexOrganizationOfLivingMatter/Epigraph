@@ -645,12 +645,12 @@ public class ExcelClass {
 			newGraphletImage.setLabelName((String) newRow.get(0));
 			newGraphletImage.setShapeOfMask(shapeColumn);
 			newGraphletImage.setRadiusOfMask((int) newRow.get(8));
-			newGraphletImage.setPercentageOfSquaresGraphlets((float) newRow.get(10));
-			newGraphletImage.setPercentageOfPentagonsGraphlets((float) newRow.get(11));
-			newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
-			newGraphletImage.setPercentageOfHexagonsGraphlets((float) newRow.get(12));
-			newGraphletImage.setPercentageOfHeptagonsGraphlets((float) newRow.get(13));
-			newGraphletImage.setPercentageOfOctogonsGraphlets((float) newRow.get(14));
+			newGraphletImage.setPercentageOfSquares((float) newRow.get(10));
+			newGraphletImage.setPercentageOfPentagons((float) newRow.get(11));
+			newGraphletImage.setPercentageOfHexagons((float) newRow.get(12));
+			newGraphletImage.setPercentageOfHexagons((float) newRow.get(12));
+			newGraphletImage.setPercentageOfHeptagons((float) newRow.get(13));
+			newGraphletImage.setPercentageOfOctogons((float) newRow.get(14));
 			
 			
 			newImages.add(newGraphletImage);

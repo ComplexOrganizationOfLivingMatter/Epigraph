@@ -244,16 +244,16 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				// creating coord array
 				pointsAxes1[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
-						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				pointsAxes2[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5());
 				pointsAxes3[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDH(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
-						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				pointsAxes4[numRow] = new Coord3d(tableInfo.getAllGraphletImages().get(i).getDistanceGDDRV(),
 						tableInfo.getAllGraphletImages().get(i).getDistanceGDDV5(),
-						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagonsGraphlets());
+						tableInfo.getAllGraphletImages().get(i).getPercentageOfHexagons());
 				// creating color array
 				colors[numRow] = new Color(tableInfo.getAllGraphletImages().get(i).getColor().getRed(),
 						tableInfo.getAllGraphletImages().get(i).getColor().getGreen(),
