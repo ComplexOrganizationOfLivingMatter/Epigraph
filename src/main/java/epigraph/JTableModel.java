@@ -204,14 +204,14 @@ public class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @return the listof selected columns
+	 * @return the list of selected columns
 	 */
 	public ArrayList<Boolean> getListOfSelected() {
 		return listOfSelected;
 	}
 
 	/**
-	 * @param listOfVisualizing
+	 * @param listOfSelected
 	 *            the list of selected cells
 	 */
 	public void setListOfVisualizing(ArrayList<Boolean> listOfSelected) {
@@ -235,7 +235,7 @@ public class JTableModel extends AbstractTableModel {
 
 	/**
 	 * 
-	 * @param newImages
+	 * @param newImages new images to add
 	 */
 	public void addImages(ArrayList<GraphletImage> newImages) {
 		allGraphletImages.addAll(newImages);
@@ -248,8 +248,8 @@ public class JTableModel extends AbstractTableModel {
 
 	/**
 	 * 
-	 * @param newGraphletImage
-	 * @param graphletsMode
+	 * @param newGraphletImage new image to add
+	 * @param graphletsMode the setup (MO kind).
 	 */
 	public void addImage(BasicGraphletImage newGraphletImage, String graphletsMode) {
 		allGraphletImages.add(newGraphletImage);
@@ -280,7 +280,6 @@ public class JTableModel extends AbstractTableModel {
 	/**
 	 * Select or deselect columns to be deleted or visualized
 	 * 
-	 * @param listOfSelected
 	 */
 	public void selectAll() {
 		if (allSelectedEquals(listOfSelected) == true) {
@@ -303,9 +302,9 @@ public class JTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * 
-	 * @param listOfSelected
-	 * @return
+	 * Select/deselect all the table rows depending on the first value
+	 * @param listOfSelected if the rows are selected or deselected
+	 * @return if all the rows have the same value as in the first (selected or deselected)
 	 */
 	public boolean allSelectedEquals(ArrayList<Boolean> listOfSelected) {
 		boolean bolVar = listOfSelected.get(0);

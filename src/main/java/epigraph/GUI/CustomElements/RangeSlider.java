@@ -24,6 +24,8 @@ public class RangeSlider extends JSlider {
     /**
      * Constructs a RangeSlider with the specified default minimum and maximum 
      * values.
+     * @param min in the range
+     * @param max maximum of the range
      */
     public RangeSlider(int min, int max) {
         super(min, max);
@@ -37,9 +39,11 @@ public class RangeSlider extends JSlider {
         setOrientation(HORIZONTAL);
     }
 
-    /**
+    /*
      * Overrides the superclass method to install the UI delegate to draw two
      * thumbs.
+     * (non-Javadoc)
+     * @see javax.swing.JSlider#updateUI()
      */
     @Override
     public void updateUI() {
@@ -49,16 +53,18 @@ public class RangeSlider extends JSlider {
         updateLabelUIs();
     }
 
-    /**
-     * Returns the lower value in the range.
+    /*
+     * (non-Javadoc)
+     * @see javax.swing.JSlider#getValue()
      */
     @Override
     public int getValue() {
         return super.getValue();
     }
 
-    /**
+    /*
      * Sets the lower value in the range.
+     * @see javax.swing.JSlider#setValue(int)
      */
     @Override
     public void setValue(int value) {
@@ -78,7 +84,8 @@ public class RangeSlider extends JSlider {
     }
 
     /**
-     * Returns the upper value in the range.
+     * @return the upper value in the range.
+     * 
      */
     public int getUpperValue() {
         return getValue() + getExtent();
@@ -86,6 +93,7 @@ public class RangeSlider extends JSlider {
 
     /**
      * Sets the upper value in the range.
+     * @param value to set
      */
     public void setUpperValue(int value) {
         // Compute new extent.

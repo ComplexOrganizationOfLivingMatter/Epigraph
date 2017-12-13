@@ -69,7 +69,7 @@ public class ExcelClass {
 	}
 
 	/**
-	 * Constructor from parameters
+	 * /** Constructor from parameters
 	 * 
 	 * @param filename
 	 *            Name of excel file to import or export
@@ -82,8 +82,6 @@ public class ExcelClass {
 	 *            tesselletion
 	 * @param gddv5
 	 *            List of graphlet degree distance to voronoi 5 tesselletion
-	 * @param hexagonsPercentage
-	 *            List of percentajes of hexagons for each image
 	 * @param r
 	 *            List of red channel value from RGB for each image
 	 * @param g
@@ -96,6 +94,16 @@ public class ExcelClass {
 	 *            List of radius of the shapes.
 	 * @param shapeOfMask
 	 *            List of chosen shapes.
+	 * @param squaresPercentage
+	 *            List of percentages of squares for each image
+	 * @param pentagonsPercentage
+	 *            List of percentages of pentagons for each image
+	 * @param hexagonsPercentage
+	 *            List of percentages of hexagons for each image
+	 * @param heptagonsPercentage
+	 *            List of percentages of heptagons for each image
+	 * @param octogonsPercentage
+	 *            List of percentages of octogons for each image
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> gddv5, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,

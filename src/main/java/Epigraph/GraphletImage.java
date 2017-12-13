@@ -1112,9 +1112,11 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	}
 	
 	/**
-	 * 
-	 * @param modeNumGraphlets
-	 * @return
+	 * Get the number of cells used in graphlets calculation
+	 * @param modeNumGraphlets the setup
+	 * @param selectionMode any cells selected?
+	 * @param length which Valid cells should we use? Valid cells of 4' or 5'?
+	 * @return the number of cells used
 	 */
 	public int getTotalNumberOfGraphlets(int modeNumGraphlets, boolean selectionMode, int length){
 		int[] graphletsWeDontWant;

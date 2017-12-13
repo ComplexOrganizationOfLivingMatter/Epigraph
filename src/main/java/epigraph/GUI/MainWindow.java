@@ -541,6 +541,8 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Import information from an .XLS file to the table
+	 * @param saveIntoTable whether it should save the info into the table of the main window or not
+	 * @return the arraylist of graphletsImages from the imported data
 	 */
 	public ArrayList<BasicGraphletImage> importXLSToTable(boolean saveIntoTable) {
 		

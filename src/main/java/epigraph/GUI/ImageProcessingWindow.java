@@ -989,7 +989,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 		/**
 		 * Calculate graphlets in background
-		 * @throws CloneNotSupportedException 
+		 * @throws CloneNotSupportedException when using clone if it cannot proceed
 		 */
 		public void calculateGraphlets() throws CloneNotSupportedException {
 			ArrayList<ArrayList<String>> ListPolDistri;
@@ -1206,9 +1206,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	/**
 	 * 
-	 * @param allData
-	 * @param numDiagram
-	 * @return
+	 * @param allData data to filter
+	 * @param numDiagram the number of the diagram we want to
+	 * @return all the data that fits with the number of the diagram
 	 */
 	public ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, double numDiagram) {
 		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
