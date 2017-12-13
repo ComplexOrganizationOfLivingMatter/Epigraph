@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph;
+package epigraph.GUI;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,7 +33,7 @@ public class CustomCanvas extends OverlayedImageCanvas {
 	 * @param imp
 	 *            image to show
 	 */
-	CustomCanvas(ImagePlus imp) {
+	public CustomCanvas(ImagePlus imp) {
 		super(imp);
 		Dimension dim = new Dimension(imp.getWidth(), imp.getHeight());
 		setMinimumSize(dim);

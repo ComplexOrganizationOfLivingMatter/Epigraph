@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph;
+package epigraph.GUI;
 
 import java.awt.Color;
 import java.awt.Component;

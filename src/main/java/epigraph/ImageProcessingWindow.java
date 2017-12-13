@@ -51,6 +51,8 @@ import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import epigraph.GUI.CustomCanvas;
+import epigraph.GUI.ImageOverlay;
 import epigraph.Statistics.Utils;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;

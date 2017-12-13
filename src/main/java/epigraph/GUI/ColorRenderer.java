@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph;
+package epigraph.GUI;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
  * 
  * @author Pedro Gomez-Galvez
  */
-class ColorRenderer extends JLabel implements TableCellRenderer {
+public class ColorRenderer extends JLabel implements TableCellRenderer {
 	/**
 	 * 
 	 */

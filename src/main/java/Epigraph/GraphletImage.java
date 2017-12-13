@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JProgressBar;
 
+import epigraph.GUI.CustomCanvas;
+import epigraph.GUI.ImageOverlay;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Roi;

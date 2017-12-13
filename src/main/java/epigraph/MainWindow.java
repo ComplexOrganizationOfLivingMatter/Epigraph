@@ -35,6 +35,8 @@ import javax.swing.table.TableCellRenderer;
 import org.jfree.ui.NumberCellRenderer;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 
+import epigraph.GUI.ColorRenderer;
+import epigraph.GUI.JColorEditor;
 import ij.IJ;
 import ij.ImagePlus;
 

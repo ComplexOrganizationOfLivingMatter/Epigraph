@@ -17,7 +17,7 @@
  * 
  */
 
-package epigraph;
+package epigraph.GUI;
 
 import fiji.util.gui.OverlayedImageCanvas.Overlay;
 import ij.process.ImageProcessor;

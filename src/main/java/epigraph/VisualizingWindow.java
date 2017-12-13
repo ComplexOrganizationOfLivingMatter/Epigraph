@@ -45,6 +45,7 @@ import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRendere
 import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import epigraph.GUI.RangeSlider;
 import util.opencsv.CSVReader;
 
 /**

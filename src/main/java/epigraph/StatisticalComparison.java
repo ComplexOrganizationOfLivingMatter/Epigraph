@@ -4,11 +4,7 @@
 package epigraph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
-import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.MultivariateSummaryStatistics;
 
 import epigraph.Statistics.Utils;
