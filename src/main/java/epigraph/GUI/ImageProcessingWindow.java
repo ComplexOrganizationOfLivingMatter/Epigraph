@@ -78,6 +78,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private static final long serialVersionUID = 1L;
 	private static int MIN_GRAPHLETS_ON_IMAGE = 15;
+	private static int MAX_CLOSERDIAGRAMS = 3;
 	// For future stack
 	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
@@ -1065,13 +1066,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				statisticalDistances[numDiagram] = newRow[1];
 			}
 			
-			double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
-			double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
+			//double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
+			//double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
 			
 			//They may differ
-			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDifferences.clone(), diagramsUsed.clone());
-			double[][] orderedDists = Utils.bubbleSorting(statisticalDistances.clone(), diagramsUsed.clone());
 			
+			double[][] orderedDists = Utils.bubbleSorting(statisticalDistances.clone(), diagramsUsed.clone());
+			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDistances.clone(), statisticalDifferences.clone());
+			
+			double[][] closestDiagrams = new double[MAX_CLOSERDIAGRAMS][3];
+			for (int numDiagram = 0; numDiagram < MAX_CLOSERDIAGRAMS; numDiagram++) {
+				closestDiagrams[numDiagram][0] = orderedDists[1][numDiagram];
+				closestDiagrams[numDiagram][1] = orderedDists[0][numDiagram];
+				closestDiagrams[numDiagram][2] = orderedDiffs[1][numDiagram];
+			}
+			
+			newGraphletImage.setClosestDiagrams(closestDiagrams);
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");

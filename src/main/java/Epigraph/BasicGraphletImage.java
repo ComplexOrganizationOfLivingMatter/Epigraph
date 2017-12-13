@@ -26,6 +26,7 @@ public class BasicGraphletImage {
 	protected int shapeOfMask;
 	protected int radiusOfMask;
 	protected boolean selectedCells;
+	// 1: Position; 2: Euclidean Distance; 3: Deviation Difference
 	protected double[][] closestDiagrams;
 
 	/**
@@ -342,7 +343,7 @@ public class BasicGraphletImage {
 	 * @return the closestDiagrams
 	 */
 	public final double[][] getClosestDiagrams() {
-		return closestDiagrams;
+		return closestDiagrams.clone();
 	}
 
 	/**

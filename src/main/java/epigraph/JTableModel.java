@@ -26,7 +26,8 @@ public class JTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape", "Kind", "✓ Select all" };
+	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape",
+			"Kind", "Closest diagram", "Confidence", "✓ Select all" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
@@ -41,29 +42,23 @@ public class JTableModel extends AbstractTableModel {
 		listOfSelected = new ArrayList<Boolean>();
 		listOfModes = new ArrayList<String>();
 	}
-	
-	
-	
-	
-	public class MyRenderer extends JLabel implements TableCellRenderer { 
-		   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) { 
-		      DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(); 
-		      Component c = renderer.getTableCellRendererComponent(table,value, isSelected, hasFocus, row, col); 
-		      String s = ""; 
-		      if (col == 3) { 
-		         DecimalFormat dFormat = new DecimalFormat("#0.0000"); 
-		         Double d = (Double) value; 
-		         s = dFormat.format(d); 
-		         c = renderer.getTableCellRendererComponent(table, s,isSelected, hasFocus, row, col); 
-		         ((JLabel) c).setHorizontalAlignment(SwingConstants.LEFT); 
-		      } 
-		      return c; 
-		   } 
+
+	public class MyRenderer extends JLabel implements TableCellRenderer {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int col) {
+			DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+			Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+			String s = "";
+			if (col == 3) {
+				DecimalFormat dFormat = new DecimalFormat("#0.0000");
+				Double d = (Double) value;
+				s = dFormat.format(d);
+				c = renderer.getTableCellRendererComponent(table, s, isSelected, hasFocus, row, col);
+				((JLabel) c).setHorizontalAlignment(SwingConstants.LEFT);
+			}
+			return c;
 		}
-	
-	
-	
-	
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -114,13 +109,19 @@ public class JTableModel extends AbstractTableModel {
 		case 8:
 			return listOfModes.get(row);
 		case 9:
+			double[][] closestDiagrams = allGraphletImages.get(row).getClosestDiagrams();
+			return closestDiagrams[0][0];
+		case 10:
+			double[][] closestDiagrams1 = allGraphletImages.get(row).getClosestDiagrams();
+			return 1 / closestDiagrams1[0][2];
+		case 11:
 			return listOfSelected.get(row);
 		case 6:
 			return allGraphletImages.get(row).getRadiusOfMask();
 		case 7:
-			if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.CIRCLE_SHAPE){
+			if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.CIRCLE_SHAPE) {
 				return "Circle";
-			} else if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.SQUARE_SHAPE){
+			} else if (allGraphletImages.get(row).getShapeOfMask() == GraphletImage.SQUARE_SHAPE) {
 				return "Square";
 			}
 		}
@@ -144,9 +145,9 @@ public class JTableModel extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int row, int col) {
-		if (col != 6 && col != 7)
+		if (col != 6 && col != 7 && col != 10 && col != 9)
 			return true;
-		
+
 		return false;
 	}
 
@@ -179,7 +180,7 @@ public class JTableModel extends AbstractTableModel {
 		case 8:
 			listOfModes.set(row, (String) value);
 			break;
-		case 9:
+		case 11:
 			listOfSelected.set(row, (Boolean) value);
 			break;
 		}
@@ -275,44 +276,45 @@ public class JTableModel extends AbstractTableModel {
 
 		}
 	}
-	
+
 	/**
 	 * Select or deselect columns to be deleted or visualized
+	 * 
 	 * @param listOfSelected
 	 */
-	public void selectAll(){
-		if (allSelectedEquals(listOfSelected)==true){
-			if (listOfSelected.get(0)==true){
-				for (int i=0;i<listOfSelected.size();i++){	
+	public void selectAll() {
+		if (allSelectedEquals(listOfSelected) == true) {
+			if (listOfSelected.get(0) == true) {
+				for (int i = 0; i < listOfSelected.size(); i++) {
 					listOfSelected.set(i, false);
 				}
-			}else{
-				for (int i=0;i<listOfSelected.size();i++){	
+			} else {
+				for (int i = 0; i < listOfSelected.size(); i++) {
 					listOfSelected.set(i, true);
 				}
 			}
-		}else{
-			for (int i=0;i<listOfSelected.size();i++){	
+		} else {
+			for (int i = 0; i < listOfSelected.size(); i++) {
 				listOfSelected.set(i, true);
 			}
 		}
-		
+
 		fireTableDataChanged();
 	}
+
 	/**
 	 * 
 	 * @param listOfSelected
 	 * @return
 	 */
-	public boolean allSelectedEquals(ArrayList<Boolean> listOfSelected){
-		boolean bolVar= listOfSelected.get(0);
-		for (int i=0;i<listOfSelected.size();i++){
-			if (listOfSelected.get(i) != bolVar){
+	public boolean allSelectedEquals(ArrayList<Boolean> listOfSelected) {
+		boolean bolVar = listOfSelected.get(0);
+		for (int i = 0; i < listOfSelected.size(); i++) {
+			if (listOfSelected.get(i) != bolVar) {
 				return false;
-			}		
+			}
 		}
 		return true;
 	}
-
 
 }
