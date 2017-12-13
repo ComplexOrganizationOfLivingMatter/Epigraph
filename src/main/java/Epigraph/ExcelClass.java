@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -402,13 +403,12 @@ public class ExcelClass {
 	/**
 	 * load a xls file previously exported
 	 * 
-	 * @param filename
+	 * @param path
 	 *            Name of file in directory
 	 */
-	public void importData(String filename) {
+	public void importData(InputStream path) {
 
 		try {
-			FileInputStream path = new FileInputStream(filename);
 			POIFSFileSystem fs = new POIFSFileSystem(path);
 			HSSFWorkbook wb = new HSSFWorkbook(fs);
 			HSSFSheet sheet = wb.getSheetAt(0);
@@ -595,14 +595,14 @@ public class ExcelClass {
 	 * 
 	 * @param saveIntoTable
 	 *            check if we should save the new info into a table
-	 * @param pathFile
+	 * @param file
 	 *            the path of the excel to import
 	 * @param tableInfo
 	 *            table in which it would be save
 	 * @return collection of graphlets info from the imported excel
 	 */
-	public ArrayList<BasicGraphletImage> importExcel(boolean saveIntoTable, String pathFile, JTableModel tableInfo) {
-		this.importData(pathFile);
+	public ArrayList<BasicGraphletImage> importExcel(boolean saveIntoTable, InputStream file, JTableModel tableInfo) {
+		this.importData(file);
 
 		int flat = 0;
 

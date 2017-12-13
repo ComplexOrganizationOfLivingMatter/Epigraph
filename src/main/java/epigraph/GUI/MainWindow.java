@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -558,8 +560,15 @@ public class MainWindow extends JFrame {
 
 			
 			ExcelClass excelclass = new ExcelClass();
-			
-			return excelclass.importExcel(saveIntoTable, fileChooser.getSelectedFile().getPath(), tableInfo);
+
+			FileInputStream path = null;
+			try {
+				path = new FileInputStream(fileChooser.getSelectedFile());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return excelclass.importExcel(saveIntoTable, path, tableInfo);
 		}
 		return null;
 	}

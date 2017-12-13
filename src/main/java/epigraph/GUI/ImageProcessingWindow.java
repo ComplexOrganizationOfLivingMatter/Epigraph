@@ -18,11 +18,14 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -1047,8 +1050,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			
 			ExcelClass excelclass = new ExcelClass();
 			
-			String filePath = Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls").getPath();
-			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, filePath, null);
+			InputStream file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls"); //GetPath not working
+			
+			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, file, null);
 			
 			double[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
 			double[] statisticalDifferences = new double[diagramsUsed.length];

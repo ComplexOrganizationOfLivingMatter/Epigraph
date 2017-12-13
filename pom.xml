@@ -165,6 +165,7 @@
 							<exclude>net.imagej:*</exclude>
 							<exclude>net.imglib2:*</exclude>
 							<exclude>org.jogamp.*:*</exclude>
+							<exclude>org.apache.commons:*</exclude>
 						</excludes>
 					</artifactSet>
 					<archive>

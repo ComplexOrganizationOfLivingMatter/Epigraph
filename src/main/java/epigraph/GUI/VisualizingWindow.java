@@ -130,7 +130,6 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 * 
 	 * @param tableInfo
 	 */
-	@SuppressWarnings("unchecked")
 	private void createScatterPlot(int referenceGraphlets,int referenceAxes) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
