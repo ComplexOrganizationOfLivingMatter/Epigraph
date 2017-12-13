@@ -65,11 +65,11 @@ final class StatisticalComparison {
 		
 		double[][] originalData = new double[4][groupOfImages.size()];
 		
-		for (int numRow = 1; numRow < originalData[1].length; numRow++){
-			originalData[1][numRow] = groupOfImages.get(numRow).getDistanceGDDH();
-			originalData[2][numRow] = groupOfImages.get(numRow).getDistanceGDDRV();
-			originalData[3][numRow] = groupOfImages.get(numRow).getDistanceGDDV5();
-			originalData[4][numRow] = groupOfImages.get(numRow).getPercentageOfHexagonsGraphlets();
+		for (int numRow = 0; numRow < originalData[0].length; numRow++){
+			originalData[0][numRow] = groupOfImages.get(numRow).getDistanceGDDH();
+			originalData[1][numRow] = groupOfImages.get(numRow).getDistanceGDDRV();
+			originalData[2][numRow] = groupOfImages.get(numRow).getDistanceGDDV5();
+			originalData[3][numRow] = groupOfImages.get(numRow).getPercentageOfHexagonsGraphlets();
 		}
 		
 		return originalData;

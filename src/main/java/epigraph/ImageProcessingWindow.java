@@ -1036,7 +1036,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			
 			ExcelClass excelclass = new ExcelClass();
 			
-			ArrayList<BasicGraphletImage> originalGroup = excelclass.importExcel(false, Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xlsx").getPath(), null);
+			String filePath = Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls").getPath();
+			
+			ArrayList<BasicGraphletImage> originalGroup = excelclass.importExcel(false, filePath, null);
 			ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
 			newGraphletsGroup.add(newGraphletImage);
 			StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);

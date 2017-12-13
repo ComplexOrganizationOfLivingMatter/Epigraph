@@ -155,7 +155,7 @@ final public class Utils {
 		
 		double[] stdDevs = new double[data.length];
 		
-		for (int numCol = 1; numCol < data.length; numCol++){
+		for (int numCol = 0; numCol < data.length; numCol++){
 			stdDevs[numCol] = getStdDev(data[numCol]);
 		}
 		
