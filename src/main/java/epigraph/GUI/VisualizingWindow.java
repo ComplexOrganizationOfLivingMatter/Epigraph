@@ -1,4 +1,4 @@
-package epigraph;
+package epigraph.GUI;
 
 import java.awt.Checkbox;
 import java.awt.Component;
@@ -45,7 +45,10 @@ import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRendere
 import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
-import epigraph.GUI.RangeSlider;
+import epigraph.Epigraph;
+import epigraph.GraphletImage;
+import epigraph.JTableModel;
+import epigraph.GUI.CustomElements.RangeSlider;
 import util.opencsv.CSVReader;
 
 /**

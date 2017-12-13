@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph.GUI;
+package epigraph.GUI.CustomElements;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

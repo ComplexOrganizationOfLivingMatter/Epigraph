@@ -1,4 +1,4 @@
-package epigraph.GUI;
+package epigraph.GUI.CustomElements;
 
 import javax.swing.JSlider;
 

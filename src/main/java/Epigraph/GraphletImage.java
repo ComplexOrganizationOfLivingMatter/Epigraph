@@ -16,8 +16,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JProgressBar;
 
-import epigraph.GUI.CustomCanvas;
-import epigraph.GUI.ImageOverlay;
+import epigraph.GUI.CustomElements.CustomCanvas;
+import epigraph.GUI.CustomElements.ImageOverlay;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Roi;
@@ -189,7 +189,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	}
 	
 	@Override
-    protected Object clone() throws CloneNotSupportedException {
+	public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 

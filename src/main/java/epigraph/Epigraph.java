@@ -5,6 +5,7 @@ package epigraph;
 
 import javax.swing.SwingUtilities;
 
+import epigraph.GUI.MainWindow;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;

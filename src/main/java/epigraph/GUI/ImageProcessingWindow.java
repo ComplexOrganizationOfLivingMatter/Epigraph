@@ -1,4 +1,4 @@
-package epigraph;
+package epigraph.GUI;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -51,8 +51,14 @@ import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import epigraph.GUI.CustomCanvas;
-import epigraph.GUI.ImageOverlay;
+import epigraph.BasicGraphletImage;
+import epigraph.Epigraph;
+import epigraph.ExcelClass;
+import epigraph.GraphletImage;
+import epigraph.JTableModel;
+import epigraph.StatisticalComparison;
+import epigraph.GUI.CustomElements.CustomCanvas;
+import epigraph.GUI.CustomElements.ImageOverlay;
 import epigraph.Statistics.Utils;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
@@ -1202,7 +1208,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		String formattedDiagram = nf.format(numDiagram);
 		
 		for (BasicGraphletImage basicGraphletImage : allData) {
-			if (basicGraphletImage.labelName.contains(formattedDiagram))
+			if (basicGraphletImage.getLabelName().contains(formattedDiagram))
 					actualDiagramData.add(basicGraphletImage);
 					
 		}
