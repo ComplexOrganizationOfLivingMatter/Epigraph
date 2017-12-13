@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph.LibMahalanobis;
+package epigraph.Statistics;
 
 /**
  * From https://github.com/Navien2/K_Mean_Mahalanobis-Distance

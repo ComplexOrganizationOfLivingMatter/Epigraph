@@ -6,12 +6,12 @@ package epigraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import epigraph.LibMahalanobis.Utils;
-
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.MultivariateSummaryStatistics;
+
+import epigraph.Statistics.Utils;
 
 
 /**
@@ -50,23 +50,20 @@ final class StatisticalComparison {
 		originalPlusNewGroup.addAll(newGroup);
 		double[][] originalPlusNewData = create4DMatrix(originalPlusNewGroup);
 		
-		double[] stdDevs = Utils.getStdDev(originalData);
-		double[] stdDevsNewData = Utils.getStdDev(originalPlusNewData);
+		MultivariateSummaryStatistics originalStats = getStats(originalData);
+		MultivariateSummaryStatistics originalPlusNewStats = getStats(originalPlusNewData);
 		
-		double[] originalMean = Utils.getMean(originalData);
-		double[] newGroupMean = Utils.getMean(create4DMatrix(newGroup));
+		double[] stdDevs = originalStats.getStandardDeviation();
+		double[] stdDevsNewData = originalPlusNewStats.getStandardDeviation();
 		
 		EuclideanDistance euDis = new EuclideanDistance();
-		double distanceBetweenMeans = euDis.compute(originalMean, newGroupMean);
+		double distanceBetweenMeans = euDis.compute(originalStats.getMean(), originalPlusNewStats.getMean());
 		
 		double[] stdDiff = new double[stdDevs.length];
 		
 		for (int numDimension = 0; numDimension < stdDevs.length; numDimension++){
 			stdDiff[numDimension] = stdDevsNewData[numDimension] / stdDevs[numDimension];
 		}
-		
-		//RealMatrix rmOriginal = getCovariance(originalData);
-		//RealMatrix rmOriginalPlusNew = getCovariance(originalPlusNewData);
 		
 		double[] stdDiffAndDistance = {Utils.getMean(stdDiff), distanceBetweenMeans};
 		return stdDiffAndDistance;
@@ -76,7 +73,7 @@ final class StatisticalComparison {
 	 * @param matrix4D
 	 * @return 
 	 */
-	public static RealMatrix getCovariance(double[][] matrix4D) {
+	public static MultivariateSummaryStatistics getStats(double[][] matrix4D) {
 		MultivariateSummaryStatistics statsOriginal = new MultivariateSummaryStatistics(MAX_DIMENSIONS, false);
 		double[] newRow = new double[MAX_DIMENSIONS]; 
 		for (int numImg = 0; numImg < matrix4D[0].length; numImg++){
@@ -87,7 +84,7 @@ final class StatisticalComparison {
 			statsOriginal.addValue(newRow);
 		}
 		
-		return statsOriginal.getCovariance();
+		return statsOriginal;
 	}
 
 	/**

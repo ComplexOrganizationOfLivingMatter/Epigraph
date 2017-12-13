@@ -51,7 +51,7 @@ import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import epigraph.LibMahalanobis.Utils;
+import epigraph.Statistics.Utils;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
@@ -1060,7 +1060,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
 			double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
 			
-			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDifferences, diagramsUsed);
+			//They may differ
+			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDifferences.clone(), diagramsUsed.clone());
+			double[][] orderedDists = Utils.bubbleSorting(statisticalDistances.clone(), diagramsUsed.clone());
 			
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);

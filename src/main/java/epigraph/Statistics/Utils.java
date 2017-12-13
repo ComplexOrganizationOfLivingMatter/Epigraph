@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epigraph.LibMahalanobis;
+package epigraph.Statistics;
 
 import java.util.Arrays;
 
