@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
@@ -1037,11 +1038,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			ExcelClass excelclass = new ExcelClass();
 			
 			String filePath = Epigraph.class.getResource("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls").getPath();
+			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, filePath, null);
 			
-			ArrayList<BasicGraphletImage> originalGroup = excelclass.importExcel(false, filePath, null);
-			ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
-			newGraphletsGroup.add(newGraphletImage);
-			StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+			for (int numDiagram = 1; numDiagram <= 20; numDiagram++){
+				
+				ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(allData, numDiagram);
+				ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
+				newGraphletsGroup.add(newGraphletImage);
+				StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+			}
 			
 			
 			
@@ -1165,5 +1170,28 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			imp.updateAndDraw();
 			repaintAll();
 		}
+	}
+
+	/**
+	 * 
+	 * @param allData
+	 * @param numDiagram
+	 * @return
+	 */
+	public ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, int numDiagram) {
+		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
+		
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMinimumFractionDigits(3);
+		String formattedDiagram = nf.format(numDiagram);
+		
+		for (BasicGraphletImage basicGraphletImage : allData) {
+			if (basicGraphletImage.labelName.contains(formattedDiagram))
+					actualDiagramData.add(basicGraphletImage);
+					
+		}
+		
+		
+		return actualDiagramData;
 	}
 }
