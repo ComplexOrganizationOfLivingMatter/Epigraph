@@ -38,6 +38,7 @@ import org.jfree.ui.NumberCellRenderer;
 import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 
 import epigraph.BasicGraphletImage;
+import epigraph.DiagramsData;
 import epigraph.ExcelClass;
 import epigraph.GraphletImage;
 import epigraph.JTableModel;
@@ -72,6 +73,7 @@ public class MainWindow extends JFrame {
 	private ImageProcessingWindow imageProcessing;
 	private JButton btnDeleteRow;
 	private JFileChooser fileChooser;
+	private DiagramsData diagramsData;
 
 	/**
 	 * Constructor by default. Setup all the windows and creates the panel. It
@@ -152,6 +154,13 @@ public class MainWindow extends JFrame {
 		
 
 		fileChooser = new JFileChooser();
+		
+		try {
+			diagramsData = new DiagramsData();
+		} catch (CloneNotSupportedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 	}
 
@@ -392,7 +401,7 @@ public class MainWindow extends JFrame {
 			ImagePlus raw_img = IJ.openImage();
 			if (raw_img != null) {
 				if (raw_img.getHeight() < 3000 && raw_img.getWidth() < 3000) {
-					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo);
+					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
 					imageProcessing.pack();
 					
 					imageProcessing.addWindowListener(new WindowListener(){
@@ -568,7 +577,12 @@ public class MainWindow extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return excelclass.importExcel(saveIntoTable, path, tableInfo);
+			try {
+				return excelclass.importExcel(path, tableInfo, diagramsData);
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

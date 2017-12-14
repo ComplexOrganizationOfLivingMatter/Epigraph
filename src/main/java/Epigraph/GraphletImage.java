@@ -5,6 +5,7 @@ package epigraph;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import javax.swing.JProgressBar;
 
 import epigraph.GUI.CustomElements.CustomCanvas;
 import epigraph.GUI.CustomElements.ImageOverlay;
+import epigraph.Statistics.StatisticalComparison;
+import epigraph.Statistics.Utils;
 import fiji.util.gui.OverlayedImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Roi;
@@ -36,6 +39,7 @@ import inra.ijpb.morphology.strel.SquareStrel;
  * @author Pablo Vicente-Munuera
  */
 public class GraphletImage extends BasicGraphletImage implements Cloneable {
+	
 
 	/**
 	 * Nomenclature of the graphlets we'll be using

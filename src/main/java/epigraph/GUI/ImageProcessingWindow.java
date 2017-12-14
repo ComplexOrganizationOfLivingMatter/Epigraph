@@ -55,6 +55,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import epigraph.BasicGraphletImage;
+import epigraph.DiagramsData;
 import epigraph.Epigraph;
 import epigraph.ExcelClass;
 import epigraph.GraphletImage;
@@ -81,7 +82,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private static final long serialVersionUID = 1L;
 	private static int MIN_GRAPHLETS_ON_IMAGE = 15;
-	private static int MAX_CLOSERDIAGRAMS = 3;
 	// For future stack
 	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
@@ -140,6 +140,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JButton btnZipData;
 	private JLabel lblConnectiviy;
 
+	private DiagramsData diagramsData;
+
 	/**
 	 * Constructor
 	 * 
@@ -148,10 +150,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * @param tableInfo
 	 *            information of the table
 	 */
-	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo) {
+	ImageProcessingWindow(ImagePlus raw_img, JTableModel tableInfo, DiagramsData diagramsData) {
 		
 		super(raw_img, new CustomCanvas(raw_img));
 		//super(raw_img, new CustomCanvas(raw_img));
+		
+		this.diagramsData = diagramsData;
 
 		canvas = (CustomCanvas) super.getCanvas();
 		
@@ -1048,44 +1052,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriGraphlets.get(4).replace("%","").replace(",", ".")));
 			}
 			
-			ExcelClass excelclass = new ExcelClass();
-			
-			InputStream file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/17Motifs_CVTn_GDDs_06_12_2017.xls"); //GetPath not working
-			
-			ArrayList<BasicGraphletImage> allData = excelclass.importExcel(false, file, null);
-			
-			double[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
-			double[] statisticalDifferences = new double[diagramsUsed.length];
-			double[] statisticalDistances = new double[diagramsUsed.length];
-			
-			double[] newRow = new double[2];
-			
-			for (int numDiagram = 0; numDiagram < diagramsUsed.length; numDiagram++){
-				
-				ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(allData, diagramsUsed[numDiagram]);
-				ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
-				newGraphletsGroup.add(newGraphletImage);
-				newRow = StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
-				statisticalDifferences[numDiagram] = newRow[0];
-				statisticalDistances[numDiagram] = newRow[1];
-			}
-			
-			//double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
-			//double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
-			
-			//They may differ
-			
-			double[][] orderedDists = Utils.bubbleSorting(statisticalDistances.clone(), diagramsUsed.clone());
-			double[][] orderedDiffs = Utils.bubbleSorting(statisticalDistances.clone(), statisticalDifferences.clone());
-			
-			double[][] closestDiagrams = new double[MAX_CLOSERDIAGRAMS][3];
-			for (int numDiagram = 0; numDiagram < MAX_CLOSERDIAGRAMS; numDiagram++) {
-				closestDiagrams[numDiagram][0] = orderedDists[1][numDiagram];
-				closestDiagrams[numDiagram][1] = orderedDists[0][numDiagram];
-				closestDiagrams[numDiagram][2] = orderedDiffs[1][numDiagram];
-			}
-			
-			newGraphletImage.setClosestDiagrams(closestDiagrams);
 			
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
@@ -1112,6 +1078,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					JOptionPane.showMessageDialog(canvas.getParent(),
 							"Care: Not too many graphlets in the sample selected. You may obtain results with no warranties",
 							"Warning", JOptionPane.WARNING_MESSAGE);
+				}
+				
+
+				switch (cbGraphletsMode.getSelectedIndex()){
+					case 0: newGraphletImage.calculateClosestDiagram(diagramsData.getMo7());
+						break;
+					case 1: newGraphletImage.calculateClosestDiagram(diagramsData.getMo10());
+						break;
+					case 2: newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
+						break;
+					case 3: newGraphletImage.calculateClosestDiagram(diagramsData.getMo26());
+						break;
 				}
 				
 				tableInf.addImage((GraphletImage) newGraphletImage.clone(), cbGraphletsMode.getSelectedItem().toString());
@@ -1206,28 +1184,5 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			imp.updateAndDraw();
 			repaintAll();
 		}
-	}
-
-	/**
-	 * 
-	 * @param allData data to filter
-	 * @param numDiagram the number of the diagram we want to
-	 * @return all the data that fits with the number of the diagram
-	 */
-	public ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, double numDiagram) {
-		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
-		
-		NumberFormat nf = NumberFormat.getInstance();
-		nf.setMinimumIntegerDigits(3);
-		String formattedDiagram = nf.format(numDiagram);
-		
-		for (BasicGraphletImage basicGraphletImage : allData) {
-			if (basicGraphletImage.getLabelName().contains(formattedDiagram))
-					actualDiagramData.add(basicGraphletImage);
-					
-		}
-		
-		
-		return actualDiagramData;
 	}
 }

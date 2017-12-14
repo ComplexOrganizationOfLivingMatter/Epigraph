@@ -2,6 +2,12 @@
 package epigraph;
 
 import java.awt.Color;
+import java.io.InputStream;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+
+import epigraph.Statistics.StatisticalComparison;
+import epigraph.Statistics.Utils;
 
 /**
  * On this class we represent the basic information we aim to have through the
@@ -10,6 +16,11 @@ import java.awt.Color;
  * @author Pablo Vicente-Munuera
  */
 public class BasicGraphletImage {
+
+	/**
+	 * 
+	 */
+	private static int MAX_CLOSERDIAGRAMS = 3;
 
 	protected float distanceGDDRV;
 	protected float distanceGDDV5;
@@ -365,5 +376,71 @@ public class BasicGraphletImage {
 	 */
 	public void setSelectedCells(boolean selectedCells) {
 		this.selectedCells = selectedCells;
+	}
+	
+	/**
+	 * 
+	 * @throws CloneNotSupportedException
+	 */
+	public void calculateClosestDiagram(ArrayList<BasicGraphletImage> diagramsData) throws CloneNotSupportedException{
+
+		
+		double[] diagramsUsed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700};
+		double[] statisticalDifferences = new double[diagramsUsed.length];
+		double[] statisticalDistances = new double[diagramsUsed.length];
+		
+		double[] newRow = new double[2];
+		
+		for (int numDiagram = 0; numDiagram < diagramsUsed.length; numDiagram++){
+			
+			ArrayList<BasicGraphletImage> originalGroup = filterByDiagram(diagramsData, diagramsUsed[numDiagram]);
+			ArrayList<BasicGraphletImage> newGraphletsGroup = new ArrayList<BasicGraphletImage>();
+			newGraphletsGroup.add(this);
+			newRow = StatisticalComparison.compareGroupsOfImages(originalGroup, newGraphletsGroup);
+			statisticalDifferences[numDiagram] = newRow[0];
+			statisticalDistances[numDiagram] = newRow[1];
+		}
+		
+		//double[] minValueDistAndPosition = Utils.getMin(statisticalDistances);
+		//double[] minValueDiffAndPosition = Utils.getMin(statisticalDifferences);
+		
+		//They may differ
+		
+		double[][] orderedDists = Utils.bubbleSorting(statisticalDistances.clone(), diagramsUsed.clone());
+		double[][] orderedDiffs = Utils.bubbleSorting(statisticalDistances.clone(), statisticalDifferences.clone());
+		
+		double[][] closestDiagrams = new double[MAX_CLOSERDIAGRAMS][3];
+		for (int numDiagram = 0; numDiagram < MAX_CLOSERDIAGRAMS; numDiagram++) {
+			closestDiagrams[numDiagram][0] = orderedDists[1][numDiagram];
+			closestDiagrams[numDiagram][1] = orderedDists[0][numDiagram];
+			closestDiagrams[numDiagram][2] = orderedDiffs[1][numDiagram];
+		}
+		
+		this.setClosestDiagrams(closestDiagrams);
+	}
+	
+
+
+	/**
+	 * 
+	 * @param allData data to filter
+	 * @param numDiagram the number of the diagram we want to
+	 * @return all the data that fits with the number of the diagram
+	 */
+	private ArrayList<BasicGraphletImage> filterByDiagram(ArrayList<BasicGraphletImage> allData, double numDiagram) {
+		ArrayList<BasicGraphletImage> actualDiagramData = new ArrayList<BasicGraphletImage>();
+		
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMinimumIntegerDigits(3);
+		String formattedDiagram = nf.format(numDiagram);
+		
+		for (BasicGraphletImage basicGraphletImage : allData) {
+			if (basicGraphletImage.getLabelName().contains(formattedDiagram))
+					actualDiagramData.add(basicGraphletImage);
+					
+		}
+		
+		
+		return actualDiagramData;
 	}
 }
