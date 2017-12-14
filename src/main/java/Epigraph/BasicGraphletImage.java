@@ -380,7 +380,8 @@ public class BasicGraphletImage {
 	
 	/**
 	 * 
-	 * @throws CloneNotSupportedException
+	 * @param diagramsData the diagrams excel info
+	 * @throws CloneNotSupportedException an exception
 	 */
 	public void calculateClosestDiagram(ArrayList<BasicGraphletImage> diagramsData) throws CloneNotSupportedException{
 
@@ -444,16 +445,28 @@ public class BasicGraphletImage {
 		return actualDiagramData;
 	}
 
+	/**
+	 * 
+	 * @return the closest diagram
+	 */
 	public int getClosestDiagram() {
 		// TODO Auto-generated method stub
 		return (int) closestDiagrams[0][0];
 	}
 
+	/**
+	 * 
+	 * @return the distance of the closest diagram
+	 */
 	public double getDistanceClosestDiagram() {
 		// TODO Auto-generated method stub
 		return closestDiagrams[0][1];
 	}
 
+	/**
+	 * 
+	 * @return the confidence of the closest diagram
+	 */
 	public double getConfidenceClosestDiagram() {
 		// TODO Auto-generated method stub
 		return closestDiagrams[0][2];

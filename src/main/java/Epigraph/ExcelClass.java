@@ -76,7 +76,7 @@ public class ExcelClass {
 	}
 
 	/**
-	 * /** Constructor from parameters
+	 * Constructor from parameters
 	 * 
 	 * @param filename
 	 *            Name of excel file to import or export
@@ -111,6 +111,12 @@ public class ExcelClass {
 	 *            List of percentages of heptagons for each image
 	 * @param octogonsPercentage
 	 *            List of percentages of octogons for each image
+	 * @param closestDiagram
+	 *            List of closest diagram of each image
+	 * @param distanceDiagram
+	 *            List of distance of closest diagram of each image
+	 * @param confidenceDiagram
+	 *            List of confidence of closest diagram of each image
 	 */
 	public ExcelClass(String filename, ArrayList<String> imageName, ArrayList<Float> gddh, ArrayList<Float> gddrv,
 			ArrayList<Float> gddv5, ArrayList<Float> r, ArrayList<Float> g, ArrayList<Float> b,
@@ -656,8 +662,9 @@ public class ExcelClass {
 	 * @param tableInfo
 	 *            table in which it would be save
 	 * @param diagramsData
+	 *            diagrams information
 	 * @return collection of graphlets info from the imported excel
-	 * @throws CloneNotSupportedException
+	 * @throws CloneNotSupportedException an exception
 	 */
 	public ArrayList<BasicGraphletImage> importExcel(InputStream file, JTableModel tableInfo, DiagramsData diagramsData)
 			throws CloneNotSupportedException {
@@ -728,8 +735,8 @@ public class ExcelClass {
 
 	/**
 	 * 
-	 * @param file
-	 * @return
+	 * @param file the excel file
+	 * @return the array list of the basic graphlet images without adding it into the table
 	 */
 	public ArrayList<BasicGraphletImage> importBasicExcel(InputStream file) {
 		this.importData(file);
