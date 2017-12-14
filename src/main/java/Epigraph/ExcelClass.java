@@ -457,9 +457,6 @@ public class ExcelClass {
 		rowExcel.add(this.hexagonsPercentage.get(row));
 		rowExcel.add(this.heptagonsPercentage.get(row));
 		rowExcel.add(this.octogonsPercentage.get(row));
-		rowExcel.add(this.closestDiagram.get(row));
-		rowExcel.add(this.distanceDiagram.get(row));
-		rowExcel.add(this.confidenceDiagram.get(row));
 
 		return rowExcel;
 	}
