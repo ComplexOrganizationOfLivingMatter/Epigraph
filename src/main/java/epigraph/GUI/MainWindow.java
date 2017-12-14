@@ -91,7 +91,7 @@ public class MainWindow extends JFrame {
 		UIManager.put("Panel.background", Color.WHITE);
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
-		setMinimumSize(new Dimension(1000, 600));
+		setMinimumSize(new Dimension(1200, 600));
 		setTitle("EpiGraph");
 		// Not close Fiji when Epigraph is closed
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -280,8 +280,8 @@ public class MainWindow extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getColumnModel().getColumn(0).setMaxWidth(40);
 		table.getColumnModel().getColumn(0).setMinWidth(40);
-		table.getColumnModel().getColumn(2).setMaxWidth(40);
-		table.getColumnModel().getColumn(2).setMinWidth(40);
+		table.getColumnModel().getColumn(2).setMaxWidth(45);
+		table.getColumnModel().getColumn(2).setMinWidth(45);
 		table.getColumnModel().getColumn(3).setMaxWidth(50);
 		table.getColumnModel().getColumn(3).setMinWidth(50);
 		table.getColumnModel().getColumn(4).setMinWidth(50);
@@ -294,10 +294,10 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(7).setMinWidth(50);
 		table.getColumnModel().getColumn(8).setMaxWidth(120);
 		table.getColumnModel().getColumn(8).setMinWidth(120);
-		table.getColumnModel().getColumn(9).setMaxWidth(80);
+		table.getColumnModel().getColumn(9).setMaxWidth(110);
+		table.getColumnModel().getColumn(9).setMinWidth(110);
 		table.getColumnModel().getColumn(10).setMinWidth(80);
 		table.getColumnModel().getColumn(10).setMaxWidth(80);
-		table.getColumnModel().getColumn(11).setMinWidth(80);
 		table.getColumnModel().getColumn(11).setMaxWidth(80);
 		table.getColumnModel().getColumn(11).setMinWidth(80);
 		
@@ -371,12 +371,12 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnImport.setBounds(240, 496, 105, 29);
-		btnExport.setBounds(431, 496, 105, 29);
-		btnVisualize.setBounds(607, 496, 93, 29);
-		scrollPane.setBounds(15, 27, 820, 425);
-		btnOpenButton.setBounds(92, 496, 71, 29);
-		btnDeleteRow.setBounds(847, 66, 115, 25);
+		btnImport.setBounds(336, 487, 105, 29);
+		btnExport.setBounds(527, 487, 105, 29);
+		btnVisualize.setBounds(703, 487, 93, 29);
+		scrollPane.setBounds(26, 30, 1001, 431);
+		btnOpenButton.setBounds(188, 487, 71, 29);
+		btnDeleteRow.setBounds(1055, 68, 115, 25);
 
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
