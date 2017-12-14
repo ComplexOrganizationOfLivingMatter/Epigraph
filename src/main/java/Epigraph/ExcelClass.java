@@ -44,6 +44,9 @@ public class ExcelClass {
 	private ArrayList<Float> hexagonsPercentage;
 	private ArrayList<Float> heptagonsPercentage;
 	private ArrayList<Float> octogonsPercentage;
+	private ArrayList<String> closestDiagram;
+	private ArrayList<Float> distanceDiagram;
+	private ArrayList<Float> confidenceDiagram;
 
 	/**
 	 * Default constructor
@@ -66,6 +69,9 @@ public class ExcelClass {
 		this.hexagonsPercentage = new ArrayList<Float>();
 		this.heptagonsPercentage = new ArrayList<Float>();
 		this.octogonsPercentage = new ArrayList<Float>();
+		this.closestDiagram = new ArrayList<String>();
+		this.distanceDiagram = new ArrayList<Float>();
+		this.confidenceDiagram = new ArrayList<Float>();
 
 	}
 
@@ -111,7 +117,8 @@ public class ExcelClass {
 			ArrayList<String> graphletsMode, ArrayList<Integer> radiusOfMask, ArrayList<String> shapeOfMask,
 			ArrayList<Float> squaresPercentage, ArrayList<Float> pentagonsPercentage,
 			ArrayList<Float> hexagonsPercentage, ArrayList<Float> heptagonsPercentage,
-			ArrayList<Float> octogonsPercentage) {
+			ArrayList<Float> octogonsPercentage, ArrayList<String> closestDiagram, ArrayList<Float> distanceDiagram,
+			ArrayList<Float> confidenceDiagram) {
 		super();
 		this.fileName = filename;
 		this.imageName = imageName;
@@ -129,6 +136,9 @@ public class ExcelClass {
 		this.hexagonsPercentage = hexagonsPercentage;
 		this.heptagonsPercentage = heptagonsPercentage;
 		this.octogonsPercentage = octogonsPercentage;
+		this.closestDiagram = closestDiagram;
+		this.distanceDiagram = distanceDiagram;
+		this.confidenceDiagram = confidenceDiagram;
 	}
 
 	/**
@@ -374,6 +384,51 @@ public class ExcelClass {
 	}
 
 	/**
+	 * @return the closestDiagram
+	 */
+	public final ArrayList<String> getClosestDiagram() {
+		return closestDiagram;
+	}
+
+	/**
+	 * @param closestDiagram
+	 *            the closestDiagram to set
+	 */
+	public final void setClosestDiagram(ArrayList<String> closestDiagram) {
+		this.closestDiagram = closestDiagram;
+	}
+
+	/**
+	 * @return the distanceDiagram
+	 */
+	public final ArrayList<Float> getDistanceDiagram() {
+		return distanceDiagram;
+	}
+
+	/**
+	 * @param distanceDiagram
+	 *            the distanceDiagram to set
+	 */
+	public final void setDistanceDiagram(ArrayList<Float> distanceDiagram) {
+		this.distanceDiagram = distanceDiagram;
+	}
+
+	/**
+	 * @return the confidenceDiagram
+	 */
+	public final ArrayList<Float> getConfidenceDiagram() {
+		return confidenceDiagram;
+	}
+
+	/**
+	 * @param confidenceDiagram
+	 *            the confidenceDiagram to set
+	 */
+	public final void setConfidenceDiagram(ArrayList<Float> confidenceDiagram) {
+		this.confidenceDiagram = confidenceDiagram;
+	}
+
+	/**
 	 * 
 	 * @param row
 	 *            number of excel class row
@@ -396,6 +451,9 @@ public class ExcelClass {
 		rowExcel.add(this.hexagonsPercentage.get(row));
 		rowExcel.add(this.heptagonsPercentage.get(row));
 		rowExcel.add(this.octogonsPercentage.get(row));
+		rowExcel.add(this.closestDiagram.get(row));
+		rowExcel.add(this.distanceDiagram.get(row));
+		rowExcel.add(this.confidenceDiagram.get(row));
 
 		return rowExcel;
 	}
@@ -593,16 +651,16 @@ public class ExcelClass {
 	/**
 	 * Import excel from our own file. Use it internally
 	 * 
-	 * @param saveIntoTable
-	 *            check if we should save the new info into a table
 	 * @param file
 	 *            the path of the excel to import
 	 * @param tableInfo
 	 *            table in which it would be save
+	 * @param diagramsData
 	 * @return collection of graphlets info from the imported excel
-	 * @throws CloneNotSupportedException 
+	 * @throws CloneNotSupportedException
 	 */
-	public ArrayList<BasicGraphletImage> importExcel(InputStream file, JTableModel tableInfo, DiagramsData diagramsData) throws CloneNotSupportedException {
+	public ArrayList<BasicGraphletImage> importExcel(InputStream file, JTableModel tableInfo, DiagramsData diagramsData)
+			throws CloneNotSupportedException {
 		this.importData(file);
 
 		int flat = 0;
@@ -657,11 +715,11 @@ public class ExcelClass {
 			newGraphletImage.setPercentageOfHexagons((float) newRow.get(12));
 			newGraphletImage.setPercentageOfHeptagons((float) newRow.get(13));
 			newGraphletImage.setPercentageOfOctogons((float) newRow.get(14));
-			//Select which motifs
+			// Select which motifs
 			newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
 
 			newImages.add(newGraphletImage);
-			
+
 			tableInfo.addImage(newGraphletImage, (String) newRow.get(7));
 
 		}
@@ -748,8 +806,10 @@ public class ExcelClass {
 
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("1", new Object[] { "Image name", "GDDH", "GDDRV", "GDDV5", "R", "G", "B", "GraphletsMode",
-				"RadiusOfMask", "ShapeOfMask", "% squares", "% pentagons", "% hexagons", "% heptagons", "% octogons" });
+		data.put("1",
+				new Object[] { "Image name", "GDDH", "GDDRV", "GDDV5", "R", "G", "B", "GraphletsMode", "RadiusOfMask",
+						"ShapeOfMask", "% squares", "% pentagons", "% hexagons", "% heptagons", "% octogons",
+						"Closest diagram", "Distance", "Confidence" });
 
 		NumberFormat df2 = NumberFormat.getInstance();
 		df2.setMaximumFractionDigits(3);
@@ -764,7 +824,8 @@ public class ExcelClass {
 					new Object[] { imageName.get(i), gddh.get(i), gddrv.get(i), gddv5.get(i), R.get(i), G.get(i),
 							B.get(i), this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i),
 							squaresPercentage.get(i), pentagonsPercentage.get(i), hexagonsPercentage.get(i),
-							heptagonsPercentage.get(i), octogonsPercentage.get(i) });
+							heptagonsPercentage.get(i), octogonsPercentage.get(i), closestDiagram.get(i),
+							distanceDiagram.get(i), confidenceDiagram.get(i) });
 		}
 
 		// Iterate over data and write to sheet

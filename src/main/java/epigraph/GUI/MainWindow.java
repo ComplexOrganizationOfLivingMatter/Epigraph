@@ -484,6 +484,9 @@ public class MainWindow extends JFrame {
 		ArrayList<String> arrayMode = new ArrayList<String>();
 		ArrayList<Integer> arrayRadiusOfMask = new ArrayList<Integer>();
 		ArrayList<String> arrayShapeOfMask = new ArrayList<String>();
+		ArrayList<String> arrayClosestDiagram = new ArrayList<String>();
+		ArrayList<Float> arrayDistanceDiagram = new ArrayList<Float>();
+		ArrayList<Float> arrayConfidenceDiagram = new ArrayList<Float>();
 		
 		int cont = 0;
 		for (BasicGraphletImage graphletImg : tableInfo.getAllGraphletImages()) {
@@ -509,6 +512,9 @@ public class MainWindow extends JFrame {
 
 			arrayRadiusOfMask.add(graphletImg.getRadiusOfMask());
 			
+			arrayClosestDiagram.add(Integer.toString(graphletImg.getClosestDiagram()));
+			arrayDistanceDiagram.add((float) graphletImg.getDistanceClosestDiagram());
+			arrayConfidenceDiagram.add((float) graphletImg.getConfidenceClosestDiagram());
 			
 			cont++;
 		}
@@ -542,9 +548,7 @@ public class MainWindow extends JFrame {
 
 			ExcelClass excelclass = new ExcelClass(filename, arrayNames, arrayGDDH, arrayGDDRV, arrayGDDV5, arrayR,
 					arrayG, arrayB, arrayMode, arrayRadiusOfMask, arrayShapeOfMask,arraySquares,arrayPentagons,
-					arrayHexagons,arrayHeptagons,arrayOctogons);
-			
-			
+					arrayHexagons,arrayHeptagons,arrayOctogons, arrayClosestDiagram, arrayDistanceDiagram, arrayConfidenceDiagram);
 			
 			excelclass.exportData();
 		}

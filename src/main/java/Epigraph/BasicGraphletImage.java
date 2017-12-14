@@ -443,4 +443,19 @@ public class BasicGraphletImage {
 		
 		return actualDiagramData;
 	}
+
+	public int getClosestDiagram() {
+		// TODO Auto-generated method stub
+		return (int) closestDiagrams[0][0];
+	}
+
+	public double getDistanceClosestDiagram() {
+		// TODO Auto-generated method stub
+		return closestDiagrams[0][1];
+	}
+
+	public double getConfidenceClosestDiagram() {
+		// TODO Auto-generated method stub
+		return closestDiagrams[0][2];
+	}
 }
