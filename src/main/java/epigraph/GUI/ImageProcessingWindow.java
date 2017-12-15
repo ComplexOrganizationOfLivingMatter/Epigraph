@@ -1084,7 +1084,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				switch (cbGraphletsMode.getSelectedIndex()){
 					case 3: newGraphletImage.calculateClosestDiagram(diagramsData.getMo7());
 						break;
-					case 2: newGraphletImage.calculateClosestDiagram(diagramsData.getMo9());
+					case 2: newGraphletImage.calculateClosestDiagram(diagramsData.getMo10());
 						break;
 					case 1: newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
 						break;
