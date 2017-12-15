@@ -34,14 +34,14 @@ final public class DiagramsData {
 		//Mo10
 		excelclass = new ExcelClass();
 		
-		file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/10Motifs_CVTn_GDDs_15_12_2017.xls"); //GetPath not working
+		file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/10Motifs_CVTn_GDDs_15_12_2017.xls");
 		
 		mo10 = excelclass.importBasicExcel(file);
 		
 		//Mo7
 		excelclass = new ExcelClass();
 		
-		file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/7Motifs_CVTn_GDDs_15_12_2017.xls"); //GetPath not working
+		file = this.getClass().getResourceAsStream("/epigraph/voronoiNoiseReference/allDiagrams/7Motifs_CVTn_GDDs_15_12_2017.xls");
 		
 		mo7 = excelclass.importBasicExcel(file);
 		
