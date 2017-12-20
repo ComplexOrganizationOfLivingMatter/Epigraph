@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -719,11 +720,23 @@ public class ExcelClass {
 			newGraphletImage.setPercentageOfHexagons((float) newRow.get(12));
 			newGraphletImage.setPercentageOfHeptagons((float) newRow.get(13));
 			newGraphletImage.setPercentageOfOctogons((float) newRow.get(14));
-			// Select which motifs
-			//PORQUE SIEMPRE SE CALCULA EL CLOSEST DIAGRAM TENIENDO EN CUENTA EL MO17????TENDREMOS QUE
-			//TENER EN CUENTA EL GRAPHLETS MODE ELEGIDO NO???
-			newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
-
+			
+			// Select which motifs			
+			int indexString = Arrays.asList(GraphletImage.KIND_OF_GRAPHLETS).indexOf((String) newRow.get(7));
+			switch (indexString){
+				case 3: newGraphletImage.calculateClosestDiagram(diagramsData.getMo7());
+					break;
+				case 2: newGraphletImage.calculateClosestDiagram(diagramsData.getMo10());
+					break;
+				case 1: newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
+					break;
+				case 0: newGraphletImage.calculateClosestDiagram(diagramsData.getMo29());
+					break;
+				default:newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
+					break;
+					
+			}
+			
 			newImages.add(newGraphletImage);
 
 			tableInfo.addImage(newGraphletImage, (String) newRow.get(7));
