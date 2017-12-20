@@ -720,6 +720,8 @@ public class ExcelClass {
 			newGraphletImage.setPercentageOfHeptagons((float) newRow.get(13));
 			newGraphletImage.setPercentageOfOctogons((float) newRow.get(14));
 			// Select which motifs
+			//PORQUE SIEMPRE SE CALCULA EL CLOSEST DIAGRAM TENIENDO EN CUENTA EL MO17????TENDREMOS QUE
+			//TENER EN CUENTA EL GRAPHLETS MODE ELEGIDO NO???
 			newGraphletImage.calculateClosestDiagram(diagramsData.getMO17());
 
 			newImages.add(newGraphletImage);
@@ -829,7 +831,7 @@ public class ExcelClass {
 							B.get(i), this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i),
 							squaresPercentage.get(i), pentagonsPercentage.get(i), hexagonsPercentage.get(i),
 							heptagonsPercentage.get(i), octogonsPercentage.get(i), closestDiagram.get(i),
-							distanceDiagram.get(i), confidenceDiagram.get(i) });
+							distanceDiagram.get(i), 1 / confidenceDiagram.get(i) });
 		}
 
 		// Iterate over data and write to sheet
