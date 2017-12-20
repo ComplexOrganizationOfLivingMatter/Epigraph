@@ -608,8 +608,12 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 				percentagesList.add(percentagesListRoi);
 			
 			}
+		}else{
+			progressBar.setValue(20);
 		}
-
+		
+		
+		
 		return percentagesList;
 	}
 	/**
