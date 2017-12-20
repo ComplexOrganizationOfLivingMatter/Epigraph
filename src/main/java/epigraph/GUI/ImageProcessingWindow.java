@@ -682,13 +682,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			disableActionButtons();
 			backgroundTask = new Task(2);
 			backgroundTask.execute();
+		} else if (e.getSource() == btnZipData) {
+			exportDataIntoZip();
 		} else if (this.threadFinished == true) { //Removing the finished thread 
 			backgroundTask.cancel(true);
 			backgroundTask.finalizeThread();
 			backgroundTask = null;
 			this.threadFinished = false;
-		} else if (e.getSource() == btnZipData) {
-			exportDataIntoZip();
 		}
 
 		
