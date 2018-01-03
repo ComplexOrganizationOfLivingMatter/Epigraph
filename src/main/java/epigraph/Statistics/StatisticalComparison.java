@@ -4,8 +4,15 @@
 package epigraph.Statistics;
 
 import java.util.ArrayList;
+
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.apache.commons.math3.stat.descriptive.MultivariateSummaryStatistics;
+
+import com.jogamp.opengl.math.VectorUtil;
 
 import epigraph.BasicGraphletImage;
 
@@ -46,29 +53,45 @@ public final class StatisticalComparison {
 			ArrayList<BasicGraphletImage> newGroup) {
 
 		double[][] originalData = create4DMatrix(originalGroup);
-		ArrayList<BasicGraphletImage> originalPlusNewGroup = new ArrayList<BasicGraphletImage>();
-
-		originalPlusNewGroup.addAll(originalGroup);
-		originalPlusNewGroup.addAll(newGroup);
-		double[][] originalPlusNewData = create4DMatrix(originalPlusNewGroup);
 
 		MultivariateSummaryStatistics originalStats = getStats(originalData);
-		MultivariateSummaryStatistics originalPlusNewStats = getStats(originalPlusNewData);
+		
+		
+		if (newGroup.size() == 1) {
 
-		double[] stdDevs = originalStats.getStandardDeviation();
-		double[] stdDevsNewData = originalPlusNewStats.getStandardDeviation();
+			ArrayList<BasicGraphletImage> originalPlusNewGroup = new ArrayList<BasicGraphletImage>();
+			originalPlusNewGroup.addAll(originalGroup);
+			originalPlusNewGroup.addAll(newGroup);
+			double[][] originalPlusNewData = create4DMatrix(originalPlusNewGroup);
+			
+			MultivariateSummaryStatistics originalPlusNewStats = getStats(originalPlusNewData);
+			
+			double[] stdDevs = originalStats.getStandardDeviation();
+			double[] stdDevsNewData = originalPlusNewStats.getStandardDeviation();
+	
+			EuclideanDistance euDis = new EuclideanDistance();
+			double distanceBetweenMeans = euDis.compute(originalStats.getMean(), originalPlusNewStats.getMean());
+	
+			double[] stdDiff = new double[stdDevs.length];
+	
+			for (int numDimension = 0; numDimension < stdDevs.length; numDimension++) {
+				stdDiff[numDimension] = stdDevsNewData[numDimension] / stdDevs[numDimension];
+			}
+	
+			double[] stdDiffAndDistance = { Utils.getMean(stdDiff), distanceBetweenMeans };
+			
+			return stdDiffAndDistance;
+		} else { //Group vs Group
+			
+			double[][] newGroupData = create4DMatrix(newGroup);
 
-		EuclideanDistance euDis = new EuclideanDistance();
-		double distanceBetweenMeans = euDis.compute(originalStats.getMean(), originalPlusNewStats.getMean());
-
-		double[] stdDiff = new double[stdDevs.length];
-
-		for (int numDimension = 0; numDimension < stdDevs.length; numDimension++) {
-			stdDiff[numDimension] = stdDevsNewData[numDimension] / stdDevs[numDimension];
+			MultivariateSummaryStatistics newGroupStats = getStats(newGroupData);
+			
+			newGroupStats.getMean();
+			
+			
+			return computeBhattacharyyaCoefficient(originalStats.getMean(), originalStats.getCovariance(), newGroupStats.getMean(), newGroupStats.getCovariance());
 		}
-
-		double[] stdDiffAndDistance = { Utils.getMean(stdDiff), distanceBetweenMeans };
-		return stdDiffAndDistance;
 	}
 
 	/**
@@ -109,5 +132,28 @@ public final class StatisticalComparison {
 		}
 
 		return originalData;
+	}
+	
+	
+	public static double[] computeBhattacharyyaCoefficient(double[] mean1, RealMatrix cov1, double[] mean2, RealMatrix cov2){
+		
+		RealMatrix cov = cov1.add(cov2).scalarMultiply(1/2);
+		double detCov1 = new LUDecomposition(cov1).getDeterminant();
+		double detCov2 = new LUDecomposition(cov2).getDeterminant();
+		double temp = new LUDecomposition(cov).getDeterminant() / Math.sqrt(detCov1 * detCov2);
+		
+		RealVector mean1V = MatrixUtils.createRealVector(mean1);
+		RealVector mean2V = MatrixUtils.createRealVector(mean2);
+		RealMatrix pInvCov = new LUDecomposition(cov).getSolver().getInverse();
+		RealVector diffMeans = mean1V.subtract(mean2V);
+		
+		RealVector part1Eq = pInvCov.preMultiply(diffMeans).mapMultiply(1/8);
+		
+		double bhattacharyyaDistance = part1Eq.dotProduct(diffMeans) + ((1/2) * Math.log(temp));
+		double bhattacharyyaCoefficient = Math.exp(-bhattacharyyaDistance);
+		
+		double[] bhattacharyyaInfo = {bhattacharyyaCoefficient, bhattacharyyaDistance};
+		
+		return bhattacharyyaInfo;
 	}
 }
