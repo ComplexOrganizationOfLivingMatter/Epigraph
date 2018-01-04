@@ -135,6 +135,16 @@ public final class StatisticalComparison {
 	}
 	
 	
+	/**
+	 * Based on matlab's code of 
+	 * https://github.com/jgrizou/matlab_tools/blob/76a2db22accb7be2e82f7771d6c65ab7b40403bb/statistics/bhattacharyya_gaussian.m
+	 * Formula in https://en.wikipedia.org/wiki/Bhattacharyya_distance
+	 * @param mean1
+	 * @param cov1
+	 * @param mean2
+	 * @param cov2
+	 * @return
+	 */
 	public static double[] computeBhattacharyyaCoefficient(double[] mean1, RealMatrix cov1, double[] mean2, RealMatrix cov2){
 		
 		RealMatrix cov = cov1.add(cov2).scalarMultiply(1/2);
@@ -152,6 +162,7 @@ public final class StatisticalComparison {
 		double bhattacharyyaDistance = part1Eq.dotProduct(diffMeans) + ((1/2) * Math.log(temp));
 		double bhattacharyyaCoefficient = Math.exp(-bhattacharyyaDistance);
 		
+		//Test with matlab's code!!!
 		double[] bhattacharyyaInfo = {bhattacharyyaCoefficient, bhattacharyyaDistance};
 		
 		return bhattacharyyaInfo;
