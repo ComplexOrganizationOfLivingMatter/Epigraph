@@ -844,7 +844,7 @@ public class ExcelClass {
 							B.get(i), this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i),
 							squaresPercentage.get(i), pentagonsPercentage.get(i), hexagonsPercentage.get(i),
 							heptagonsPercentage.get(i), octogonsPercentage.get(i), closestDiagram.get(i),
-							distanceDiagram.get(i), 1 / confidenceDiagram.get(i) });
+							distanceDiagram.get(i), confidenceDiagram.get(i) });
 		}
 
 		// Iterate over data and write to sheet

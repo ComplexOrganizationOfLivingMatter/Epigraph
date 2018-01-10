@@ -75,7 +75,7 @@ public final class StatisticalComparison {
 			double[] stdDiff = new double[stdDevs.length];
 	
 			for (int numDimension = 0; numDimension < stdDevs.length; numDimension++) {
-				stdDiff[numDimension] = stdDevsNewData[numDimension] / stdDevs[numDimension];
+				stdDiff[numDimension] = stdDevs[numDimension] / stdDevsNewData[numDimension];
 			}
 	
 			double[] stdDiffAndDistance = { Utils.getMean(stdDiff), distanceBetweenMeans };

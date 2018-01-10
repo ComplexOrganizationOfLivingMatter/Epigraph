@@ -113,7 +113,7 @@ public class JTableModel extends AbstractTableModel {
 			return closestDiagrams[0][0];
 		case 10:
 			double[][] closestDiagrams1 = allGraphletImages.get(row).getClosestDiagrams();
-			return 1 / closestDiagrams1[0][2];
+			return closestDiagrams1[0][2];
 		case 11:
 			return listOfSelected.get(row);
 		case 6:
