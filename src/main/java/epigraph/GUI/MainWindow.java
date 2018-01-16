@@ -278,27 +278,27 @@ public class MainWindow extends JFrame {
 		table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 		table.setDefaultEditor(Color.class, new JColorEditor());
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.getColumnModel().getColumn(0).setMaxWidth(40);
+		table.getColumnModel().getColumn(0).setMaxWidth(40); //color
 		table.getColumnModel().getColumn(0).setMinWidth(40);
-		table.getColumnModel().getColumn(2).setMaxWidth(45);
+		table.getColumnModel().getColumn(2).setMaxWidth(45);// GDDH
 		table.getColumnModel().getColumn(2).setMinWidth(45);
-		table.getColumnModel().getColumn(3).setMaxWidth(45);
+		table.getColumnModel().getColumn(3).setMaxWidth(45);// GDDRV
 		table.getColumnModel().getColumn(3).setMinWidth(45);
-		table.getColumnModel().getColumn(4).setMinWidth(45);
+		table.getColumnModel().getColumn(4).setMinWidth(45);//GDDV5
 		table.getColumnModel().getColumn(4).setMaxWidth(45);
-		table.getColumnModel().getColumn(5).setMinWidth(75);//
-		table.getColumnModel().getColumn(5).setMaxWidth(75);//
-		table.getColumnModel().getColumn(6).setMinWidth(45);
+		table.getColumnModel().getColumn(5).setMinWidth(75);//% Hexagons
+		table.getColumnModel().getColumn(5).setMaxWidth(75);
+		table.getColumnModel().getColumn(6).setMinWidth(45);//Radius
 		table.getColumnModel().getColumn(6).setMaxWidth(45);
-		table.getColumnModel().getColumn(7).setMaxWidth(45);
+		table.getColumnModel().getColumn(7).setMaxWidth(45);//Shape
 		table.getColumnModel().getColumn(7).setMinWidth(45);
-		table.getColumnModel().getColumn(8).setMaxWidth(120);
+		table.getColumnModel().getColumn(8).setMaxWidth(120); //Kind
 		table.getColumnModel().getColumn(8).setMinWidth(120);
-		table.getColumnModel().getColumn(9).setMaxWidth(90);
+		table.getColumnModel().getColumn(9).setMaxWidth(90);// Closest diagram
 		table.getColumnModel().getColumn(9).setMinWidth(90);
-		table.getColumnModel().getColumn(10).setMinWidth(70);
+		table.getColumnModel().getColumn(10).setMinWidth(70);// Confidence
 		table.getColumnModel().getColumn(10).setMaxWidth(70);
-		table.getColumnModel().getColumn(11).setMaxWidth(70);
+		table.getColumnModel().getColumn(11).setMaxWidth(70); //Select all
 		table.getColumnModel().getColumn(11).setMinWidth(70);
 		
 		 
