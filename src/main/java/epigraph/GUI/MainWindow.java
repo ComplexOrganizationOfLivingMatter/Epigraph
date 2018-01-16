@@ -294,10 +294,10 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(7).setMinWidth(45);
 		table.getColumnModel().getColumn(8).setMaxWidth(120); //Kind
 		table.getColumnModel().getColumn(8).setMinWidth(120);
-		table.getColumnModel().getColumn(9).setMaxWidth(90);// Closest diagram
-		table.getColumnModel().getColumn(9).setMinWidth(90);
-		table.getColumnModel().getColumn(10).setMinWidth(70);// Confidence
-		table.getColumnModel().getColumn(10).setMaxWidth(70);
+		table.getColumnModel().getColumn(9).setMaxWidth(60);// Closest diagram
+		table.getColumnModel().getColumn(9).setMinWidth(60);
+		table.getColumnModel().getColumn(10).setMinWidth(75);// Confidence
+		table.getColumnModel().getColumn(10).setMaxWidth(75);
 		table.getColumnModel().getColumn(11).setMaxWidth(70); //Select all
 		table.getColumnModel().getColumn(11).setMinWidth(70);
 		
@@ -319,7 +319,11 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(9).setCellRenderer(defaultformat);
 		table.getColumnModel().getColumn(10).setCellRenderer(decimalFormat2);
 		
-		table.getTableHeader().setPreferredSize(new Dimension(table.getColumnModel().getTotalColumnWidth(), 29*2));
+		table.getTableHeader().setPreferredSize(new Dimension(table.getColumnModel().getTotalColumnWidth(), 35));
+		DefaultTableCellRenderer defaultformat3 = new DefaultTableCellRenderer();
+		defaultformat3.setHorizontalAlignment(SwingConstants.CENTER);
+		table.getTableHeader().setDefaultRenderer(defaultformat3);
+		
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override

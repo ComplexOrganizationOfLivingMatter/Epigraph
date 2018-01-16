@@ -27,7 +27,7 @@ public class JTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	private String[] columnNames = { "Color", "Label", "GDDH", "GDDRV", "GDDV5", "% Hexagons", "Radius", "Shape",
-			"Kind", "Closest diagram", "Confidence", "✓ Select all" };
+			"Kind", "<html><center>Closest<br>diagram</html>", "<html><center>Confidence<br>score</html>", "✓ Select all" };
 
 	private ArrayList<BasicGraphletImage> allGraphletImages;
 	private ArrayList<Boolean> listOfSelected;
