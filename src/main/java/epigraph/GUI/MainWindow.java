@@ -319,6 +319,7 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(9).setCellRenderer(defaultformat);
 		table.getColumnModel().getColumn(10).setCellRenderer(decimalFormat2);
 		
+		table.getTableHeader().setPreferredSize(new Dimension(table.getColumnModel().getTotalColumnWidth(), 29*2));
 		// listener
 		table.getTableHeader().addMouseListener(new MouseAdapter() {
 			@Override
