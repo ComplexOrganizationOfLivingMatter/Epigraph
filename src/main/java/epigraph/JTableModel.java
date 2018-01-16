@@ -110,7 +110,7 @@ public class JTableModel extends AbstractTableModel {
 			return listOfModes.get(row);
 		case 9:
 			double[][] closestDiagrams = allGraphletImages.get(row).getClosestDiagrams();
-			return closestDiagrams[0][0];
+			return (int) closestDiagrams[0][0];
 		case 10:
 			double[][] closestDiagrams1 = allGraphletImages.get(row).getClosestDiagrams();
 			return closestDiagrams1[0][2];

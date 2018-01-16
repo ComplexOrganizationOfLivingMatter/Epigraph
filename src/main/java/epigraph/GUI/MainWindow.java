@@ -282,24 +282,26 @@ public class MainWindow extends JFrame {
 		table.getColumnModel().getColumn(0).setMinWidth(40);
 		table.getColumnModel().getColumn(2).setMaxWidth(45);
 		table.getColumnModel().getColumn(2).setMinWidth(45);
-		table.getColumnModel().getColumn(3).setMaxWidth(50);
-		table.getColumnModel().getColumn(3).setMinWidth(50);
-		table.getColumnModel().getColumn(4).setMinWidth(50);
-		table.getColumnModel().getColumn(4).setMaxWidth(50);
-		table.getColumnModel().getColumn(5).setMinWidth(85);//
-		table.getColumnModel().getColumn(5).setMaxWidth(85);//
-		table.getColumnModel().getColumn(6).setMinWidth(50);
-		table.getColumnModel().getColumn(6).setMaxWidth(50);
-		table.getColumnModel().getColumn(7).setMaxWidth(50);
-		table.getColumnModel().getColumn(7).setMinWidth(50);
+		table.getColumnModel().getColumn(3).setMaxWidth(45);
+		table.getColumnModel().getColumn(3).setMinWidth(45);
+		table.getColumnModel().getColumn(4).setMinWidth(45);
+		table.getColumnModel().getColumn(4).setMaxWidth(45);
+		table.getColumnModel().getColumn(5).setMinWidth(75);//
+		table.getColumnModel().getColumn(5).setMaxWidth(75);//
+		table.getColumnModel().getColumn(6).setMinWidth(45);
+		table.getColumnModel().getColumn(6).setMaxWidth(45);
+		table.getColumnModel().getColumn(7).setMaxWidth(45);
+		table.getColumnModel().getColumn(7).setMinWidth(45);
 		table.getColumnModel().getColumn(8).setMaxWidth(120);
 		table.getColumnModel().getColumn(8).setMinWidth(120);
-		table.getColumnModel().getColumn(9).setMaxWidth(110);
-		table.getColumnModel().getColumn(9).setMinWidth(110);
-		table.getColumnModel().getColumn(10).setMinWidth(80);
-		table.getColumnModel().getColumn(10).setMaxWidth(80);
-		table.getColumnModel().getColumn(11).setMaxWidth(80);
-		table.getColumnModel().getColumn(11).setMinWidth(80);
+		table.getColumnModel().getColumn(9).setMaxWidth(90);
+		table.getColumnModel().getColumn(9).setMinWidth(90);
+		table.getColumnModel().getColumn(10).setMinWidth(70);
+		table.getColumnModel().getColumn(10).setMaxWidth(70);
+		table.getColumnModel().getColumn(11).setMaxWidth(70);
+		table.getColumnModel().getColumn(11).setMinWidth(70);
+		
+		 
 		
 		DecimalFormatRenderer decimalFormat = new DecimalFormatRenderer();
 		decimalFormat.setHorizontalAlignment(SwingConstants.LEFT);
@@ -314,6 +316,7 @@ public class MainWindow extends JFrame {
 		decimalFormat2.set(new DecimalFormat("#0.00"));
 		table.getColumnModel().getColumn(5).setCellRenderer(decimalFormat2);
 		table.getColumnModel().getColumn(6).setCellRenderer(defaultformat);
+		table.getColumnModel().getColumn(9).setCellRenderer(defaultformat);
 		table.getColumnModel().getColumn(10).setCellRenderer(decimalFormat2);
 		
 		// listener
