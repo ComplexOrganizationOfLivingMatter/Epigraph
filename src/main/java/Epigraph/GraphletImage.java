@@ -608,6 +608,12 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 				percentagesList.add(percentagesListRoi);
 			
 			}
+			
+			/*
+			 * Bugfix: This happen when there's no changes in rois and nothing and you TestNeighbours, but you've performed a previous GDD calculation. 
+			 * Instead of redo that GDD computation, it uses somehow the past results resulting in a non-sense and wrong GDD values.
+			 */
+			this.distanceGDDH = -1;
 		}else{
 			progressBar.setValue(20);
 		}
@@ -1210,10 +1216,10 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @return if we have to redo the computation of neighbours
 	 */
 	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode) {
-		boolean reDoTheComputation = false;
+		boolean reDoTheComputationAux = false;
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape
 				|| this.isSelectedCells() != selectionMode || this.invalidRegionChanged) {
-			reDoTheComputation = true;
+			reDoTheComputationAux = true;
 		}
 		
 		this.invalidRegionChanged = false;
@@ -1235,10 +1241,10 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			ArrayList<Integer> actualSelectedCells = this.getAllSelectedCells();
 
 			if (!previousSelectedCells.equals(actualSelectedCells))
-				reDoTheComputation = true;
+				reDoTheComputationAux = true;
 		}
 
 		this.selectedCells = selectionMode;
-		return reDoTheComputation;
+		return reDoTheComputationAux;
 	}
 }
