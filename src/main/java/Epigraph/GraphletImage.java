@@ -610,7 +610,8 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			}
 			
 			/*
-			 * Bugfix: This happen when there's no changes in rois and nothing and you TestNeighbours, but you've performed a previous GDD calculation. 
+			 * Bugfix: This happen when there's no changes in rois and nothing, but you've performed a previous GDD calculation.
+			 * When you click again on Calculate graphlets (right after a TestNeighbours).
 			 * Instead of redo that GDD computation, it uses somehow the past results resulting in a non-sense and wrong GDD values.
 			 */
 			this.distanceGDDH = -1;
