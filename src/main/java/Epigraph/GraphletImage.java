@@ -95,6 +95,10 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	private ImagePlus neighbourImage;
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
+	
+
+	private ArrayList<ArrayList<String>> percentagesList;
+	private boolean modeNumGraphletsToCheck; 
 
 	/**
 	 * Constructor
@@ -376,7 +380,6 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 *            overlay of the image that we will paint the neighbour image
 	 * @return the polygon distribution
 	 */
-	ArrayList<ArrayList<String>> percentagesList; 
 	public ArrayList<ArrayList<String>> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
 			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
 		double totalPercentageToReach;
@@ -386,9 +389,11 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		else
 			totalPercentageToReach = 1;
 
-		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode);
+		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode, modeNumGraphlets);
 		
 		if (this.reDoTheComputation) {
+			
+			this.modeNumGraphletsToCheck = modeNumGraphlets < 2;
 			
 			percentagesList = new ArrayList<ArrayList<String>>();
 			// Neighbours
@@ -432,11 +437,13 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			ColorProcessor colorImgToShow = this.raw_img.getChannelProcessor().convertToColorProcessor();
 			Color colorOfCell;
 			for (int i = 0; i < this.cells.size(); i++) {
+				this.cells.get(i).setValid_cell_4(allValidCellsWithinAGivenLength(i, 4));
+				this.cells.get(i).setValid_cell_5(allValidCellsWithinAGivenLength(i, 5));
 				colorOfCell = Color.WHITE;
 				if (this.cells.get(i).isValid_cell()) {
 					//If it is selection mode we check if the cell is selected
 					//Otherwise we enter always.
-					if (!selectionMode || this.cells.get(i).isSelected()) {
+					if ((this.cells.get(i).isValid_cell_5() || (modeNumGraphlets >= 2 && this.cells.get(i).isValid_cell_4()) ) && (!selectionMode || this.cells.get(i).isSelected())) {
 						switch (this.cells.get(i).getNeighbours().size()) {
 						case 3:
 							percentageOfTrianglesGraphlets++;
@@ -479,14 +486,14 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 						
 						roiCells++;
 						validCells++;
-					} else if (selectionMode) { // Some cells are selected
+					} else {
 						if (modeNumGraphlets < 2) {
 							this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 5));
 						} else {
 							this.cells.get(i).setWithinTheRange(selectedCellWithinAGivenLength(i, 4));
 						}
 
-						if (this.cells.get(i).isWithinTheRange()) {
+						if (!selectionMode || this.cells.get(i).isWithinTheRange()) {
 							validCells++;
 
 							switch (this.cells.get(i).getNeighbours().size()) {
@@ -690,10 +697,6 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 		
 		if (this.reDoTheComputation || this.distanceGDDH == -1) {
-			for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
-				this.cells.get(indexEpiCell).setValid_cell_4(allValidCellsWithinAGivenLength(indexEpiCell, 4));
-				this.cells.get(indexEpiCell).setValid_cell_5(allValidCellsWithinAGivenLength(indexEpiCell, 5));
-			}
 
 			// Adjacency matrix
 			HashSet<Integer> neighbours;
@@ -1214,12 +1217,13 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @param selectedShape shape of mask
 	 * @param radiusOfShape radius of shape of mask
 	 * @param selectionMode if exists any roi
+	 * @param modeNumGraphlets 
 	 * @return if we have to redo the computation of neighbours
 	 */
-	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode) {
+	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode, int modeNumGraphlets) {
 		boolean reDoTheComputationAux = false;
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape
-				|| this.isSelectedCells() != selectionMode || this.invalidRegionChanged) {
+				|| this.isSelectedCells() != selectionMode || this.invalidRegionChanged || this.modeNumGraphletsToCheck != (modeNumGraphlets < 2)) {
 			reDoTheComputationAux = true;
 		}
 		
