@@ -711,14 +711,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// first comes in)
 		fileChooser.setSelectedFile(new File("data.zip"));
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-		int userSelection = fileChooser.showSaveDialog(btnZipData.getParent());
-
 		// Set an extension filter, so the user sees other XML files
 		fileChooser.setFileFilter(new FileNameExtensionFilter("ZIP files", "zip"));
 
 		fileChooser.setAcceptAllFileFilterUsed(false);
 
+		int userSelection = fileChooser.showSaveDialog(btnZipData.getParent());
+
+		
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 			String filename = fileChooser.getSelectedFile().toString();
