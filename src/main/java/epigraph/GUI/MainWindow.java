@@ -14,14 +14,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,10 +29,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-
-import org.jfree.ui.NumberCellRenderer;
-import org.jzy3d.plot3d.primitives.axes.layout.renderers.FixedDecimalTickRenderer;
 
 import epigraph.BasicGraphletImage;
 import epigraph.DiagramsData;
@@ -74,6 +67,7 @@ public class MainWindow extends JFrame {
 	private JButton btnDeleteRow;
 	private JFileChooser fileChooser;
 	private DiagramsData diagramsData;
+	private String initialDirectory;
 
 	/**
 	 * Constructor by default. Setup all the windows and creates the panel. It
@@ -91,6 +85,7 @@ public class MainWindow extends JFrame {
 		UIManager.put("Panel.background", Color.WHITE);
 		UIManager.put("Slider.background", Color.WHITE);
 		fatherWindow = this;
+		this.initialDirectory = null;
 		setMinimumSize(new Dimension(1200, 600));
 		setTitle("EpiGraph");
 		// Not close Fiji when Epigraph is closed
@@ -407,6 +402,9 @@ public class MainWindow extends JFrame {
 	public void initImageProcessingWindow() {
 		try {
 			ImagePlus raw_img = IJ.openImage();
+			
+			this.initialDirectory = raw_img.getOriginalFileInfo().directory;
+			
 			if (raw_img != null) {
 				if (raw_img.getHeight() < 3000 && raw_img.getWidth() < 3000) {
 					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
@@ -532,7 +530,7 @@ public class MainWindow extends JFrame {
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		// set a default filename (this is where you default extension
 		// first comes in)
-		fileChooser.setSelectedFile(new File("myfile.xls"));
+		fileChooser.setSelectedFile(new File(this.initialDirectory.concat("myfile.xls")));
 		// Set an extension filter, so the user sees other XML files
 		fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls"));
 
@@ -542,6 +540,7 @@ public class MainWindow extends JFrame {
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 
 			String filename = fileChooser.getSelectedFile().toString();
+			this.initialDirectory = fileChooser.getSelectedFile().getParentFile().toString().concat(System.getProperty("file.separator"));
 			if (!filename.endsWith(".xls"))
 				filename += ".xls";
 
@@ -573,18 +572,22 @@ public class MainWindow extends JFrame {
 		javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls");
 		fileChooser.setFileFilter(filter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setCurrentDirectory(new File(this.initialDirectory));
 
-		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		int option = fileChooser.showOpenDialog(this.fatherWindow);
+		
+		if (option == JFileChooser.APPROVE_OPTION) {
 			
-			System.out.println("getCurrentDirectory(): " + fileChooser.getCurrentDirectory());
-			System.out.println("getSelectedFile() : " + fileChooser.getSelectedFile().getPath());
+//			System.out.println("getCurrentDirectory(): " + fileChooser.getCurrentDirectory());
+//			System.out.println("getSelectedFile() : " + fileChooser.getSelectedFile().getPath());
 
 			
 			ExcelClass excelclass = new ExcelClass();
-
+			
 			FileInputStream path = null;
 			try {
 				path = new FileInputStream(fileChooser.getSelectedFile());
+				this.initialDirectory = fileChooser.getSelectedFile().getParentFile().toString().concat(System.getProperty("file.separator"));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
