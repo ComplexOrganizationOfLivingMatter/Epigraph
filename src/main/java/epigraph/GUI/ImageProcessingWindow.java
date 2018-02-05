@@ -18,17 +18,13 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -52,24 +48,18 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 
-import epigraph.BasicGraphletImage;
 import epigraph.DiagramsData;
 import epigraph.Epigraph;
-import epigraph.ExcelClass;
 import epigraph.GraphletImage;
 import epigraph.JTableModel;
 import epigraph.GUI.CustomElements.CustomCanvas;
 import epigraph.GUI.CustomElements.ImageOverlay;
-import epigraph.Statistics.StatisticalComparison;
-import epigraph.Statistics.Utils;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
-
 import ij.plugin.frame.RoiManager;
 import util.opencsv.CSVWriter;
 
@@ -141,6 +131,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lblConnectiviy;
 
 	private DiagramsData diagramsData;
+	private String initialDirectory;
 
 	/**
 	 * Constructor
@@ -154,6 +145,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		
 		super(raw_img, new CustomCanvas(raw_img));
 		//super(raw_img, new CustomCanvas(raw_img));
+		
+		this.initialDirectory = raw_img.getOriginalFileInfo().directory;
 		
 		this.diagramsData = diagramsData;
 
@@ -709,7 +702,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		// set a default filename (this is where you default extension
 		// first comes in)
-		fileChooser.setSelectedFile(new File("data.zip"));
+		
+		String outputFile = initialDirectory.concat("data.zip");
+		
+		fileChooser.setSelectedFile(new File(outputFile));
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		// Set an extension filter, so the user sees other XML files
 		fileChooser.setFileFilter(new FileNameExtensionFilter("ZIP files", "zip"));
