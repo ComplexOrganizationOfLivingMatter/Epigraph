@@ -403,10 +403,9 @@ public class MainWindow extends JFrame {
 		try {
 			ImagePlus raw_img = IJ.openImage();
 			
-			this.initialDirectory = raw_img.getOriginalFileInfo().directory;
-			
 			if (raw_img != null) {
 				if (raw_img.getHeight() < 3000 && raw_img.getWidth() < 3000) {
+					this.initialDirectory = raw_img.getOriginalFileInfo().directory;
 					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
 					imageProcessing.pack();
 					
@@ -572,7 +571,9 @@ public class MainWindow extends JFrame {
 		javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("XLS files", "xls");
 		fileChooser.setFileFilter(filter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setCurrentDirectory(new File(this.initialDirectory));
+		if (this.initialDirectory != null)
+			fileChooser.setCurrentDirectory(new File(this.initialDirectory));
+
 
 		int option = fileChooser.showOpenDialog(this.fatherWindow);
 		
