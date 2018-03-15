@@ -139,11 +139,11 @@ public final class StatisticalComparison {
 	 * Based on matlab's code of 
 	 * https://github.com/jgrizou/matlab_tools/blob/76a2db22accb7be2e82f7771d6c65ab7b40403bb/statistics/bhattacharyya_gaussian.m
 	 * Formula in https://en.wikipedia.org/wiki/Bhattacharyya_distance
-	 * @param mean1
-	 * @param cov1
-	 * @param mean2
-	 * @param cov2
-	 * @return
+	 * @param mean1 average values of the first dataset
+	 * @param cov1 covariance values of the first dataset variables
+	 * @param mean2 average values of the second dataset
+	 * @param cov2 covariance values of the second dataset variables
+	 * @return the Bhattacharyya Coefficient and Bhattacharyya Distance
 	 */
 	public static double[] computeBhattacharyyaCoefficient(double[] mean1, RealMatrix cov1, double[] mean2, RealMatrix cov2){
 		
