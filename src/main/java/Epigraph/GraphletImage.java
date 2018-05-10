@@ -96,6 +96,9 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	private boolean reDoTheComputation;
 	private boolean invalidRegionChanged;
 	
+	// for internal use
+	private int[] graphletsWeDontWant;
+  boolean validCells5Graphlets;
 
 	private ArrayList<ArrayList<String>> percentagesList;
 	private boolean modeNumGraphletsToCheck; 
@@ -672,14 +675,14 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		
 		ArrayList<ArrayList<String>> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
 				modeNumGraphlets, overlay);
-		int[] graphletsWeDontWant;
-		boolean validCells5Graphlets = true;
 		switch (modeNumGraphlets) {
 		case 0:
 			graphletsWeDontWant = totalGraphlets;
+      validCells5Graphlets = true;
 			break;
 		case 1:
 			graphletsWeDontWant = totalParcialGraphlets;
+      validCells5Graphlets = true;
 			break;
 		case 2:
 			graphletsWeDontWant = basicGraphlets;
@@ -1113,20 +1116,41 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	/**
 	 * @return graphlets in an array of string
 	 */
-	public String[][] getGraphlets() {
+	public String[][] getFinalGraphlets(boolean selectionMode) {
+	  
 		String[][] graphlets = new String[this.cells.size()][BasicGraphlet.TOTALGRAPHLETS + 1];
 		int cont = 0;
 		int numCell = 0;
 		for (EpiCell cell : this.cells) {
 			graphlets[cont][0] = Integer.toString(cont + 1);
 			numCell = 1;
-			for (String graphlet : cell.getGraphletsString()) {
-				graphlets[cont][numCell] = graphlet;
-				numCell++;
-			}
-			cont++;
+			boolean validCell = false;
+			if (validCells5Graphlets) {
+        if (cell.isValid_cell_5() && (!selectionMode || cell.isSelected())) {
+          validCell = true;
+        }
+      } else {
+        if (cell.isValid_cell_4() && (!selectionMode || cell.isSelected())) {
+          validCell = true;
+        }
+      }
+			
+			if (validCell) {
+  			for (String graphlet : cell.getGraphletsString(graphletsWeDontWant)) {
+  				graphlets[cont][numCell] = graphlet;
+  				numCell++;
+  			}
+  			cont++;
+		  }
 		}
-		return graphlets;
+		
+		String[][] graphletsFinal = new String[cont][BasicGraphlet.TOTALGRAPHLETS + 1];
+		
+		for (int i = 0; i < cont; i++) {
+		  graphletsFinal[i] = graphlets[i];
+    }
+		
+		return graphletsFinal;
 	}
 	
 	/**
@@ -1137,7 +1161,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @return the number of cells used
 	 */
 	public int getTotalNumberOfGraphlets(int modeNumGraphlets, boolean selectionMode, int length){
-		int[] graphletsWeDontWant;
+		
 		switch (modeNumGraphlets) {
 		case 0:
 			graphletsWeDontWant = totalGraphlets;

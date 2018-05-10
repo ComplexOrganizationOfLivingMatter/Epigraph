@@ -182,13 +182,20 @@ public class EpiCell {
 	}
 
 	/**
+	 * @param graphletsWeDontWant 
 	 * @return graphlets int values
 	 */
-	public String[] getGraphletsString() {
+	public String[] getGraphletsString(int[] graphletsWeDontWant) {
 		String[] graphletStr = new String[BasicGraphlet.TOTALGRAPHLETS];
-
+		int graphletIndex = 0;
 		for (int i = 0; i < this.graphlets.length; i++) {
-			graphletStr[i] = Integer.toString(graphlets[i]);
+		  if (graphletIndex >= graphletsWeDontWant.length || i != graphletsWeDontWant[graphletIndex]){
+		    graphletStr[i] = Integer.toString(graphlets[i]);
+		  } else {
+		    graphletStr[i] = "0";
+		    graphletIndex++;
+		  }
+		  
 		}
 
 		return graphletStr;

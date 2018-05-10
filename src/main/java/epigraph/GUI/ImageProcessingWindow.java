@@ -775,7 +775,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 						"orbit 62", "orbit 63", "orbit 64", "orbit 65", "orbit 66", "orbit 67", "orbit 68", "orbit 69",
 						"orbit 70", "orbit 71", "orbit 72" };
 				writer.writeNext(header);
-				for (String[] row : newGraphletImage.getGraphlets())
+				for (String[] row : newGraphletImage.getFinalGraphlets(selectionMode))
 					writer.writeNext(row); // write the contents
 				writer.flush(); // flush the writer. Very important!
 				out.closeEntry();
