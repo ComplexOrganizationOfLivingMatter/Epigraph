@@ -27,7 +27,7 @@ import epigraph.BasicGraphletImage;
  */
 public final class StatisticalComparison {
 
-	static int MAX_DIMENSIONS = 4;
+	static int MAX_DIMENSIONS = 3;
 
 	/**
 	 * We're not using it
@@ -126,7 +126,7 @@ public final class StatisticalComparison {
 			originalData[0][numRow] = groupOfImages.get(numRow).getDistanceGDDH();
 			originalData[1][numRow] = groupOfImages.get(numRow).getDistanceGDDRV();
 			originalData[2][numRow] = groupOfImages.get(numRow).getDistanceGDDV5();
-			originalData[3][numRow] = groupOfImages.get(numRow).getPercentageOfHexagons() / 100; // Normalization
+			//originalData[3][numRow] = groupOfImages.get(numRow).getPercentageOfHexagons() / 100; // Normalization
 		}
 
 		return originalData;
