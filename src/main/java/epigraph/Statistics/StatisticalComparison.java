@@ -105,10 +105,8 @@ public final class StatisticalComparison {
 		MultivariateSummaryStatistics statsOriginal = new MultivariateSummaryStatistics(MAX_DIMENSIONS, false);
 		double[] newRow = new double[MAX_DIMENSIONS];
 		for (int numImg = 0; numImg < matrix4D[0].length; numImg++) {
-			newRow[0] = matrix4D[0][numImg];
-			newRow[1] = matrix4D[1][numImg];
-			newRow[2] = matrix4D[2][numImg];
-			newRow[3] = matrix4D[3][numImg];
+		  for (int numDimension = 0; numDimension < MAX_DIMENSIONS; numDimension++)
+  		    newRow[numDimension] = matrix4D[numDimension][numImg];
 			statsOriginal.addValue(newRow);
 		}
 
@@ -122,7 +120,7 @@ public final class StatisticalComparison {
 	 */
 	private static double[][] create4DMatrix(ArrayList<BasicGraphletImage> groupOfImages) {
 
-		double[][] originalData = new double[4][groupOfImages.size()];
+		double[][] originalData = new double[MAX_DIMENSIONS][groupOfImages.size()];
 
 		for (int numRow = 0; numRow < originalData[0].length; numRow++) {
 			originalData[0][numRow] = groupOfImages.get(numRow).getDistanceGDDH();
