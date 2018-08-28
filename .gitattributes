@@ -1,1 +1,2 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
+tutorials/3.3[[:space:]]Calculate[[:space:]]Graphlets[[:space:]]connectivity[[:space:]]4.mp4 filter=lfs diff=lfs merge=lfs -text
