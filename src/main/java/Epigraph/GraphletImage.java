@@ -102,6 +102,9 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 	private ArrayList<ArrayList<String>> percentagesList;
 	private boolean modeNumGraphletsToCheck; 
+	
+	private float[] orbitDist;
+  private float[][] orbitsWeights;
 
 	/**
 	 * Constructor
@@ -769,6 +772,8 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 		this.distanceGDDH = calculateGDD(graphletsFinal, this.hexagonRefInt.getGraphletsInteger(graphletsWeDontWant));
 
+		orbitsWeights = new float[3][];
+		orbitsWeights[0] = getOrbitDist();
 		progressBar.setValue(90);
 
 		float[] distanceGDDRVArray = new float[NUMRANDOMVORONOI];
@@ -777,13 +782,19 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			if (validCells5Graphlets){
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
+				orbitsWeights[1] = getOrbitDist();
+				
 				distanceGDDV5Array[i] = calculateGDD(graphletsFinal,
 						this.voronoi5ValidCells_5Ref[i].getGraphletsInteger(graphletsWeDontWant));
+				orbitsWeights[2] = getOrbitDist();
 			} else {
 				distanceGDDRVArray[i] = calculateGDD(graphletsFinal,
 						this.randomVoronoiValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+				orbitsWeights[1] = getOrbitDist();
+				
 				distanceGDDV5Array[i] = calculateGDD(graphletsFinal,
 						this.voronoi5ValidCells_4Ref[i].getGraphletsInteger(graphletsWeDontWant));
+				orbitsWeights[2] = getOrbitDist();
 			}
 		}
 		this.distanceGDDRV = mean(distanceGDDRVArray);
@@ -940,7 +951,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		ArrayList<HashMap<Integer, Float>> graphletFreqRef = scaleGraphletDists(distanceReference);
 		ArrayList<HashMap<Integer, Float>> graphletFreqImage = scaleGraphletDists(graphletsFinal);
 
-		float[] orbitDist = new float[this.cells.get(0).getGraphlets().length];
+		orbitDist = new float[this.cells.get(0).getGraphlets().length];
 
 		for (int i = 0; i < BasicGraphlet.TOTALGRAPHLETS; i++) {
 			HashMap<Integer, Float> values1 = graphletFreqRef.get(i);
@@ -1276,4 +1287,18 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		this.selectedCells = selectionMode;
 		return reDoTheComputationAux;
 	}
+
+  /**
+   * @return the orbitDist
+   */
+  public final float[] getOrbitDist() {
+    return orbitDist;
+  }
+
+  /**
+   * @return the orbitsWeights
+   */
+  public final float[][] getOrbitsWeights() {
+    return orbitsWeights;
+  }
 }

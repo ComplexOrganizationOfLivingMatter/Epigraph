@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -779,6 +780,48 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					writer.writeNext(row); // write the contents
 				writer.flush(); // flush the writer. Very important!
 				out.closeEntry();
+				
+				e = new ZipEntry("orbitWeight.csv");
+				out.putNextEntry(e);
+				CSVWriter writer2 = new CSVWriter(new OutputStreamWriter(out));
+        String[] header2 = {"TypeOfGDD", "TotalWeight", "orbit 0", "orbit 1", "orbit 2", "orbit 3", "orbit 4", "orbit 5",
+            "orbit 6", "orbit 7", "orbit 8", "orbit 9", "orbit 10", "orbit 11", "orbit 12", "orbit 13",
+            "orbit 14", "orbit 15", "orbit 16", "orbit 17", "orbit 18", "orbit 19", "orbit 20", "orbit 21",
+            "orbit 22", "orbit 23", "orbit 24", "orbit 25", "orbit 26", "orbit 27", "orbit 28", "orbit 29",
+            "orbit 30", "orbit 31", "orbit 32", "orbit 33", "orbit 34", "orbit 35", "orbit 36", "orbit 37",
+            "orbit 38", "orbit 39", "orbit 40", "orbit 41", "orbit 42", "orbit 43", "orbit 44", "orbit 45",
+            "orbit 46", "orbit 47", "orbit 48", "orbit 49", "orbit 50", "orbit 51", "orbit 52", "orbit 53",
+            "orbit 54", "orbit 55", "orbit 56", "orbit 57", "orbit 58", "orbit 59", "orbit 60", "orbit 61",
+            "orbit 62", "orbit 63", "orbit 64", "orbit 65", "orbit 66", "orbit 67", "orbit 68", "orbit 69",
+            "orbit 70", "orbit 71", "orbit 72" };
+        writer2.writeNext(header2);
+        int cont = 0;
+        for (float[] row : newGraphletImage.getOrbitsWeights()){
+          String[] rowStr = new String[row.length+2];
+          
+          switch (cont) {
+          case 0:
+            rowStr[0] = "GDDH";
+            rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDH());
+            break;
+          case 1:
+            rowStr[0] = "GDDRV";
+            rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDRV());
+            break;
+          case 2:
+            rowStr[0] = "GDDV5";
+            rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDV5());
+            break;
+          }
+          
+          for (int numRow = 0; numRow < row.length; numRow++)
+            rowStr[numRow+2] = Float.toString(row[numRow]);
+          
+          writer2.writeNext(rowStr); // write the contents
+          cont++;
+        }
+        writer2.flush(); // flush the writer. Very important!
+        out.closeEntry();
 
 				out.close();
 			} catch (FileNotFoundException e1) {
