@@ -337,10 +337,10 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		cbGraphletsReference.setSelectedIndex(1);
 		cbAxesToRepresent = new JComboBox<String>();
 		cbAxesToRepresent.setModel(new DefaultComboBoxModel<String>());
-		cbAxesToRepresent.addItem("GDDH-GDDRV-% Hexagons");
-		cbAxesToRepresent.addItem("GDDH-GDDRV-GDDV5");
-		cbAxesToRepresent.addItem("GDDH-GDDV5-% Hexagons");
-		cbAxesToRepresent.addItem("GDDRV-GDDV5-% Hexagons");
+		cbAxesToRepresent.addItem("Epi-Hexagons, Epi-Random, % Hexagons");
+		cbAxesToRepresent.addItem("Epi-Hexagons, Epi-Random, Epi-Voronoi5");
+		cbAxesToRepresent.addItem("Epi-Hexagons, Epi-Voronoi5, % Hexagons");
+		cbAxesToRepresent.addItem("Epi-Random, Epi-Voronoi5, % Hexagons");
 		cbAxesToRepresent.setSelectedIndex(0);
 		
 		// Init rangeSliders
