@@ -826,7 +826,7 @@ public class ExcelClass {
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		data.put("1",
-				new Object[] { "Image name", "GDDH", "GDDRV", "GDDV5", "R", "G", "B", "GraphletsMode", "RadiusOfMask",
+				new Object[] { "Image name", "Epi-Hexagons", "Epi-Random", "Epi-Voronoi5", "R", "G", "B", "GraphletsMode", "RadiusOfMask",
 						"ShapeOfMask", "% squares", "% pentagons", "% hexagons", "% heptagons", "% octogons",
 						"Closest diagram", "Distance", "Confidence" });
 

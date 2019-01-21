@@ -543,23 +543,23 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		
 		switch (cbAxesToRepresent.getSelectedIndex()) {
 		case 0:
-			l.setXAxeLabel("GDDH");
-			l.setYAxeLabel("GDDRV");
+			l.setXAxeLabel("Epi-Hexagons");
+			l.setYAxeLabel("Epi-Random");
 			l.setZAxeLabel("Percentage of hexagons");
 			break;
 		case 1:
-			l.setXAxeLabel("GDDH");
-			l.setYAxeLabel("GDDRV");
-			l.setZAxeLabel("GDDV5");
+			l.setXAxeLabel("Epi-Hexagons");
+			l.setYAxeLabel("Epi-Random");
+			l.setZAxeLabel("Epi-Voronoi5");
 			break;
 		case 2:
-			l.setXAxeLabel("GDDH");
-			l.setYAxeLabel("GDDV5");
+			l.setXAxeLabel("Epi-Hexagons");
+			l.setYAxeLabel("Epi-Voronoi5");
 			l.setZAxeLabel("Percentage of hexagons");
 			break;
 		case 3:
-			l.setXAxeLabel("GDDRV");
-			l.setYAxeLabel("GDDV5");
+			l.setXAxeLabel("Epi-Random");
+			l.setYAxeLabel("Epi-Voronoi5");
 			l.setZAxeLabel("Percentage of hexagons");
 			break;
 		}

@@ -275,12 +275,12 @@ public class MainWindow extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getColumnModel().getColumn(0).setMaxWidth(40); //color
 		table.getColumnModel().getColumn(0).setMinWidth(40);
-		table.getColumnModel().getColumn(2).setMaxWidth(45);// GDDH
-		table.getColumnModel().getColumn(2).setMinWidth(45);
-		table.getColumnModel().getColumn(3).setMaxWidth(45);// GDDRV
-		table.getColumnModel().getColumn(3).setMinWidth(45);
-		table.getColumnModel().getColumn(4).setMinWidth(45);//GDDV5
-		table.getColumnModel().getColumn(4).setMaxWidth(45);
+		table.getColumnModel().getColumn(2).setMaxWidth(80);// GDDH
+		table.getColumnModel().getColumn(2).setMinWidth(80);
+		table.getColumnModel().getColumn(3).setMaxWidth(80);// GDDRV
+		table.getColumnModel().getColumn(3).setMinWidth(80);
+		table.getColumnModel().getColumn(4).setMinWidth(80);//GDDV5
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
 		table.getColumnModel().getColumn(5).setMinWidth(75);//% Hexagons
 		table.getColumnModel().getColumn(5).setMaxWidth(75);
 		table.getColumnModel().getColumn(6).setMinWidth(45);//Radius
