@@ -149,6 +149,20 @@ public class ExcelClass {
 	}
 
 	/**
+   * @return the fileName
+   */
+  public final String getFileName() {
+    return fileName;
+  }
+
+  /**
+   * @param fileName the fileName to set
+   */
+  public final void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+
+  /**
 	 * 
 	 * @return Get list of images names
 	 */
@@ -212,7 +226,7 @@ public class ExcelClass {
 	 *            Set list of gddv5
 	 */
 	public void setGddv5(ArrayList<Float> gddv5) {
-		this.gddrv = gddv5;
+		this.gddv5 = gddv5;
 	}
 
 	/**
@@ -821,7 +835,7 @@ public class ExcelClass {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 
 		// Create a blank sheet
-		HSSFSheet sheet = workbook.createSheet("Graphlets_distance");
+		HSSFSheet sheet = workbook.createSheet("EpiGraph");
 
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
@@ -839,12 +853,21 @@ public class ExcelClass {
 
 			Integer j = i + 2;
 
-			data.put(j.toString(),
-					new Object[] { imageName.get(i), gddh.get(i), gddrv.get(i), gddv5.get(i), R.get(i), G.get(i),
-							B.get(i), this.graphletsMode.get(i), this.radiusOfMask.get(i), this.shapeOfMask.get(i),
-							squaresPercentage.get(i), pentagonsPercentage.get(i), hexagonsPercentage.get(i),
-							heptagonsPercentage.get(i), octogonsPercentage.get(i), closestDiagram.get(i),
-							distanceDiagram.get(i), confidenceDiagram.get(i) });
+			if (pentagonsPercentage.size() != gddh.size()) {
+			  data.put(j.toString(),
+            new Object[] { imageName.get(i), gddh.get(i), gddrv.get(i), gddv5.get(i), R.get(i),
+                G.get(i), B.get(i), this.graphletsMode.get(i), 3,
+                "Circle", -1, -1,
+                hexagonsPercentage.get(i), -1, -1,
+                -1, -1, -1 });
+			} else {
+        data.put(j.toString(),
+            new Object[] { imageName.get(i), gddh.get(i), gddrv.get(i), gddv5.get(i), R.get(i),
+                G.get(i), B.get(i), this.graphletsMode.get(i), this.radiusOfMask.get(i),
+                this.shapeOfMask.get(i), squaresPercentage.get(i), pentagonsPercentage.get(i),
+                hexagonsPercentage.get(i), heptagonsPercentage.get(i), octogonsPercentage.get(i),
+                closestDiagram.get(i), distanceDiagram.get(i), confidenceDiagram.get(i) });
+			}
 		}
 
 		// Iterate over data and write to sheet

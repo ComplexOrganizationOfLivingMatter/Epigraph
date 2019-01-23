@@ -46,6 +46,7 @@ import org.jzy3d.plot3d.rendering.canvas.CanvasAWT;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
 import epigraph.Epigraph;
+import epigraph.ExcelClass;
 import epigraph.GraphletImage;
 import epigraph.JTableModel;
 import epigraph.GUI.CustomElements.RangeSlider;
@@ -72,6 +73,7 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private JSlider slSizeOfPoints;
 
 	private JButton btnExport;
+	private JButton btnExportCVT;
 
 	private JPanel canvasPanel;
 	private JPanel buttonsPanel;
@@ -92,6 +94,20 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 	private JFileChooser fileChooser;
 
+  private ArrayList<Float> actualReferenceGDDH_Points;
+  private ArrayList<Float> actualReferenceGDDRV_Points;
+  private ArrayList<Float> actualReferenceGDDV5_Points;
+  private ArrayList<Float> actualReferenceHexagons_Points;
+  private ArrayList<String> actualReference_ImageNames;
+
+  private ArrayList<Float> actualReference_B;
+
+  private ArrayList<Float> actualReference_G;
+
+  private ArrayList<Float> actualReference_R;
+
+  private ArrayList<String> actualGraphletsMode;
+
 	/**
 	 * Constructor. Initialize the chart with the info from the main table. Also
 	 * it add a reference in case you'd want to view it and compare the points
@@ -102,6 +118,16 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	 */
 	public VisualizingWindow(Frame parent, JTableModel tableInfo) {
 		super(parent);
+		
+		this.actualReferenceGDDH_Points = new ArrayList<Float>();
+		this.actualReferenceGDDRV_Points = new ArrayList<Float>();
+		this.actualReferenceGDDV5_Points = new ArrayList<Float>();
+		this.actualReferenceHexagons_Points = new ArrayList<Float>();
+		this.actualReference_ImageNames = new ArrayList<String>();
+		this.actualReference_R = new ArrayList<Float>();
+    this.actualReference_G = new ArrayList<Float>();
+    this.actualReference_B = new ArrayList<Float>();
+    this.actualGraphletsMode = new ArrayList<String>();
 
 		this.tableInfo = tableInfo;
 		
@@ -133,19 +159,23 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 	private void createScatterPlot(int referenceGraphlets,int referenceAxes) {
 		List<String[]> voronoiReference = new ArrayList<String[]>();
 		String fileName = null;
-
+		String graphletsName ="";
 		switch (referenceGraphlets) {
 		case 0:
 			fileName = "/epigraph/voronoiNoiseReference/mean/Total.txt";
+			graphletsName = "29-motifs";
 			break;
 		case 1:
 			fileName = "/epigraph/voronoiNoiseReference/mean/TotalPartial.txt";
+      graphletsName = "17-motifs";
 			break;
 		case 2:
 			fileName = "/epigraph/voronoiNoiseReference/mean/Basic.txt";
+      graphletsName = "10-motifs";
 			break;
 		case 3:
 			fileName = "/epigraph/voronoiNoiseReference/mean/BasicPartial.txt";
+      graphletsName = "7-motifs";
 			break;
 		}
 
@@ -173,10 +203,22 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		Coord3d[] pointsAxes4 = new Coord3d[voronoiReferenceSize];
 		
 		Color[] colors = new Color[voronoiReferenceSize];
-
 		for (int i = 0; i < voronoiReferenceSize; i++) {
 			// creating coord array
 			row = voronoiReference.get(i);
+			
+			//Saving info to export CVT reference
+			actualReference_ImageNames.add(row[0]);
+			actualReferenceGDDH_Points.add(Float.parseFloat(row[3].replace(',', '.')));
+			actualReferenceGDDRV_Points.add(Float.parseFloat(row[2].replace(',', '.')));
+			actualReferenceGDDV5_Points.add(Float.parseFloat(row[7].replace(',', '.')));
+			actualReferenceHexagons_Points.add(Float.parseFloat(row[1].replace(',', '.')));
+			//Colours
+			actualReference_R.add(Float.parseFloat(row[4]));
+			actualReference_G.add(Float.parseFloat(row[5]));
+      actualReference_B.add(Float.parseFloat(row[6]));
+      actualGraphletsMode.add(graphletsName);
+			
 			pointsAxes1[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')),
 					Float.parseFloat(row[2].replace(',', '.')), Float.parseFloat(row[1].replace(',', '.')));
 			pointsAxes2[i] = new Coord3d(Float.parseFloat(row[3].replace(',', '.')),
@@ -331,6 +373,9 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 
 		btnExport = new JButton("Export view");
 		btnExport.addActionListener(this);
+		
+		btnExportCVT = new JButton("Export actual CVT reference");
+    btnExportCVT.addActionListener(this);
 
 		cbGraphletsReference = new JComboBox<String>();
 		cbGraphletsReference.setModel(new DefaultComboBoxModel<String>(GraphletImage.KIND_OF_GRAPHLETS));
@@ -400,10 +445,11 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				rangeSliderY.setValue(rangeSliderY.getMinimum());
 				rangeSliderY.setUpperValue(rangeSliderY.getMaximum());
 				
-				if (cbAxesToRepresent.getSelectedIndex()==1){
-					rangeSliderZ.setMaximum(100);
-				}else{rangeSliderZ.setMaximum(10000);
-					}
+        if (cbAxesToRepresent.getSelectedIndex() == 1) {
+          rangeSliderZ.setMaximum(100);
+        } else {
+          rangeSliderZ.setMaximum(10000);
+        }
 				rangeSliderZ.setValue(rangeSliderZ.getMinimum());
 				rangeSliderZ.setUpperValue(rangeSliderZ.getMaximum());
 	
@@ -498,6 +544,8 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 		genericPanelConstrainst.gridy++;
 		buttonsPanel.add(btnExport, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
+    buttonsPanel.add(btnExportCVT, genericPanelConstrainst);
+    genericPanelConstrainst.gridy++;
 
 		// GENERAL PANEL
 		scatterpanel = new JPanel();
@@ -597,16 +645,15 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 				
 				if (!filename.endsWith(".png"))
 					filename += ".png";
-				
-				if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
-			        int response = JOptionPane.showConfirmDialog(this,
-			          "The file " + fileChooser.getSelectedFile().getName() + 
-			          " already exists. Do you want to replace the existing file?",
-			          "Ovewrite file", JOptionPane.YES_NO_OPTION,
-			          JOptionPane.WARNING_MESSAGE);
-			        if (response != JOptionPane.YES_OPTION)
-			          return;
-			     }
+
+        if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
+          int response = JOptionPane.showConfirmDialog(this,
+              "The file " + fileChooser.getSelectedFile().getName()
+                  + " already exists. Do you want to replace the existing file?",
+              "Ovewrite file", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+          if (response != JOptionPane.YES_OPTION)
+            return;
+        }
 				
 				
 				
@@ -631,6 +678,54 @@ public class VisualizingWindow extends JDialog implements ActionListener {
 					e1.printStackTrace();
 				}
 			}
+		} 
+		else if (e.getSource() == btnExportCVT)
+		{
+		  // set it to be a save dialog
+      fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+      // set a default filename (this is where you default extension
+      // first comes in)
+      fileChooser.setSelectedFile(new File("CVT_Reference.xls"));
+      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+      int userSelection = fileChooser.showSaveDialog(btnExportCVT.getParent());
+      if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+        String filename = fileChooser.getSelectedFile().toString();
+        
+        if (!filename.endsWith(".xls"))
+          filename += ".xls";
+
+        if ((fileChooser.getSelectedFile() != null) && fileChooser.getSelectedFile().exists()) {
+          int response = JOptionPane.showConfirmDialog(this,
+              "The file " + fileChooser.getSelectedFile().getName()
+                  + " already exists. Do you want to replace the existing file?",
+              "Ovewrite file", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+          if (response != JOptionPane.YES_OPTION)
+            return;
+        }
+  		  ExcelClass ex = new ExcelClass();
+  		  
+  		  ex.setImageName(actualReference_ImageNames);
+  		  
+  		  ex.setGddh(actualReferenceGDDH_Points);
+  		  ex.setGddrv(actualReferenceGDDRV_Points);
+  		  ex.setGddv5(actualReferenceGDDV5_Points);
+  		  ex.setHexagonsPercentage(actualReferenceHexagons_Points);
+  		  
+  		  //Colours
+  		  ex.setR(actualReference_R);
+  		  ex.setG(actualReference_G);
+  		  ex.setB(actualReference_B);
+  		  
+  		  //Mo7, Mo10, Mo17 or Mo29?
+  		  ex.setGraphletsMode(actualGraphletsMode);
+  		  
+  		  ex.setFileName(filename);
+  		  
+  		  ex.exportData();
+      }
+		  
 		}
 	}
 	
