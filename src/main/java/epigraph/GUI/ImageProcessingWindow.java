@@ -73,7 +73,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private static final long serialVersionUID = 1L;
 	private static int MIN_GRAPHLETS_ON_IMAGE = 15;
 	// For future stack
-	@SuppressWarnings("unused")
 	private ArrayList<GraphletImage> newGraphletImages;
 
 	private ImageOverlay overlayResult;
@@ -1056,6 +1055,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					roiManager=null;
 					}
 				}
+			if (imp.getStackSize() == 1) {
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
@@ -1071,26 +1071,31 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriRoi.get(2).replace("%","").replace(",", ".")));
 				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriRoi.get(3).replace("%","").replace(",", ".")));
 				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriRoi.get(4).replace("%","").replace(",", ".")));
-			
-			} else {
-				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
-						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
-						overlayResult);
-				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength, false);
-				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), false, maxLength);
-				
-				
-				ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
-				
-				newGraphletImage.setPercentageOfSquares(Float.parseFloat(polDistriGraphlets.get(0).replace("%","").replace(",", ".")));
-				
-				newGraphletImage.setPercentageOfPentagons(Float.parseFloat(polDistriGraphlets.get(1).replace("%","").replace(",", ".")));
-				newGraphletImage.setPercentageOfHexagons(Float.parseFloat(polDistriGraphlets.get(2).replace("%","").replace(",", ".")));
-				newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(polDistriGraphlets.get(3).replace("%","").replace(",", ".")));
-				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriGraphlets.get(4).replace("%","").replace(",", ".")));
 			}
-			
-			
+			else {
+					ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape
+						.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
+						overlayResult);
+					numberOfValidCellsOfLength = newGraphletImage
+						.calculateNumberOfValidCellForGraphlets(maxLength, false);
+					totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets(
+						(int) cbGraphletsMode.getSelectedIndex(), false, maxLength);
+
+					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+
+					newGraphletImage.setPercentageOfSquares(Float.parseFloat(
+						polDistriGraphlets.get(0).replace("%", "").replace(",", ".")));
+
+					newGraphletImage.setPercentageOfPentagons(Float.parseFloat(
+						polDistriGraphlets.get(1).replace("%", "").replace(",", ".")));
+					newGraphletImage.setPercentageOfHexagons(Float.parseFloat(
+						polDistriGraphlets.get(2).replace("%", "").replace(",", ".")));
+					newGraphletImage.setPercentageOfHeptagons(Float.parseFloat(
+						polDistriGraphlets.get(3).replace("%", "").replace(",", ".")));
+					newGraphletImage.setPercentageOfOctogons(Float.parseFloat(
+						polDistriGraphlets.get(4).replace("%", "").replace(",", ".")));
+				}
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
 			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -1110,7 +1115,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiHeptagons.setText(polDistriRoi.get(3));
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
-
 			if (numberOfValidCellsOfLength > 0) {
 				if (totalGraphlets < MIN_GRAPHLETS_ON_IMAGE) {// Careful
 					JOptionPane.showMessageDialog(canvas.getParent(),
@@ -1133,28 +1137,148 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				tableInf.addImage((GraphletImage) newGraphletImage.clone(), cbGraphletsMode.getSelectedItem().toString());
 
 				JOptionPane pane = new JOptionPane("Graphlet data added to table", JOptionPane.INFORMATION_MESSAGE,
-						JOptionPane.DEFAULT_OPTION, null, new Object[] {}, null);
-				JDialog dialog = pane.createDialog("Info message");
+					JOptionPane.DEFAULT_OPTION, null, new Object[] {}, null);
+			JDialog dialog = pane.createDialog("Info message");
 
-				dialog.addWindowListener(null);
+			dialog.addWindowListener(null);
 
-				Timer timer = new Timer(1000, new ActionListener() { // 1 sec
-					public void actionPerformed(ActionEvent e) {
-						dialog.setVisible(false);
-						dialog.dispose();
-					}
-				});
+			Timer timer = new Timer(1000, new ActionListener() { // 1 sec
+				public void actionPerformed(ActionEvent e) {
+					dialog.setVisible(false);
+					dialog.dispose();
+				}
+			});
 
-				timer.start();
-				dialog.setVisible(true);
-			} else { // No calculations
-				JOptionPane.showMessageDialog(canvas.getParent(),
-						"No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one",
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-
+			timer.start();
+			dialog.setVisible(true);
+		} else { // No calculations
+			JOptionPane.showMessageDialog(canvas.getParent(),
+					"No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one",
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
+			} else {
+			ArrayList<ArrayList<String>> TotalListPolDistri = new ArrayList<>();
+			for (int j = 0; j < imp.getStackSize(); j++) {
+			if (roiManager != null) {				
+				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+				ListPolDistri = newGraphletImages.get(j).runGraphlets(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
+						roiArray.length > 0, overlayResult);
+				numberOfValidCellsOfLength = newGraphletImages.get(j).calculateNumberOfValidCellForGraphlets(maxLength,
+						roiArray.length > 0);
+				totalGraphlets = newGraphletImages.get(j).getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), roiArray.length > 0, maxLength);
+				
+				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				newGraphletImages.get(j).setPercentageOfSquares(Float.parseFloat(polDistriRoi.get(0).replace("%","").replace(",", ".")));
+				newGraphletImages.get(j).setPercentageOfPentagons(Float.parseFloat(polDistriRoi.get(1).replace("%","").replace(",", ".")));
+				newGraphletImages.get(j).setPercentageOfHexagons(Float.parseFloat(polDistriRoi.get(2).replace("%","").replace(",", ".")));
+				newGraphletImages.get(j).setPercentageOfHeptagons(Float.parseFloat(polDistriRoi.get(3).replace("%","").replace(",", ".")));
+				newGraphletImages.get(j).setPercentageOfOctogons(Float.parseFloat(polDistriRoi.get(4).replace("%","").replace(",", ".")));
+			}
+			else {
+					ListPolDistri = newGraphletImages.get(j).runGraphlets(cbSelectedShape
+						.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
+						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
+						overlayResult);
+					numberOfValidCellsOfLength = newGraphletImages.get(j)
+						.calculateNumberOfValidCellForGraphlets(maxLength, false);
+					totalGraphlets = newGraphletImages.get(j).getTotalNumberOfGraphlets(
+						(int) cbGraphletsMode.getSelectedIndex(), false, maxLength);
 
+					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+
+					newGraphletImages.get(j).setPercentageOfSquares(Float.parseFloat(
+						polDistriGraphlets.get(0).replace("%", "").replace(",", ".")));
+
+					newGraphletImages.get(j).setPercentageOfPentagons(Float.parseFloat(
+						polDistriGraphlets.get(1).replace("%", "").replace(",", ".")));
+					newGraphletImages.get(j).setPercentageOfHexagons(Float.parseFloat(
+						polDistriGraphlets.get(2).replace("%", "").replace(",", ".")));
+					newGraphletImages.get(j).setPercentageOfHeptagons(Float.parseFloat(
+						polDistriGraphlets.get(3).replace("%", "").replace(",", ".")));
+					newGraphletImages.get(j).setPercentageOfOctogons(Float.parseFloat(
+						polDistriGraphlets.get(4).replace("%", "").replace(",", ".")));
+					TotalListPolDistri.add(polDistriGraphlets);
+					}
+			
+					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+					lbtitlePolDistGraphlets.setText("Graphlets");
+					lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lbSquares.setText(polDistriGraphlets.get(0));
+					lbPentagons.setText(polDistriGraphlets.get(1));
+					lbHexagons.setText(polDistriGraphlets.get(2));
+					lbHeptagons.setText(polDistriGraphlets.get(3));
+					lbOctogons.setText(polDistriGraphlets.get(4));
+					TotalListPolDistri.add(polDistriGraphlets);
+					if (ListPolDistri.size() > 1) {
+						ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+						ArrayList<ArrayList<String>> TotalpolDistriRoi = new ArrayList<>();
+						lbtitlePolDistRoi.setText("ROIs");
+						lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
+						lbRoiSquares.setText(polDistriRoi.get(0));
+						lbRoiPentagons.setText(polDistriRoi.get(1));
+						lbRoiHexagons.setText(polDistriRoi.get(2));
+						lbRoiHeptagons.setText(polDistriRoi.get(3));
+						lbRoiOctogons.setText(polDistriRoi.get(4));
+						TotalpolDistriRoi.add(polDistriRoi);
+					}
+		
+					if (numberOfValidCellsOfLength > 0) {
+						if (totalGraphlets < MIN_GRAPHLETS_ON_IMAGE) {// Careful
+							JOptionPane.showMessageDialog(canvas.getParent(),
+								"Care: Not too many graphlets in the sample selected. You may obtain results with no warranties",
+								"Warning", JOptionPane.WARNING_MESSAGE);
+						}
+
+						switch (cbGraphletsMode.getSelectedIndex()) {
+							case 3:
+								newGraphletImages.get(j).calculateClosestDiagram(diagramsData
+									.getMo7());
+								break;
+							case 2:
+								newGraphletImages.get(j).calculateClosestDiagram(diagramsData
+									.getMo10());
+								break;
+							case 1:
+								newGraphletImages.get(j).calculateClosestDiagram(diagramsData
+									.getMO17());
+								break;
+							case 0:
+								newGraphletImages.get(j).calculateClosestDiagram(diagramsData
+									.getMo29());
+								break;
+						}
+
+						tableInf.addImage((GraphletImage) newGraphletImages.get(j).clone(),
+							cbGraphletsMode.getSelectedItem().toString());
+						JOptionPane pane = new JOptionPane("Graphlet data added to table",
+							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null,
+							new Object[] {}, null);
+						JDialog dialog = pane.createDialog("Info message");
+
+						dialog.addWindowListener(null);
+
+						Timer timer = new Timer(1000, new ActionListener() { // 1 sec
+
+							public void actionPerformed(ActionEvent e) {
+								dialog.setVisible(false);
+								dialog.dispose();
+							}
+						});
+
+						timer.start();
+						dialog.setVisible(true);
+					}
+					else { // No calculations
+						JOptionPane.showMessageDialog(canvas.getParent(),
+							"No valid cells for graphlets, should be at least 4 cells between a valid and a non-valid one",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		}
+		
+		
 		/**
 		 * Calculate polygon distribution in background
 		 */
@@ -1168,7 +1292,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			} else {
 				selectionMode = false;
 			}
-
+			
+			if (imp.getStackSize()==1) { 
 			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(
 					cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), imp, progressBar,
 					selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
@@ -1193,6 +1318,39 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				lbRoiHeptagons.setText(polDistriRoi.get(3));
 				lbRoiOctogons.setText(polDistriRoi.get(4));
 			}
+			} else {
+				ArrayList<ArrayList<String>> TotalListPolDistri = new ArrayList<>();
+				for (int j = 0; j < imp.getStackSize(); j++) {
+					
+					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(j)
+						.testNeighbours(cbSelectedShape.getSelectedIndex(),
+							(int) inputRadiusNeigh.getValue(), imp, progressBar,
+							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
+
+					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+					lbtitlePolDistGraphlets.setText("Graphlets");
+					lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lbSquares.setText(polDistriGraphlets.get(0));
+					lbPentagons.setText(polDistriGraphlets.get(1));
+					lbHexagons.setText(polDistriGraphlets.get(2));
+					lbHeptagons.setText(polDistriGraphlets.get(3));
+					lbOctogons.setText(polDistriGraphlets.get(4));
+					TotalListPolDistri.add(polDistriGraphlets);
+					if (ListPolDistri.size() > 1) {
+						ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+						ArrayList<ArrayList<String>> TotalpolDistriRoi = new ArrayList<>();
+						lbtitlePolDistRoi.setText("Rois");
+						lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
+						lbRoiSquares.setText(polDistriRoi.get(0));
+						lbRoiPentagons.setText(polDistriRoi.get(1));
+						lbRoiHexagons.setText(polDistriRoi.get(2));
+						lbRoiHeptagons.setText(polDistriRoi.get(3));
+						lbRoiOctogons.setText(polDistriRoi.get(4));
+						TotalpolDistriRoi.add(polDistriRoi);
+					}
+				}
+			}
+		
 
 		}
 
@@ -1203,24 +1361,60 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 *             Min cells exception
 		 */
 		public void labelImage() throws Exception {
-			getImagePlus().deleteRoi();
-			newGraphletImage.preprocessImage(imp, (int) cbConnectivity.getSelectedItem(), progressBar);
-			TextRoi text;
-
-			ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor().convertToRGB().duplicate());
-			ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
-			for (int i = 0; i < centroids.size(); i++) {
-				text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1], Integer.toString(i + 1));
-				text.setStrokeColor(Color.red);
-				text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth() / 2),
+			getImagePlus().deleteRoi(); 
+			if (imp.getStackSize() == 1) {
+				newGraphletImage.preprocessImage(imp, (int) cbConnectivity
+					.getSelectedItem(), progressBar);
+				TextRoi text;
+				ImagePlus imageWithLabels = new ImagePlus("", imp.getChannelProcessor()
+					.convertToRGB().duplicate());
+				ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
+				for (int i = 0; i < centroids.size(); i++) {
+					text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1],
+						Integer.toString(i + 1));
+					text.setStrokeColor(Color.red);
+					text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth() / 2),
 						centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
-				imageWithLabels.getChannelProcessor().drawRoi(text);
+					imageWithLabels.getChannelProcessor().drawRoi(text);
+				}
+				newGraphletImage.setImageWithLabels(imageWithLabels);
+				// canvas.addOverlay(new
+				// ImageOverlay(imageWithLabels.getChannelProcessor()));
+				imp.updateAndDraw();
+				repaintAll();
 			}
-			newGraphletImage.setImageWithLabels(imageWithLabels);
-			// canvas.addOverlay(new
-			// ImageOverlay(imageWithLabels.getChannelProcessor()));
-			imp.updateAndDraw();
-			repaintAll();
+			else {
+				for (int j = 0; j < imp.getStackSize(); j++) {
+					ImageStack is = new ImageStack(); 
+					is = imp.getStack(); 
+					ImagePlus imp2 = new ImagePlus();
+					ImageProcessor ip = is.getProcessor(j+1); // specify number of slice 
+					imp2.setProcessor(ip); 
+					GraphletImage newGraphletImage = new GraphletImage();
+					newGraphletImage.preprocessImage(imp2, (int) cbConnectivity
+						.getSelectedItem(), progressBar);
+					TextRoi text;
+					ImagePlus imageWithLabels = new ImagePlus(("Slice"+(j+1)), imp2
+						.getChannelProcessor().convertToRGB().duplicate());
+					ArrayList<int[][]> centroids = newGraphletImage.getCentroids();
+					for (int i = 0; i < centroids.size(); i++) {
+						text = new TextRoi(centroids.get(i)[0][0], centroids.get(i)[0][1],
+							Integer.toString(i + 1));
+						text.setStrokeColor(Color.red);
+						text.setLocation(centroids.get(i)[0][0] - (text.getFloatWidth() /
+							2), centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
+						imageWithLabels.getChannelProcessor().drawRoi(text);
+					}
+					newGraphletImage.setImageWithLabels(imageWithLabels);
+					newGraphletImages.add(j, newGraphletImage);
+
+					// canvas.addOverlay(new
+					// ImageOverlay(imageWithLabels.getChannelProcessor()));
+					imp2.updateAndDraw();
+					repaintAll();
+					// stack.addSlice(("Slice" + (j + 1)), imp.getChannelProcessor().convertToRGB().duplicate());
+				}
+			}
 		}
 	}
 }
