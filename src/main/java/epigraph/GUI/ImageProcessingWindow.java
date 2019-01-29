@@ -804,15 +804,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
           
           switch (cont) {
           case 0:
-            rowStr[0] = "GDDH";
+            rowStr[0] = "Epi-Hexagons";
             rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDH());
             break;
           case 1:
-            rowStr[0] = "GDDRV";
+            rowStr[0] = "Epi-Random";
             rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDRV());
             break;
           case 2:
-            rowStr[0] = "GDDV5";
+            rowStr[0] = "Epi-Voronoi5";
             rowStr[1] = Float.toString(newGraphletImage.getDistanceGDDV5());
             break;
           }

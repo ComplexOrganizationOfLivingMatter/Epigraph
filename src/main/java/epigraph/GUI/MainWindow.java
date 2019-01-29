@@ -275,12 +275,12 @@ public class MainWindow extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getColumnModel().getColumn(0).setMaxWidth(40); //color
 		table.getColumnModel().getColumn(0).setMinWidth(40);
-		table.getColumnModel().getColumn(2).setMaxWidth(45);// GDDH
-		table.getColumnModel().getColumn(2).setMinWidth(45);
-		table.getColumnModel().getColumn(3).setMaxWidth(45);// GDDRV
-		table.getColumnModel().getColumn(3).setMinWidth(45);
-		table.getColumnModel().getColumn(4).setMinWidth(45);//GDDV5
-		table.getColumnModel().getColumn(4).setMaxWidth(45);
+		table.getColumnModel().getColumn(2).setMaxWidth(80);// GDDH
+		table.getColumnModel().getColumn(2).setMinWidth(80);
+		table.getColumnModel().getColumn(3).setMaxWidth(80);// GDDRV
+		table.getColumnModel().getColumn(3).setMinWidth(80);
+		table.getColumnModel().getColumn(4).setMinWidth(80);//GDDV5
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
 		table.getColumnModel().getColumn(5).setMinWidth(75);//% Hexagons
 		table.getColumnModel().getColumn(5).setMaxWidth(75);
 		table.getColumnModel().getColumn(6).setMinWidth(45);//Radius
@@ -404,62 +404,60 @@ public class MainWindow extends JFrame {
 			ImagePlus raw_img = IJ.openImage();
 			
 			if (raw_img != null) {
-				if (raw_img.getHeight() < 3000 && raw_img.getWidth() < 3000) {
-					this.initialDirectory = raw_img.getOriginalFileInfo().directory;
-					imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
-					imageProcessing.pack();
-					
-					imageProcessing.addWindowListener(new WindowListener(){
+        if (raw_img.getHeight() >= 3000 || raw_img.getWidth() >= 3000) {
+          JOptionPane.showMessageDialog(panel.getParent(),
+              "Warning! Large image detected. It may take time to process it.");
+        }
+        
+        this.initialDirectory = raw_img.getOriginalFileInfo().directory;
+        imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
+        imageProcessing.pack();
 
-						@Override
-						public void windowOpened(WindowEvent e) {
-							// TODO Auto-generated method stub
-							btnOpenButton.setEnabled(false);
-						}
+        imageProcessing.addWindowListener(new WindowListener() {
 
-						@Override
-						public void windowClosing(WindowEvent e) {
-							// TODO Auto-generated method stub
-							btnOpenButton.setEnabled(true);
-						}
+          @Override
+          public void windowOpened(WindowEvent e) {
+            // TODO Auto-generated method stub
+            btnOpenButton.setEnabled(false);
+          }
 
-						@Override
-						public void windowClosed(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
+          @Override
+          public void windowClosing(WindowEvent e) {
+            // TODO Auto-generated method stub
+            btnOpenButton.setEnabled(true);
+          }
 
-						@Override
-						public void windowIconified(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
+          @Override
+          public void windowClosed(WindowEvent e) {
+            // TODO Auto-generated method stub
 
-						@Override
-						public void windowDeiconified(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
+          }
 
-						@Override
-						public void windowActivated(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
+          @Override
+          public void windowIconified(WindowEvent e) {
+            // TODO Auto-generated method stub
 
-						@Override
-						public void windowDeactivated(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-					});
-					
-					
-				} else {
-					JOptionPane.showMessageDialog(panel.getParent(),
-							"Max. width or height is 3000px. Please, resize it.");
-				}
+          }
+
+          @Override
+          public void windowDeiconified(WindowEvent e) {
+            // TODO Auto-generated method stub
+
+          }
+
+          @Override
+          public void windowActivated(WindowEvent e) {
+            // TODO Auto-generated method stub
+
+          }
+
+          @Override
+          public void windowDeactivated(WindowEvent e) {
+            // TODO Auto-generated method stub
+
+          }
+
+        });
 
 			} else {
 				JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
