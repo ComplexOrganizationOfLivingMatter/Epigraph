@@ -56,11 +56,15 @@ import epigraph.JTableModel;
 import epigraph.GUI.CustomElements.CustomCanvas;
 import epigraph.GUI.CustomElements.ImageOverlay;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
+import ij.measure.Calibration;
+import ij.plugin.Duplicator;
 import ij.plugin.frame.RoiManager;
+import ij.process.ImageProcessor;
 import util.opencsv.CSVWriter;
 
 /**
