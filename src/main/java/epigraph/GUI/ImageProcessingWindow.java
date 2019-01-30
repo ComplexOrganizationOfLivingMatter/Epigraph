@@ -49,6 +49,7 @@ import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import epigraph.BasicGraphletImage;
 import epigraph.DiagramsData;
 import epigraph.Epigraph;
 import epigraph.GraphletImage;
@@ -1253,8 +1254,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 								break;
 						}
 
-						tableInf.addImage((GraphletImage) newGraphletImages.get(j).clone(),
-							cbGraphletsMode.getSelectedItem().toString());
+						tableInf.addImages(j, (ArrayList<GraphletImage>) newGraphletImages.clone(), cbGraphletsMode.getSelectedItem().toString());
+						
 						JOptionPane pane = new JOptionPane("Graphlet data added to table",
 							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null,
 							new Object[] {}, null);
