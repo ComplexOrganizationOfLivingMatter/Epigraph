@@ -2,7 +2,7 @@
 
 ## Installation onto ImageJ/FIJI
 
-1. Download the [jar file](https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/raw/master/Epigraph_-1.0.2-SNAPSHOT.jar)
+1. Download the [jar file](http://bit.ly/2RoVdXt)
 2. Go to Fiji>Plugins>Install PlugIn...
 3. Select the downloaded jar file.
 4. Ta ta! You can use EpiGraph!!
