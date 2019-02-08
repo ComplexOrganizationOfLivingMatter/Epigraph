@@ -1254,7 +1254,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 								break;
 						}
 
-						tableInf.addImages(j, (ArrayList<GraphletImage>) newGraphletImages.clone(), cbGraphletsMode.getSelectedItem().toString());
+						tableInf.addImages(j, (ArrayList<BasicGraphletImage>) newGraphletImages.clone(), cbGraphletsMode.getSelectedItem().toString());
 						
 						JOptionPane pane = new JOptionPane("Graphlet data added to table",
 							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null,
@@ -1410,7 +1410,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 							2), centroids.get(i)[0][1] - (text.getFloatHeight() / 2));
 						imageWithLabels.getChannelProcessor().drawRoi(text);
 					}
+					
 					newGraphletImage.setImageWithLabels(imageWithLabels);
+					newGraphletImage.setLabelName("Slice"+(j+1));
+					newGraphletImage.setColor(Color.red);
 					newGraphletImages.add(j, newGraphletImage);
 
 					// canvas.addOverlay(new

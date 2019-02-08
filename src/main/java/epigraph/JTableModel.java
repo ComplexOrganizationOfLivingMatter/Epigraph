@@ -135,10 +135,11 @@ public class JTableModel extends AbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
+	
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -238,7 +239,7 @@ public class JTableModel extends AbstractTableModel {
 	 * @param newImages new images to add
 	 * @param index 
 	 */
-	public void addImages(int index,ArrayList<GraphletImage> newImages, String graphletsMode) {
+	public void addImages(int index,ArrayList<BasicGraphletImage> newImages, String graphletsMode) {
 		allGraphletImages.add(newImages.get(index));
 		listOfSelected.add(true);
 		listOfModes.add(graphletsMode);
