@@ -11,16 +11,11 @@ import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Scrollbar;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,8 +25,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -48,7 +41,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -68,16 +60,14 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
-import ij.gui.StackWindow;
 import ij.gui.Roi;
 import ij.gui.TextRoi;
-import ij.gui.ScrollbarWithLabel;
 import ij.measure.Calibration;
 import ij.plugin.Duplicator;
 import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
 import util.opencsv.CSVWriter;
-import vib.segment.CustomStackWindow;
+
 /**
  * Window that process the image and calculate its graphlets.
  * 
@@ -146,22 +136,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private DiagramsData diagramsData;
 	private String initialDirectory;
-	private JScrollPane scrollPanel = null;
-	private Scrollbar sliceSelector;
-	/** executor service to launch threads for the plugin methods and events */
-	private final ExecutorService exec = Executors.newFixedThreadPool(1);
-	private boolean showColorOverlay;
-	private CustomStackWindow win;
-	public void updateResultOverlay()
-	{
-		ImageProcessor overlay = imp.getImageStack().getProcessor(imp.getCurrentSlice()).duplicate();
 
-		//IJ.log("updating overlay with result from slice " + displayImage.getCurrentSlice());
-				
-		overlay = overlay.convertToByte(false);
-		//win.overlayResult.setImage(overlay);
-	}
-	
 	/**
 	 * Constructor
 	 * 
@@ -180,8 +155,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		this.diagramsData = diagramsData;
 
 		canvas = (CustomCanvas) super.getCanvas();
-		
-		sliceSelector = new Scrollbar();
 		
 		newGraphletImages = new ArrayList<GraphletImage>();
 
@@ -335,11 +308,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
-		
-		// Add Scrollbar
-		sliceSelector.setValues(1, imp.getStackSize(), 1, imp.getStackSize());
-		polDistPanel.add(sliceSelector, polDistPanelConstrainst);
-		
+
 		// labels of polygon distribution ROI
 		polDistRoiPanel = new JPanel();
 		GridBagLayout polDistRoiPanelLayout = new GridBagLayout();
@@ -384,65 +353,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * 
 	 * @param raw_img
 	 */
-	
 	private void initializeGUIItems(ImagePlus raw_img) {
 		canvas.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent ce) {
 				Rectangle r = canvas.getBounds();
 				canvas.setDstDimensions(r.width, r.height);
-					// set slice selector to the correct number
-				/*
-					sliceSelector.setValue( imp.getSlice() );
-					// add adjustment listener to the scroll bar
-					sliceSelector.addAdjustmentListener(new AdjustmentListener() 
-					{
-
-						public void adjustmentValueChanged(final AdjustmentEvent e) {
-							exec.submit(new Runnable() {
-								public void run() {							
-									if(e.getSource() == sliceSelector)
-									{
-										//IJ.log("moving scroll");
-										imp.killRoi();
-										// drawExamples();
-										// updateExampleLists();
-										if(showColorOverlay)
-										{
-											updateResultOverlay();
-											imp.updateAndDraw();
-										}
-									}
-
-								}
-							});
-
-						}
-					});
-
-					// mouse wheel listener to update the rois while scrolling
-					addMouseWheelListener(new MouseWheelListener() {
-
-						@Override
-						public void mouseWheelMoved(final MouseWheelEvent e) {
-
-							exec.submit(new Runnable() {
-								public void run() 
-								{
-									//IJ.log("moving scroll");
-									imp.killRoi();
-									// drawExamples();
-									// updateExampleLists();
-									if(showColorOverlay)
-									{
-										updateResultOverlay();
-										imp.updateAndDraw();
-									}
-								}
-							});
-
-						}
-					});
-					*/
 			}
 		});
 
@@ -779,8 +694,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			ic.requestFocus();
-
-		
 	}
 
 	/**
@@ -1506,9 +1419,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					// canvas.addOverlay(new
 					// ImageOverlay(imageWithLabels.getChannelProcessor()));
 					imp2.updateAndDraw();
-					// recalculate minimum size of scroll panel
 					repaintAll();
-
 					// stack.addSlice(("Slice" + (j + 1)), imp.getChannelProcessor().convertToRGB().duplicate());
 				}
 			}
