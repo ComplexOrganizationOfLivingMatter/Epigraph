@@ -553,10 +553,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.insets = new Insets(5, 10, 6, 10);
 		all.add(canvas, allConstraints);
 		
-		allConstraints.gridy--;
 		 // The scrollbar 
-    
-		sliceSelector = new Scrollbar(Scrollbar.HORIZONTAL, 0,1,0,(imp.getStackSize()+1));
+		allConstraints.gridy--;
+		sliceSelector = new Scrollbar(Scrollbar.HORIZONTAL, 1,1,1,(imp.getStackSize()+1));
     sliceSelector.setVisible(true);
 		all.add(sliceSelector, allConstraints);
 		sliceSelector.addAdjustmentListener(new AdjustmentListener() {
@@ -564,44 +563,10 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent evt) {
 				// TODO Auto-generated method stub
-        int z = sliceSelector.getValue(); 
-        int slice = imp.getCurrentSlice(); 
+        int z = sliceSelector.getValue();  
         imp.setSlice(z); 
         ic.setImageUpdated(); 
         ic.repaint(); 
-
-				/*
-			    Adjustable source = evt.getAdjustable();
-
-			    // getValueIsAdjusting() returns true if the user is currently
-			    // dragging the scrollbar's knob and has not picked a final value
-			    if (evt.getValueIsAdjusting()) {
-			        // The user is dragging the knob
-			        return;
-			    } else {
-			        ((javax.swing.JScrollBar) source).getParent().repaint();
-			    }
-
-			    // Determine the type of event
-			    int type = evt.getAdjustmentType();
-			    switch (type) {
-			        case AdjustmentEvent.UNIT_INCREMENT:
-			            // Scrollbar was increased by one unit
-			            break;
-			        case AdjustmentEvent.UNIT_DECREMENT:
-			            // Scrollbar was decreased by one unit
-			            break;
-			        case AdjustmentEvent.BLOCK_INCREMENT:
-			            // Scrollbar was increased by one block
-			            break;
-			        case AdjustmentEvent.BLOCK_DECREMENT:
-			            // Scrollbar was decreased by one block
-			            break;
-			        case AdjustmentEvent.TRACK:
-			            // The knob on the scrollbar was dragged
-			            break;
-			    }
-				*/
 			}
 		});
 		
