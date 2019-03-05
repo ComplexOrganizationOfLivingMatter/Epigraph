@@ -1,5 +1,6 @@
 package epigraph.GUI;
 
+import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -11,9 +12,12 @@ import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Scrollbar;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
@@ -41,6 +45,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -56,6 +61,7 @@ import epigraph.GraphletImage;
 import epigraph.JTableModel;
 import epigraph.GUI.CustomElements.CustomCanvas;
 import epigraph.GUI.CustomElements.ImageOverlay;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.ImageCanvas;
@@ -88,6 +94,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private JLabel lblRadius, lblImageName;
 	private JSpinner inputRadiusNeigh;
 	private JPanel colorPicked;
+	private JScrollPane ScrollBar;
 	private JProgressBar progressBar;
 	private JTableModel tableInf;
 	private CustomCanvas canvas;
@@ -136,6 +143,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 	private DiagramsData diagramsData;
 	private String initialDirectory;
+	
+	private Scrollbar sliceSelector; 
 
 	/**
 	 * Constructor
@@ -166,7 +175,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		removeAll();
 
 		initGUI(raw_img);
-
+		
 		setEnablePanels(false);
 		
 		threadFinished = false;
@@ -280,7 +289,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		imgPolDistPanel.add(emptyLabel3, genericPanelConstrainst);
 		genericPanelConstrainst.gridy++;
 		imgPolDistPanel.add(lbImageLegend, genericPanelConstrainst);
-
+		
 		// labels of polygon distribution
 		polDistPanel = new JPanel();
 		GridBagLayout polDistPanelLayout = new GridBagLayout();
@@ -308,7 +317,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		polDistPanelConstrainst.gridy += 1;
 		polDistPanel.add(lbOctogons, polDistPanelConstrainst);
 		polDistPanelConstrainst.gridy += 1;
-
+  	
 		// labels of polygon distribution ROI
 		polDistRoiPanel = new JPanel();
 		GridBagLayout polDistRoiPanelLayout = new GridBagLayout();
@@ -543,12 +552,64 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.gridheight = 1;
 		allConstraints.insets = new Insets(5, 10, 6, 10);
 		all.add(canvas, allConstraints);
+		
+		allConstraints.gridy--;
+		 // The scrollbar 
+    
+		sliceSelector = new Scrollbar(Scrollbar.HORIZONTAL, 0,1,0,(imp.getStackSize()+1));
+    sliceSelector.setVisible(true);
+		all.add(sliceSelector, allConstraints);
+		sliceSelector.addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent evt) {
+				// TODO Auto-generated method stub
+        int z = sliceSelector.getValue(); 
+        int slice = imp.getCurrentSlice(); 
+        imp.setSlice(z); 
+        ic.setImageUpdated(); 
+        ic.repaint(); 
 
+				/*
+			    Adjustable source = evt.getAdjustable();
+
+			    // getValueIsAdjusting() returns true if the user is currently
+			    // dragging the scrollbar's knob and has not picked a final value
+			    if (evt.getValueIsAdjusting()) {
+			        // The user is dragging the knob
+			        return;
+			    } else {
+			        ((javax.swing.JScrollBar) source).getParent().repaint();
+			    }
+
+			    // Determine the type of event
+			    int type = evt.getAdjustmentType();
+			    switch (type) {
+			        case AdjustmentEvent.UNIT_INCREMENT:
+			            // Scrollbar was increased by one unit
+			            break;
+			        case AdjustmentEvent.UNIT_DECREMENT:
+			            // Scrollbar was decreased by one unit
+			            break;
+			        case AdjustmentEvent.BLOCK_INCREMENT:
+			            // Scrollbar was increased by one block
+			            break;
+			        case AdjustmentEvent.BLOCK_DECREMENT:
+			            // Scrollbar was decreased by one block
+			            break;
+			        case AdjustmentEvent.TRACK:
+			            // The knob on the scrollbar was dragged
+			            break;
+			    }
+				*/
+			}
+		});
+		
 		allConstraints.gridy++;
 		allConstraints.weightx = 0;
 		allConstraints.weighty = 0;
 		allConstraints.gridy--;
-
+				
 		/* RIGHT SIDE */
 		allConstraints.gridx++;
 		allConstraints.anchor = GridBagConstraints.NORTHEAST;
@@ -573,6 +634,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	 * @see
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	
 	public void actionPerformed(ActionEvent e) {
 		roiManager = RoiManager.getInstance();
 
@@ -692,9 +754,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		// Update the image and canvas
 		imp.updateAndDraw();
 		ImageCanvas ic = imp.getCanvas();
-		if (ic != null)
+		if (ic != null) 
 			ic.requestFocus();
-	}
+		} 
+		
+		/*
+
+        } 
+	});}
+	*/
 
 	/**
 	 * Export data into a .zip file. It will export a file with graphlets, an
