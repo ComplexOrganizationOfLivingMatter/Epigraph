@@ -567,6 +567,22 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
         imp.setSlice(z); 
         ic.setImageUpdated(); 
         ic.repaint(); 
+        /*
+        Task testNeighbours = new Task();
+        
+        if (TotalListPolDistri != null) {
+        lbSquares.setText(TotalPolDistri.get(z));
+  			lbPentagons.setText(polDistriGraphlets.get(1));
+  			lbHexagons.setText(polDistriGraphlets.get(2));
+  			lbHeptagons.setText(polDistriGraphlets.get(3));
+  			lbOctogons.setText(polDistriGraphlets.get(4));
+        }
+        
+        if (OverlayResultList != null) {
+        	OverlayResultList.set(z);
+        }
+        */
+        
 			}
 		});
 		
@@ -1331,10 +1347,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				selectionMode = false;
 			}
 			
-			if (imp.getStackSize()==1) { 
+			if (imp.getStackSize()==1) {
 			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(
 					cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), imp, progressBar,
 					selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
+			
 
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
@@ -1358,13 +1375,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 			} else {
 				ArrayList<ArrayList<String>> TotalListPolDistri = new ArrayList<>();
+				ArrayList<ImageOverlay> OverlayResultList = new ArrayList<>();
 				for (int j = 0; j < imp.getStackSize(); j++) {
 					
 					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(j)
 						.testNeighbours(cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), imp, progressBar,
 							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
-
+					
+					OverlayResultList.add(overlayResult);
 					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 					lbtitlePolDistGraphlets.setText("Graphlets");
 					lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
