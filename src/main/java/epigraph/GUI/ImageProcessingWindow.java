@@ -85,6 +85,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private static int MIN_GRAPHLETS_ON_IMAGE = 15;
 	// For future stack
 	private ArrayList<GraphletImage> newGraphletImages;
+	private ArrayList<ArrayList<String>> TotalListPolDistri;
+	private ArrayList<ImageOverlay> OverlayResultList;
 
 	private ImageOverlay overlayResult;
 	private GraphletImage newGraphletImage;
@@ -172,6 +174,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		overlayResult = new ImageOverlay();
 
 		newGraphletImage = new GraphletImage(raw_img);
+
 		removeAll();
 
 		initGUI(raw_img);
@@ -565,24 +568,23 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				// TODO Auto-generated method stub
         int z = sliceSelector.getValue();  
         imp.setSlice(z); 
+        
+       /*
+       if (TotalListPolDistri != null) {
+	      lbSquares.setText(TotalListPolDistri.get(z).get(0));
+	      lbPentagons.setText(TotalListPolDistri.get(z).get(1));
+	  		lbHexagons.setText(TotalListPolDistri.get(z).get(2));
+	  		lbHeptagons.setText(TotalListPolDistri.get(z).get(3));
+	  		lbOctogons.setText(TotalListPolDistri.get(z).get(4));
+       }
+       */
+       
+       if (OverlayResultList != null) {
+        OverlayResultList.set(z, OverlayResultList.get(z));
+       }
+       
         ic.setImageUpdated(); 
         ic.repaint(); 
-        /*
-        Task testNeighbours = new Task();
-        
-        if (TotalListPolDistri != null) {
-        lbSquares.setText(TotalPolDistri.get(z));
-  			lbPentagons.setText(polDistriGraphlets.get(1));
-  			lbHexagons.setText(polDistriGraphlets.get(2));
-  			lbHeptagons.setText(polDistriGraphlets.get(3));
-  			lbOctogons.setText(polDistriGraphlets.get(4));
-        }
-        
-        if (OverlayResultList != null) {
-        	OverlayResultList.set(z);
-        }
-        */
-        
 			}
 		});
 		
@@ -678,11 +680,14 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				btnSelectInvalidRegion.setEnabled(true);
 			}
 		} else if (e.getSource() == btnToggleOverlay) {
-			if (overlayResult != null) {
+			if (OverlayResultList != null) {
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
-					canvas.addOverlay(overlayResult);
-					canvas.setImageOverlay(overlayResult);
+					for (int j = 0; j < 3; j++) {
+						canvas.addOverlay(OverlayResultList.get(j));
+						canvas.setImageOverlay(OverlayResultList.set(j, OverlayResultList.get(j)));
+					}
+				
 				} else {
 					overlayResult = new ImageOverlay(overlayResult.getImage());
 					canvas.setImageOverlay(null);
