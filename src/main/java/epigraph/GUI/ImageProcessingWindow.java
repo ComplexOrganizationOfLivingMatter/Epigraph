@@ -571,15 +571,15 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
         int z = sliceSelector.getValue();  
         imp.setSlice(z); 
         
-      /*
+      
        if (TotalListPolDistri != null) {
-	      lbSquares.setText(TotalListPolDistri.get(z).get(0));
-	      lbPentagons.setText(TotalListPolDistri.get(z).get(1));
-	  		lbHexagons.setText(TotalListPolDistri.get(z).get(2));
-	  		lbHeptagons.setText(TotalListPolDistri.get(z).get(3));
-	  		lbOctogons.setText(TotalListPolDistri.get(z).get(4));
+	      lbSquares.setText(TotalListPolDistri.get(z-1).get(0));
+	      lbPentagons.setText(TotalListPolDistri.get(z-1).get(1));
+	  		lbHexagons.setText(TotalListPolDistri.get(z-1).get(2));
+	  		lbHeptagons.setText(TotalListPolDistri.get(z-1).get(3));
+	  		lbOctogons.setText(TotalListPolDistri.get(z-1).get(4));
        }
-      */
+    
        
        if (OverlayResultList != null) {
 					canvas.addOverlay(OverlayResultList.get(z-1));
@@ -687,9 +687,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
 					// for (int j = 0; j < imp.getStackSize(); j++) {
-					canvas.addOverlay(OverlayResultList.get(imp.getCurrentSlice()));
+					canvas.addOverlay(OverlayResultList.get(imp.getCurrentSlice()-1));
 				
-					canvas.setImageOverlay(OverlayResultList.get(imp.getCurrentSlice()));
+					canvas.setImageOverlay(OverlayResultList.get(imp.getCurrentSlice()-1));
 			
 				
 				} else {
@@ -1359,7 +1359,9 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), imp, progressBar,
 					selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
 			
-
+			OverlayResultList.add(overlayResult);
+			canvas.addOverlay(OverlayResultList.get(0));
+			canvas.setImageOverlay(OverlayResultList.get(0));
 			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
 			lbtitlePolDistGraphlets.setText("Graphlets");
 			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -1383,16 +1385,16 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			} else {
 				for (int j = 0; j < imp.getStackSize(); j++) {
 					ImageOverlay overlayResult= new ImageOverlay();
-					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(j)
+					ArrayList<String> polDistriGraphlets = new ArrayList<String>();
+					ArrayList<ArrayList<String>> ListPolDistri = new ArrayList<ArrayList<String>>();
+					
+					ListPolDistri = newGraphletImages.get(j)
 						.testNeighbours(cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), imp, progressBar,
 							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
 					
 					OverlayResultList.add(overlayResult);
-					canvas.addOverlay(OverlayResultList.get(0));
-					canvas.setImageOverlay(OverlayResultList.get(0));
-
-					ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+					polDistriGraphlets = ListPolDistri.get(0);
 					lbtitlePolDistGraphlets.setText("Graphlets");
 					lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
 					lbSquares.setText(polDistriGraphlets.get(0));
