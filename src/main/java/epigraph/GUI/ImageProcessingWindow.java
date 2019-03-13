@@ -87,6 +87,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private ArrayList<GraphletImage> newGraphletImages;
 	private ArrayList<ArrayList<String>> TotalListPolDistri;
 	private ArrayList<ImageOverlay> OverlayResultList;
+	private ArrayList<ArrayList<String>> TotalpolDistriRoi;
 
 	private ImageOverlay overlayResult;
 	private GraphletImage newGraphletImage;
@@ -558,7 +559,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		allConstraints.insets = new Insets(5, 10, 6, 10);
 		all.add(canvas, allConstraints);
 		
-		 // The scrollbar 
+		/* THE SCROLLBAR */
 		allConstraints.gridy--;
 		sliceSelector = new Scrollbar(Scrollbar.HORIZONTAL, 1,1,1,(imp.getStackSize()+1));
     sliceSelector.setVisible(true);
@@ -571,21 +572,26 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
         int z = sliceSelector.getValue();  
         imp.setSlice(z); 
         
-      
-       if (TotalListPolDistri != null) {
-	      lbSquares.setText(TotalListPolDistri.get(z-1).get(0));
-	      lbPentagons.setText(TotalListPolDistri.get(z-1).get(1));
-	  		lbHexagons.setText(TotalListPolDistri.get(z-1).get(2));
-	  		lbHeptagons.setText(TotalListPolDistri.get(z-1).get(3));
-	  		lbOctogons.setText(TotalListPolDistri.get(z-1).get(4));
-       }
+				if (TotalListPolDistri != null) {
+					lbSquares.setText(TotalListPolDistri.get(z - 1).get(0));
+					lbPentagons.setText(TotalListPolDistri.get(z - 1).get(1));
+					lbHexagons.setText(TotalListPolDistri.get(z - 1).get(2));
+					lbHeptagons.setText(TotalListPolDistri.get(z - 1).get(3));
+					lbOctogons.setText(TotalListPolDistri.get(z - 1).get(4));
+					if (TotalpolDistriRoi != null) {
+						lbRoiSquares.setText(TotalpolDistriRoi.get(z - 1).get(0));
+						lbRoiPentagons.setText(TotalpolDistriRoi.get(z - 1).get(1));
+						lbRoiHexagons.setText(TotalpolDistriRoi.get(z - 1).get(2));
+						lbRoiHeptagons.setText(TotalpolDistriRoi.get(z - 1).get(3));
+						lbRoiOctogons.setText(TotalpolDistriRoi.get(z - 1).get(4));
+					}
+				}
     
-       
        if (OverlayResultList != null) {
 					canvas.addOverlay(OverlayResultList.get(z-1));
 					canvas.setImageOverlay(OverlayResultList.get(z-1));
        }
-       
+              
         ic.setImageUpdated(); 
         ic.repaint(); 
 			}
@@ -1386,9 +1392,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				for (int j = 0; j < imp.getStackSize(); j++) {
 					ImageOverlay overlayResult= new ImageOverlay();
 					ArrayList<String> polDistriGraphlets = new ArrayList<String>();
-					ArrayList<ArrayList<String>> ListPolDistri = new ArrayList<ArrayList<String>>();
 					
-					ListPolDistri = newGraphletImages.get(j)
+					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(j)
 						.testNeighbours(cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), imp, progressBar,
 							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
@@ -1404,8 +1409,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					lbOctogons.setText(polDistriGraphlets.get(4));
 					TotalListPolDistri.add(polDistriGraphlets);
 					if (ListPolDistri.size() > 1) {
-						ArrayList<String> polDistriRoi = ListPolDistri.get(1);
-						ArrayList<ArrayList<String>> TotalpolDistriRoi = new ArrayList<>();
+						ArrayList<String> polDistriRoi = new ArrayList<String>();
+						polDistriRoi = ListPolDistri.get(1);
 						lbtitlePolDistRoi.setText("Rois");
 						lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
 						lbRoiSquares.setText(polDistriRoi.get(0));
