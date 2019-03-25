@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JProgressBar;
 
+import epigraph.GUI.ImageProcessingWindow;
 import epigraph.GUI.CustomElements.CustomCanvas;
 import epigraph.GUI.CustomElements.ImageOverlay;
 import epigraph.Statistics.StatisticalComparison;
@@ -83,6 +84,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 	public static int MINCELLS = 15;
 
+	private ImageProcessingWindow z_position;
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
 
@@ -116,7 +118,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		super();
 		this.labelName = img.getFileInfo().url;
 		this.raw_img = img;
-
+		this.z_position= z_position;
 		// Initialize the reference Hexagons and Random Voronoi
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -670,6 +672,8 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 *            are there any ROIs?
 	 * @param overlay
 	 *            of the image that we will paint the neighbour image
+	 * @param z_index
+	 * 						of the stack to select only  slice.
 	 * @return the polygon distribution
 	 */
 	public ArrayList<ArrayList<String>> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,

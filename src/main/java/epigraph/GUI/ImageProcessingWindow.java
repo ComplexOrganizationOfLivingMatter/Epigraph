@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -88,7 +89,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 	private ArrayList<ArrayList<String>> TotalListPolDistri;
 	private ArrayList<ImageOverlay> OverlayResultList;
 	private ArrayList<ArrayList<String>> TotalpolDistriRoi;
-
+	private ArrayList<ArrayList<String>> ListPolDistri;
+	
 	private ImageOverlay overlayResult;
 	private GraphletImage newGraphletImage;
 	private JTextField tfImageName;
@@ -170,6 +172,8 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		
 		newGraphletImages = new ArrayList<GraphletImage>();
 		TotalListPolDistri = new ArrayList<ArrayList<String>>();
+		TotalpolDistriRoi= new ArrayList<ArrayList<String>>();
+		ListPolDistri = new ArrayList<ArrayList<String>>();
 		OverlayResultList = new ArrayList<ImageOverlay>();
 		
 		tableInf = tableInfo;
@@ -690,20 +694,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			}
 		} else if (e.getSource() == btnToggleOverlay) {
 			if (OverlayResultList != null) {
+				
 				if (canvas.getImageOverlay() == null) {
 					canvas.clearOverlay();
-					// for (int j = 0; j < imp.getStackSize(); j++) {
 					canvas.addOverlay(OverlayResultList.get(imp.getCurrentSlice()-1));
-				
 					canvas.setImageOverlay(OverlayResultList.get(imp.getCurrentSlice()-1));
-			
-				
 				} else {
 					overlayResult = new ImageOverlay(overlayResult.getImage());
 					canvas.setImageOverlay(null);
 					canvas.clearOverlay();
 				}
 			}
+			
 		} else if (e.getSource() == btnSelectInvalidRegion) {
 			if (btnSelectInvalidRegion.getText() != "Done") {
 				if (invalidRegionRoi != null) {
@@ -1360,44 +1362,47 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				selectionMode = false;
 			}
 			
-			if (imp.getStackSize()==1) {
-			ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage.testNeighbours(
-					cbSelectedShape.getSelectedIndex(), (int) inputRadiusNeigh.getValue(), imp, progressBar,
-					selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
-			
-			OverlayResultList.add(overlayResult);
-			canvas.addOverlay(OverlayResultList.get(0));
-			canvas.setImageOverlay(OverlayResultList.get(0));
-			ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
-			lbtitlePolDistGraphlets.setText("Graphlets");
-			lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
-			lbSquares.setText(polDistriGraphlets.get(0));
-			lbPentagons.setText(polDistriGraphlets.get(1));
-			lbHexagons.setText(polDistriGraphlets.get(2));
-			lbHeptagons.setText(polDistriGraphlets.get(3));
-			lbOctogons.setText(polDistriGraphlets.get(4));
+			if (imp.getStackSize() == 1) {
+				int z_index=0;
+				ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage
+					.testNeighbours(cbSelectedShape.getSelectedIndex(),
+						(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
+						cbGraphletsMode.getSelectedIndex(), overlayResult);
 
-			if (ListPolDistri.size() > 1) {
-				ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+				OverlayResultList.add(overlayResult);
+				canvas.addOverlay(OverlayResultList.get(0));
+				canvas.setImageOverlay(OverlayResultList.get(0));
+				ArrayList<String> polDistriGraphlets = ListPolDistri.get(0);
+				lbtitlePolDistGraphlets.setText("Graphlets");
+				lbtitlePolDistGraphlets.setFont(new Font("Tahoma", Font.BOLD, 14));
+				lbSquares.setText(polDistriGraphlets.get(0));
+				lbPentagons.setText(polDistriGraphlets.get(1));
+				lbHexagons.setText(polDistriGraphlets.get(2));
+				lbHeptagons.setText(polDistriGraphlets.get(3));
+				lbOctogons.setText(polDistriGraphlets.get(4));
 
-				lbtitlePolDistRoi.setText("Rois");
-				lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
-				lbRoiSquares.setText(polDistriRoi.get(0));
-				lbRoiPentagons.setText(polDistriRoi.get(1));
-				lbRoiHexagons.setText(polDistriRoi.get(2));
-				lbRoiHeptagons.setText(polDistriRoi.get(3));
-				lbRoiOctogons.setText(polDistriRoi.get(4));
+				if (ListPolDistri.size() > 1) {
+					ArrayList<String> polDistriRoi = ListPolDistri.get(1);
+
+					lbtitlePolDistRoi.setText("Rois");
+					lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lbRoiSquares.setText(polDistriRoi.get(0));
+					lbRoiPentagons.setText(polDistriRoi.get(1));
+					lbRoiHexagons.setText(polDistriRoi.get(2));
+					lbRoiHeptagons.setText(polDistriRoi.get(3));
+					lbRoiOctogons.setText(polDistriRoi.get(4));
+				}
 			}
-			} else {
-				for (int j = 0; j < imp.getStackSize(); j++) {
-					ImageOverlay overlayResult= new ImageOverlay();
+			else {
+				for (int z_index = 0; z_index < imp.getStackSize(); z_index++) {
+					ImageOverlay overlayResult = new ImageOverlay();
 					ArrayList<String> polDistriGraphlets = new ArrayList<String>();
-					
-					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(j)
+
+					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(z_index)
 						.testNeighbours(cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), imp, progressBar,
 							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
-					
+
 					OverlayResultList.add(overlayResult);
 					polDistriGraphlets = ListPolDistri.get(0);
 					lbtitlePolDistGraphlets.setText("Graphlets");
@@ -1408,21 +1413,31 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					lbHeptagons.setText(polDistriGraphlets.get(3));
 					lbOctogons.setText(polDistriGraphlets.get(4));
 					TotalListPolDistri.add(polDistriGraphlets);
-					if (ListPolDistri.size() > 1) {
-						ArrayList<String> polDistriRoi = new ArrayList<String>();
-						polDistriRoi = ListPolDistri.get(1);
-						lbtitlePolDistRoi.setText("Rois");
-						lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
-						lbRoiSquares.setText(polDistriRoi.get(0));
-						lbRoiPentagons.setText(polDistriRoi.get(1));
-						lbRoiHexagons.setText(polDistriRoi.get(2));
-						lbRoiHeptagons.setText(polDistriRoi.get(3));
-						lbRoiOctogons.setText(polDistriRoi.get(4));
-						TotalpolDistriRoi.add(polDistriRoi);
-					}
 				}
-			}
-		
+				
+					Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+					//ArrayList<ArrayList<Roi>> z_position = new ArrayList<ArrayList<Roi>>();
+					Hashtable<Integer, ArrayList<Roi>>z_position = new Hashtable<>();
+					for (int j = 0; j < roiArray.length; j++) {
+						if (z_position.containsKey(roiArray[j].getPosition())) {
+							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
+						} else {
+							z_position.put(roiArray[j].getPosition(), new ArrayList<Roi>());
+							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
+						}
+						
+					}
+					ArrayList<String> polDistriRoi = new ArrayList<String>();
+					lbtitlePolDistRoi.setText("Rois");
+					lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lbRoiSquares.setText(polDistriRoi.get(0));
+					lbRoiPentagons.setText(polDistriRoi.get(1));
+					lbRoiHexagons.setText(polDistriRoi.get(2));
+					lbRoiHeptagons.setText(polDistriRoi.get(3));
+					lbRoiOctogons.setText(polDistriRoi.get(4));
+					TotalpolDistriRoi.add(polDistriRoi);
+				}
+
 
 		}
 
