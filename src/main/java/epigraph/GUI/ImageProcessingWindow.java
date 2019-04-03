@@ -1128,9 +1128,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 			if (imp.getStackSize() == 1) {
 			if (roiManager != null) {
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+				int z_index=0;
+				Hashtable<Integer, ArrayList<Roi>> z_position = new Hashtable<>();
 				ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
-						roiArray.length > 0, overlayResult);
+						roiArray.length > 0, overlayResult, z_index, z_position);
 				numberOfValidCellsOfLength = newGraphletImage.calculateNumberOfValidCellForGraphlets(maxLength,
 						roiArray.length > 0);
 				totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), roiArray.length > 0, maxLength);
@@ -1143,10 +1145,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				newGraphletImage.setPercentageOfOctogons(Float.parseFloat(polDistriRoi.get(4).replace("%","").replace(",", ".")));
 			}
 			else {
+					int z_index= 0;
+					Hashtable<Integer, ArrayList<Roi>> z_position = new Hashtable<>();
 					ListPolDistri = newGraphletImage.runGraphlets(cbSelectedShape
 						.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
 						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
-						overlayResult);
+						overlayResult, z_index, z_position);
 					numberOfValidCellsOfLength = newGraphletImage
 						.calculateNumberOfValidCellForGraphlets(maxLength, false);
 					totalGraphlets = newGraphletImage.getTotalNumberOfGraphlets(
@@ -1228,11 +1232,13 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 			} else {
 			for (int j = 0; j < imp.getStackSize(); j++) {
-			if (roiManager != null) {				
+			if (roiManager != null) {
+				Hashtable<Integer, ArrayList<Roi>> z_position = new Hashtable<>();
+				int z_index = 0;
 				Roi[] roiArray = roiManager.getSelectedRoisAsArray();
 				ListPolDistri = newGraphletImages.get(j).runGraphlets(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), (int) cbGraphletsMode.getSelectedIndex(), progressBar,
-						roiArray.length > 0, overlayResult);
+						roiArray.length > 0, overlayResult, z_index, z_position);
 				numberOfValidCellsOfLength = newGraphletImages.get(j).calculateNumberOfValidCellForGraphlets(maxLength,
 						roiArray.length > 0);
 				totalGraphlets = newGraphletImages.get(j).getTotalNumberOfGraphlets((int) cbGraphletsMode.getSelectedIndex(), roiArray.length > 0, maxLength);
@@ -1245,10 +1251,12 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				newGraphletImages.get(j).setPercentageOfOctogons(Float.parseFloat(polDistriRoi.get(4).replace("%","").replace(",", ".")));
 			}
 			else {
+					Hashtable<Integer, ArrayList<Roi>> z_position = new Hashtable<>();
+					int z_index=0;
 					ListPolDistri = newGraphletImages.get(j).runGraphlets(cbSelectedShape
 						.getSelectedIndex(), (int) inputRadiusNeigh.getValue(),
 						(int) cbGraphletsMode.getSelectedIndex(), progressBar, false,
-						overlayResult);
+						overlayResult, z_index, z_position);
 					numberOfValidCellsOfLength = newGraphletImages.get(j)
 						.calculateNumberOfValidCellForGraphlets(maxLength, false);
 					totalGraphlets = newGraphletImages.get(j).getTotalNumberOfGraphlets(
@@ -1352,22 +1360,33 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		 * Calculate polygon distribution in background
 		 */
 		public void testNeighbours() {
+			Hashtable<Integer, ArrayList<Roi>> z_position = new Hashtable<>();
 			if (roiManager != null) {
 				if (roiManager.getSelectedRoisAsArray().length > 0) {
 					selectionMode = true;
+					Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+					for (int j = 0; j < roiArray.length; j++) {
+						if (z_position.containsKey(roiArray[j].getPosition())) {
+							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
+						}
+						else {
+							z_position.put(roiArray[j].getPosition(), new ArrayList<Roi>());
+							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
+						}
+					}
 				} else {
 					selectionMode = false;
 				}
 			} else {
 				selectionMode = false;
 			}
-			
+						
 			if (imp.getStackSize() == 1) {
 				int z_index=0;
 				ArrayList<ArrayList<String>> ListPolDistri = newGraphletImage
 					.testNeighbours(cbSelectedShape.getSelectedIndex(),
 						(int) inputRadiusNeigh.getValue(), imp, progressBar, selectionMode,
-						cbGraphletsMode.getSelectedIndex(), overlayResult);
+						cbGraphletsMode.getSelectedIndex(), overlayResult, z_index, z_position);
 
 				OverlayResultList.add(overlayResult);
 				canvas.addOverlay(OverlayResultList.get(0));
@@ -1398,10 +1417,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					ImageOverlay overlayResult = new ImageOverlay();
 					ArrayList<String> polDistriGraphlets = new ArrayList<String>();
 
-					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(z_index)
-						.testNeighbours(cbSelectedShape.getSelectedIndex(),
+					ArrayList<ArrayList<String>> ListPolDistri = newGraphletImages.get(
+						z_index).testNeighbours(cbSelectedShape.getSelectedIndex(),
 							(int) inputRadiusNeigh.getValue(), imp, progressBar,
-							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult);
+							selectionMode, cbGraphletsMode.getSelectedIndex(), overlayResult,
+							z_index, z_position);
 
 					OverlayResultList.add(overlayResult);
 					polDistriGraphlets = ListPolDistri.get(0);
@@ -1413,30 +1433,21 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					lbHeptagons.setText(polDistriGraphlets.get(3));
 					lbOctogons.setText(polDistriGraphlets.get(4));
 					TotalListPolDistri.add(polDistriGraphlets);
-				}
-				
-					Roi[] roiArray = roiManager.getSelectedRoisAsArray();
-					//ArrayList<ArrayList<Roi>> z_position = new ArrayList<ArrayList<Roi>>();
-					Hashtable<Integer, ArrayList<Roi>>z_position = new Hashtable<>();
-					for (int j = 0; j < roiArray.length; j++) {
-						if (z_position.containsKey(roiArray[j].getPosition())) {
-							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
-						} else {
-							z_position.put(roiArray[j].getPosition(), new ArrayList<Roi>());
-							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
-						}
-						
+
+					if (ListPolDistri.size() > 1) {
+						ArrayList<String> polDistriRoi = new ArrayList<String>();
+						polDistriRoi = ListPolDistri.get(1);
+						lbtitlePolDistRoi.setText("Rois");
+						lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
+						lbRoiSquares.setText(polDistriRoi.get(0));
+						lbRoiPentagons.setText(polDistriRoi.get(1));
+						lbRoiHexagons.setText(polDistriRoi.get(2));
+						lbRoiHeptagons.setText(polDistriRoi.get(3));
+						lbRoiOctogons.setText(polDistriRoi.get(4));
+						TotalpolDistriRoi.add(polDistriRoi);
 					}
-					ArrayList<String> polDistriRoi = new ArrayList<String>();
-					lbtitlePolDistRoi.setText("Rois");
-					lbtitlePolDistRoi.setFont(new Font("Tahoma", Font.BOLD, 14));
-					lbRoiSquares.setText(polDistriRoi.get(0));
-					lbRoiPentagons.setText(polDistriRoi.get(1));
-					lbRoiHexagons.setText(polDistriRoi.get(2));
-					lbRoiHeptagons.setText(polDistriRoi.get(3));
-					lbRoiOctogons.setText(polDistriRoi.get(4));
-					TotalpolDistriRoi.add(polDistriRoi);
 				}
+			}
 
 
 		}

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
@@ -84,7 +85,6 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 
 	public static int MINCELLS = 15;
 
-	private ImageProcessingWindow z_position;
 	private ImagePlus raw_img;
 	private ImagePlus l_img;
 
@@ -118,7 +118,6 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		super();
 		this.labelName = img.getFileInfo().url;
 		this.raw_img = img;
-		this.z_position= z_position;
 		// Initialize the reference Hexagons and Random Voronoi
 		int[][] hexagonGraphlets = { { 6, 18, 9, 6, 54, 54, 6, 2, 0, 12, 24, 12, 6, 6, 0, 162, 162, 81, 18, 36, 18, 18,
 				0, 0, 48, 24, 48, 36, 36, 72, 36, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 6, 6, 12, 3, 12, 12, 12, 24, 0, 0, 0,
@@ -389,7 +388,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @return the polygon distribution
 	 */
 	public ArrayList<ArrayList<String>> testNeighbours(int selectedShape, int radiusOfShape, ImagePlus imgToShow,
-			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult) {
+			JProgressBar progressBar, boolean selectionMode, int modeNumGraphlets, ImageOverlay overlayResult, int z_index, Hashtable<Integer, ArrayList<Roi>> z_position) {
 		double totalPercentageToReach;
 		
 		if (imgToShow != null)
@@ -397,7 +396,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		else
 			totalPercentageToReach = 1;
 
-		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode, modeNumGraphlets);
+		this.reDoTheComputation = checkReDoComputation(selectedShape, radiusOfShape, selectionMode, modeNumGraphlets, z_index, z_position);
 		
 		if (this.reDoTheComputation) {
 			
@@ -672,16 +671,18 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 *            are there any ROIs?
 	 * @param overlay
 	 *            of the image that we will paint the neighbour image
+	 * @param z_index 
 	 * @param z_index
 	 * 						of the stack to select only  slice.
+	 * @param z_position 
 	 * @return the polygon distribution
 	 */
 	public ArrayList<ArrayList<String>> runGraphlets(int selectedShape, int radiusOfShape, int modeNumGraphlets,
-			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay) {
+			JProgressBar progressBar, boolean selectionMode, ImageOverlay overlay, int z_index, Hashtable<Integer, ArrayList<Roi>> z_position) {
 		
 		
 		ArrayList<ArrayList<String>> polDist = testNeighbours(selectedShape, radiusOfShape, null, progressBar, selectionMode,
-				modeNumGraphlets, overlay);
+				modeNumGraphlets, overlay, z_index, z_position);
 		switch (modeNumGraphlets) {
 		case 0:
 			graphletsWeDontWant = totalGraphlets;
@@ -1259,7 +1260,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @param modeNumGraphlets 
 	 * @return if we have to redo the computation of neighbours
 	 */
-	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode, int modeNumGraphlets) {
+	private boolean checkReDoComputation(int selectedShape, int radiusOfShape, boolean selectionMode, int modeNumGraphlets, int z_index, Hashtable<Integer, ArrayList<Roi>> z_position) {
 		boolean reDoTheComputationAux = false;
 		if (this.shapeOfMask != selectedShape || this.radiusOfMask != radiusOfShape
 				|| this.isSelectedCells() != selectionMode || this.invalidRegionChanged || this.modeNumGraphletsToCheck != (modeNumGraphlets < 2)) {
@@ -1274,8 +1275,9 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			RoiManager roiManager = RoiManager.getInstance();
 			resetSelection();
 			// Check if there is any ROI
-			if (roiManager != null && selectionMode) {
-				for (Roi r : roiManager.getRoisAsArray()) {
+			if (z_position.get(z_index) != null && selectionMode) {
+
+				for (Roi r : z_position.get(z_index)) {
 					for (Point point : r) {
 						int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
 						this.addCellToSelected(pixelInfo[0]);
