@@ -402,6 +402,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			
 			this.modeNumGraphletsToCheck = modeNumGraphlets < 2;
 			
+			
 			percentagesList = new ArrayList<ArrayList<String>>();
 			// Neighbours
 			for (int indexEpiCell = 0; indexEpiCell < this.cells.size(); indexEpiCell++) {
@@ -450,6 +451,9 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 				if (this.cells.get(i).isValid_cell()) {
 					//If it is selection mode we check if the cell is selected
 					//Otherwise we enter always.
+					if (z_position.get(z_index+1)== null) {
+						selectionMode=false;
+					}
 					if ((this.cells.get(i).isValid_cell_5() || (modeNumGraphlets >= 2 && this.cells.get(i).isValid_cell_4()) ) && (!selectionMode || this.cells.get(i).isSelected())) {
 						switch (this.cells.get(i).getNeighbours().size()) {
 						case 3:
@@ -620,6 +624,10 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 				percentagesListRoi.add(defaultFormat.format(percentageOfOctogonsRoi));
 			
 				percentagesList.add(percentagesListRoi);
+				
+				if (z_position.get(z_index+1)== null) {
+					selectionMode=true;
+				}
 			
 			}
 			
@@ -1275,14 +1283,15 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 			RoiManager roiManager = RoiManager.getInstance();
 			resetSelection();
 			// Check if there is any ROI
-			if (z_position.get(z_index) != null && selectionMode) {
-
-				for (Roi r : z_position.get(z_index)) {
+			if (z_position.containsKey(z_index+1) && selectionMode) {
+				for (Roi r : z_position.get(z_index+1)) {
 					for (Point point : r) {
 						int[] pixelInfo = this.getLabelledImage().getPixel(point.x, point.y);
 						this.addCellToSelected(pixelInfo[0]);
 					}
 				}
+			} else {
+				
 			}
 			ArrayList<Integer> actualSelectedCells = this.getAllSelectedCells();
 
