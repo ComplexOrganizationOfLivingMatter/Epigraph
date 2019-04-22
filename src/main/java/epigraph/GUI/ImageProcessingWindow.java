@@ -599,7 +599,6 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 							lbRoiHexagons.setText("");
 							lbRoiHeptagons.setText("");
 							lbRoiOctogons.setText("");
-							polDistRoiPanel.repaint();
 						}
 			}
 
@@ -1385,6 +1384,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 						}
 					}
 				} else {
+					z_position = null;
 					selectionMode = false;
 				}
 			} else {
