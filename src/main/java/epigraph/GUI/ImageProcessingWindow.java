@@ -1374,9 +1374,18 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 				if (roiManager.getSelectedRoisAsArray().length > 0) {
 					selectionMode = true;
 					Roi[] roiArray = roiManager.getSelectedRoisAsArray();
+					if (z_position.isEmpty() == false) {
+						z_position.clear();
+					}
+					if (imp.getStackSize() == 1) {
+						z_position.put(1, new ArrayList<Roi>());
+					}
 					for (int j = 0; j < roiArray.length; j++) {
 						if (z_position.containsKey(roiArray[j].getPosition())) {
 							z_position.get(roiArray[j].getPosition()).add(roiArray[j]);
+						}
+						else if (imp.getStackSize() == 1) {
+							z_position.get(1).add(roiArray[j]);
 						}
 						else {
 							z_position.put(roiArray[j].getPosition(), new ArrayList<Roi>());
@@ -1384,7 +1393,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 						}
 					}
 				} else {
-					z_position = null;
+					z_position.clear();
 					selectionMode = false;
 				}
 			} else {
