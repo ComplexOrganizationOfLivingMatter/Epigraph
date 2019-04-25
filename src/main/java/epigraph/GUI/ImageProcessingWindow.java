@@ -740,7 +740,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 
 			} else {
 				// Add selected cells
+				if (imp.getStackSize() == 1) {
 				addInvalidRegion();
+				} else {
+				addInvalidRegions();
+				}
 				btnSelectInvalidRegion.setText("Pick invalid regions");
 				enableActionButtons();
 				btnCreateRoi.setEnabled(true);
@@ -982,7 +986,26 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 		}
 		this.getImagePlus().deleteRoi();
 	}
-
+	
+	/**
+	 * Transform the ROI to an invalid region that will be surrounded by no
+	 * valid cells in stacks.
+	 */
+	public void addInvalidRegions() {
+		for (int j = 0; j < imp.getStackSize(); j++) {
+		this.newGraphletImages.get(j).resetInvalidRegion();
+		invalidRegionRoi = null;
+		Roi r = this.getImagePlus().getRoi();
+		if (r != null) {
+			for (Point point : r) {
+				int[] pixelInfo = newGraphletImages.get(j).getLabelledImage().getPixel(point.x, point.y);
+				this.newGraphletImages.get(j).addCellToInvalidRegion(pixelInfo[0]);
+			}
+			invalidRegionRoi = r;
+		}
+		this.getImagePlus().deleteRoi();
+	}
+	}
 	/**
 	 * Add the painted Roi to the roiManager
 	 */
