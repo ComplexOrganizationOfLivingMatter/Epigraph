@@ -1377,6 +1377,11 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					if (z_position.isEmpty() == false) {
 						z_position.clear();
 					}
+					if (OverlayResultList.isEmpty() == false) {
+						OverlayResultList.clear();
+						canvas.clearOverlay();
+						TotalpolDistriRoi.clear();
+					}
 					if (imp.getStackSize() == 1) {
 						z_position.put(1, new ArrayList<Roi>());
 					}
@@ -1394,6 +1399,7 @@ public class ImageProcessingWindow extends ImageWindow implements ActionListener
 					}
 				} else {
 					z_position.clear();
+					OverlayResultList.clear();
 					selectionMode = false;
 				}
 			} else {
