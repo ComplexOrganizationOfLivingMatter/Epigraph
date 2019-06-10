@@ -16,9 +16,10 @@ If you want to test the code in your computer, follow these steps:
 2nd, import to the eclipse project the eclipse-preferences.
 
 3rd, install as an eclipse plugin: 
-Windowbuilder
-Eclipse java development tools
-Swing Designer
+- Windowbuilder
+- Eclipse java development tools
+- Swing Designer
+
 
 4th If you have any trouble with the Epigraph package:
 Change the package to lower case.
