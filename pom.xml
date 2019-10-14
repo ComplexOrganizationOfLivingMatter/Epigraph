@@ -14,7 +14,20 @@
 	<artifactId>Epigraph_</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 	<name>plugins/Epigraph_.jar</name>
-	<description></description>
+	<description>EpiGraph is a Fiji plugin that combines computational geometry and graph theory to measure the degree of arrangement in any tessellation. </description>
+	<url>http://scutoids.es/</url>
+	<inceptionYear>2017</inceptionYear>
+	<organization>
+		<name>University of Seville - IBiS</name>
+		<url>http://www.us.es</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>GNU General Public License v3+</name>
+			<url>https://www.gnu.org/licenses/gpl.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<developers>
 		<developer>
