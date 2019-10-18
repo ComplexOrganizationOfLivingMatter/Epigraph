@@ -4,10 +4,10 @@
 		http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>sc.fiji</groupId>
-		<artifactId>pom-fiji</artifactId>
-		<version>26.1.1</version>
+	<parent> 
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>26.0.0</version>
 		<relativePath />
 	</parent>
 	
@@ -51,20 +51,43 @@
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
-
-
 	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>Luis M. Escudero</name>
+			<url>https://imagej.net/User:LMEscudero</url>
+			<roles>
+				<role>founder</role>
+			</roles>
+		</contributor>
+	</contributors>
+	
+	<mailingLists>
+		<mailingList>
+			<name>Image.sc Forum</name>
+			<archive>https://forum.image.sc/tags/fiji</archive>
+		</mailingList>
+	</mailingLists>
+	
+	<ciManagement>
+		<system>Travis CI</system>
+	</ciManagement>
+	
+	<scm>
+		<connection>scm:git:git://github.com/ComplexOrganizationOfLivingMatter/EpiGraph</connection>
+		<developerConnection>scm:git:git@github.com/ComplexOrganizationOfLivingMatter/EpiGraph</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/ComplexOrganizationOfLivingMatter/EpiGraph</url>
+	</scm>
 
 	<properties>
-		<main-class>Epigraph</main-class>		
+		<main-class>Epigraph</main-class>
+		<license.licenseName>gpl_v3</license.licenseName>
+		<license.copyrightOwners>Luis M. Escudero</license.copyrightOwners>
 	</properties>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>Fiji_Plugins</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>VIB-lib</artifactId>
@@ -73,10 +96,6 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-lib</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>legacy-imglib1</artifactId>
-		</dependency>
 
 		<!-- ImageJ dependencies -->
 		<dependency>
@@ -84,11 +103,6 @@
 			<artifactId>ij</artifactId>
 		</dependency>
 
-		<!-- ImgLib2 dependencies -->
-		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-ij</artifactId>
-		</dependency>
 		<!-- Visualization -->
 		<dependency>
 			<groupId>org.jzy3d</groupId>
@@ -105,12 +119,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse.swt</groupId>
-			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-			<version>4.4</version>
-		</dependency>
-
-		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.3.2</version>
@@ -121,8 +129,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
 		</dependency>
-
-
+		
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+		</dependency>
 	</dependencies>
 
 	<!--<scm> <connection>scm:git:git://github.com/Pablo1990/Epigraph</connection> 
@@ -165,16 +176,24 @@
 				<configuration>
 					<artifactSet>
 						<excludes>
-							<exclude>sc.fiji:Fiji_Plugins</exclude>
-							<exclude>sc.fiji:VIB-lib</exclude>
-							<exclude>sc.fiji:pal-optimization</exclude>
-							<exclude>sc.fiji:fiji-lib</exclude>
+							<exclude>sc.fiji:*</exclude>
 							<exclude>ome:*</exclude>
-							<exclude>sc.fiji:legacy-imglib1</exclude>
 							<exclude>net.imagej:*</exclude>
 							<exclude>net.imglib2:*</exclude>
 							<exclude>org.jogamp.*:*</exclude>
 							<exclude>org.apache.commons:*</exclude>
+							<exclude>log4j:log4j</exclude>
+							<exclude>gov.nist.math:*</exclude>
+							<exclude>org.javassist:*</exclude>
+							<exclude>org.openmicroscopy:*</exclude>
+							<exclude>org.slf4j:*</exclude>
+							<exclude>org.openmicroscopy:*</exclude>
+							<exclude>org.scijava:*</exclude>
+							<exclude>mpicbg:*</exclude>
+							<exclude>org.jfree:*</exclude>
+							<exclude>net.sf.trove4j:*</exclude>
+							<exclude>org.bushe:*</exclude>
+							<exclude>fr.inra.ijpb:*</exclude>
 						</excludes>
 					</artifactSet>
 					<archive>
