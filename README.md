@@ -31,3 +31,12 @@ Change the package to lower case.
 7th If you have any trouble with Maven not founding the JDK:
 Go to preferences and check if it's selected the JDK, not the JRE.
 If you don't have installed the JDK, install it.
+
+## Add to dependencies
+
+Add this dependency to the POM file of your proyect:
+
+  	<groupId>es.escudero</groupId>
+	<artifactId>Epigraph_</artifactId>
+	<version>1.0.2</version>
+  
