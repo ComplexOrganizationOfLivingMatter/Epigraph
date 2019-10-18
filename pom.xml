@@ -201,7 +201,7 @@
 
     <repository>
         <id>mvn-repo</id>
-        <url>https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/master</url>
+        <url>https://rawgit.com/ComplexOrganizationOfLivingMatter/test-repo/master</url>
         <releases>
             <enabled>true</enabled>
         </releases>
