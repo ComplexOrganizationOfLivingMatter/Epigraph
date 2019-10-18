@@ -2,7 +2,6 @@
 package epigraph;
 
 import java.awt.Color;
-import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 

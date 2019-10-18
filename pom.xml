@@ -4,13 +4,13 @@
 		http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent> 
+	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
 		<version>26.0.0</version>
 		<relativePath />
 	</parent>
-	
+
 	<groupId>es.escudero</groupId>
 	<artifactId>Epigraph_</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
@@ -29,7 +29,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
 
 	<distributionManagement>
 		<repository>
@@ -65,7 +64,7 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
-	
+
 	<contributors>
 		<contributor>
 			<name>Luis M. Escudero</name>
@@ -75,18 +74,18 @@
 			</roles>
 		</contributor>
 	</contributors>
-	
+
 	<mailingLists>
 		<mailingList>
 			<name>Image.sc Forum</name>
 			<archive>https://forum.image.sc/tags/fiji</archive>
 		</mailingList>
 	</mailingLists>
-	
+
 	<ciManagement>
 		<system>Travis CI</system>
 	</ciManagement>
-	
+
 	<scm>
 		<connection>scm:git:git://github.com/ComplexOrganizationOfLivingMatter/EpiGraph</connection>
 		<developerConnection>scm:git:git@github.com/ComplexOrganizationOfLivingMatter/EpiGraph</developerConnection>
@@ -128,13 +127,11 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.8</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
-			<version>1.3.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
@@ -142,21 +139,17 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2</artifactId>
 		</dependency>
 	</dependencies>
 
-	<!--<scm> <connection>scm:git:git://github.com/Pablo1990/Epigraph</connection> 
-		<developerConnection>scm:git:git@github.com:Pablo1990/Epigraph</developerConnection> 
-		<tag>HEAD</tag> <url>https://github.com/Pablo1990/Epigraph</url> </scm> -->
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/Pablo1990/Epigraph/issues</url>
 	</issueManagement>
-
 
 	<build>
 		<plugins>
@@ -229,18 +222,16 @@
 	</build>
 
 	<repositories>
-		
-
-    <repository>
-        <id>mvn-repo</id>
-        <url>https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/master</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
+		<repository>
+			<id>mvn-repo</id>
+			<url>https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/master</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 
 		<!-- NB: for project parent -->
 		<repository>
@@ -256,10 +247,6 @@
 			<id>jzy3d-releases</id>
 			<name>Jzy3d Snapshots</name>
 			<url>http://maven.jzy3d.org/releases </url>
-		</repository>
-		<repository>
-			<id>swt-repo</id>
-			<url>https://raw.githubusercontent.com/maven-eclipse/swt-repo/master/</url>
 		</repository>
 	</repositories>
 
