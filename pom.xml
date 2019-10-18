@@ -10,19 +10,20 @@
 		<version>26.1.1</version>
 		<relativePath />
 	</parent>
-
+	
+	<groupId>es.escudero</groupId>
 	<artifactId>Epigraph_</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 	<name>plugins/Epigraph_.jar</name>
 	<description></description>
-	
-<!-- 	<distributionManagement> -->
-<!-- 	<repository> -->
-<!-- 		<id>bintray-complexorganizationoflivingmatter-EpiGraph</id> -->
-<!-- 		<name>complexorganizationoflivingmatter-Epigraph</name> -->
-<!-- 		<url>https://api.bintray.com/maven/complexorganizationoflivingmatter/EpiGraph/EpiGraph/;publish=1</url> -->
-<!-- 	</repository> -->
-<!-- 	</distributionManagement> -->
+
+
+	<distributionManagement>
+		<repository>
+			<id>internal</id>
+			<url>file://D:\Github\Epigraph\mvn-repo</url>
+		</repository>
+	</distributionManagement>
 
 	<developers>
 		<developer>
@@ -55,10 +56,7 @@
 	</developers>
 
 	<properties>
-		<main-class>Epigraph</main-class>
-<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-<!--         <bintray.repo>complexorganizationoflivingmatter</bintray.repo> -->
-<!--         <bintray.package>EpiGraph</bintray.package> -->
+		<main-class>Epigraph</main-class>		
 	</properties>
 
 	<dependencies>
@@ -117,11 +115,11 @@
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-math3</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
 		</dependency>
 
 
@@ -199,6 +197,19 @@
 	</build>
 
 	<repositories>
+		
+
+    <repository>
+        <id>mvn-repo</id>
+        <url>https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/master</url>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+
 		<!-- NB: for project parent -->
 		<repository>
 			<id>imagej.public</id>
