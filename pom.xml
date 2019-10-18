@@ -222,16 +222,16 @@
 	</build>
 
 	<repositories>
-		<repository>
-			<id>mvn-repo</id>
-			<url>https://github.com/ComplexOrganizationOfLivingMatter/Epigraph/master</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
+	    <repository>
+	        <id>mvn-repo</id>
+	        <url>https://rawgit.com/ComplexOrganizationOfLivingMatter/test-repo/master</url>
+	        <releases>
+	            <enabled>true</enabled>
+	        </releases>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+	    </repository>
 
 		<!-- NB: for project parent -->
 		<repository>
