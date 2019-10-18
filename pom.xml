@@ -15,6 +15,14 @@
 	<version>1.0.2-SNAPSHOT</version>
 	<name>plugins/Epigraph_.jar</name>
 	<description></description>
+	
+<!-- 	<distributionManagement> -->
+<!-- 	<repository> -->
+<!-- 		<id>bintray-complexorganizationoflivingmatter-EpiGraph</id> -->
+<!-- 		<name>complexorganizationoflivingmatter-Epigraph</name> -->
+<!-- 		<url>https://api.bintray.com/maven/complexorganizationoflivingmatter/EpiGraph/EpiGraph/;publish=1</url> -->
+<!-- 	</repository> -->
+<!-- 	</distributionManagement> -->
 
 	<developers>
 		<developer>
@@ -48,6 +56,9 @@
 
 	<properties>
 		<main-class>Epigraph</main-class>
+<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+<!--         <bintray.repo>complexorganizationoflivingmatter</bintray.repo> -->
+<!--         <bintray.package>EpiGraph</bintray.package> -->
 	</properties>
 
 	<dependencies>
