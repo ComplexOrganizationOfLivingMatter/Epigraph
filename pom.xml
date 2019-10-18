@@ -30,12 +30,12 @@
 		</license>
 	</licenses>
 
-<!-- 	<distributionManagement> -->
-<!-- 		<repository> -->
-<!-- 			<id>internal</id> -->
-<!-- 			<url>file://D:\Github\Fiji-plugins</url> -->
-<!-- 		</repository> -->
-<!-- 	</distributionManagement> -->
+	<distributionManagement>
+		<repository>
+			<id>internal</id>
+			<url>file://D:\Github\Fiji-plugins</url>
+		</repository>
+	</distributionManagement>
 
 	<developers>
 		<developer>
