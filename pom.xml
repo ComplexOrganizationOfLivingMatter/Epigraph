@@ -13,7 +13,7 @@
 
 	<groupId>es.escudero</groupId>
 	<artifactId>Epigraph_</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>plugins/Epigraph_.jar</name>
 	<description>EpiGraph is a Fiji plugin that combines computational geometry and graph theory to measure the degree of arrangement in any tessellation. </description>
 	<url>http://scutoids.es/</url>
@@ -30,12 +30,12 @@
 		</license>
 	</licenses>
 
-	<distributionManagement>
-		<repository>
-			<id>internal</id>
-			<url>file://D:\Github\Epigraph\mvn-repo</url>
-		</repository>
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<repository> -->
+<!-- 			<id>internal</id> -->
+<!-- 			<url>file://D:\Github\Fiji-plugins</url> -->
+<!-- 		</repository> -->
+<!-- 	</distributionManagement> -->
 
 	<developers>
 		<developer>
@@ -224,7 +224,7 @@
 	<repositories>
 	    <repository>
 	        <id>mvn-repo</id>
-	        <url>https://rawgit.com/ComplexOrganizationOfLivingMatter/test-repo/master</url>
+	        <url>https://rawgit.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master</url>
 	        <releases>
 	            <enabled>true</enabled>
 	        </releases>
