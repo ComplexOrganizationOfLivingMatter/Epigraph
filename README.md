@@ -32,7 +32,7 @@ Change the package to lower case.
 Go to preferences and check if it's selected the JDK, not the JRE.
 If you don't have installed the JDK, install it.
 
-## Add to depedencies
+## Add to dependencies
 
 Add this dependency to the POM file of your proyect:
 
