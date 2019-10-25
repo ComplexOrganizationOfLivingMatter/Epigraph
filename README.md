@@ -32,11 +32,20 @@ Change the package to lower case.
 Go to preferences and check if it's selected the JDK, not the JRE.
 If you don't have installed the JDK, install it.
 
-## Add to dependencies
+## Install dependency
 
 Add this dependency to the POM file of your proyect:
 
-  	<groupId>es.escudero</groupId>
-	<artifactId>Epigraph_</artifactId>
-	<version>1.0.2</version>
-  
+	<dependency>
+  		<groupId>es.escudero</groupId>
+		<artifactId>Epigraph_</artifactId>
+		<version>1.0.2</version>
+	</dependency>
+	
+Also add this repository:
+
+	<repository>
+		<id>Fiji-plugins</id>
+	        <url>https://raw.github.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master/</url>
+	</repository>
+
