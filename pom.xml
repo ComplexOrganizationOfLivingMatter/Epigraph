@@ -223,8 +223,8 @@
 
 	<repositories>
 	    <repository>
-	        <id>mvn-repo</id>
-	        <url>https://github.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master</url>
+	        <id>Fiji-plugins</id>
+	        <url>https://raw.github.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master</url>
 	        <releases>
 	            <enabled>true</enabled>
 	        </releases>
