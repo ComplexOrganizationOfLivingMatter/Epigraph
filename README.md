@@ -34,18 +34,19 @@ If you don't have installed the JDK, install it.
 
 ## Install dependency
 
-Add this dependency to the POM file of your proyect:
-
-	<dependency>
-  		<groupId>es.escudero</groupId>
-		<artifactId>Epigraph_</artifactId>
-		<version>1.0.2</version>
-	</dependency>
+To import our project into a maven project you need to add:
+```
+<dependency>
+	<groupId>es.escudero</groupId>
+	<artifactId>Epigraph_</artifactId>
+	<version>1.0.2</version>
+</dependency>
+```
 	
 Also add this repository:
-
-	<repository>
-		<id>Fiji-plugins</id>
-	        <url>https://raw.github.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master/</url>
-	</repository>
-
+```
+<repository>
+	<id>Fiji-plugins</id>
+	<url>https://raw.github.com/ComplexOrganizationOfLivingMatter/Fiji-plugins/master/</url>
+</repository>
+```
