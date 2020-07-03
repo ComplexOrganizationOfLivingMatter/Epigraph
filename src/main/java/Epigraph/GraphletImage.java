@@ -87,6 +87,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	private ImagePlus l_img;
 
 	private ArrayList<EpiCell> cells;
+
 	private int[][] adjacencyMatrix;
 	private Orca orcaProgram;
 
@@ -704,35 +705,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		
 		if (this.reDoTheComputation || this.distanceGDDH == -1) {
 
-			// Adjacency matrix
-			HashSet<Integer> neighbours;
-			ArrayList<Integer> idsROI = new ArrayList<Integer>();
-			EpiCell cell;
-			for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
-				cell = this.cells.get(idEpiCell);
-				if (cell.isInvalidRegion() == false) {
-					if (!selectionMode || cell.isSelected() || cell.isWithinTheRange()) {
-						neighbours = cell.getNeighbours();
-						idsROI.add(idEpiCell);
-						for (int idNeighbour : neighbours) {
-							if (this.cells.get(idEpiCell).isValid_cell()
-									|| this.cells.get(idNeighbour).isValid_cell()) {
-								// Only valid cells' relationships
-								this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
-								// this.adjacencyMatrix[idNeighbour][idEpiCell]
-								// = 1;
-							}
-						}
-					}
-				}
-			}
-			// TODO: reduced adjacency matrix
-			// int[][] adjacencyMatrixReduced = new
-			// int[idsROI.size()][idsROI.size()];
-			//
-			// for (int i = 0; i < idsROI.size(); i++){
-			// adjacencyMatrixReduced[i] = this.adjacencyMatrix[idsROI.get(i)];
-			// }
+			getAdjacencyMatrix(selectionMode);
 
 			this.orcaProgram = new Orca(this.adjacencyMatrix);
 
@@ -807,6 +780,41 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	}
 
 	/**
+	 * @param selectionMode
+	 */
+	public int[][] getAdjacencyMatrix(boolean selectionMode) {
+		HashSet<Integer> neighbours;
+		ArrayList<Integer> idsROI = new ArrayList<Integer>();
+		EpiCell cell;
+		for (int idEpiCell = 0; idEpiCell < this.cells.size(); idEpiCell++) {
+			cell = this.cells.get(idEpiCell);
+			if (cell.isInvalidRegion() == false) {
+				if (!selectionMode || cell.isSelected() || cell.isWithinTheRange()) {
+					neighbours = cell.getNeighbours();
+					idsROI.add(idEpiCell);
+					for (int idNeighbour : neighbours) {
+						if (this.cells.get(idEpiCell).isValid_cell()
+								|| this.cells.get(idNeighbour).isValid_cell()) {
+							// Only valid cells' relationships
+							this.adjacencyMatrix[idEpiCell][idNeighbour] = 1;
+							// this.adjacencyMatrix[idNeighbour][idEpiCell]
+							// = 1;
+						}
+					}
+				}
+			}
+		}
+		// TODO: reduced adjacency matrix
+		// int[][] adjacencyMatrixReduced = new
+		// int[idsROI.size()][idsROI.size()];
+		//
+		// for (int i = 0; i < idsROI.size(); i++){
+		// adjacencyMatrixReduced[i] = this.adjacencyMatrix[idsROI.get(i)];
+		// }
+		return adjacencyMatrix;
+	}
+
+	/**
 	 * Generate a mask expanding the pixels with a selected shape and radius
 	 * 
 	 * @param selectedShape
@@ -852,7 +860,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	 * @param radiusOfShape
 	 *            the size radius of the mask
 	 */
-	private void createNeighbourhood(int idEpiCell, int selectedShape, int radiusOfShape) {
+	public void createNeighbourhood(int idEpiCell, int selectedShape, int radiusOfShape) {
 		EpiCell cell = this.cells.get(idEpiCell);
 
 		ImageProcessor imgProc = generateMask(selectedShape, radiusOfShape, cell.getPixelsX(), cell.getPixelsY());
@@ -1288,17 +1296,25 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 		return reDoTheComputationAux;
 	}
 
-  /**
-   * @return the orbitDist
-   */
-  public final float[] getOrbitDist() {
-    return orbitDist;
-  }
+	/**
+	 * @return the orbitDist
+	 */
+	public final float[] getOrbitDist() {
+		return orbitDist;
+	}
 
-  /**
-   * @return the orbitsWeights
-   */
-  public final float[][] getOrbitsWeights() {
-    return orbitsWeights;
-  }
+	/**
+	 * @return the orbitsWeights
+	 */
+	public final float[][] getOrbitsWeights() {
+		return orbitsWeights;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<EpiCell> getCells() {
+		return cells;
+	}
 }

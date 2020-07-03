@@ -28,6 +28,22 @@ final public class Utils {
 			sum += a;
 		return sum / data.length;
 	}
+	
+	/**
+	 * Taken from
+	 * https://stackoverflow.com/questions/7988486/how-do-you-calculate-the-variance-median-and-standard-deviation-in-c-or-java
+	 * Mr. White's answer
+	 * 
+	 * @param data
+	 *            to get the mean
+	 * @return the mean of the data
+	 */
+	public static double getMean(float[] data) {
+		double sum = 0.0;
+		for (float a : data)
+			sum += a;
+		return sum / data.length;
+	}
 
 	/**
 	 * @param data

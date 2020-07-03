@@ -21,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -32,11 +33,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import epigraph.BasicGraphletImage;
 import epigraph.DiagramsData;
+import epigraph.EpiCell;
 import epigraph.ExcelClass;
 import epigraph.GraphletImage;
 import epigraph.JTableModel;
+import epigraph.Orca;
 import epigraph.GUI.CustomElements.ColorRenderer;
 import epigraph.GUI.CustomElements.JColorEditor;
+import epigraph.Statistics.Utils;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -601,9 +605,69 @@ public class MainWindow extends JFrame {
 		return null;
 	}
 
+	public void calculateSimpleGDD(){
+		
+		int radiusNeighs = 3;
+		int[] graphletsWeDontWant = {};
+		int NUMRANDOMVORONOI = 100;
+		
+		ImagePlus imageOriginal = IJ.openImage();
+		GraphletImage originalGraphlets = new GraphletImage(imageOriginal);
+		ArrayList<Integer[]> graphletsFinal = processSimpleImage(radiusNeighs, graphletsWeDontWant, imageOriginal,
+				originalGraphlets);
+		
+		
+		float[] distanceGDDArray = new float[NUMRANDOMVORONOI];
+		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
+				distanceGDDArray[i] = calculateGDD(graphletsFinal,
+						this.randomVoronoi[i].getGraphletsInteger(graphletsWeDontWant));
+				orbitsWeights[1] = getOrbitDist();
+		}
+		double distanceGDD = Utils.getMean(distanceGDDArray);
+		
+	}
 
+	/**
+	 * @param radiusNeighs
+	 * @param graphletsWeDontWant
+	 * @param imageOriginal
+	 * @param originalGraphlets
+	 * @return
+	 */
+	public ArrayList<Integer[]> processSimpleImage(int radiusNeighs, int[] graphletsWeDontWant, ImagePlus imageOriginal,
+			GraphletImage originalGraphlets) {
+		JProgressBar progressBar = new JProgressBar();
+		try {
+			originalGraphlets.preprocessImage(imageOriginal, 8, progressBar);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Neighbours
+		for (int indexEpiCell = 0; indexEpiCell < originalGraphlets.getCells().size(); indexEpiCell++) {
+			originalGraphlets.createNeighbourhood(indexEpiCell, 0, radiusNeighs);
+		}
+		
+		Orca orcaProgram = new Orca(originalGraphlets.getAdjacencyMatrix(false));
 
+		int[][] graphlets = orcaProgram.getOrbit();
+		
+		orcaProgram = null;
 
-
-	
+		ArrayList<EpiCell> cells = originalGraphlets.getCells();
+		for (int i = 0; i < graphlets.length; i++) {
+			cells.get(i).setGraphlets(graphlets[i]);
+		}
+		
+		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
+		Integer[] actualGraphlets;
+		for (EpiCell cell2 : cells) {
+			if (cell2.isValid_cell()) {
+				actualGraphlets = cell2.getGraphletsInteger(graphletsWeDontWant);
+				graphletsFinal.add(actualGraphlets);
+			}
+		}
+		return graphletsFinal;
+	}	
 }
