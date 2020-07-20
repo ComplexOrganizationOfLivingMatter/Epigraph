@@ -105,7 +105,7 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	private boolean modeNumGraphletsToCheck; 
 	
 	private float[] orbitDist;
-  private float[][] orbitsWeights;
+    private float[][] orbitsWeights;
 
 	/**
 	 * Constructor
@@ -1311,10 +1311,25 @@ public class GraphletImage extends BasicGraphletImage implements Cloneable {
 	}
 
 	/**
+	 * @return the raw_img
+	 */
+	public ImagePlus getRaw_img() {
+		return raw_img;
+	}
+
+	/**
 	 * 
 	 * @return
 	 */
 	public ArrayList<EpiCell> getCells() {
 		return cells;
+	}
+
+	/**
+	 * 
+	 * @param arrayList
+	 */
+	public void setCells(ArrayList<EpiCell> cells) {
+		this.cells = cells;
 	}
 }

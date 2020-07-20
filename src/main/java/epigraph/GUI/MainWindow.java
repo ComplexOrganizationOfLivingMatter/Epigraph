@@ -66,6 +66,7 @@ public class MainWindow extends JFrame {
 	private JFrame fatherWindow;
 	private JButton btnExport;
 	private JButton btnImport;
+	private JButton btnSimpleGDD;
 	protected VisualizingWindow visualizingWindow;
 	private ImageProcessingWindow imageProcessing;
 	private JButton btnDeleteRow;
@@ -358,6 +359,13 @@ public class MainWindow extends JFrame {
 				importXLSToTable(true);
 			}
 		});
+		
+		btnSimpleGDD = new JButton("Simple GDD");
+		btnSimpleGDD.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				calculateSimpleGDD();
+			}
+		});
 
 		btnDeleteRow = new JButton("Delete rows");
 		btnDeleteRow.addActionListener(new ActionListener() {
@@ -378,6 +386,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		btnSimpleGDD.setBounds(100, 487, 105, 29);
 		btnImport.setBounds(336, 487, 105, 29);
 		btnExport.setBounds(527, 487, 105, 29);
 		btnVisualize.setBounds(703, 487, 93, 29);
@@ -388,6 +397,7 @@ public class MainWindow extends JFrame {
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
+		panel.add(btnSimpleGDD);
 		panel.add(btnImport);
 		panel.add(btnExport);
 		panel.add(btnDeleteRow);
@@ -611,20 +621,74 @@ public class MainWindow extends JFrame {
 		int[] graphletsWeDontWant = {};
 		int NUMRANDOMVORONOI = 100;
 		
-		ImagePlus imageOriginal = IJ.openImage();
-		GraphletImage originalGraphlets = new GraphletImage(imageOriginal);
-		ArrayList<Integer[]> graphletsFinal = processSimpleImage(radiusNeighs, graphletsWeDontWant, imageOriginal,
-				originalGraphlets);
+		fileChooser.setDialogTitle("GDD muscle");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		if (this.initialDirectory != null)
+			fileChooser.setCurrentDirectory(new File(this.initialDirectory));
+
+
+		int option = fileChooser.showOpenDialog(this.fatherWindow);
 		
+		ArrayList<GraphletImage> set1Graphlets = new ArrayList<GraphletImage>();
+		ArrayList<GraphletImage> set2Graphlets = new ArrayList<GraphletImage>();
+		
+		ArrayList<ArrayList<Double>> gddDistances = new ArrayList<ArrayList<Double>>();
+		if (option == JFileChooser.APPROVE_OPTION) {
+
+			File directoryPath = new File(fileChooser.getSelectedFile().getPath());
+			// List of all files and directories
+			String contents[] = directoryPath.list();
+			for (int i = 0; i < contents.length; i++) {
+				String fullDirectory = directoryPath.getAbsolutePath() + System.getProperty("file.separator") + contents[i];
+				ImagePlus imageOriginal = IJ.openImage(fullDirectory);
+				set1Graphlets.add(new GraphletImage(imageOriginal));
+			}
+			
+			directoryPath = new File(fileChooser.getSelectedFile().getPath());
+			// List of all files and directories
+			String contents2[] = directoryPath.list();
+			for (int i = 0; i < contents2.length; i++) {
+				String fullDirectory = directoryPath.getAbsolutePath() + System.getProperty("file.separator") + contents2[i];
+				ImagePlus imageOriginal = IJ.openImage(fullDirectory);
+				set2Graphlets.add(new GraphletImage(imageOriginal));
+				ArrayList<Double> newGDDDistance = new ArrayList<Double>();
+				
+				for (int numImage2 = 0; numImage2 < contents.length; numImage2++) {
+					newGDDDistance.add(compare2GraphletsImages(radiusNeighs, graphletsWeDontWant, NUMRANDOMVORONOI,
+							set1Graphlets.get(numImage2), set2Graphlets.get(i)));
+				}
+				gddDistances.add(newGDDDistance);
+			}
+		}
+	}
+
+
+
+
+
+	/**
+	 * @param radiusNeighs
+	 * @param graphletsWeDontWant
+	 * @param NUMRANDOMVORONOI
+	 * @param graphletsImage1
+	 * @param graphletsImage2
+	 * @return
+	 */
+	public double compare2GraphletsImages(int radiusNeighs, int[] graphletsWeDontWant, int NUMRANDOMVORONOI,
+			GraphletImage graphletsImage1, GraphletImage graphletsImage2) {
+		ArrayList<Integer[]> graphlets1 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage1.getRaw_img(),
+				graphletsImage1);
+		
+		ArrayList<Integer[]> graphlets2 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage2.getRaw_img(),
+				graphletsImage2);
 		
 		float[] distanceGDDArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
-				distanceGDDArray[i] = calculateGDD(graphletsFinal,
-						this.randomVoronoi[i].getGraphletsInteger(graphletsWeDontWant));
-				orbitsWeights[1] = getOrbitDist();
+				distanceGDDArray[i] = graphletsImage1.calculateGDD(graphlets1, graphlets2);
 		}
 		double distanceGDD = Utils.getMean(distanceGDDArray);
-		
+		return distanceGDD;
 	}
 
 	/**
@@ -637,32 +701,34 @@ public class MainWindow extends JFrame {
 	public ArrayList<Integer[]> processSimpleImage(int radiusNeighs, int[] graphletsWeDontWant, ImagePlus imageOriginal,
 			GraphletImage originalGraphlets) {
 		JProgressBar progressBar = new JProgressBar();
-		try {
-			originalGraphlets.preprocessImage(imageOriginal, 8, progressBar);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		// Neighbours
-		for (int indexEpiCell = 0; indexEpiCell < originalGraphlets.getCells().size(); indexEpiCell++) {
-			originalGraphlets.createNeighbourhood(indexEpiCell, 0, radiusNeighs);
-		}
-		
-		Orca orcaProgram = new Orca(originalGraphlets.getAdjacencyMatrix(false));
-
-		int[][] graphlets = orcaProgram.getOrbit();
-		
-		orcaProgram = null;
-
-		ArrayList<EpiCell> cells = originalGraphlets.getCells();
-		for (int i = 0; i < graphlets.length; i++) {
-			cells.get(i).setGraphlets(graphlets[i]);
+		if (originalGraphlets.getCells() == null){
+			try {
+				originalGraphlets.preprocessImage(imageOriginal, 8, progressBar);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// Neighbours
+			for (int indexEpiCell = 0; indexEpiCell < originalGraphlets.getCells().size(); indexEpiCell++) {
+				originalGraphlets.createNeighbourhood(indexEpiCell, 0, radiusNeighs);
+			}
+			
+			Orca orcaProgram = new Orca(originalGraphlets.getAdjacencyMatrix(false));
+	
+			int[][] graphlets = orcaProgram.getOrbit();
+			
+			orcaProgram = null;
+			originalGraphlets.setCells(new ArrayList<EpiCell>());
+			for (int i = 0; i < graphlets.length; i++) {
+				originalGraphlets.getCells().get(i).setGraphlets(graphlets[i]);
+			}
 		}
 		
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
-		for (EpiCell cell2 : cells) {
+		for (EpiCell cell2 : originalGraphlets.getCells()) {
 			if (cell2.isValid_cell()) {
 				actualGraphlets = cell2.getGraphletsInteger(graphletsWeDontWant);
 				graphletsFinal.add(actualGraphlets);
