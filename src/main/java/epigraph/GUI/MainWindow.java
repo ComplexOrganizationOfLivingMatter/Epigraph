@@ -652,15 +652,21 @@ public class MainWindow extends JFrame {
 				String fullDirectory = directoryPath.getAbsolutePath() + System.getProperty("file.separator") + contents2[i];
 				ImagePlus imageOriginal = IJ.openImage(fullDirectory);
 				set2Graphlets.add(new GraphletImage(imageOriginal));
+				
+				ArrayList<Integer[]> graphlets2 = processSimpleImage(radiusNeighs, graphletsWeDontWant, set2Graphlets.get(i).getRaw_img(),
+						set2Graphlets.get(i));
+				
 				ArrayList<Double> newGDDDistance = new ArrayList<Double>();
 				
 				for (int numImage2 = 0; numImage2 < contents.length; numImage2++) {
 					newGDDDistance.add(compare2GraphletsImages(radiusNeighs, graphletsWeDontWant, NUMRANDOMVORONOI,
-							set1Graphlets.get(numImage2), set2Graphlets.get(i)));
+							graphlets2, set1Graphlets.get(numImage2)));
 				}
 				gddDistances.add(newGDDDistance);
 			}
 		}
+		
+		System.out.println(gddDistances);
 	}
 
 
@@ -676,16 +682,14 @@ public class MainWindow extends JFrame {
 	 * @return
 	 */
 	public double compare2GraphletsImages(int radiusNeighs, int[] graphletsWeDontWant, int NUMRANDOMVORONOI,
-			GraphletImage graphletsImage1, GraphletImage graphletsImage2) {
-		ArrayList<Integer[]> graphlets1 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage1.getRaw_img(),
-				graphletsImage1);
+			ArrayList<Integer[]> graphlets1, GraphletImage graphletsImage2) {
 		
 		ArrayList<Integer[]> graphlets2 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage2.getRaw_img(),
 				graphletsImage2);
 		
 		float[] distanceGDDArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
-				distanceGDDArray[i] = graphletsImage1.calculateGDD(graphlets1, graphlets2);
+				distanceGDDArray[i] = graphletsImage2.calculateGDD(graphlets1, graphlets2);
 		}
 		double distanceGDD = Utils.getMean(distanceGDDArray);
 		return distanceGDD;
@@ -720,7 +724,6 @@ public class MainWindow extends JFrame {
 			int[][] graphlets = orcaProgram.getOrbit();
 			
 			orcaProgram = null;
-			originalGraphlets.setCells(new ArrayList<EpiCell>());
 			for (int i = 0; i < graphlets.length; i++) {
 				originalGraphlets.getCells().get(i).setGraphlets(graphlets[i]);
 			}
