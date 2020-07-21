@@ -144,6 +144,12 @@
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.gembox</groupId>
+			<artifactId>gembox-spreadsheet</artifactId>
+			<version>1.1.1206</version>
+		</dependency>
 	</dependencies>
 
 	<issueManagement>
@@ -248,6 +254,13 @@
 			<name>Jzy3d Snapshots</name>
 			<url>http://maven.jzy3d.org/releases </url>
 		</repository>
+
+		<repository>
+			<id>com.gembox</id>
+			<name>GemBox API</name>
+			<url>https://gemboxsoftware.com/repo/</url>
+		</repository>
+		
 	</repositories>
 
 	<profiles>
