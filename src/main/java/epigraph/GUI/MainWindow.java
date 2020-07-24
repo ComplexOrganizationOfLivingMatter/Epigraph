@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,6 +19,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -33,8 +35,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.gembox.spreadsheet.CellValueType;
+import com.gembox.spreadsheet.ExcelCell;
 import com.gembox.spreadsheet.ExcelColumn;
 import com.gembox.spreadsheet.ExcelFile;
+import com.gembox.spreadsheet.ExcelRow;
 import com.gembox.spreadsheet.ExcelWorksheet;
 import com.gembox.spreadsheet.SpreadsheetInfo;
 
@@ -656,22 +661,27 @@ public class MainWindow extends JFrame {
 			ArrayList<Double> newGDDDistance;
 			for (int numImage1 = 0; numImage1 < contents.length; numImage1++) {
 				String fullDirectory = directoryPath.getAbsolutePath() + System.getProperty("file.separator") + contents[numImage1];
-				ImagePlus imageOriginal = IJ.openImage(fullDirectory);
-				
-				newGDDDistance = new ArrayList<Double>();
-				
-				for (int numImage2 = 0; numImage2 < contents2.length; numImage2++) {
-					fullDirectory = directoryPath2.getAbsolutePath() + System.getProperty("file.separator")
-							+ contents2[numImage2];
-					ImagePlus imageToCompare = IJ.openImage(fullDirectory);
-
-					newGDDDistance.add(compare2GraphletsImages(radiusNeighs, graphletsWeDontWant, NUMRANDOMVORONOI,
-							imageOriginal, imageToCompare));
-
-					//System.out.println(newGDDDistance);
+				if (fullDirectory.endsWith(".jpg")){
+					ImagePlus imageOriginal = IJ.openImage(fullDirectory);
+					String fullDirectoryXls_1 = fullDirectory.replace("_contour_img.jpg", "_centroidsSlowCells.xls");
+					
+					newGDDDistance = new ArrayList<Double>();
+					
+					for (int numImage2 = 0; numImage2 < contents2.length; numImage2++) {
+						fullDirectory = directoryPath2.getAbsolutePath() + System.getProperty("file.separator")
+								+ contents2[numImage2];
+						if (fullDirectory.endsWith(".jpg")){
+							ImagePlus imageToCompare = IJ.openImage(fullDirectory);
+							String fullDirectoryXls_2 = fullDirectory.replace("_contour_img.jpg", "_centroidsSlowCells.xls");
+							newGDDDistance.add(compare2GraphletsImages(radiusNeighs, graphletsWeDontWant, NUMRANDOMVORONOI,
+									imageOriginal, imageToCompare, fullDirectoryXls_1, fullDirectoryXls_2));
+		
+							//System.out.println(newGDDDistance);
+						}
+					}
+					gddDistances.add(newGDDDistance);
+					System.out.println("-------Row " + (numImage1+1) + "of " + contents.length + " finished-------");
 				}
-				gddDistances.add(newGDDDistance);
-				System.out.println("-------Row " + (numImage1+1) + "of " + contents.length + " finished-------");
 			}
 			
 			SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
@@ -680,8 +690,11 @@ public class MainWindow extends JFrame {
 
 			for (int numRow = 1; numRow <= contents.length; numRow++) {
 				String nameRow = contents[numRow-1];
-				ExcelColumn column = worksheet.getColumn(0);
-				column.getCell(numRow).setValue(nameRow);
+
+				if (nameRow.endsWith(".jpg")){
+					ExcelColumn column = worksheet.getColumn(0);
+					column.getCell(numRow).setValue(nameRow);
+				}
 			}
 
 			int numCol = 1;
@@ -717,21 +730,23 @@ public class MainWindow extends JFrame {
 	 * @param radiusNeighs
 	 * @param graphletsWeDontWant
 	 * @param NUMRANDOMVORONOI
+	 * @param fullDirectoryXls_2 
+	 * @param fullDirectoryXls_1 
 	 * @param graphletsImage1
 	 * @param graphletsImage2
 	 * @return
 	 */
 	public double compare2GraphletsImages(int radiusNeighs, int[] graphletsWeDontWant, int NUMRANDOMVORONOI,
-			ImagePlus imageOriginal, ImagePlus imageToCompare) {
+			ImagePlus imageOriginal, ImagePlus imageToCompare, String fullDirectoryXls_1, String fullDirectoryXls_2) {
 		
 		GraphletImage graphletsImage1 = new GraphletImage(imageOriginal);
 		GraphletImage graphletsImage2 = new GraphletImage(imageToCompare);
 		
 		ArrayList<Integer[]> graphlets1 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage1.getRaw_img(),
-				graphletsImage1);
+				graphletsImage1, fullDirectoryXls_1);
 		
 		ArrayList<Integer[]> graphlets2 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage2.getRaw_img(),
-				graphletsImage2);
+				graphletsImage2, fullDirectoryXls_2);
 		
 		float[] distanceGDDArray = new float[NUMRANDOMVORONOI];
 		for (int i = 0; i < NUMRANDOMVORONOI; i++) {
@@ -746,12 +761,14 @@ public class MainWindow extends JFrame {
 	 * @param graphletsWeDontWant
 	 * @param imageOriginal
 	 * @param originalGraphlets
+	 * @param fullDirectoryXls 
 	 * @return
 	 */
 	public ArrayList<Integer[]> processSimpleImage(int radiusNeighs, int[] graphletsWeDontWant, ImagePlus imageOriginal,
-			GraphletImage originalGraphlets) {
+			GraphletImage originalGraphlets, String fullDirectoryXls) {
 		JProgressBar progressBar = new JProgressBar();
 		
+        ArrayList<Integer> slowCells = new ArrayList<Integer>();
 		if (originalGraphlets.getCells() == null){
 			try {
 				originalGraphlets.preprocessImage(imageOriginal, 8, progressBar);
@@ -773,12 +790,33 @@ public class MainWindow extends JFrame {
 			for (int i = 0; i < graphlets.length; i++) {
 				originalGraphlets.getCells().get(i).setGraphlets(graphlets[i]);
 			}
+			
+			//Consider only slow cells to obtain the graphlets.
+			SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+			ExcelFile workbook;
+			try {
+				workbook = ExcelFile.load(fullDirectoryXls);
+				ExcelWorksheet worksheet = workbook.getWorksheet(0);
+	            // Iterate through all rows in an Excel worksheet.
+	            for (ExcelRow row : worksheet.getRows()) {
+	            	int numCell = originalGraphlets.getLabelledImage().getChannelProcessor().get(row.getCell(0).getIntValue(), row.getCell(1).getIntValue()) - 1;
+	            	slowCells.add(numCell);
+	            	originalGraphlets.getCells().get(numCell).setSelected(true);
+	            }
+//	            BufferedImage bi = originalGraphlets.getLabelledImage().getBufferedImage();
+//	            File outputfile = new File("saved.png");
+//	            ImageIO.write(bi, "png", outputfile);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		ArrayList<Integer[]> graphletsFinal = new ArrayList<Integer[]>();
 		Integer[] actualGraphlets;
 		for (EpiCell cell2 : originalGraphlets.getCells()) {
-			if (cell2.isValid_cell()) {
+			if (cell2.isValid_cell() && cell2.isSelected()) {
 				actualGraphlets = cell2.getGraphletsInteger(graphletsWeDontWant);
 				graphletsFinal.add(actualGraphlets);
 			}
