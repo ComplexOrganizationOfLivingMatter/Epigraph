@@ -659,13 +659,19 @@ public class MainWindow extends JFrame {
 			// List of all files and directories
 			String contents2[] = directoryPath2.list();
 			ArrayList<Double> newGDDDistance;
+			ArrayList<Integer> contentIds = new ArrayList<Integer>();
 			for (int numImage1 = 0; numImage1 < contents.length; numImage1++) {
 				String fullDirectory = directoryPath.getAbsolutePath() + System.getProperty("file.separator") + contents[numImage1];
 				if (fullDirectory.endsWith(".jpg")){
 					ImagePlus imageOriginal = IJ.openImage(fullDirectory);
 					String fullDirectoryXls_1 = fullDirectory.replace("_contour_img.jpg", "_centroidsSlowCells.xls");
 					
+					File f = new File(fullDirectoryXls_1);
+					if(f.exists() == false)
+						continue;
+					
 					newGDDDistance = new ArrayList<Double>();
+					contentIds.add(numImage1);
 					
 					for (int numImage2 = 0; numImage2 < contents2.length; numImage2++) {
 						fullDirectory = directoryPath2.getAbsolutePath() + System.getProperty("file.separator")
@@ -673,6 +679,10 @@ public class MainWindow extends JFrame {
 						if (fullDirectory.endsWith(".jpg")){
 							ImagePlus imageToCompare = IJ.openImage(fullDirectory);
 							String fullDirectoryXls_2 = fullDirectory.replace("_contour_img.jpg", "_centroidsSlowCells.xls");
+							f = new File(fullDirectoryXls_2);
+							if(f.exists() == false)
+								continue;
+							
 							newGDDDistance.add(compare2GraphletsImages(radiusNeighs, graphletsWeDontWant, NUMRANDOMVORONOI,
 									imageOriginal, imageToCompare, fullDirectoryXls_1, fullDirectoryXls_2));
 		
@@ -688,12 +698,14 @@ public class MainWindow extends JFrame {
 			ExcelFile workbook = new ExcelFile();
 			ExcelWorksheet worksheet = workbook.addWorksheet("Sheet");
 
+			int realNumRow = 1;
 			for (int numRow = 1; numRow <= contents.length; numRow++) {
-				String nameRow = contents[numRow-1];
+				String nameRow = contents2[numRow-1];
 
 				if (nameRow.endsWith(".jpg")){
 					ExcelColumn column = worksheet.getColumn(0);
-					column.getCell(numRow).setValue(nameRow);
+					column.getCell(realNumRow).setValue(nameRow);
+					realNumRow++;
 				}
 			}
 
@@ -702,7 +714,7 @@ public class MainWindow extends JFrame {
 				ArrayList<Double> arrayList = (ArrayList<Double>) iterator.next();
 				
 				ExcelColumn column = worksheet.getColumn(numCol);
-				column.getCell(0).setValue(contents2[numCol-1]);
+				column.getCell(0).setValue(contents[contentIds.get(numCol-1)]);
 
 				int numRow = 1;
 				for (Iterator iterator2 = arrayList.iterator(); iterator2.hasNext();) {
