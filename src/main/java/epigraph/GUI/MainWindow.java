@@ -635,6 +635,11 @@ public class MainWindow extends JFrame {
 				62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
 		int NUMRANDOMVORONOI = 20;
 		
+		SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+		ExcelFile workbook = new ExcelFile();
+		ExcelWorksheet worksheet = workbook.addWorksheet("Sheet");
+		int numCol = 1;
+		
 		fileChooser.setDialogTitle("GDD muscle");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -677,7 +682,7 @@ public class MainWindow extends JFrame {
 								if (fullDirectory.endsWith(".png")){
 									ImagePlus imageOriginal = IJ.openImage(fullDirectory);
 									String fullDirectoryXls_1 = fullDirectory.replace("segmentedImage.png", "centroidsSlowCells.csv");
-									System.out.println(fullDirectoryXls_1);
+									System.out.println(directoryPathFolder2.getPath());
 
 									File f = new File(fullDirectoryXls_1);
 									if(f.exists() == false)
@@ -709,49 +714,29 @@ public class MainWindow extends JFrame {
 											}
 										}
 									}
-									gddDistances.add(newGDDDistance);
-								}
-							}
-							
-							SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
-							ExcelFile workbook = new ExcelFile();
-							ExcelWorksheet worksheet = workbook.addWorksheet("Sheet");
-
-							int realNumRow = 1;
-							for (int numRow = 1; numRow <= contents.length; numRow++) {
-								String nameRow = contents2[numRow-1];
-
-								if (nameRow.endsWith(".png")){
-									ExcelColumn column = worksheet.getColumn(0);
-									column.getCell(realNumRow).setValue(nameRow);
-									realNumRow++;
-								}
-							}
-
-							int numCol = 1;
-							for (Iterator iterator = gddDistances.iterator(); iterator.hasNext();) {
-								ArrayList<Double> arrayList = (ArrayList<Double>) iterator.next();
+									
 								
-								ExcelColumn column = worksheet.getColumn(numCol);
-								column.getCell(0).setValue(contents[contentIds.get(numCol-1)]);
+									ExcelColumn column = worksheet.getColumn(numCol);
+									numCol++;
+									column.getCell(0).setValue(folders1[numFolder1]+"_"+folders2[numFolder2]);
 
-								int numRow = 1;
-								for (Iterator iterator2 = arrayList.iterator(); iterator2.hasNext();) {
-									Double double1 = (Double) iterator2.next();
-									column.getCell(numRow).setValue(double1);
-									numRow++;
+									int numRow = 1;
+									for(Iterator iterator = newGDDDistance.iterator(); iterator.hasNext();) {
+											Double double1 = (Double) iterator.next();
+											column.getCell(numRow).setValue(double1);
+											numRow++;
+									}
+
+									try {
+										workbook.save(chosenDir + "_gdd" + NUMRANDOMVORONOI + ".xlsx");
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									
 								}
-								numCol++;
 							}
 
-							try {
-								workbook.save(directoryPathOrigin.getPath().replace("Original","gdd" + NUMRANDOMVORONOI + ".xlsx"));
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						
-						
 						}				
 					
 					}
