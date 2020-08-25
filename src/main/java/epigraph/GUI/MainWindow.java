@@ -652,91 +652,117 @@ public class MainWindow extends JFrame {
 		ArrayList<ArrayList<Double>> gddDistances = new ArrayList<ArrayList<Double>>();
 		if (option == JFileChooser.APPROVE_OPTION) {
 
-			String chosenDir = fileChooser.getSelectedFile().getPath();
-			File directoryPathChosen = new File(chosenDir);
-			String folders1[] = directoryPathChosen.list();
+			String chosenDir1 = fileChooser.getSelectedFile().getPath();
+			File directoryPathChosen1 = new File(chosenDir1);
+			String folders1[] = directoryPathChosen1.list();
+			
+			String chosenDir2 = chosenDir1.replace("CONT", "G93A");
+			File directoryPathChosen2 = new File(chosenDir2);
+			String foldersG93A1[] = directoryPathChosen2.list();
 			
 			for (int numFolder1 = 0; numFolder1 < folders1.length; numFolder1++) {
-				File directoryPathFolder1 = new File(chosenDir+"\\"+folders1[numFolder1]);
+				File directoryPathFolder1 = new File(chosenDir1+"\\"+folders1[numFolder1]);
 				String folders2[] = directoryPathFolder1.list();
 				
 				for (int numFolder2 = 0; numFolder2 < folders2.length; numFolder2++) {
-					File directoryPathFolder2 = new File(chosenDir+"\\"+folders1[numFolder1]+"\\"+folders2[numFolder2]);
+					File directoryPathFolder2 = new File(chosenDir1+"\\"+folders1[numFolder1]+"\\"+folders2[numFolder2]);
 					String folders3[] = directoryPathFolder2.list();
 					
 					for (int numFolder3 = 0; numFolder3 < folders3.length; numFolder3++) {
 						if(folders3[numFolder3].endsWith("GDD")){
 							
-							File directoryPathOrigin = new File(chosenDir+"\\"+folders1[numFolder1]+"\\"+folders2[numFolder2]+"\\"+folders3[numFolder3]+"\\Original");
-							File directoryPathControl = new File(directoryPathOrigin.getPath().replace("Original","VoronoiControl"));
-
+							File directoryPathOrigin = new File(chosenDir1+"\\"+folders1[numFolder1]+"\\"+folders2[numFolder2]+"\\"+folders3[numFolder3]+"\\Original");
+							
 							// List of all files and directories
 							String contents[] = directoryPathOrigin.list();
 
-							// List of all files and directories
-							String contents2[] = directoryPathControl.list();
 							ArrayList<Double> newGDDDistance;
-							ArrayList<Integer> contentIds = new ArrayList<Integer>();
-							for (int numImage1 = 0; numImage1 < contents.length; numImage1++) {
-								String fullDirectory = directoryPathOrigin.getAbsolutePath() + System.getProperty("file.separator") + contents[numImage1];
-								if (fullDirectory.endsWith(".png")){
-									ImagePlus imageOriginal = IJ.openImage(fullDirectory);
-									String fullDirectoryXls_1 = fullDirectory.replace("segmentedImage.png", "centroidsSlowCells.csv");
-									System.out.println(directoryPathFolder2.getPath());
+							newGDDDistance = new ArrayList<Double>();
+							int numRow = 1;
 
-									File f = new File(fullDirectoryXls_1);
-									if(f.exists() == false)
-										continue;
+							/////////////////////////////////////////////////////////////77
+							for (int numFolderG93A1 = 0; numFolderG93A1 < foldersG93A1.length; numFolderG93A1++) {
+								File directoryPathFolderG93A1 = new File(chosenDir2+"\\"+foldersG93A1[numFolderG93A1]);
+								String foldersG93A2[] = directoryPathFolderG93A1.list();
+								
+								for (int numFolderG93A2 = 0; numFolderG93A2 < foldersG93A2.length; numFolderG93A2++) {
+									File directoryPathFolderG93A2 = new File(chosenDir2+"\\"+foldersG93A1[numFolderG93A1]+"\\"+foldersG93A2[numFolderG93A2]);
+									String foldersG93A3[] = directoryPathFolderG93A2.list();
 									
-									newGDDDistance = new ArrayList<Double>();
-									contentIds.add(numImage1);
-									
-									GraphletImage graphletsImage1 = new GraphletImage(imageOriginal);
-									ArrayList<Integer[]> graphlets1 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage1.getRaw_img(),
-											graphletsImage1, fullDirectoryXls_1);
-									
-									for (int numImage2 = 0; numImage2 < contents2.length; numImage2++) {
-										fullDirectory = directoryPathControl.getAbsolutePath() + System.getProperty("file.separator")
-												+ contents2[numImage2];
-										if (fullDirectory.endsWith(".png")){
-											if(newGDDDistance.size()<NUMRANDOMVORONOI) {
-												ImagePlus imageToCompare = IJ.openImage(fullDirectory);
-												String fullDirectoryXls_2 = fullDirectory.replace("Voronoi_", "centroidsSlowCells_Voronoi_");
-												String fullDirectoryXls_3 = fullDirectoryXls_2.replace(".png",".csv");
-												f = new File(fullDirectoryXls_3);
-												if(f.exists() == false)
-													continue;
-												Double newGDD = compare2GraphletsImages(radiusNeighs, graphletsWeDontWant,
-														graphlets1, imageToCompare, fullDirectoryXls_3);
-												newGDDDistance.add(newGDD);
-												System.out.println("-------Row " + newGDDDistance.size() + " of " + NUMRANDOMVORONOI + " finished-------");
+									for (int numFolderG93A3 = 0; numFolderG93A3 < foldersG93A3.length; numFolderG93A3++) {
+										if(foldersG93A3[numFolderG93A3].endsWith("GDD")){
+											File directoryPathG93A = new File(chosenDir2+"\\"+foldersG93A1[numFolderG93A1]+"\\"+foldersG93A2[numFolderG93A2]+"\\"+foldersG93A3[numFolderG93A3]+"\\Original");
+											// List of all files and directories
+											String contents2[] = directoryPathG93A.list();
+											
+											
+											for (int numImage1 = 0; numImage1 < contents.length; numImage1++) {
+												String fullDirectory = directoryPathOrigin.getAbsolutePath() + System.getProperty("file.separator") + contents[numImage1];
+												if (fullDirectory.endsWith(".png")){
+													ImagePlus imageOriginal = IJ.openImage(fullDirectory);
+													String fullDirectoryXls_1 = fullDirectory.replace("segmentedImage.png", "centroidsSlowCells.csv");
+													System.out.println(directoryPathFolder2.getPath());
 
+													File f = new File(fullDirectoryXls_1);
+													if(f.exists() == false)
+														continue;
+													
+													
+													GraphletImage graphletsImage1 = new GraphletImage(imageOriginal);
+													ArrayList<Integer[]> graphlets1 = processSimpleImage(radiusNeighs, graphletsWeDontWant, graphletsImage1.getRaw_img(),
+															graphletsImage1, fullDirectoryXls_1);
+													
+													for (int numImage2 = 0; numImage2 < contents2.length; numImage2++) {
+														fullDirectory = directoryPathG93A.getAbsolutePath() + System.getProperty("file.separator")
+																+ contents2[numImage2];
+														if (fullDirectory.endsWith(".png")){
+																ImagePlus imageToCompare = IJ.openImage(fullDirectory);
+																String fullDirectoryXls_2 = fullDirectory.replace("segmentedImage.png", "centroidsSlowCells.csv");
+																f = new File(fullDirectoryXls_2);
+																if(f.exists() == false)
+																	continue;
+																Double newGDD = compare2GraphletsImages(radiusNeighs, graphletsWeDontWant,
+																		graphlets1, imageToCompare, fullDirectoryXls_2);
+																newGDDDistance.add(newGDD);
+																
+																ExcelColumn column1 = worksheet.getColumn(0);
+																column1.getCell(numRow).setValue(foldersG93A1[numFolderG93A1]+"_"+foldersG93A2[numFolderG93A2]);
+																numRow++;
+																System.out.println("-------Row " + newGDDDistance.size() + " of " + NUMRANDOMVORONOI + " finished-------");
+
+														}
+													}															
+												}
 											}
+											
 										}
 									}
-									
-								
-									ExcelColumn column = worksheet.getColumn(numCol);
-									numCol++;
-									column.getCell(0).setValue(folders1[numFolder1]+"_"+folders2[numFolder2]);
-
-									int numRow = 1;
-									for(Iterator iterator = newGDDDistance.iterator(); iterator.hasNext();) {
-											Double double1 = (Double) iterator.next();
-											column.getCell(numRow).setValue(double1);
-											numRow++;
-									}
-
-									try {
-										workbook.save(chosenDir + "_gdd" + NUMRANDOMVORONOI + ".xlsx");
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									
 								}
 							}
+							
 
+							ExcelColumn column = worksheet.getColumn(numCol);
+							numCol++;
+							column.getCell(0).setValue(folders1[numFolder1]+"_"+folders2[numFolder2]);
+
+							int numRow1 = 1;
+							for(Iterator iterator = newGDDDistance.iterator(); iterator.hasNext();) {
+									Double double1 = (Double) iterator.next();
+									column.getCell(numRow1).setValue(double1);
+									numRow1++;
+							}
+
+							try {
+								workbook.save(chosenDir1 + "_gdd_WT_G93A.xlsx");
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+							
+							
+							
 						}				
 					
 					}
