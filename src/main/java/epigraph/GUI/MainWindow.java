@@ -427,63 +427,64 @@ public class MainWindow extends JFrame {
 	 */
 	public void initImageProcessingWindow() {
 		try {
-			ImagePlus raw_img = IJ.openImage();
-			
+			String filePath = IJ.getFilePath("Choose an image file");
+			ImagePlus raw_img = IJ.openImage(filePath);
+				
 			if (raw_img != null) {
-        if (raw_img.getHeight() >= 3000 || raw_img.getWidth() >= 3000) {
-          JOptionPane.showMessageDialog(panel.getParent(),
-              "Warning! Large image detected. It may take time to process it.");
-        }
-        
-        this.initialDirectory = raw_img.getOriginalFileInfo().directory;
-        imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
-        imageProcessing.pack();
-
-        imageProcessing.addWindowListener(new WindowListener() {
-
-          @Override
-          public void windowOpened(WindowEvent e) {
-            // TODO Auto-generated method stub
-            btnOpenButton.setEnabled(false);
-          }
-
-          @Override
-          public void windowClosing(WindowEvent e) {
-            // TODO Auto-generated method stub
-            btnOpenButton.setEnabled(true);
-          }
-
-          @Override
-          public void windowClosed(WindowEvent e) {
-            // TODO Auto-generated method stub
-
-          }
-
-          @Override
-          public void windowIconified(WindowEvent e) {
-            // TODO Auto-generated method stub
-
-          }
-
-          @Override
-          public void windowDeiconified(WindowEvent e) {
-            // TODO Auto-generated method stub
-
-          }
-
-          @Override
-          public void windowActivated(WindowEvent e) {
-            // TODO Auto-generated method stub
-
-          }
-
-          @Override
-          public void windowDeactivated(WindowEvent e) {
-            // TODO Auto-generated method stub
-
-          }
-
-        });
+		        if (raw_img.getHeight() >= 3000 || raw_img.getWidth() >= 3000) {
+		          JOptionPane.showMessageDialog(panel.getParent(),
+		              "Warning! Large image detected. It may take time to process it.");
+		        }
+		        
+		        this.initialDirectory = raw_img.getOriginalFileInfo().directory;
+		        imageProcessing = new ImageProcessingWindow(raw_img, tableInfo, diagramsData);
+		        imageProcessing.pack();
+		
+		        imageProcessing.addWindowListener(new WindowListener() {
+		
+		          @Override
+		          public void windowOpened(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		            btnOpenButton.setEnabled(false);
+		          }
+		
+		          @Override
+		          public void windowClosing(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		            btnOpenButton.setEnabled(true);
+		          }
+		
+		          @Override
+		          public void windowClosed(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		
+		          }
+		
+		          @Override
+		          public void windowIconified(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		
+		          }
+		
+		          @Override
+		          public void windowDeiconified(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		
+		          }
+		
+		          @Override
+		          public void windowActivated(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		
+		          }
+		
+		          @Override
+		          public void windowDeactivated(WindowEvent e) {
+		            // TODO Auto-generated method stub
+		
+		          }
+		
+		        });
 
 			} else {
 				JOptionPane.showMessageDialog(panel.getParent(), "You must introduce a valid image or set of images.");
