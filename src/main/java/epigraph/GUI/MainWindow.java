@@ -78,7 +78,6 @@ public class MainWindow extends JFrame {
 	private JFrame fatherWindow;
 	private JButton btnExport;
 	private JButton btnImport;
-	private JButton btnSimpleGDD;
 	protected VisualizingWindow visualizingWindow;
 	private ImageProcessingWindow imageProcessing;
 	private JButton btnDeleteRow;
@@ -372,13 +371,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-		btnSimpleGDD = new JButton("Simple GDD");
-		btnSimpleGDD.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				calculateSimpleGDD();
-			}
-		});
-
 		btnDeleteRow = new JButton("Delete rows");
 		btnDeleteRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -398,7 +390,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		btnSimpleGDD.setBounds(100, 487, 105, 29);
 		btnImport.setBounds(336, 487, 105, 29);
 		btnExport.setBounds(527, 487, 105, 29);
 		btnVisualize.setBounds(703, 487, 93, 29);
@@ -409,7 +400,6 @@ public class MainWindow extends JFrame {
 		panel.add(scrollPane);
 		panel.add(btnOpenButton);
 		panel.add(btnVisualize);
-		panel.add(btnSimpleGDD);
 		panel.add(btnImport);
 		panel.add(btnExport);
 		panel.add(btnDeleteRow);
