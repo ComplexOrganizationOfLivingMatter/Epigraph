@@ -1,5 +1,7 @@
 # EpiGraph
 
+Usage information can be also found at [https://imagej.net/plugins/epigraph](https://imagej.net/plugins/epigraph)
+
 ## Installation onto ImageJ/FIJI
 
 1. Download the [jar file](http://bit.ly/2RoVdXt)
